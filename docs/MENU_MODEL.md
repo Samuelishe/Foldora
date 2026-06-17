@@ -96,7 +96,7 @@ Foldora принимает только настоящие `.ico`: файл до
 - строится через testable registry plan builder;
 - plan builder должен гарантировать, что все keys находятся только под Foldora-owned paths.
 
-Registry writer ещё не реализован. Сейчас есть только testable registry plan builder; он не пишет и не удаляет реальные registry keys.
+Registry writer реализован как отдельный слой и применяет только validated plan. `register-menu --dry-run` строит и валидирует plan, но не пишет и не удаляет реальные registry keys.
 
 Будущие owned paths:
 

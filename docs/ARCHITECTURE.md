@@ -25,3 +25,4 @@ Validation/model слой находится в `Foldora.Core`, а не в CLI/W
 Исполнение сохранённых entries также находится в `Foldora.Core`: `FolderMenuEntryActionService` загружает settings, резолвит enabled entry, создаёт папку при необходимости и вызывает `DesktopIniService`. CLI не дублирует filesystem или `desktop.ini` логику.
 
 `Foldora.Shell` содержит только shell-specific planning logic. `ExplorerMenuRegistryPlanBuilder` строит testable plan будущих HKCU операций под Foldora-owned roots, но не пишет в реестр. Реальный writer должен быть отдельным слоем поверх validated plan.
+`ExplorerMenuRegistryWriter` применяет только validated plan через `IRegistryAccess`. `WindowsRegistryAccess` - единственное место, где используется `Microsoft.Win32.Registry`; тесты используют fake/in-memory registry access.

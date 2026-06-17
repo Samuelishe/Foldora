@@ -28,7 +28,7 @@ public static class CliCommandParser
             "apply" => ParseApply(options),
             "create" => ParseCreate(options),
             "clear" => ParseClear(options),
-            "register-menu" => new CliCommand(CliCommandKind.RegisterMenu, command),
+            "register-menu" => ParseRegisterMenu(options),
             "unregister-menu" => new CliCommand(CliCommandKind.UnregisterMenu, command),
             "quote" => new CliCommand(CliCommandKind.Quote, command, QuoteValue: args.Length > 1 ? args[1] : string.Empty),
             _ when SkeletonCommands.Contains(command) => new CliCommand(CliCommandKind.Skeleton, command),
@@ -128,6 +128,16 @@ public static class CliCommandParser
         }
 
         return new CliCommand(CliCommandKind.MenuRemove, "menu remove", EntryId: entryId);
+    }
+
+    private static CliCommand ParseRegisterMenu(IReadOnlyDictionary<string, string?> options)
+    {
+        options.TryGetValue("--cli-path", out var cliPath);
+        return new CliCommand(
+            CliCommandKind.RegisterMenu,
+            "register-menu",
+            CliExecutablePath: cliPath,
+            DryRun: options.ContainsKey("--dry-run"));
     }
 
     private static Dictionary<string, string?> ParseOptions(string[] args)

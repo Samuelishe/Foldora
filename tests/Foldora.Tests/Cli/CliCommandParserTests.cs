@@ -159,4 +159,45 @@ public sealed class CliCommandParserTests
         Assert.Equal(CliCommandKind.MenuRemove, command.Kind);
         Assert.Equal("entry-123", command.EntryId);
     }
+
+    [Fact]
+    public void Parse_AcceptsRegisterMenu()
+    {
+        var command = CliCommandParser.Parse(["register-menu"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.RegisterMenu, command.Kind);
+        Assert.False(command.DryRun);
+    }
+
+    [Fact]
+    public void Parse_AcceptsRegisterMenuDryRun()
+    {
+        var command = CliCommandParser.Parse(["register-menu", "--dry-run"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.RegisterMenu, command.Kind);
+        Assert.True(command.DryRun);
+    }
+
+    [Fact]
+    public void Parse_AcceptsRegisterMenuCliPath()
+    {
+        var cliPath = @"C:\Program Files\Фолдора\Foldora.Cli.exe";
+
+        var command = CliCommandParser.Parse(["register-menu", "--cli-path", cliPath]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.RegisterMenu, command.Kind);
+        Assert.Equal(cliPath, command.CliExecutablePath);
+    }
+
+    [Fact]
+    public void Parse_AcceptsUnregisterMenu()
+    {
+        var command = CliCommandParser.Parse(["unregister-menu"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.UnregisterMenu, command.Kind);
+    }
 }

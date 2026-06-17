@@ -34,6 +34,11 @@
 - `src/Foldora.Shell/ContextMenu/CommandLineQuoter.cs` - quoting аргументов командной строки.
 - `src/Foldora.Shell/ContextMenu/ExplorerContextMenuRegistrationOptions.cs` - параметры регистрации меню.
 - `src/Foldora.Shell/ContextMenu/ExplorerContextMenuRegistrar.cs` - skeleton registrar для HKCU context menu.
+- `src/Foldora.Shell/Registry/IRegistryAccess.cs` - абстракция registry access.
+- `src/Foldora.Shell/Registry/WindowsRegistryAccess.cs` - реальный HKCU registry access через `Microsoft.Win32.Registry`.
+- `src/Foldora.Shell/Registry/ExplorerMenuRegistryWriter.cs` - применение validated registry plan.
+- `src/Foldora.Shell/Registry/ExplorerMenuRegistrationResult.cs` - результат register/dry-run/unregister.
+- `src/Foldora.Shell/Registry/ExplorerMenuRegistrationService.cs` - orchestration register-menu/unregister-menu.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuCommandBuilder.cs` - command strings для будущих registry values.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryDeleteOperation.cs` - delete key operation.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryHive.cs` - registry hive model.
@@ -71,6 +76,9 @@
 - `tests/Foldora.Tests/Shell/CommandLineQuoterTests.cs` - тесты command line quoting.
 - `tests/Foldora.Tests/Shell/ExplorerMenuRegistryPlanBuilderTests.cs` - тесты registry plan builder.
 - `tests/Foldora.Tests/Shell/ExplorerMenuRegistryPlanValidatorTests.cs` - тесты registry plan safety validator.
+- `tests/Foldora.Tests/Shell/Fakes/FakeRegistryAccess.cs` - fake registry access для тестов.
+- `tests/Foldora.Tests/Shell/ExplorerMenuRegistryWriterTests.cs` - тесты writer safety.
+- `tests/Foldora.Tests/Shell/ExplorerMenuRegistrationServiceTests.cs` - тесты register/dry-run/unregister service.
 - `tests/Foldora.Tests/Validation/DisplayNameValidatorTests.cs` - тесты display name validation.
 - `tests/Foldora.Tests/Validation/FolderMenuSettingsValidatorTests.cs` - тесты лимитов menu settings.
 - `tests/Foldora.Tests/Validation/FolderNameSanitizerTests.cs` - тесты sanitizer имени папки.

@@ -4,6 +4,8 @@ using Foldora.Core.Menu;
 using Foldora.Core.Settings;
 using Foldora.Core.Storage;
 using Foldora.Shell.ContextMenu;
+using Foldora.Shell.Registry;
+using Foldora.Shell.RegistryPlan;
 
 var parsedCommand = CliCommandParser.Parse(args);
 
@@ -66,11 +68,11 @@ try
             return 0;
 
         case CliCommandKind.RegisterMenu:
-            Console.WriteLine("Command 'register-menu' is planned for a separate step. Registry writes are not implemented now.");
+            await RegisterMenuAsync(parsedCommand.DryRun, parsedCommand.CliExecutablePath);
             return 0;
 
         case CliCommandKind.UnregisterMenu:
-            Console.WriteLine("Command 'unregister-menu' is planned for a separate step. Registry writes are not implemented now.");
+            await UnregisterMenuAsync();
             return 0;
 
         case CliCommandKind.Quote:
@@ -89,7 +91,8 @@ catch (Exception exception) when (exception is DirectoryNotFoundException
                                   or InvalidOperationException
                                   or ArgumentException
                                   or UnauthorizedAccessException
-                                  or IOException)
+                                  or IOException
+                                  or System.Security.SecurityException)
 {
     Console.Error.WriteLine($"Error: {exception.Message}");
     return 1;
@@ -108,11 +111,11 @@ Usage:
   foldora menu list
   foldora menu add --icon "<absolute-icon-path>" [--name "<display-name>"] [--folder-name "<default-folder-name>"]
   foldora menu remove --entry-id "<entry-id>"
+  foldora register-menu [--dry-run] [--cli-path "<absolute-path-to-Foldora.Cli.exe>"]
+  foldora unregister-menu
   foldora import-pack --path "<pack-path>"
   foldora list-packs
   foldora list-styles
-  foldora register-menu
-  foldora unregister-menu
   foldora settings
 
 Implemented now:
@@ -123,8 +126,10 @@ Implemented now:
   menu list
   menu add --icon [--name] [--folder-name]
   menu remove --entry-id
+  register-menu [--dry-run] [--cli-path]
+  unregister-menu
 
-The --style flow, pack import, registry context menu, Explorer restart, and icon cache reset are not implemented in this step.
+The --style flow, pack import, Explorer restart, and icon cache reset are not implemented in this step.
 """);
 }
 
@@ -177,4 +182,59 @@ static async Task RemoveMenuEntryAsync(string entryId)
     Console.WriteLine("Menu entry removed.");
     Console.WriteLine($"EntryId: {entry.Id}");
     Console.WriteLine($"DisplayName: {entry.DisplayName}");
+}
+
+static ExplorerMenuRegistrationService CreateRegistrationService()
+{
+    var paths = FoldoraDataPaths.CreateDefault();
+    var storage = new FoldoraSettingsStorage(paths);
+    var writer = new ExplorerMenuRegistryWriter(new WindowsRegistryAccess());
+    return new ExplorerMenuRegistrationService(storage, new ExplorerMenuRegistryPlanBuilder(), writer);
+}
+
+static async Task RegisterMenuAsync(bool dryRun, string? cliExecutablePath)
+{
+    var resolvedCliPath = string.IsNullOrWhiteSpace(cliExecutablePath)
+        ? Environment.ProcessPath ?? throw new InvalidOperationException("Current CLI executable path could not be resolved.")
+        : cliExecutablePath;
+
+    var result = await CreateRegistrationService().RegisterAsync(resolvedCliPath, dryRun);
+    Console.WriteLine(result.Message);
+    Console.WriteLine($"ExplorerIntegrationEnabled: {result.ExplorerIntegrationEnabled}");
+
+    if (dryRun)
+    {
+        PrintPlans(result.Plans);
+    }
+}
+
+static async Task UnregisterMenuAsync()
+{
+    var result = await CreateRegistrationService().UnregisterAsync();
+    Console.WriteLine(result.Message);
+    Console.WriteLine($"ExplorerIntegrationEnabled: {result.ExplorerIntegrationEnabled}");
+}
+
+static void PrintPlans(IEnumerable<ExplorerMenuRegistryPlan> plans)
+{
+    foreach (var plan in plans)
+    {
+        Console.WriteLine($"Plan: {plan.TargetKind}");
+
+        foreach (var operation in plan.DeleteOperations)
+        {
+            Console.WriteLine($"  DELETE {operation.Hive}\\{operation.KeyPath}");
+        }
+
+        foreach (var operation in plan.KeyOperations)
+        {
+            Console.WriteLine($"  CREATE {operation.Hive}\\{operation.KeyPath}");
+        }
+
+        foreach (var operation in plan.ValueOperations)
+        {
+            var valueName = string.IsNullOrEmpty(operation.ValueName) ? "(Default)" : operation.ValueName;
+            Console.WriteLine($"  SET {operation.Hive}\\{operation.KeyPath} [{valueName}] = {operation.ValueData}");
+        }
+    }
 }

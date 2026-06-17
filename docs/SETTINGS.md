@@ -55,3 +55,5 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 `DisplayName` нельзя использовать как имя файла, registry key или stable id.
 
 Если старый entry не содержит `DefaultFolderName`, при загрузке используется fallback `Новая папка`.
+
+`ExplorerIntegrationEnabled` отражает состояние последнего успешного register/unregister flow. `register-menu --dry-run` не меняет этот флаг.

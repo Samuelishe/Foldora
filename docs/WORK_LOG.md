@@ -1,5 +1,16 @@
 # Work Log
 
+## 2026-06-17 - HKCU registry writer and register-menu CLI
+
+- Добавлены `IRegistryAccess` и `WindowsRegistryAccess`; `Microsoft.Win32.Registry` используется только в `WindowsRegistryAccess`.
+- Добавлен `ExplorerMenuRegistryWriter`, который применяет только validated registry plan.
+- Добавлен `ExplorerMenuRegistrationService` для `register-menu`, `register-menu --dry-run` и `unregister-menu`.
+- CLI `register-menu` теперь поддерживает `--dry-run` и `--cli-path`.
+- CLI `unregister-menu` удаляет только Foldora-owned roots и является idempotent.
+- `register-menu --dry-run` печатает delete/create/set операции и не меняет registry/settings.
+- После успешной регистрации settings получает `ExplorerIntegrationEnabled = true`; при пустых enabled entries меню удаляется и флаг остаётся/становится `false`.
+- Добавлены fake registry tests без записи в реальный реестр.
+
 ## 2026-06-17 - Testable registry plan builder
 
 - Добавлен слой `Foldora.Shell.RegistryPlan` для построения будущих HKCU legacy context menu operations.
