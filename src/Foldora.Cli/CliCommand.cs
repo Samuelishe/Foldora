@@ -21,6 +21,7 @@ public sealed record CliCommand(
     string? FolderPath = null,
     string? IconPath = null,
     string? DisplayName = null,
+    string? DefaultFolderName = null,
     string? EntryId = null,
     string? QuoteValue = null,
     string? Error = null)

@@ -38,7 +38,7 @@ try
             return 0;
 
         case CliCommandKind.MenuAdd:
-            await AddMenuEntryAsync(parsedCommand.IconPath!, parsedCommand.DisplayName);
+            await AddMenuEntryAsync(parsedCommand.IconPath!, parsedCommand.DisplayName, parsedCommand.DefaultFolderName);
             return 0;
 
         case CliCommandKind.MenuRemove:
@@ -88,7 +88,7 @@ Usage:
   foldora apply --folder "<folder>" --icon "<absolute-icon-path>"
   foldora clear --folder "<folder>"
   foldora menu list
-  foldora menu add --icon "<absolute-icon-path>" [--name "<display-name>"]
+  foldora menu add --icon "<absolute-icon-path>" [--name "<display-name>"] [--folder-name "<default-folder-name>"]
   foldora menu remove --entry-id "<entry-id>"
   foldora create --target "<directory>" --style "<style-id>"
   foldora import-pack --path "<pack-path>"
@@ -102,7 +102,7 @@ Implemented now:
   apply --folder --icon
   clear --folder
   menu list
-  menu add --icon [--name]
+  menu add --icon [--name] [--folder-name]
   menu remove --entry-id
 
 The --style flow, pack import, registry context menu, Explorer restart, and icon cache reset are not implemented in this step.
@@ -129,17 +129,18 @@ static async Task ListMenuAsync()
     foreach (var entry in entries)
     {
         var enabledState = entry.IsEnabled ? "enabled" : "disabled";
-        Console.WriteLine($"{entry.Id}\t{entry.DisplayName}\t{enabledState}\t{entry.IconPath}");
+        Console.WriteLine($"{entry.Id}\t{entry.DisplayName}\t{entry.DefaultFolderName}\t{enabledState}\t{entry.IconPath}");
     }
 }
 
-static async Task AddMenuEntryAsync(string iconPath, string? displayName)
+static async Task AddMenuEntryAsync(string iconPath, string? displayName, string? defaultFolderName)
 {
-    var entry = await CreateFolderMenuService().AddAsync(iconPath, displayName);
+    var entry = await CreateFolderMenuService().AddAsync(iconPath, displayName, defaultFolderName);
 
     Console.WriteLine("Menu entry added.");
     Console.WriteLine($"EntryId: {entry.Id}");
     Console.WriteLine($"DisplayName: {entry.DisplayName}");
+    Console.WriteLine($"DefaultFolderName: {entry.DefaultFolderName}");
     Console.WriteLine($"IconPath: {entry.IconPath}");
 }
 

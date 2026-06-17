@@ -1,5 +1,16 @@
 # Work Log
 
+## 2026-06-17 - Menu model validation
+
+- `FolderMenuEntry` расширен полем `DefaultFolderName` с fallback `Новая папка`.
+- Добавлен validation слой для display name, folder name, menu limits и `.ico` structure.
+- Добавлен `FolderNameSanitizer` для будущего WPF input/paste flow.
+- `IconImportService` теперь проверяет `.ico` header/directory и лимит 10 MB.
+- `FolderMenuService` валидирует entry до импорта и сохранения.
+- CLI `menu add` получил опцию `--folder-name`, а `menu list` показывает `DefaultFolderName`.
+- Добавлен документ `docs/MENU_MODEL.md` со staged-save, nested menu и registry safety design.
+- Расширены unit-тесты validation/model/settings/CLI.
+
 ## 2026-06-17 - User menu entries and settings storage
 
 - Добавлен AppData layout с папками `icons`, `previews`, `packs` и файлом `settings.json`.

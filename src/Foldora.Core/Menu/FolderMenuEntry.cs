@@ -1,3 +1,5 @@
+using Foldora.Core.Validation;
+
 namespace Foldora.Core.Menu;
 
 /// <summary>
@@ -8,6 +10,8 @@ public sealed class FolderMenuEntry
     public string Id { get; init; } = string.Empty;
 
     public string DisplayName { get; set; } = string.Empty;
+
+    public string DefaultFolderName { get; set; } = FolderNameValidator.DefaultFolderName;
 
     public string IconPath { get; set; } = string.Empty;
 

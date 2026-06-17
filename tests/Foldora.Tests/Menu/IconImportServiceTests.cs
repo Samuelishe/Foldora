@@ -1,5 +1,6 @@
 using Foldora.Core.Menu;
 using Foldora.Core.Storage;
+using Foldora.Tests.Fixtures;
 
 namespace Foldora.Tests.Menu;
 
@@ -14,8 +15,7 @@ public sealed class IconImportServiceTests
         {
             var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
             var sourceIconPath = Path.Combine(root.FullName, "Downloads", "череп.ico");
-            Directory.CreateDirectory(Path.GetDirectoryName(sourceIconPath)!);
-            await File.WriteAllTextAsync(sourceIconPath, "ico placeholder");
+            await IcoTestFile.WriteValidAsync(sourceIconPath);
 
             var result = await new IconImportService().ImportAsync(sourceIconPath, paths);
 
@@ -39,7 +39,7 @@ public sealed class IconImportServiceTests
         {
             var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
 
-            await Assert.ThrowsAsync<FileNotFoundException>(
+            await Assert.ThrowsAsync<InvalidOperationException>(
                 () => new IconImportService().ImportAsync(Path.Combine(root.FullName, "missing.ico"), paths));
         }
         finally

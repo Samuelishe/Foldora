@@ -1,4 +1,5 @@
 using Foldora.Core.Storage;
+using Foldora.Core.Validation;
 
 namespace Foldora.Core.Menu;
 
@@ -7,6 +8,13 @@ namespace Foldora.Core.Menu;
 /// </summary>
 public sealed class IconImportService
 {
+    private readonly IconFileValidator iconFileValidator;
+
+    public IconImportService(IconFileValidator? iconFileValidator = null)
+    {
+        this.iconFileValidator = iconFileValidator ?? new IconFileValidator();
+    }
+
     public async Task<IconImportResult> ImportAsync(
         string sourceIconPath,
         FoldoraDataPaths paths,
@@ -15,17 +23,9 @@ public sealed class IconImportService
         ArgumentException.ThrowIfNullOrWhiteSpace(sourceIconPath);
         ArgumentNullException.ThrowIfNull(paths);
 
+        iconFileValidator.EnsureValid(sourceIconPath);
+
         var sourceIcon = new FileInfo(sourceIconPath);
-        if (!sourceIcon.Exists)
-        {
-            throw new FileNotFoundException($"Icon file was not found: {sourceIcon.FullName}", sourceIcon.FullName);
-        }
-
-        if (!string.Equals(sourceIcon.Extension, ".ico", StringComparison.OrdinalIgnoreCase))
-        {
-            throw new InvalidOperationException("Foldora supports only .ico files for menu entries.");
-        }
-
         Directory.CreateDirectory(paths.IconsDirectory);
 
         var entryId = CreateEntryId();

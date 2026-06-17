@@ -14,6 +14,7 @@
   - `docs/SHELL_INTEGRATION.md`;
   - `docs/DESKTOP_INI.md`;
   - `docs/PACKS.md`;
+  - `docs/MENU_MODEL.md`;
   - `docs/CLI.md`;
   - `docs/CODING_RULES.md`;
   - `docs/FILE_INDEX.md`.
@@ -25,6 +26,7 @@
 - При изменении shell integration обновлять `docs/SHELL_INTEGRATION.md`.
 - При изменении desktop.ini механизма обновлять `docs/DESKTOP_INI.md`.
 - При изменении CLI обновлять `docs/CLI.md`.
+- При изменении модели пользовательского меню или validation rules обновлять `docs/MENU_MODEL.md`.
 - Не делать commit без прямого запроса пользователя.
 - В конце значимого шага предлагать commit message на английском, 1-2 предложения.
 - Не делать крупные изменения без краткого плана.

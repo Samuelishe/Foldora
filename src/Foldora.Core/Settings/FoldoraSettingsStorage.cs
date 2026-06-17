@@ -1,5 +1,7 @@
 using System.Text.Json;
+using Foldora.Core.Menu;
 using Foldora.Core.Storage;
+using Foldora.Core.Validation;
 
 namespace Foldora.Core.Settings;
 
@@ -44,7 +46,7 @@ public sealed class FoldoraSettingsStorage
             JsonOptions,
             cancellationToken);
 
-        return settings ?? new FoldoraSettings();
+        return Normalize(settings ?? new FoldoraSettings());
     }
 
     public async Task SaveAsync(FoldoraSettings settings, CancellationToken cancellationToken = default)
@@ -61,5 +63,15 @@ public sealed class FoldoraSettingsStorage
 
         await JsonSerializer.SerializeAsync(stream, settings, JsonOptions, cancellationToken);
         await stream.WriteAsync("\n"u8.ToArray(), cancellationToken);
+    }
+
+    private static FoldoraSettings Normalize(FoldoraSettings settings)
+    {
+        foreach (var entry in settings.CreateFolderMenu.Entries)
+        {
+            entry.DefaultFolderName = FolderNameValidator.NormalizeOrDefault(entry.DefaultFolderName);
+        }
+
+        return settings;
     }
 }

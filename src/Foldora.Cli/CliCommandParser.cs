@@ -88,7 +88,13 @@ public static class CliCommandParser
         }
 
         options.TryGetValue("--name", out var displayName);
-        return new CliCommand(CliCommandKind.MenuAdd, "menu add", IconPath: iconPath, DisplayName: displayName);
+        options.TryGetValue("--folder-name", out var defaultFolderName);
+        return new CliCommand(
+            CliCommandKind.MenuAdd,
+            "menu add",
+            IconPath: iconPath,
+            DisplayName: displayName,
+            DefaultFolderName: defaultFolderName);
     }
 
     private static CliCommand ParseMenuRemove(IReadOnlyDictionary<string, string?> options)

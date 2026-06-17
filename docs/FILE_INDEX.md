@@ -16,6 +16,15 @@
 - `src/Foldora.Core/Menu/IconImportResult.cs` - результат импорта иконки.
 - `src/Foldora.Core/Menu/IconImportService.cs` - импорт `.ico` в AppData.
 - `src/Foldora.Core/Menu/FolderMenuService.cs` - управление пользовательскими пунктами меню.
+- `src/Foldora.Core/Validation/DisplayNameValidator.cs` - валидация подписи пункта меню.
+- `src/Foldora.Core/Validation/FolderNameValidator.cs` - валидация имени создаваемой папки.
+- `src/Foldora.Core/Validation/FolderNameSanitizer.cs` - sanitizer имени папки для будущего UI.
+- `src/Foldora.Core/Validation/FolderMenuEntryValidator.cs` - валидация одного menu entry.
+- `src/Foldora.Core/Validation/FolderMenuSettingsValidator.cs` - валидация flat menu и лимитов.
+- `src/Foldora.Core/Validation/FolderMenuValidationIssue.cs` - issue валидации.
+- `src/Foldora.Core/Validation/FolderMenuValidationResult.cs` - результат валидации.
+- `src/Foldora.Core/Validation/FolderMenuValidationSeverity.cs` - severity валидации.
+- `src/Foldora.Core/Validation/IconFileValidator.cs` - structural validation `.ico`.
 - `src/Foldora.Core/DesktopIni/DesktopIniOptions.cs` - параметры записи desktop.ini.
 - `src/Foldora.Core/DesktopIni/DesktopIniService.cs` - минимальный сервис применения/очистки desktop.ini.
 - `src/Foldora.Shell/Foldora.Shell.csproj` - shell integration library.
@@ -36,11 +45,18 @@
 - `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser.
 - `tests/Foldora.Tests/Core/FoldoraDataPathsTests.cs` - тесты AppData paths.
 - `tests/Foldora.Tests/Core/DesktopIniServiceTests.cs` - тесты desktop.ini.
+- `tests/Foldora.Tests/Fixtures/IcoTestFile.cs` - helper минимального ICO fixture.
+- `tests/Foldora.Tests/Menu/FolderMenuEntryTests.cs` - тесты defaults menu entry.
 - `tests/Foldora.Tests/Menu/FolderMenuNameGeneratorTests.cs` - тесты fallback-имён.
 - `tests/Foldora.Tests/Menu/IconImportServiceTests.cs` - тесты импорта `.ico`.
 - `tests/Foldora.Tests/Menu/FolderMenuServiceTests.cs` - тесты управления menu entries.
 - `tests/Foldora.Tests/Settings/FoldoraSettingsStorageTests.cs` - тесты JSON storage и default settings.
 - `tests/Foldora.Tests/Shell/CommandLineQuoterTests.cs` - тесты command line quoting.
+- `tests/Foldora.Tests/Validation/DisplayNameValidatorTests.cs` - тесты display name validation.
+- `tests/Foldora.Tests/Validation/FolderMenuSettingsValidatorTests.cs` - тесты лимитов menu settings.
+- `tests/Foldora.Tests/Validation/FolderNameSanitizerTests.cs` - тесты sanitizer имени папки.
+- `tests/Foldora.Tests/Validation/FolderNameValidatorTests.cs` - тесты Windows folder name validation.
+- `tests/Foldora.Tests/Validation/IconFileValidatorTests.cs` - тесты structural ICO validation.
 - `docs/README.md` - карта документации.
 - `docs/PROJECT_STATE.md` - состояние проекта.
 - `docs/ROADMAP.md` - roadmap.
@@ -51,6 +67,7 @@
 - `docs/SHELL_INTEGRATION.md` - shell integration.
 - `docs/DESKTOP_INI.md` - механизм desktop.ini.
 - `docs/PACKS.md` - pack manifest.
+- `docs/MENU_MODEL.md` - модель пользовательского меню, validation, staged-save, nested menu и registry safety.
 - `docs/CLI.md` - CLI.
 - `docs/UI_DESIGN.md` - UI правила.
 - `docs/CODING_RULES.md` - правила кодирования.

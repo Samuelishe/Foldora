@@ -46,9 +46,12 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 
 - `Id` - стабильный технический идентификатор, не зависящий от подписи.
 - `DisplayName` - пользовательская подпись для будущего Explorer submenu.
+- `DefaultFolderName` - имя папки, которую Foldora создаст при выборе пункта.
 - `IconPath` - импортированная копия `.ico` внутри `%AppData%\Foldora\icons`.
 - `PreviewPath` - optional/future путь preview.
 - `SortOrder` - порядок пунктов.
 - `IsEnabled` - возможность скрыть пункт без удаления.
 
 `DisplayName` нельзя использовать как имя файла, registry key или stable id.
+
+Если старый entry не содержит `DefaultFolderName`, при загрузке используется fallback `Новая папка`.

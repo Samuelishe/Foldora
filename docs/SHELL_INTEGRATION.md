@@ -31,4 +31,22 @@ Foldora
 
 Bootstrap содержит `Foldora.Shell` и безопасный skeleton registrar. Реальные registry writes будут добавлены отдельным этапом.
 
+Будущие registry safety rules:
+
+- Foldora пишет только в HKCU.
+- Foldora пишет только в свои ключи.
+- Foldora удаляет только свои ключи.
+- Foldora не трогает чужие shell entries.
+- Foldora не пишет в HKLM.
+- Foldora не требует admin.
+- Перед registry writer нужен testable registry plan builder.
+- Plan builder должен гарантировать, что все keys находятся только под Foldora-owned paths.
+
+Будущие owned paths:
+
+```text
+HKCU\Software\Classes\Directory\Background\shell\Foldora
+HKCU\Software\Classes\Directory\shell\Foldora
+```
+
 Не делать на текущем этапе: COM shell extension, `IExplorerCommand`, sparse package, MSIX и modern Windows 11 compact context menu integration.

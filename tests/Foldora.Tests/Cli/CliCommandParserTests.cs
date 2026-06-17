@@ -63,6 +63,34 @@ public sealed class CliCommandParserTests
     }
 
     [Fact]
+    public void Parse_AcceptsMenuAddWithFolderName()
+    {
+        var icon = @"C:\Users\User\Иконки\skull.ico";
+
+        var command = CliCommandParser.Parse(
+            ["menu", "add", "--icon", icon, "--name", "Череп", "--folder-name", "Новая папка"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.MenuAdd, command.Kind);
+        Assert.Equal(icon, command.IconPath);
+        Assert.Equal("Череп", command.DisplayName);
+        Assert.Equal("Новая папка", command.DefaultFolderName);
+    }
+
+    [Fact]
+    public void Parse_AcceptsMenuAddWithEmptyFolderName()
+    {
+        var icon = @"C:\Users\User\Иконки\skull.ico";
+
+        var command = CliCommandParser.Parse(
+            ["menu", "add", "--icon", icon, "--folder-name", ""]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.MenuAdd, command.Kind);
+        Assert.Equal(string.Empty, command.DefaultFolderName);
+    }
+
+    [Fact]
     public void Parse_AcceptsMenuAddWithoutName()
     {
         var icon = @"C:\Users\User\Иконки\skull.ico";

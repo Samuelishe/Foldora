@@ -30,3 +30,5 @@ Pack import/export пока не реализован. Icon packs являютс
 Иконки должны быть настоящими `.ico`, а не переименованными PNG. Для MVP используются абсолютные пути в AppData.
 
 Главный MVP-объект сейчас - пользовательские menu entries в `settings.json`: пользователь выбирает произвольный `.ico`, задаёт любую подпись, Foldora копирует иконку в `%AppData%\Foldora\icons` и позже сгенерирует registry context menu из этих entries.
+
+Menu entries валидируются отдельно от pack manifest: `DisplayName` может дублироваться, а `DefaultFolderName` должен быть безопасным Windows folder name.
