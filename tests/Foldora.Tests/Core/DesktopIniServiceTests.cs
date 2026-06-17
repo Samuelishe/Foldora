@@ -43,6 +43,129 @@ public sealed class DesktopIniServiceTests
         }
     }
 
+    [Fact]
+    public async Task ApplyIconAsync_RequiresExistingIconFile()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraTests-");
+        var folder = Directory.CreateDirectory(Path.Combine(root.FullName, "Target"));
+        var iconPath = Path.Combine(root.FullName, "missing.ico");
+
+        try
+        {
+            var service = new DesktopIniService();
+
+            await Assert.ThrowsAsync<FileNotFoundException>(
+                () => service.ApplyIconAsync(new DesktopIniOptions(folder.FullName, iconPath)));
+        }
+        finally
+        {
+            ClearAttributes(root);
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ApplyIconAsync_RequiresIcoExtension()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraTests-");
+        var folder = Directory.CreateDirectory(Path.Combine(root.FullName, "Target"));
+        var iconPath = Path.Combine(root.FullName, "icon.png");
+
+        await File.WriteAllTextAsync(iconPath, "not an ico");
+
+        try
+        {
+            var service = new DesktopIniService();
+
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                () => service.ApplyIconAsync(new DesktopIniOptions(folder.FullName, iconPath)));
+        }
+        finally
+        {
+            ClearAttributes(root);
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ClearIconAsync_RemovesDesktopIniWhenOnlyFoldoraIconEntryExists()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraTests-");
+        var folder = Directory.CreateDirectory(Path.Combine(root.FullName, "Target"));
+        var iconPath = Path.Combine(root.FullName, "icon.ico");
+
+        await File.WriteAllTextAsync(iconPath, "bootstrap placeholder");
+
+        try
+        {
+            var service = new DesktopIniService();
+            await service.ApplyIconAsync(new DesktopIniOptions(folder.FullName, iconPath));
+
+            await service.ClearIconAsync(folder.FullName);
+
+            Assert.False(File.Exists(Path.Combine(folder.FullName, DesktopIniService.FileName)));
+        }
+        finally
+        {
+            ClearAttributes(root);
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ClearIconAsync_PreservesOtherDesktopIniSections()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraTests-");
+        var folder = Directory.CreateDirectory(Path.Combine(root.FullName, "Target"));
+        var desktopIniPath = Path.Combine(folder.FullName, DesktopIniService.FileName);
+
+        await File.WriteAllTextAsync(
+            desktopIniPath,
+            string.Join(
+                Environment.NewLine,
+                "[.ShellClassInfo]",
+                "IconResource=C:\\Icons\\old.ico,0",
+                "[OtherSection]",
+                "Value=Keep",
+                string.Empty));
+
+        try
+        {
+            var service = new DesktopIniService();
+
+            await service.ClearIconAsync(folder.FullName);
+
+            var content = await File.ReadAllTextAsync(desktopIniPath);
+            Assert.DoesNotContain("IconResource=", content);
+            Assert.Contains("[OtherSection]", content);
+            Assert.Contains("Value=Keep", content);
+        }
+        finally
+        {
+            ClearAttributes(root);
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ClearIconAsync_DoesNotThrowWhenDesktopIniDoesNotExist()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraTests-");
+        var folder = Directory.CreateDirectory(Path.Combine(root.FullName, "Target"));
+
+        try
+        {
+            var service = new DesktopIniService();
+
+            await service.ClearIconAsync(folder.FullName);
+        }
+        finally
+        {
+            ClearAttributes(root);
+            root.Delete(recursive: true);
+        }
+    }
+
     private static void ClearAttributes(DirectoryInfo directory)
     {
         foreach (var file in directory.EnumerateFiles("*", SearchOption.AllDirectories))

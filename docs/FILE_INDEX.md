@@ -16,7 +16,9 @@
 - `src/Foldora.Shell/ContextMenu/ExplorerContextMenuRegistrationOptions.cs` - параметры регистрации меню.
 - `src/Foldora.Shell/ContextMenu/ExplorerContextMenuRegistrar.cs` - skeleton registrar для HKCU context menu.
 - `src/Foldora.Cli/Foldora.Cli.csproj` - console app.
-- `src/Foldora.Cli/Program.cs` - skeleton CLI help/dispatch.
+- `src/Foldora.Cli/CliCommand.cs` - модель разобранной CLI-команды.
+- `src/Foldora.Cli/CliCommandParser.cs` - простой parser CLI-аргументов.
+- `src/Foldora.Cli/Program.cs` - CLI help/dispatch и вызов Core-сервисов.
 - `src/Foldora.App/Foldora.App.csproj` - WPF settings app.
 - `src/Foldora.App/App.xaml` - WPF application entry.
 - `src/Foldora.App/App.xaml.cs` - WPF app code-behind.
@@ -24,6 +26,7 @@
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI plumbing.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project.
+- `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser.
 - `tests/Foldora.Tests/Core/FoldoraDataPathsTests.cs` - тесты AppData paths.
 - `tests/Foldora.Tests/Core/DesktopIniServiceTests.cs` - тесты desktop.ini.
 - `tests/Foldora.Tests/Shell/CommandLineQuoterTests.cs` - тесты command line quoting.

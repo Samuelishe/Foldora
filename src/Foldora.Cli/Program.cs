@@ -1,57 +1,78 @@
+using Foldora.Cli;
+using Foldora.Core.DesktopIni;
 using Foldora.Shell.ContextMenu;
 
-if (args.Length == 0 || IsHelp(args[0]))
+var parsedCommand = CliCommandParser.Parse(args);
+
+if (!parsedCommand.IsValid)
 {
+    Console.Error.WriteLine(parsedCommand.Error);
     PrintHelp();
-    return 0;
+    return 1;
 }
 
-var command = args[0].ToLowerInvariant();
-
-switch (command)
+try
 {
-    case "create":
-    case "apply":
-    case "clear":
-    case "import-pack":
-    case "list-packs":
-    case "list-styles":
-    case "settings":
-        Console.WriteLine($"Command '{command}' is a bootstrap skeleton and is not implemented yet.");
-        return 0;
+    switch (parsedCommand.Kind)
+    {
+        case CliCommandKind.Help:
+            PrintHelp();
+            return 0;
 
-    case "register-menu":
-        Console.WriteLine("Command 'register-menu' is available only as an explicit future action. Registry writes are not implemented in bootstrap.");
-        return 0;
+        case CliCommandKind.Apply:
+            await new DesktopIniService().ApplyIconAsync(
+                new DesktopIniOptions(parsedCommand.FolderPath!, parsedCommand.IconPath!));
+            Console.WriteLine("Folder icon was applied. Explorer may not refresh the icon immediately.");
+            return 0;
 
-    case "unregister-menu":
-        Console.WriteLine("Command 'unregister-menu' is available only as an explicit future action. Registry writes are not implemented in bootstrap.");
-        return 0;
+        case CliCommandKind.Clear:
+            await new DesktopIniService().ClearIconAsync(parsedCommand.FolderPath!);
+            Console.WriteLine("Folder icon entry was cleared. Explorer may not refresh the icon immediately.");
+            return 0;
 
-    case "quote":
-        Console.WriteLine(CommandLineQuoter.Quote(args.Length > 1 ? args[1] : string.Empty));
-        return 0;
+        case CliCommandKind.Skeleton:
+            Console.WriteLine($"Command '{parsedCommand.Name}' is a skeleton and is not implemented yet.");
+            return 0;
 
-    default:
-        Console.WriteLine($"Unknown command '{command}'.");
-        PrintHelp();
-        return 1;
+        case CliCommandKind.RegisterMenu:
+            Console.WriteLine("Command 'register-menu' is planned for a separate step. Registry writes are not implemented now.");
+            return 0;
+
+        case CliCommandKind.UnregisterMenu:
+            Console.WriteLine("Command 'unregister-menu' is planned for a separate step. Registry writes are not implemented now.");
+            return 0;
+
+        case CliCommandKind.Quote:
+            Console.WriteLine(CommandLineQuoter.Quote(parsedCommand.QuoteValue ?? string.Empty));
+            return 0;
+
+        case CliCommandKind.Unknown:
+        default:
+            Console.Error.WriteLine($"Unknown command '{parsedCommand.Name}'.");
+            PrintHelp();
+            return 1;
+    }
 }
-
-static bool IsHelp(string value)
+catch (Exception exception) when (exception is DirectoryNotFoundException
+                                  or FileNotFoundException
+                                  or InvalidOperationException
+                                  or ArgumentException
+                                  or UnauthorizedAccessException
+                                  or IOException)
 {
-    return value is "-h" or "--help" or "help";
+    Console.Error.WriteLine($"Error: {exception.Message}");
+    return 1;
 }
 
 static void PrintHelp()
 {
     Console.WriteLine("""
-Foldora CLI bootstrap
+Foldora CLI
 
 Usage:
-  foldora create --target "<directory>" --style "<style-id>"
-  foldora apply --folder "<folder>" --style "<style-id>"
+  foldora apply --folder "<folder>" --icon "<absolute-icon-path>"
   foldora clear --folder "<folder>"
+  foldora create --target "<directory>" --style "<style-id>"
   foldora import-pack --path "<pack-path>"
   foldora list-packs
   foldora list-styles
@@ -59,6 +80,10 @@ Usage:
   foldora unregister-menu
   foldora settings
 
-Commands are skeletons in the bootstrap build.
+Implemented now:
+  apply --folder --icon
+  clear --folder
+
+The --style flow, pack import, registry context menu, Explorer restart, and icon cache reset are not implemented in this step.
 """);
 }

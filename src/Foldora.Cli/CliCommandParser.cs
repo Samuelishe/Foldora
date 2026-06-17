@@ -1,0 +1,107 @@
+namespace Foldora.Cli;
+
+public static class CliCommandParser
+{
+    private static readonly HashSet<string> SkeletonCommands = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "create",
+        "import-pack",
+        "list-packs",
+        "list-styles",
+        "settings"
+    };
+
+    public static CliCommand Parse(string[] args)
+    {
+        ArgumentNullException.ThrowIfNull(args);
+
+        if (args.Length == 0 || IsHelp(args[0]))
+        {
+            return new CliCommand(CliCommandKind.Help, "help");
+        }
+
+        var command = args[0].ToLowerInvariant();
+        var options = ParseOptions(args.Skip(1).ToArray());
+
+        return command switch
+        {
+            "apply" => ParseApply(options),
+            "clear" => ParseClear(options),
+            "register-menu" => new CliCommand(CliCommandKind.RegisterMenu, command),
+            "unregister-menu" => new CliCommand(CliCommandKind.UnregisterMenu, command),
+            "quote" => new CliCommand(CliCommandKind.Quote, command, QuoteValue: args.Length > 1 ? args[1] : string.Empty),
+            _ when SkeletonCommands.Contains(command) => new CliCommand(CliCommandKind.Skeleton, command),
+            _ => new CliCommand(CliCommandKind.Unknown, command, Error: $"Unknown command '{command}'.")
+        };
+    }
+
+    private static CliCommand ParseApply(IReadOnlyDictionary<string, string?> options)
+    {
+        if (!TryGetRequiredOption(options, "--folder", out var folderError, out var folderPath))
+        {
+            return new CliCommand(CliCommandKind.Apply, "apply", Error: folderError);
+        }
+
+        if (!TryGetRequiredOption(options, "--icon", out var iconError, out var iconPath))
+        {
+            return new CliCommand(CliCommandKind.Apply, "apply", Error: iconError);
+        }
+
+        return new CliCommand(CliCommandKind.Apply, "apply", FolderPath: folderPath, IconPath: iconPath);
+    }
+
+    private static CliCommand ParseClear(IReadOnlyDictionary<string, string?> options)
+    {
+        if (!TryGetRequiredOption(options, "--folder", out var folderError, out var folderPath))
+        {
+            return new CliCommand(CliCommandKind.Clear, "clear", Error: folderError);
+        }
+
+        return new CliCommand(CliCommandKind.Clear, "clear", FolderPath: folderPath);
+    }
+
+    private static Dictionary<string, string?> ParseOptions(string[] args)
+    {
+        var options = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+
+        for (var index = 0; index < args.Length; index++)
+        {
+            var option = args[index];
+            if (!option.StartsWith("--", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            var value = index + 1 < args.Length && !args[index + 1].StartsWith("--", StringComparison.Ordinal)
+                ? args[++index]
+                : null;
+
+            options[option] = value;
+        }
+
+        return options;
+    }
+
+    private static bool TryGetRequiredOption(
+        IReadOnlyDictionary<string, string?> options,
+        string name,
+        out string error,
+        out string value)
+    {
+        if (!options.TryGetValue(name, out var rawValue) || string.IsNullOrWhiteSpace(rawValue))
+        {
+            error = $"Missing required option {name}.";
+            value = string.Empty;
+            return false;
+        }
+
+        error = string.Empty;
+        value = rawValue;
+        return true;
+    }
+
+    private static bool IsHelp(string value)
+    {
+        return value is "-h" or "--help" or "help";
+    }
+}

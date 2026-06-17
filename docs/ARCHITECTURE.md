@@ -13,7 +13,7 @@ Foldora разделена на пять проектов:
 - `Foldora.App` -> `Foldora.Core`, `Foldora.Shell`.
 - `Foldora.Cli` -> `Foldora.Core`, `Foldora.Shell`.
 - `Foldora.Shell` -> `Foldora.Core`.
-- `Foldora.Tests` -> `Foldora.Core`, `Foldora.Shell`.
+- `Foldora.Tests` -> `Foldora.Core`, `Foldora.Shell`, `Foldora.Cli`.
 - `Foldora.Core` не зависит от других проектов Foldora.
 
 Границы: Core не знает о WPF, CLI, registry API и конкретном UI. Registry logic не находится в Core. WPF code-behind используется только для UI plumbing.
