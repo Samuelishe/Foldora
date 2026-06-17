@@ -38,6 +38,7 @@ foldora settings
 - `--style` пока не реализован.
 - `import-pack` пока не реализован.
 - Registry context menu будет следующим отдельным этапом после проверки CLI и будет генерироваться из сохранённых menu entries.
+- Registry plan builder уже формирует будущие command values для `create --target --entry-id`, но `register-menu` и реальная запись в HKCU пока не реализованы.
 - Explorer restart и icon cache reset не выполняются.
 - Explorer может не обновить иконку мгновенно из-за кэша.
 

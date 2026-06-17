@@ -81,6 +81,8 @@ Foldora принимает только настоящие `.ico`: файл до
 
 Будущий HKCU context menu должен вызывать уже существующие CLI-команды `create --entry-id` и `apply --entry-id`.
 
+Текущий registry plan builder поддерживает только flat entries. Будущая nested model должна заменить flat source на tree source и строить submenu tree с теми же safety limits.
+
 ## Registry Safety
 
 Будущий registry writer:
@@ -93,6 +95,8 @@ Foldora принимает только настоящие `.ico`: файл до
 - не требует admin;
 - строится через testable registry plan builder;
 - plan builder должен гарантировать, что все keys находятся только под Foldora-owned paths.
+
+Registry writer ещё не реализован. Сейчас есть только testable registry plan builder; он не пишет и не удаляет реальные registry keys.
 
 Будущие owned paths:
 

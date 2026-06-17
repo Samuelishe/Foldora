@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-06-17 - Testable registry plan builder
+
+- Добавлен слой `Foldora.Shell.RegistryPlan` для построения будущих HKCU legacy context menu operations.
+- Добавлены модели registry plan: target kind, hive, create key, set value, delete key и validation result.
+- Добавлен `ExplorerMenuRegistryPlanBuilder` для flat menu entries.
+- Добавлен `ExplorerMenuCommandBuilder`, который формирует команды `create --target ... --entry-id ...` через `CommandLineQuoter`.
+- Добавлен `ExplorerMenuRegistryPlanValidator`, запрещающий HKLM и операции вне Foldora-owned roots.
+- Empty enabled entries строят только delete owned root operations, без пустого submenu.
+- Добавлены unit-тесты registry plan builder/validator.
+
 ## 2026-06-17 - Execute menu entries from CLI
 
 - Добавлен `FolderMenuEntryResolver` для поиска enabled entry в settings.

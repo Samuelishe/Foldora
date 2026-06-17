@@ -10,13 +10,25 @@ public static class CommandLineQuoter
     public static string Quote(string argument)
     {
         ArgumentNullException.ThrowIfNull(argument);
+        return Quote(argument, forceQuotes: false);
+    }
+
+    public static string QuoteAlways(string argument)
+    {
+        ArgumentNullException.ThrowIfNull(argument);
+        return Quote(argument, forceQuotes: true);
+    }
+
+    private static string Quote(string argument, bool forceQuotes)
+    {
+        ArgumentNullException.ThrowIfNull(argument);
 
         if (argument.Length == 0)
         {
             return "\"\"";
         }
 
-        var requiresQuotes = argument.Any(char.IsWhiteSpace) || argument.Contains('"');
+        var requiresQuotes = forceQuotes || argument.Any(char.IsWhiteSpace) || argument.Contains('"');
         if (!requiresQuotes)
         {
             return argument;

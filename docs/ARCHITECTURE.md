@@ -23,3 +23,5 @@ Foldora разделена на пять проектов:
 Validation/model слой находится в `Foldora.Core`, а не в CLI/WPF. `DisplayName` отвечает только за подпись меню, `DefaultFolderName` - за имя создаваемой папки. Эти поля не смешиваются.
 
 Исполнение сохранённых entries также находится в `Foldora.Core`: `FolderMenuEntryActionService` загружает settings, резолвит enabled entry, создаёт папку при необходимости и вызывает `DesktopIniService`. CLI не дублирует filesystem или `desktop.ini` логику.
+
+`Foldora.Shell` содержит только shell-specific planning logic. `ExplorerMenuRegistryPlanBuilder` строит testable plan будущих HKCU операций под Foldora-owned roots, но не пишет в реестр. Реальный writer должен быть отдельным слоем поверх validated plan.
