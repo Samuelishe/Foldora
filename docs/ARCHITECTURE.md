@@ -21,3 +21,5 @@ Foldora разделена на пять проектов:
 Пользовательские menu entries являются главным MVP-объектом для будущего Explorer submenu. Пользователь сам выбирает любые `.ico` и любые подписи; Foldora копирует `.ico` в AppData и хранит metadata в `settings.json`. Registry context menu на следующем этапе должен генерироваться из этих сохранённых entries, а не из жёстко заданных категорий вроде Documents/Code/Photos.
 
 Validation/model слой находится в `Foldora.Core`, а не в CLI/WPF. `DisplayName` отвечает только за подпись меню, `DefaultFolderName` - за имя создаваемой папки. Эти поля не смешиваются.
+
+Исполнение сохранённых entries также находится в `Foldora.Core`: `FolderMenuEntryActionService` загружает settings, резолвит enabled entry, создаёт папку при необходимости и вызывает `DesktopIniService`. CLI не дублирует filesystem или `desktop.ini` логику.

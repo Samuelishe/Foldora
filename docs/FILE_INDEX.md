@@ -16,6 +16,9 @@
 - `src/Foldora.Core/Menu/IconImportResult.cs` - результат импорта иконки.
 - `src/Foldora.Core/Menu/IconImportService.cs` - импорт `.ico` в AppData.
 - `src/Foldora.Core/Menu/FolderMenuService.cs` - управление пользовательскими пунктами меню.
+- `src/Foldora.Core/Menu/FolderMenuEntryResolver.cs` - поиск enabled entry в settings.
+- `src/Foldora.Core/Menu/FolderMenuEntryActionService.cs` - выполнение apply/create по entry id.
+- `src/Foldora.Core/Menu/UniqueFolderNameService.cs` - подбор свободного имени папки.
 - `src/Foldora.Core/Validation/DisplayNameValidator.cs` - валидация подписи пункта меню.
 - `src/Foldora.Core/Validation/FolderNameValidator.cs` - валидация имени создаваемой папки.
 - `src/Foldora.Core/Validation/FolderNameSanitizer.cs` - sanitizer имени папки для будущего UI.
@@ -47,9 +50,11 @@
 - `tests/Foldora.Tests/Core/DesktopIniServiceTests.cs` - тесты desktop.ini.
 - `tests/Foldora.Tests/Fixtures/IcoTestFile.cs` - helper минимального ICO fixture.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryTests.cs` - тесты defaults menu entry.
+- `tests/Foldora.Tests/Menu/FolderMenuEntryActionServiceTests.cs` - тесты apply/create по entry id.
 - `tests/Foldora.Tests/Menu/FolderMenuNameGeneratorTests.cs` - тесты fallback-имён.
 - `tests/Foldora.Tests/Menu/IconImportServiceTests.cs` - тесты импорта `.ico`.
 - `tests/Foldora.Tests/Menu/FolderMenuServiceTests.cs` - тесты управления menu entries.
+- `tests/Foldora.Tests/Menu/UniqueFolderNameServiceTests.cs` - тесты выбора свободного имени папки.
 - `tests/Foldora.Tests/Settings/FoldoraSettingsStorageTests.cs` - тесты JSON storage и default settings.
 - `tests/Foldora.Tests/Shell/CommandLineQuoterTests.cs` - тесты command line quoting.
 - `tests/Foldora.Tests/Validation/DisplayNameValidatorTests.cs` - тесты display name validation.

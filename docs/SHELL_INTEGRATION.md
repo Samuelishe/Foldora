@@ -31,6 +31,14 @@ Foldora
 
 Bootstrap содержит `Foldora.Shell` и безопасный skeleton registrar. Реальные registry writes будут добавлены отдельным этапом.
 
+Будущий HKCU context menu должен вызывать существующие CLI-команды:
+
+```text
+foldora create --target "<directory>" --entry-id "<entry-id>"
+foldora apply --folder "<folder>" --entry-id "<entry-id>"
+foldora clear --folder "<folder>"
+```
+
 Будущие registry safety rules:
 
 - Foldora пишет только в HKCU.

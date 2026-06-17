@@ -4,6 +4,7 @@ public enum CliCommandKind
 {
     Help,
     Apply,
+    Create,
     Clear,
     MenuList,
     MenuAdd,
@@ -19,6 +20,7 @@ public sealed record CliCommand(
     CliCommandKind Kind,
     string Name,
     string? FolderPath = null,
+    string? TargetPath = null,
     string? IconPath = null,
     string? DisplayName = null,
     string? DefaultFolderName = null,

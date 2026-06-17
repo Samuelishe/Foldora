@@ -14,6 +14,13 @@
 
 `DisplayName` и `DefaultFolderName` не смешиваются. `DisplayName` нельзя использовать как id, имя файла или registry key. Дубликаты `DisplayName` разрешены.
 
+Сохранённые entries исполняются через CLI:
+
+- `apply --folder "<folder>" --entry-id "<entry-id>"` применяет `IconPath` entry к существующей папке.
+- `create --target "<directory>" --entry-id "<entry-id>"` создаёт новую папку с `DefaultFolderName` и применяет `IconPath`.
+
+Entry должен быть enabled, иметь непустой `IconPath`, а импортированная иконка должна существовать.
+
 ## Validation
 
 `DisplayName`: trim по краям, после fallback непустой, максимум 80 символов, control chars запрещены, кириллица/emoji/пробелы разрешены, дубликаты разрешены.
@@ -21,6 +28,8 @@
 `DefaultFolderName`: пустое значение получает fallback `Новая папка`, максимум 80 символов, control chars запрещены, запрещены Windows filename characters `< > : " / \ | ? *`, reserved names `CON`, `PRN`, `AUX`, `NUL`, `COM1`...`COM9`, `LPT1`...`LPT9`, а также trailing dot/space.
 
 Flat menu limits на текущем этапе: max total entries 100, max enabled entries 50.
+
+При создании папки конфликт имён решается без перезаписи: `Name`, `Name (2)`, `Name (3)` и далее. Учитываются конфликты и с папками, и с файлами.
 
 `FolderNameSanitizer` существует только для будущего WPF input/paste convenience. Он не заменяет validator; перед сохранением validator всё равно проверяет данные.
 
@@ -69,6 +78,8 @@ Foldora принимает только настоящие `.ico`: файл до
 Предварительные ограничения tree-модели: max depth after root `Создать папку` = 2, max children per group = 30, max total nodes = 100, max enabled create entries = 50.
 
 На текущем этапе storage остаётся flat; nested runtime/storage migration не реализована.
+
+Будущий HKCU context menu должен вызывать уже существующие CLI-команды `create --entry-id` и `apply --entry-id`.
 
 ## Registry Safety
 

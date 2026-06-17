@@ -38,6 +38,53 @@ public sealed class CliCommandParserTests
         Assert.False(command.IsValid);
         Assert.Equal(CliCommandKind.Apply, command.Kind);
         Assert.Contains("--icon", command.Error);
+        Assert.Contains("--entry-id", command.Error);
+    }
+
+    [Fact]
+    public void Parse_AcceptsApplyWithFolderAndEntryId()
+    {
+        var folder = @"C:\Users\User\Папка с пробелами";
+
+        var command = CliCommandParser.Parse(["apply", "--folder", folder, "--entry-id", "entry-123"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.Apply, command.Kind);
+        Assert.Equal(folder, command.FolderPath);
+        Assert.Equal("entry-123", command.EntryId);
+        Assert.Null(command.IconPath);
+    }
+
+    [Fact]
+    public void Parse_RejectsApplyWithIconAndEntryId()
+    {
+        var command = CliCommandParser.Parse(
+            ["apply", "--folder", @"C:\Temp", "--icon", @"C:\Icons\a.ico", "--entry-id", "entry-123"]);
+
+        Assert.False(command.IsValid);
+        Assert.Equal(CliCommandKind.Apply, command.Kind);
+        Assert.Contains("mutually exclusive", command.Error);
+    }
+
+    [Fact]
+    public void Parse_AcceptsCreateWithTargetAndEntryId()
+    {
+        var command = CliCommandParser.Parse(["create", "--target", @"C:\Temp", "--entry-id", "entry-123"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.Create, command.Kind);
+        Assert.Equal(@"C:\Temp", command.TargetPath);
+        Assert.Equal("entry-123", command.EntryId);
+    }
+
+    [Fact]
+    public void Parse_RejectsCreateWithoutEntryId()
+    {
+        var command = CliCommandParser.Parse(["create", "--target", @"C:\Temp"]);
+
+        Assert.False(command.IsValid);
+        Assert.Equal(CliCommandKind.Create, command.Kind);
+        Assert.Contains("--entry-id", command.Error);
     }
 
     [Fact]

@@ -23,9 +23,25 @@ try
             return 0;
 
         case CliCommandKind.Apply:
-            await new DesktopIniService().ApplyIconAsync(
-                new DesktopIniOptions(parsedCommand.FolderPath!, parsedCommand.IconPath!));
+            if (parsedCommand.EntryId is not null)
+            {
+                await CreateEntryActionService().ApplyAsync(parsedCommand.FolderPath!, parsedCommand.EntryId);
+            }
+            else
+            {
+                await new DesktopIniService().ApplyIconAsync(
+                    new DesktopIniOptions(parsedCommand.FolderPath!, parsedCommand.IconPath!));
+            }
+
             Console.WriteLine("Folder icon was applied. Explorer may not refresh the icon immediately.");
+            return 0;
+
+        case CliCommandKind.Create:
+            var createdFolderPath = await CreateEntryActionService().CreateAsync(
+                parsedCommand.TargetPath!,
+                parsedCommand.EntryId!);
+            Console.WriteLine($"Folder was created: {createdFolderPath}");
+            Console.WriteLine("Explorer may not refresh the icon immediately.");
             return 0;
 
         case CliCommandKind.Clear:
@@ -86,11 +102,12 @@ Foldora CLI
 
 Usage:
   foldora apply --folder "<folder>" --icon "<absolute-icon-path>"
+  foldora apply --folder "<folder>" --entry-id "<entry-id>"
+  foldora create --target "<directory>" --entry-id "<entry-id>"
   foldora clear --folder "<folder>"
   foldora menu list
   foldora menu add --icon "<absolute-icon-path>" [--name "<display-name>"] [--folder-name "<default-folder-name>"]
   foldora menu remove --entry-id "<entry-id>"
-  foldora create --target "<directory>" --style "<style-id>"
   foldora import-pack --path "<pack-path>"
   foldora list-packs
   foldora list-styles
@@ -100,6 +117,8 @@ Usage:
 
 Implemented now:
   apply --folder --icon
+  apply --folder --entry-id
+  create --target --entry-id
   clear --folder
   menu list
   menu add --icon [--name] [--folder-name]
@@ -114,6 +133,13 @@ static FolderMenuService CreateFolderMenuService()
     var paths = FoldoraDataPaths.CreateDefault();
     var storage = new FoldoraSettingsStorage(paths);
     return new FolderMenuService(storage, paths);
+}
+
+static FolderMenuEntryActionService CreateEntryActionService()
+{
+    var paths = FoldoraDataPaths.CreateDefault();
+    var storage = new FoldoraSettingsStorage(paths);
+    return new FolderMenuEntryActionService(storage);
 }
 
 static async Task ListMenuAsync()

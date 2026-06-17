@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-06-17 - Execute menu entries from CLI
+
+- Добавлен `FolderMenuEntryResolver` для поиска enabled entry в settings.
+- Добавлен `UniqueFolderNameService` для выбора имени `Name`, `Name (2)`, `Name (3)` без перезаписи файлов и папок.
+- Добавлен `FolderMenuEntryActionService` для `apply` и `create` по `entry-id`.
+- CLI `apply` расширен режимом `--entry-id`; `--icon` и `--entry-id` взаимоисключающие.
+- Реализован CLI `create --target "<directory>" --entry-id "<entry-id>"`.
+- Добавлены тесты action-сервиса, parser-а и unique folder name helper.
+
 ## 2026-06-17 - Menu model validation
 
 - `FolderMenuEntry` расширен полем `DefaultFolderName` с fallback `Новая папка`.

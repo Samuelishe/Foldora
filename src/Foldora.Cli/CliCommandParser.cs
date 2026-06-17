@@ -4,7 +4,6 @@ public static class CliCommandParser
 {
     private static readonly HashSet<string> SkeletonCommands = new(StringComparer.OrdinalIgnoreCase)
     {
-        "create",
         "import-pack",
         "list-packs",
         "list-styles",
@@ -27,6 +26,7 @@ public static class CliCommandParser
         {
             "menu" => ParseMenu(args.Skip(1).ToArray()),
             "apply" => ParseApply(options),
+            "create" => ParseCreate(options),
             "clear" => ParseClear(options),
             "register-menu" => new CliCommand(CliCommandKind.RegisterMenu, command),
             "unregister-menu" => new CliCommand(CliCommandKind.UnregisterMenu, command),
@@ -62,12 +62,35 @@ public static class CliCommandParser
             return new CliCommand(CliCommandKind.Apply, "apply", Error: folderError);
         }
 
-        if (!TryGetRequiredOption(options, "--icon", out var iconError, out var iconPath))
+        var hasIcon = TryGetOptionalOption(options, "--icon", out var iconPath);
+        var hasEntryId = TryGetOptionalOption(options, "--entry-id", out var entryId);
+
+        if (hasIcon && hasEntryId)
         {
-            return new CliCommand(CliCommandKind.Apply, "apply", Error: iconError);
+            return new CliCommand(CliCommandKind.Apply, "apply", Error: "Options --icon and --entry-id are mutually exclusive.");
         }
 
-        return new CliCommand(CliCommandKind.Apply, "apply", FolderPath: folderPath, IconPath: iconPath);
+        if (!hasIcon && !hasEntryId)
+        {
+            return new CliCommand(CliCommandKind.Apply, "apply", Error: "Either --icon or --entry-id is required.");
+        }
+
+        return new CliCommand(CliCommandKind.Apply, "apply", FolderPath: folderPath, IconPath: iconPath, EntryId: entryId);
+    }
+
+    private static CliCommand ParseCreate(IReadOnlyDictionary<string, string?> options)
+    {
+        if (!TryGetRequiredOption(options, "--target", out var targetError, out var targetPath))
+        {
+            return new CliCommand(CliCommandKind.Create, "create", Error: targetError);
+        }
+
+        if (!TryGetRequiredOption(options, "--entry-id", out var entryIdError, out var entryId))
+        {
+            return new CliCommand(CliCommandKind.Create, "create", Error: entryIdError);
+        }
+
+        return new CliCommand(CliCommandKind.Create, "create", TargetPath: targetPath, EntryId: entryId);
     }
 
     private static CliCommand ParseClear(IReadOnlyDictionary<string, string?> options)
@@ -145,6 +168,21 @@ public static class CliCommandParser
         error = string.Empty;
         value = rawValue;
         return true;
+    }
+
+    private static bool TryGetOptionalOption(
+        IReadOnlyDictionary<string, string?> options,
+        string name,
+        out string? value)
+    {
+        if (options.TryGetValue(name, out var rawValue) && !string.IsNullOrWhiteSpace(rawValue))
+        {
+            value = rawValue;
+            return true;
+        }
+
+        value = null;
+        return false;
     }
 
     private static bool IsHelp(string value)
