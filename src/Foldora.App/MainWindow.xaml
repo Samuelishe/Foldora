@@ -1,0 +1,15 @@
+<Window x:Class="Foldora.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Foldora" Height="320" Width="520"
+        MinHeight="240" MinWidth="420">
+    <Grid Margin="24">
+        <TextBlock Text="Foldora MVP bootstrap build"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="20" />
+    </Grid>
+</Window>

@@ -1,0 +1,46 @@
+# File Index
+
+- `Foldora.sln` - solution.
+- `.gitignore` - исключения для .NET/WPF и локальных файлов.
+- `README.md` - краткое описание репозитория.
+- `AGENTS.md` - правила для будущих агентных сессий.
+- `src/Foldora.Core/Foldora.Core.csproj` - доменная библиотека.
+- `src/Foldora.Core/Models/IconPack.cs` - модель набора иконок.
+- `src/Foldora.Core/Models/FolderIconStyle.cs` - модель стиля иконки.
+- `src/Foldora.Core/Settings/FoldoraSettings.cs` - модель пользовательских настроек.
+- `src/Foldora.Core/Storage/FoldoraDataPaths.cs` - AppData paths.
+- `src/Foldora.Core/DesktopIni/DesktopIniOptions.cs` - параметры записи desktop.ini.
+- `src/Foldora.Core/DesktopIni/DesktopIniService.cs` - минимальный сервис применения/очистки desktop.ini.
+- `src/Foldora.Shell/Foldora.Shell.csproj` - shell integration library.
+- `src/Foldora.Shell/ContextMenu/CommandLineQuoter.cs` - quoting аргументов командной строки.
+- `src/Foldora.Shell/ContextMenu/ExplorerContextMenuRegistrationOptions.cs` - параметры регистрации меню.
+- `src/Foldora.Shell/ContextMenu/ExplorerContextMenuRegistrar.cs` - skeleton registrar для HKCU context menu.
+- `src/Foldora.Cli/Foldora.Cli.csproj` - console app.
+- `src/Foldora.Cli/Program.cs` - skeleton CLI help/dispatch.
+- `src/Foldora.App/Foldora.App.csproj` - WPF settings app.
+- `src/Foldora.App/App.xaml` - WPF application entry.
+- `src/Foldora.App/App.xaml.cs` - WPF app code-behind.
+- `src/Foldora.App/MainWindow.xaml` - минимальное окно bootstrap.
+- `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI plumbing.
+- `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
+- `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project.
+- `tests/Foldora.Tests/Core/FoldoraDataPathsTests.cs` - тесты AppData paths.
+- `tests/Foldora.Tests/Core/DesktopIniServiceTests.cs` - тесты desktop.ini.
+- `tests/Foldora.Tests/Shell/CommandLineQuoterTests.cs` - тесты command line quoting.
+- `docs/README.md` - карта документации.
+- `docs/PROJECT_STATE.md` - состояние проекта.
+- `docs/ROADMAP.md` - roadmap.
+- `docs/WORK_LOG.md` - журнал изменений.
+- `docs/ARCHITECTURE.md` - архитектура.
+- `docs/REQUIREMENTS.md` - требования.
+- `docs/SETTINGS.md` - настройки.
+- `docs/SHELL_INTEGRATION.md` - shell integration.
+- `docs/DESKTOP_INI.md` - механизм desktop.ini.
+- `docs/PACKS.md` - pack manifest.
+- `docs/CLI.md` - CLI.
+- `docs/UI_DESIGN.md` - UI правила.
+- `docs/CODING_RULES.md` - правила кодирования.
+- `docs/FILE_INDEX.md` - этот индекс.
+- `docs/FUTURE_IDEAS.md` - отложенные идеи.
+- `docs/CHANGELOG.md` - пользовательский changelog.
+- `docs/archive/work-log/.gitkeep` - сохранение папки архива.
