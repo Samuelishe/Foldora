@@ -5,6 +5,9 @@ public enum CliCommandKind
     Help,
     Apply,
     Clear,
+    MenuList,
+    MenuAdd,
+    MenuRemove,
     Skeleton,
     RegisterMenu,
     UnregisterMenu,
@@ -17,6 +20,8 @@ public sealed record CliCommand(
     string Name,
     string? FolderPath = null,
     string? IconPath = null,
+    string? DisplayName = null,
+    string? EntryId = null,
     string? QuoteValue = null,
     string? Error = null)
 {

@@ -25,5 +25,6 @@ public sealed class FoldoraDataPathsTests
         Assert.Equal(Path.Combine(root, "settings.json"), paths.SettingsFile);
         Assert.Equal(Path.Combine(root, "packs"), paths.PacksDirectory);
         Assert.Equal(Path.Combine(root, "icons"), paths.IconsDirectory);
+        Assert.Equal(Path.Combine(root, "previews"), paths.PreviewsDirectory);
     }
 }

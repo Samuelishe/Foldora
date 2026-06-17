@@ -25,6 +25,7 @@ public static class CliCommandParser
 
         return command switch
         {
+            "menu" => ParseMenu(args.Skip(1).ToArray()),
             "apply" => ParseApply(options),
             "clear" => ParseClear(options),
             "register-menu" => new CliCommand(CliCommandKind.RegisterMenu, command),
@@ -32,6 +33,25 @@ public static class CliCommandParser
             "quote" => new CliCommand(CliCommandKind.Quote, command, QuoteValue: args.Length > 1 ? args[1] : string.Empty),
             _ when SkeletonCommands.Contains(command) => new CliCommand(CliCommandKind.Skeleton, command),
             _ => new CliCommand(CliCommandKind.Unknown, command, Error: $"Unknown command '{command}'.")
+        };
+    }
+
+    private static CliCommand ParseMenu(string[] args)
+    {
+        if (args.Length == 0)
+        {
+            return new CliCommand(CliCommandKind.Unknown, "menu", Error: "Missing menu subcommand.");
+        }
+
+        var subcommand = args[0].ToLowerInvariant();
+        var options = ParseOptions(args.Skip(1).ToArray());
+
+        return subcommand switch
+        {
+            "list" => new CliCommand(CliCommandKind.MenuList, "menu list"),
+            "add" => ParseMenuAdd(options),
+            "remove" => ParseMenuRemove(options),
+            _ => new CliCommand(CliCommandKind.Unknown, $"menu {subcommand}", Error: $"Unknown menu subcommand '{subcommand}'.")
         };
     }
 
@@ -58,6 +78,27 @@ public static class CliCommandParser
         }
 
         return new CliCommand(CliCommandKind.Clear, "clear", FolderPath: folderPath);
+    }
+
+    private static CliCommand ParseMenuAdd(IReadOnlyDictionary<string, string?> options)
+    {
+        if (!TryGetRequiredOption(options, "--icon", out var iconError, out var iconPath))
+        {
+            return new CliCommand(CliCommandKind.MenuAdd, "menu add", Error: iconError);
+        }
+
+        options.TryGetValue("--name", out var displayName);
+        return new CliCommand(CliCommandKind.MenuAdd, "menu add", IconPath: iconPath, DisplayName: displayName);
+    }
+
+    private static CliCommand ParseMenuRemove(IReadOnlyDictionary<string, string?> options)
+    {
+        if (!TryGetRequiredOption(options, "--entry-id", out var entryIdError, out var entryId))
+        {
+            return new CliCommand(CliCommandKind.MenuRemove, "menu remove", Error: entryIdError);
+        }
+
+        return new CliCommand(CliCommandKind.MenuRemove, "menu remove", EntryId: entryId);
     }
 
     private static Dictionary<string, string?> ParseOptions(string[] args)

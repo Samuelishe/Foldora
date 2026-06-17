@@ -8,7 +8,14 @@
 - `src/Foldora.Core/Models/IconPack.cs` - модель набора иконок.
 - `src/Foldora.Core/Models/FolderIconStyle.cs` - модель стиля иконки.
 - `src/Foldora.Core/Settings/FoldoraSettings.cs` - модель пользовательских настроек.
+- `src/Foldora.Core/Settings/FoldoraSettingsStorage.cs` - JSON storage настроек в AppData.
 - `src/Foldora.Core/Storage/FoldoraDataPaths.cs` - AppData paths.
+- `src/Foldora.Core/Menu/FolderMenuEntry.cs` - пользовательский пункт будущего submenu.
+- `src/Foldora.Core/Menu/FolderMenuSettings.cs` - настройки меню создания папки.
+- `src/Foldora.Core/Menu/FolderMenuNameGenerator.cs` - генератор fallback-имён `Вид N`.
+- `src/Foldora.Core/Menu/IconImportResult.cs` - результат импорта иконки.
+- `src/Foldora.Core/Menu/IconImportService.cs` - импорт `.ico` в AppData.
+- `src/Foldora.Core/Menu/FolderMenuService.cs` - управление пользовательскими пунктами меню.
 - `src/Foldora.Core/DesktopIni/DesktopIniOptions.cs` - параметры записи desktop.ini.
 - `src/Foldora.Core/DesktopIni/DesktopIniService.cs` - минимальный сервис применения/очистки desktop.ini.
 - `src/Foldora.Shell/Foldora.Shell.csproj` - shell integration library.
@@ -29,6 +36,10 @@
 - `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser.
 - `tests/Foldora.Tests/Core/FoldoraDataPathsTests.cs` - тесты AppData paths.
 - `tests/Foldora.Tests/Core/DesktopIniServiceTests.cs` - тесты desktop.ini.
+- `tests/Foldora.Tests/Menu/FolderMenuNameGeneratorTests.cs` - тесты fallback-имён.
+- `tests/Foldora.Tests/Menu/IconImportServiceTests.cs` - тесты импорта `.ico`.
+- `tests/Foldora.Tests/Menu/FolderMenuServiceTests.cs` - тесты управления menu entries.
+- `tests/Foldora.Tests/Settings/FoldoraSettingsStorageTests.cs` - тесты JSON storage и default settings.
 - `tests/Foldora.Tests/Shell/CommandLineQuoterTests.cs` - тесты command line quoting.
 - `docs/README.md` - карта документации.
 - `docs/PROJECT_STATE.md` - состояние проекта.

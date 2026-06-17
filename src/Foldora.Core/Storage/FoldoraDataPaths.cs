@@ -13,6 +13,7 @@ public sealed class FoldoraDataPaths
         SettingsFile = Path.Combine(rootDirectory, "settings.json");
         PacksDirectory = Path.Combine(rootDirectory, "packs");
         IconsDirectory = Path.Combine(rootDirectory, "icons");
+        PreviewsDirectory = Path.Combine(rootDirectory, "previews");
     }
 
     public string RootDirectory { get; }
@@ -22,6 +23,8 @@ public sealed class FoldoraDataPaths
     public string PacksDirectory { get; }
 
     public string IconsDirectory { get; }
+
+    public string PreviewsDirectory { get; }
 
     public static FoldoraDataPaths CreateDefault()
     {

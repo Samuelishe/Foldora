@@ -39,4 +39,49 @@ public sealed class CliCommandParserTests
         Assert.Equal(CliCommandKind.Apply, command.Kind);
         Assert.Contains("--icon", command.Error);
     }
+
+    [Fact]
+    public void Parse_AcceptsMenuList()
+    {
+        var command = CliCommandParser.Parse(["menu", "list"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.MenuList, command.Kind);
+    }
+
+    [Fact]
+    public void Parse_AcceptsMenuAddWithName()
+    {
+        var icon = @"C:\Users\User\Иконки\skull.ico";
+
+        var command = CliCommandParser.Parse(["menu", "add", "--icon", icon, "--name", "Череп"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.MenuAdd, command.Kind);
+        Assert.Equal(icon, command.IconPath);
+        Assert.Equal("Череп", command.DisplayName);
+    }
+
+    [Fact]
+    public void Parse_AcceptsMenuAddWithoutName()
+    {
+        var icon = @"C:\Users\User\Иконки\skull.ico";
+
+        var command = CliCommandParser.Parse(["menu", "add", "--icon", icon]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.MenuAdd, command.Kind);
+        Assert.Equal(icon, command.IconPath);
+        Assert.Null(command.DisplayName);
+    }
+
+    [Fact]
+    public void Parse_AcceptsMenuRemove()
+    {
+        var command = CliCommandParser.Parse(["menu", "remove", "--entry-id", "entry-123"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.MenuRemove, command.Kind);
+        Assert.Equal("entry-123", command.EntryId);
+    }
 }

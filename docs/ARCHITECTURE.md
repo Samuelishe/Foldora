@@ -17,3 +17,5 @@ Foldora разделена на пять проектов:
 - `Foldora.Core` не зависит от других проектов Foldora.
 
 Границы: Core не знает о WPF, CLI, registry API и конкретном UI. Registry logic не находится в Core. WPF code-behind используется только для UI plumbing.
+
+Пользовательские menu entries являются главным MVP-объектом для будущего Explorer submenu. Пользователь сам выбирает любые `.ico` и любые подписи; Foldora копирует `.ico` в AppData и хранит metadata в `settings.json`. Registry context menu на следующем этапе должен генерироваться из этих сохранённых entries, а не из жёстко заданных категорий вроде Documents/Code/Photos.

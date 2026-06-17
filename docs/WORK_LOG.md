@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-06-17 - User menu entries and settings storage
+
+- Добавлен AppData layout с папками `icons`, `previews`, `packs` и файлом `settings.json`.
+- Добавлены модели `FolderMenuEntry` и `FolderMenuSettings`.
+- Расширена `FoldoraSettings` настройками меню `CreateFolderMenu`.
+- Добавлен JSON storage `FoldoraSettingsStorage` с `EnsureCreatedAsync`, `LoadAsync`, `SaveAsync`.
+- Добавлены `IconImportService`, `FolderMenuNameGenerator` и `FolderMenuService`.
+- Реализованы CLI-команды `foldora menu list`, `foldora menu add --icon ... [--name ...]`, `foldora menu remove --entry-id ...`.
+- Добавлены тесты storage, fallback-имён, импорта `.ico`, menu service и CLI parser.
+
 ## 2026-06-17 - CLI apply/clear vertical slice
 
 - Реализована команда `foldora apply --folder "<folder>" --icon "<absolute-icon-path>"`.

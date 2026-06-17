@@ -1,3 +1,5 @@
+using Foldora.Core.Menu;
+
 namespace Foldora.Core.Settings;
 
 /// <summary>
@@ -18,4 +20,6 @@ public sealed record FoldoraSettings
     public bool ShowLegacyContextMenu { get; init; } = true;
 
     public bool OpenPickerForCustomStyle { get; init; } = true;
+
+    public FolderMenuSettings CreateFolderMenu { get; init; } = FolderMenuSettings.CreateDefault();
 }
