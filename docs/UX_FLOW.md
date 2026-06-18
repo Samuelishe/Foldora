@@ -158,6 +158,36 @@ WPF показывает эту flat-модель как секции:
 
 Схематичный visual reference для этого UX используется только как структура `группа -> элементы`; цвета, размеры, шрифты и грубая геометрия не копируются.
 
+## Compact/Edit Entry Cards
+
+WPF entry cards имеют compact view state и inline edit state.
+
+Default state для загруженных saved entries - compact:
+
+```text
+[preview] Название в меню
+          Имя папки: <DefaultFolderName>
+          Иконка: <state>
+          [enabled] [Редактировать] [Удалить]
+```
+
+Новый draft entry сразу раскрывается в edit state, чтобы пользователь мог задать поля и выбрать `.ico`.
+
+Edit state показывает:
+
+- `Название в меню`;
+- `Имя создаваемой папки`;
+- `Показывать в меню`;
+- icon preview/status;
+- `Выбрать .ico`;
+- `Готово`;
+- `Удалить`;
+- inline validation errors for this entry.
+
+`Готово` не сохраняет settings. Оно только сворачивает карточку, если у неё нет inline validation errors. Глобальная кнопка `Сохранить` остаётся единственным действием persistence для draft menu.
+
+Если Core validation возвращает error с `EntryId`, соответствующая карточка раскрывается и показывает ошибку inline. Общий status/errors area остаётся как summary.
+
 ## Icon Preview
 
 WPF phase 3 показывает `.ico` напрямую в строке entry, примерно 50x50.

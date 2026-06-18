@@ -23,6 +23,7 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string RootGroupTitle => Get();
     public string AddEntryToGroupFormat => Get();
     public string AddEntryToThisGroup => Get();
+    public string EntryCountFormat => Get();
     public string DeleteGroup => Get();
     public string DeleteGroupPrompt => Get();
     public string ConfirmDeleteGroup => Get();
@@ -32,12 +33,15 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string EmptyDescription => Get();
     public string EntryDisplayName => Get();
     public string EntryFolderName => Get();
+    public string FolderNameSummaryLabel => Get();
     public string EntryGroupName => Get();
     public string EntryGroupHelp => Get();
     public string EntryEnabled => Get();
     public string EntryIcon => Get();
     public string ChooseIcon => Get();
     public string Delete => Get();
+    public string Edit => Get();
+    public string Done => Get();
     public string ExplorerIntegration => Get();
     public string StatusLabel => Get();
     public string DryRun => Get();

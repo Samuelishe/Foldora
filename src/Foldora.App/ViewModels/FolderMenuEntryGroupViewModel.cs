@@ -17,6 +17,7 @@ public sealed class FolderMenuEntryGroupViewModel : INotifyPropertyChanged
         string groupName,
         string title,
         IEnumerable<FolderMenuEntryViewModel> entries,
+        string entryCountText,
         string addEntryText,
         string deleteGroupText,
         string confirmDeleteGroupText,
@@ -29,6 +30,7 @@ public sealed class FolderMenuEntryGroupViewModel : INotifyPropertyChanged
         GroupName = groupName;
         this.title = title;
         Entries = new ObservableCollection<FolderMenuEntryViewModel>(entries);
+        EntryCountText = entryCountText;
         AddEntryText = addEntryText;
         DeleteGroupText = deleteGroupText;
         ConfirmDeleteGroupText = confirmDeleteGroupText;
@@ -67,6 +69,8 @@ public sealed class FolderMenuEntryGroupViewModel : INotifyPropertyChanged
     public ObservableCollection<FolderMenuEntryViewModel> Entries { get; }
 
     public bool IsRootSection { get; }
+
+    public string EntryCountText { get; }
 
     public bool CanDeleteGroup => !IsRootSection;
 

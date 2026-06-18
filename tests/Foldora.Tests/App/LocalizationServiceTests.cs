@@ -48,6 +48,8 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Delete group", english.Resources.DeleteGroup);
         Assert.Equal("Удалить группу и все её пункты?", russian.Resources.DeleteGroupPrompt);
         Assert.Equal("Delete the group and all its entries?", english.Resources.DeleteGroupPrompt);
+        Assert.Equal("Элементов: {0}", russian.Resources.EntryCountFormat);
+        Assert.Equal("{0} entries", english.Resources.EntryCountFormat);
     }
 
     [Fact]
@@ -60,5 +62,19 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Создавайте и настраивайте пункты контекстного меню Проводника.", russian.Resources.PageSubtitle);
         Assert.Equal("Folder menu", english.Resources.PageTitle);
         Assert.Equal("Create and configure File Explorer context menu entries.", english.Resources.PageSubtitle);
+    }
+
+    [Fact]
+    public void CompactEntryLabelsHaveRussianAndEnglishValues()
+    {
+        var russian = new InMemoryLocalizationService("ru");
+        var english = new InMemoryLocalizationService("en");
+
+        Assert.Equal("Редактировать", russian.Resources.Edit);
+        Assert.Equal("Готово", russian.Resources.Done);
+        Assert.Equal("Имя папки: ", russian.Resources.FolderNameSummaryLabel);
+        Assert.Equal("Edit", english.Resources.Edit);
+        Assert.Equal("Done", english.Resources.Done);
+        Assert.Equal("Folder name: ", english.Resources.FolderNameSummaryLabel);
     }
 }

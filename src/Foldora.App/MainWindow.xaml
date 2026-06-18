@@ -179,6 +179,7 @@
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
 
                                                 <TextBlock Grid.Column="0"
@@ -212,7 +213,13 @@
                                                     </TextBox.Style>
                                                 </TextBox>
 
-                                                <Button Grid.Column="1"
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding EntryCountText}"
+                                                           Style="{StaticResource CaptionTextStyle}"
+                                                           VerticalAlignment="Center"
+                                                           Margin="12,0,0,0" />
+
+                                                <Button Grid.Column="2"
                                                         Content="×"
                                                         Command="{Binding DeleteGroupCommand}"
                                                         ToolTip="{Binding DeleteGroupText}"
@@ -257,89 +264,186 @@
                                                 <DataTemplate>
                                                     <Border Style="{StaticResource CardContainerStyle}"
                                                             ToolTip="{Binding Id}">
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="64" />
-                                                                <ColumnDefinition Width="*" />
-                                                            </Grid.ColumnDefinitions>
-
-                                                            <Border Grid.Column="0"
-                                                                    Style="{StaticResource PreviewBoxStyle}">
-                                                                <Image Source="{Binding IconPreview}"
-                                                                       Width="{DynamicResource PreviewImageSize}"
-                                                                       Height="{DynamicResource PreviewImageSize}"
-                                                                       Stretch="Uniform" />
-                                                            </Border>
-
-                                                            <Grid Grid.Column="1">
-                                                                <Grid.RowDefinitions>
-                                                                    <RowDefinition Height="Auto" />
-                                                                    <RowDefinition Height="Auto" />
-                                                                    <RowDefinition Height="Auto" />
-                                                                    <RowDefinition Height="Auto" />
-                                                                </Grid.RowDefinitions>
+                                                        <StackPanel>
+                                                            <Grid>
+                                                                <Grid.Style>
+                                                                    <Style TargetType="Grid">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Grid.Style>
                                                                 <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="170" />
+                                                                    <ColumnDefinition Width="64" />
                                                                     <ColumnDefinition Width="*" />
                                                                     <ColumnDefinition Width="Auto" />
                                                                 </Grid.ColumnDefinitions>
 
-                                                                <TextBlock Grid.Row="0"
-                                                                           Grid.Column="0"
-                                                                           Text="{Binding DataContext.L.EntryDisplayName, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                           Style="{StaticResource FieldLabelStyle}" />
-                                                                <TextBox Grid.Row="0"
-                                                                         Grid.Column="1"
-                                                                         Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                         Margin="0,0,14,6"
-                                                                         MinWidth="220" />
+                                                                <Border Grid.Column="0"
+                                                                        Style="{StaticResource PreviewBoxStyle}">
+                                                                    <Image Source="{Binding IconPreview}"
+                                                                           Width="{DynamicResource PreviewImageSize}"
+                                                                           Height="{DynamicResource PreviewImageSize}"
+                                                                           Stretch="Uniform" />
+                                                                </Border>
 
-                                                                <TextBlock Grid.Row="1"
-                                                                           Grid.Column="0"
-                                                                           Text="{Binding DataContext.L.EntryFolderName, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                           Style="{StaticResource FieldLabelStyle}" />
-                                                                <TextBox Grid.Row="1"
-                                                                         Grid.Column="1"
-                                                                         Text="{Binding DefaultFolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                        Margin="0,0,14,6"
-                                                                        MinWidth="220" />
+                                                                <StackPanel Grid.Column="1"
+                                                                            VerticalAlignment="Center">
+                                                                    <TextBlock Text="{Binding CompactTitle}"
+                                                                               Style="{StaticResource GroupTitleTextStyle}"
+                                                                               TextTrimming="CharacterEllipsis" />
+                                                                    <TextBlock Style="{StaticResource SecondaryBodyTextStyle}"
+                                                                               TextTrimming="CharacterEllipsis"
+                                                                               Margin="0,4,0,0">
+                                                                        <TextBlock.Text>
+                                                                            <MultiBinding StringFormat="{}{0}{1}">
+                                                                                <Binding Path="DataContext.L.FolderNameSummaryLabel" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                                                                <Binding Path="CompactFolderName" />
+                                                                            </MultiBinding>
+                                                                        </TextBlock.Text>
+                                                                    </TextBlock>
+                                                                    <TextBlock Text="{Binding IconState}"
+                                                                               Style="{StaticResource CaptionTextStyle}"
+                                                                               TextTrimming="CharacterEllipsis"
+                                                                               Margin="0,4,0,0" />
+                                                                </StackPanel>
 
-                                                                <CheckBox Grid.Row="2"
-                                                                          Grid.Column="1"
-                                                                          Content="{Binding DataContext.L.EntryEnabled, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                          IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                          Margin="0,2,0,8" />
-
-                                                                <TextBlock Grid.Row="3"
-                                                                           Grid.Column="0"
-                                                                           Text="{Binding DataContext.L.EntryIcon, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                           Style="{StaticResource FieldLabelStyle}"
-                                                                           Margin="0,0,10,0" />
-                                                                <TextBlock Grid.Row="3"
-                                                                           Grid.Column="1"
-                                                                           Text="{Binding IconState}"
-                                                                           Style="{StaticResource SecondaryBodyTextStyle}"
-                                                                           TextWrapping="Wrap"
-                                                                           VerticalAlignment="Center"
-                                                                           Margin="0,0,14,0" />
-
-                                                                <StackPanel Grid.Row="0"
-                                                                            Grid.RowSpan="4"
-                                                                            Grid.Column="2"
-                                                                            Orientation="Vertical"
-                                                                            VerticalAlignment="Top">
-                                                                    <Button Content="{Binding DataContext.L.ChooseIcon, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                            Command="{Binding ChooseIconCommand}"
+                                                                <StackPanel Grid.Column="2"
+                                                                            Orientation="Horizontal"
+                                                                            VerticalAlignment="Center"
+                                                                            Margin="14,0,0,0">
+                                                                    <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                              ToolTip="{Binding DataContext.L.EntryEnabled, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                              Margin="0,0,8,0" />
+                                                                    <Button Content="{Binding DataContext.L.Edit, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                            Command="{Binding EditCommand}"
                                                                             Style="{StaticResource SecondaryButtonStyle}"
-                                                                            MinWidth="112"
-                                                                            Margin="0,0,0,8" />
+                                                                            MinWidth="96"
+                                                                            Margin="0,0,8,0" />
                                                                     <Button Content="{Binding DataContext.L.Delete, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                             Command="{Binding RemoveCommand}"
                                                                             Style="{StaticResource SecondaryButtonStyle}"
-                                                                            MinWidth="112" />
+                                                                            MinWidth="96" />
                                                                 </StackPanel>
                                                             </Grid>
-                                                        </Grid>
+
+                                                            <Grid>
+                                                                <Grid.Style>
+                                                                    <Style TargetType="Grid">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Grid.Style>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="64" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <Border Grid.Column="0"
+                                                                        Style="{StaticResource PreviewBoxStyle}">
+                                                                    <Image Source="{Binding IconPreview}"
+                                                                           Width="{DynamicResource PreviewImageSize}"
+                                                                           Height="{DynamicResource PreviewImageSize}"
+                                                                           Stretch="Uniform" />
+                                                                </Border>
+
+                                                                <StackPanel Grid.Column="1">
+                                                                    <Grid>
+                                                                        <Grid.RowDefinitions>
+                                                                            <RowDefinition Height="Auto" />
+                                                                            <RowDefinition Height="Auto" />
+                                                                            <RowDefinition Height="Auto" />
+                                                                            <RowDefinition Height="Auto" />
+                                                                        </Grid.RowDefinitions>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="170" />
+                                                                            <ColumnDefinition Width="*" />
+                                                                            <ColumnDefinition Width="Auto" />
+                                                                        </Grid.ColumnDefinitions>
+
+                                                                        <TextBlock Grid.Row="0"
+                                                                                   Grid.Column="0"
+                                                                                   Text="{Binding DataContext.L.EntryDisplayName, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                                   Style="{StaticResource FieldLabelStyle}" />
+                                                                        <TextBox Grid.Row="0"
+                                                                                 Grid.Column="1"
+                                                                                 Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                                 Margin="0,0,14,6"
+                                                                                 MinWidth="220" />
+
+                                                                        <TextBlock Grid.Row="1"
+                                                                                   Grid.Column="0"
+                                                                                   Text="{Binding DataContext.L.EntryFolderName, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                                   Style="{StaticResource FieldLabelStyle}" />
+                                                                        <TextBox Grid.Row="1"
+                                                                                 Grid.Column="1"
+                                                                                 Text="{Binding DefaultFolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                                 Margin="0,0,14,6"
+                                                                                 MinWidth="220" />
+
+                                                                        <CheckBox Grid.Row="2"
+                                                                                  Grid.Column="1"
+                                                                                  Content="{Binding DataContext.L.EntryEnabled, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                                  IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                                  Margin="0,2,0,8" />
+
+                                                                        <TextBlock Grid.Row="3"
+                                                                                   Grid.Column="0"
+                                                                                   Text="{Binding DataContext.L.EntryIcon, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                                   Style="{StaticResource FieldLabelStyle}"
+                                                                                   Margin="0,0,10,0" />
+                                                                        <TextBlock Grid.Row="3"
+                                                                                   Grid.Column="1"
+                                                                                   Text="{Binding IconState}"
+                                                                                   Style="{StaticResource SecondaryBodyTextStyle}"
+                                                                                   TextWrapping="Wrap"
+                                                                                   VerticalAlignment="Center"
+                                                                                   Margin="0,0,14,0" />
+
+                                                                        <StackPanel Grid.Row="0"
+                                                                                    Grid.RowSpan="4"
+                                                                                    Grid.Column="2"
+                                                                                    Orientation="Vertical"
+                                                                                    VerticalAlignment="Top">
+                                                                            <Button Content="{Binding DataContext.L.ChooseIcon, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                                    Command="{Binding ChooseIconCommand}"
+                                                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                                                    MinWidth="112"
+                                                                                    Margin="0,0,0,8" />
+                                                                            <Button Content="{Binding DataContext.L.Done, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                                    Command="{Binding FinishEditingCommand}"
+                                                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                                                    MinWidth="112"
+                                                                                    Margin="0,0,0,8" />
+                                                                            <Button Content="{Binding DataContext.L.Delete, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                                    Command="{Binding RemoveCommand}"
+                                                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                                                    MinWidth="112" />
+                                                                        </StackPanel>
+                                                                    </Grid>
+
+                                                                    <ItemsControl ItemsSource="{Binding InlineErrors}"
+                                                                                  Visibility="{Binding HasInlineErrors, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                                                  Margin="0,10,0,0">
+                                                                        <ItemsControl.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <TextBlock Text="{Binding}"
+                                                                                           Style="{StaticResource ValidationErrorTextStyle}"
+                                                                                           TextWrapping="Wrap"
+                                                                                           Margin="0,0,0,4" />
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.ItemTemplate>
+                                                                    </ItemsControl>
+                                                                </StackPanel>
+                                                            </Grid>
+                                                        </StackPanel>
                                                     </Border>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>

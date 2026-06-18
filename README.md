@@ -1,5 +1,9 @@
 # Foldora
 
+License: 0BSD
+
+## About
+
 Foldora is a working name for a lightweight Windows 11 utility for creating folders with custom icons from a user-defined Explorer menu.
 
 The project is in an early MVP / experimental stage. It is usable for local testing, but it does not have an installer, modern Windows 11 context menu integration, or a stable public release flow yet.
@@ -32,6 +36,7 @@ Selecting an entry creates a folder and applies its icon through `desktop.ini`.
 ## Current Capabilities
 
 - WPF editor for the user menu.
+- Compact/edit entry cards for menu entries.
 - Add/remove menu entries.
 - One-level grouping for menu entries.
 - `DisplayName`, `DefaultFolderName`, `GroupName`, and enabled/disabled entry state.
@@ -60,15 +65,18 @@ To build from source:
 
 - Windows 11.
 - .NET SDK 10.x.
-- PowerShell, Terminal, Rider, Visual Studio Code or another development shell/editor.
+- PowerShell 7 is recommended for the documented local workflow, but it is not a runtime dependency.
+- Git is needed only for working with the repository.
 
-To run a published build later:
+To run with `dotnet run` or a framework-dependent build:
 
 - Windows 11.
-- .NET 10 runtime / Windows Desktop Runtime, unless the app is published self-contained.
+- .NET 10 Windows Desktop Runtime, unless the app is published self-contained.
 - Explorer legacy context menu support.
 
 Foldora uses HKCU registry keys only for Explorer integration and does not require administrator rights.
+
+Windows 10 and non-Windows platforms are not claimed as supported for the current MVP.
 
 ## Data Location
 
@@ -87,6 +95,7 @@ Imported icons are copied into the `icons` directory. The original source icon f
 ## Build and Run
 
 ```text
+dotnet restore Foldora.sln
 dotnet build Foldora.sln
 dotnet test Foldora.sln
 dotnet run --project src/Foldora.App/Foldora.App.csproj
@@ -125,15 +134,29 @@ foldora unregister-menu
 
 ## Safety Disclaimer
 
-Foldora is experimental early MVP software, provided as-is and without warranty. It modifies user-level HKCU registry keys only under Foldora-owned paths and creates/edits `desktop.ini` inside folders selected or created by the user. Test on non-critical folders first.
+Foldora is experimental early MVP software. It is provided as-is, without warranty. The author is not liable for loss, damage, configuration issues, Explorer behavior, shell behavior, or other problems caused by use or modification of the software.
+
+Foldora modifies user-level HKCU registry keys only under Foldora-owned paths and creates/edits `desktop.ini` inside folders selected or created by the user. Test on non-critical folders first.
 
 ## AI Assistance Note
 
-Parts of Foldora were developed with assistance from OpenAI Codex / AI tooling. Product decisions, testing and commits are reviewed by the maintainer.
+Parts of Foldora were developed with assistance from OpenAI Codex and other AI tools. Product decisions, architecture decisions, manual verification and commits are reviewed or performed by the maintainer.
+
+AI-assisted development does not change ownership or license requirements for third-party materials. Third-party resources still require explicit license review before they can be added to the repository.
+
+## License
+
+Unless otherwise noted, original Foldora source code, documentation and self-authored project assets are licensed under the Zero-Clause BSD License (0BSD). See [LICENSE](LICENSE).
+
+0BSD applies only to materials whose rights belong to the Foldora author/contributors. Third-party components and assets are not relicensed by Foldora; they remain under their respective licenses and attribution requirements. If a README statement conflicts with a bundled third-party license, the third-party material's own license controls that material.
+
+Русское пояснение: если явно не указано иное, оригинальный код Foldora, документация и созданные автором ресурсы распространяются под 0BSD. Сторонние материалы не перелицензируются автором Foldora; для них действуют их собственные лицензии.
 
 ## Third-Party Resources
 
-No third-party visual assets are currently bundled, except where explicitly listed here or in a future third-party notices file. Resource rules are documented in [docs/RESOURCE_POLICY.md](docs/RESOURCE_POLICY.md).
+No third-party visual assets are currently bundled. Third-party materials, if added later, are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Resource rules are documented in [docs/RESOURCE_POLICY.md](docs/RESOURCE_POLICY.md).
+
+Free download availability is not enough to include an asset in this repository. Every bundled third-party resource must have an explicit license that allows Foldora's actual use, redistribution and attribution model.
 
 ## Documentation
 

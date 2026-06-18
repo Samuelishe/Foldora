@@ -18,3 +18,6 @@
 - Учитывать пробелы, кириллицу и спецсимволы.
 - Command line strings для registry собирать с корректным quoting.
 - Не хранить пользовательские настройки рядом с exe.
+- Не добавлять сторонние ресурсы без явной лицензии.
+- Перед добавлением ресурса проверять право на redistribution, modification, commercial use, attribution requirements и необходимость bundled license text.
+- Новые bundled third-party resources должны одновременно обновлять `THIRD_PARTY_NOTICES.md`, `docs/FILE_INDEX.md` и license files, если они требуются.

@@ -3,6 +3,8 @@
 - `Foldora.sln` - solution.
 - `.gitignore` - исключения для .NET/WPF и локальных файлов.
 - `README.md` - публичный GitHub README: краткое описание продукта, текущие возможности, ограничения, build/run и базовые CLI-примеры.
+- `LICENSE` - Zero-Clause BSD License (0BSD) для оригинального кода, документации и self-authored ресурсов Foldora, если не указано иное.
+- `THIRD_PARTY_NOTICES.md` - notices для bundled third-party materials; сейчас фиксирует отсутствие сторонних visual assets и test-only NuGet dependency license metadata.
 - `AGENTS.md` - правила для будущих агентных сессий.
 - `src/Foldora.Core/Foldora.Core.csproj` - доменная библиотека.
 - `src/Foldora.Core/Models/IconPack.cs` - модель набора иконок.
@@ -79,8 +81,8 @@
 - `src/Foldora.App/SettingsWindow.xaml.cs` - минимальный plumbing окна настроек.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
 - `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands и presentation state для card/list UI.
-- `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню с icon status и preview.
-- `src/Foldora.App/ViewModels/FolderMenuEntryGroupViewModel.cs` - presentation-only group container WPF для entries по `GroupName`, включая add/rename/delete group commands.
+- `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню с icon status, preview, compact/edit presentation state и inline errors.
+- `src/Foldora.App/ViewModels/FolderMenuEntryGroupViewModel.cs` - presentation-only group container WPF для entries по `GroupName`, включая entry count и add/rename/delete group commands.
 - `src/Foldora.App/ViewModels/SettingsViewModel.cs` - ViewModel настроек языка приложения.
 - `src/Foldora.App/ViewModels/LocalizationResources.cs` - bindable набор локализованных строк для WPF.
 - `src/Foldora.App/ViewModels/RelayCommand.cs` - простая синхронная WPF-команда.
@@ -107,7 +109,7 @@
 - `tests/Foldora.Tests/App/ExplorerIntegrationControllerTests.cs` - тесты WPF Explorer integration controller с fake registry.
 - `tests/Foldora.Tests/App/DesignResourceTests.cs` - lightweight tests for WPF design resource dictionary wiring and core style keys.
 - `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
-- `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor.
+- `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections и compact/edit entry behavior.
 - `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.
 - `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты минимальной локализации RU/EN.
 - `tests/Foldora.Tests/App/StartupDiagnosticsServiceTests.cs` - тесты controlled startup diagnostic log.

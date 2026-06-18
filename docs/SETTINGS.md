@@ -68,6 +68,7 @@ WPF startup не должен синхронно читать `settings.json` в
 Дубликаты `DisplayName` разрешены и сохраняются как пользовательский выбор.
 Одинаковые `GroupName` разрешены и объединяют entries в одно submenu. Старые settings без `groupName` загружаются как root-level entries.
 WPF grouped sections являются presentation layer; пустые группы не сохраняются в JSON как отдельные сущности.
+WPF compact/edit state карточек (`IsEditing`, inline validation errors, collapsed/expanded presentation state) не сохраняется в JSON.
 
 Если старый entry не содержит `DefaultFolderName`, при загрузке используется fallback `Новая папка`.
 

@@ -254,6 +254,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     {
         Errors.Clear();
         OperationDetails.Clear();
+        ClearInlineEntryErrors();
         var shouldRebuildExplorerMenu = draftEditor.ExplorerIntegrationEnabled;
         var result = await draftEditor.SaveAsync();
         if (!result.Saved)
@@ -261,6 +262,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             foreach (var issue in result.Issues.Where(issue => issue.Severity == FolderMenuValidationSeverity.Error))
             {
                 Errors.Add(FormatIssue(issue));
+                AddInlineEntryError(issue);
             }
 
             NotifyErrorAndDetailsStateChanged();
@@ -376,10 +378,12 @@ public sealed class MainViewModel : INotifyPropertyChanged
     {
         var entry = draftEditor.AddEntry();
         entry.GroupName = groupName;
-        Entries.Add(CreateEntryViewModel(entry));
+        var entryViewModel = CreateEntryViewModel(entry);
+        Entries.Add(entryViewModel);
         Errors.Clear();
         OperationDetails.Clear();
         RebuildEntryGroups();
+        RequestEntryEdit(entryViewModel);
         NotifyEntryStateChanged();
         NotifyErrorAndDetailsStateChanged();
         StatusMessage = "Добавлен draft-пункт. Выберите .ico перед сохранением.";
@@ -451,7 +455,24 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     private FolderMenuEntryViewModel CreateEntryViewModel(FolderMenuDraftEntry entry)
     {
-        return new FolderMenuEntryViewModel(entry, iconPreviewService, RefreshDirtyState, OnEntryGroupChanged, ChooseIconAsync, RemoveEntry);
+        return new FolderMenuEntryViewModel(
+            entry,
+            iconPreviewService,
+            RefreshDirtyState,
+            OnEntryGroupChanged,
+            RequestEntryEdit,
+            ChooseIconAsync,
+            RemoveEntry);
+    }
+
+    private void RequestEntryEdit(FolderMenuEntryViewModel entry)
+    {
+        foreach (var existingEntry in Entries.Where(existingEntry => !ReferenceEquals(existingEntry, entry) && !existingEntry.HasInlineErrors))
+        {
+            existingEntry.CollapseEditing();
+        }
+
+        entry.BeginEditing();
     }
 
     private void OnEntryGroupChanged()
@@ -473,6 +494,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
                 string.Empty,
                 L.RootGroupTitle,
                 rootEntries,
+                string.Format(L.EntryCountFormat, rootEntries.Count),
                 L.AddEntry,
                 L.DeleteGroup,
                 L.ConfirmDeleteGroup,
@@ -493,6 +515,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
                 group.Key,
                 group.Key,
                 group,
+                string.Format(L.EntryCountFormat, group.Count()),
                 L.AddEntryToThisGroup,
                 L.DeleteGroup,
                 L.ConfirmDeleteGroup,
@@ -571,6 +594,25 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private void RefreshDirtyState()
     {
         HasUnsavedChanges = draftEditor.HasUnsavedChanges;
+    }
+
+    private void ClearInlineEntryErrors()
+    {
+        foreach (var entry in Entries)
+        {
+            entry.ClearInlineErrors();
+        }
+    }
+
+    private void AddInlineEntryError(FolderMenuValidationIssue issue)
+    {
+        if (string.IsNullOrWhiteSpace(issue.EntryId))
+        {
+            return;
+        }
+
+        var entry = Entries.FirstOrDefault(entry => string.Equals(entry.Id, issue.EntryId, StringComparison.Ordinal));
+        entry?.AddInlineError(issue.Message);
     }
 
     private void NotifyEntryStateChanged()

@@ -34,6 +34,9 @@
 - При изменении desktop.ini механизма обновлять `docs/DESKTOP_INI.md`.
 - При изменении CLI обновлять `docs/CLI.md`.
 - При изменении модели пользовательского меню или validation rules обновлять `docs/MENU_MODEL.md`.
+- Перед добавлением стороннего ресурса проверять явную лицензию, redistribution, modification, commercial use, attribution requirements, необходимость bundled license text и совместимость с публичным 0BSD-репозиторием.
+- При добавлении стороннего ресурса обновлять `THIRD_PARTY_NOTICES.md`, `README.md` для заметных ресурсов, `docs/FILE_INDEX.md` и bundled license files, если лицензия этого требует.
+- Не добавлять unknown-license assets, ripped/proprietary resources или файлы, найденные в интернете без понятной лицензии.
 - Не делать commit без прямого запроса пользователя.
 - В конце значимого шага предлагать commit message на английском, 1-2 предложения.
 - Не делать крупные изменения без краткого плана.

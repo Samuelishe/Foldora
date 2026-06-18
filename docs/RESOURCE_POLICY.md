@@ -2,6 +2,8 @@
 
 Foldora may include visual resources such as icons, fonts, vector assets and small UI illustrations only when their license is clear and compatible with a public GitHub project.
 
+Original Foldora source code, documentation and self-authored project assets are licensed under 0BSD unless explicitly noted otherwise. This does not relicense third-party materials.
+
 ## Allowed Sources
 
 Acceptable resource licenses include:
@@ -27,18 +29,43 @@ Do not add:
 When adding an external resource to git, record:
 
 - resource name;
-- author;
+- type: dependency, font, icon, image, code or other;
+- author or copyright holder;
 - source URL;
-- license name;
+- exact license name;
+- license source URL or bundled license text path;
 - local repository path;
-- attribution text required by the license.
+- attribution text required by the license;
+- whether the file was modified.
 
-Attribution must be added to the root `README.md`. If bundled third-party resources grow beyond one or two small items, create a dedicated `THIRD_PARTY_NOTICES.md` or `docs/THIRD_PARTY_NOTICES.md`.
+Attribution must be added to `THIRD_PARTY_NOTICES.md`. If the resource is user-visible or prominent, also mention it in the root `README.md`.
 
-If a license requires including its full text, add it under a clear folder such as `licenses/` or `third-party/`.
+If a license requires including its full text, add it under a clear folder such as `third-party/licenses/`.
+
+## Required License Check
+
+Before adding any third-party resource, verify:
+
+1. Explicit license text or license metadata exists.
+2. Redistribution is allowed.
+3. Modification is allowed, if Foldora modifies the resource.
+4. Commercial use is allowed, because 0BSD permits commercial reuse of Foldora's original materials.
+5. Attribution requirements are clear and practical.
+6. Bundling the full license text is either not required or is handled in the repository.
+7. The license is compatible with the repository's public GitHub distribution model and does not conflict with 0BSD-covered original materials.
+
+Free download availability alone is not a license. If the license is missing, unclear or incompatible, do not add the resource to git or include it in the build. Ask the author/rightsholder first.
+
+When a resource is added, update in the same change:
+
+- `THIRD_PARTY_NOTICES.md`;
+- root `README.md`, if the resource is visible or prominent;
+- `docs/FILE_INDEX.md`;
+- bundled license files, if required;
+- this policy document, if the policy itself changes.
 
 ## Current State
 
-No third-party visual assets are currently bundled, except where explicitly listed in the root `README.md` or a future third-party notices file.
+No third-party visual assets are currently bundled, except where explicitly listed in the root `THIRD_PARTY_NOTICES.md`.
 
 For small UI icons, prefer self-authored XAML/vector shapes or documented system UI fonts before adding external icon packs.

@@ -1,5 +1,16 @@
 # Work Log
 
+## 2026-06-18 - Licensing and compact entry cards
+
+- Добавлен root `LICENSE` со стандартной Zero-Clause BSD License (0BSD).
+- Добавлен `THIRD_PARTY_NOTICES.md`: bundled third-party visual assets отсутствуют; test-only NuGet dependencies перечислены с license metadata из `.nuspec`.
+- Root `README.md` обновлён: license scope, third-party material rules, requirements, `dotnet restore/build/test/run`, disclaimer and AI-assisted development note.
+- `docs/RESOURCE_POLICY.md`, `AGENTS.md` и `docs/CODING_RULES.md` уточняют обязательный license audit перед добавлением сторонних ресурсов.
+- Entry cards получили compact view state и inline edit state. Saved entries стартуют compact; новые draft entries стартуют в edit mode.
+- `Готово` сворачивает только presentation state и не сохраняет settings; глобальная `Сохранить` остаётся единственным persistence action.
+- Validation errors из Core validation layer раскрывают affected entry card и показываются inline рядом с полями.
+- Group containers показывают entry count; Core menu model/settings format не менялись.
+
 ## 2026-06-18 - WPF layout correctness after design system
 
 - Убрано визуальное дублирование `Foldora`: custom title bar остаётся application title, а content area использует semantic page header `Меню папок`/`Folder menu` с subtitle.

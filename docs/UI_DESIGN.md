@@ -111,6 +111,23 @@ Settings window является resizable и подготовлен к буду
 
 Footer buttons `Сохранить`/`Закрыть` не прокручиваются вместе с содержимым и остаются доступными при уменьшении окна. Открытие modal settings window проверяется вручную пользователем; UIAutomation не является acceptance criterion для modal/custom-chrome WPF dialog.
 
+## Compact Entry Cards
+
+Entry cards используют два presentation-only состояния:
+
+- compact view state;
+- inline edit state.
+
+Сохранённые entries после загрузки открываются в compact state. Compact card показывает preview, `Название в меню`, краткое имя создаваемой папки, icon status, enabled toggle и компактные actions `Редактировать`/`Удалить`.
+
+Новые draft entries сразу открываются в inline edit state. Edit state показывает поля `Название в меню`, `Имя создаваемой папки`, `Показывать в меню`, выбор `.ico`, icon status, inline validation errors и actions `Готово`/`Удалить`.
+
+`Готово` сворачивает только presentation state. Оно не сохраняет `settings.json`, не импортирует иконки и не перестраивает registry. Единственное persistence action остаётся глобальная кнопка `Сохранить`.
+
+Validation errors из Core validation layer показываются в общей status/errors area и inline на affected entry card. Карточка с ошибкой раскрывается и не сворачивается через `Готово`, пока inline errors не будут очищены новой попыткой save.
+
+Текущее поведение допускает один основной раскрытый entry для обычного редактирования; карточки с validation errors могут оставаться раскрытыми, чтобы пользователь видел проблемы.
+
 ## Реализовано в phase 4
 
 - Загрузка settings из `%AppData%\Foldora\settings.json`.

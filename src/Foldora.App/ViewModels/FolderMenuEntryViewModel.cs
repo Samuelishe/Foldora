@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
@@ -16,14 +17,17 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
     private readonly IIconPreviewService iconPreviewService;
     private readonly Action changed;
     private readonly Action groupChanged;
+    private readonly Action<FolderMenuEntryViewModel> editRequested;
     private readonly Func<FolderMenuEntryViewModel, Task> chooseIconAsync;
     private readonly Action<FolderMenuEntryViewModel> remove;
+    private bool isEditing;
 
     public FolderMenuEntryViewModel(
         FolderMenuDraftEntry draftEntry,
         IIconPreviewService iconPreviewService,
         Action changed,
         Action groupChanged,
+        Action<FolderMenuEntryViewModel> editRequested,
         Func<FolderMenuEntryViewModel, Task> chooseIconAsync,
         Action<FolderMenuEntryViewModel> remove)
     {
@@ -31,8 +35,11 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
         this.iconPreviewService = iconPreviewService ?? throw new ArgumentNullException(nameof(iconPreviewService));
         this.changed = changed ?? throw new ArgumentNullException(nameof(changed));
         this.groupChanged = groupChanged ?? throw new ArgumentNullException(nameof(groupChanged));
+        this.editRequested = editRequested ?? throw new ArgumentNullException(nameof(editRequested));
         this.chooseIconAsync = chooseIconAsync ?? throw new ArgumentNullException(nameof(chooseIconAsync));
         this.remove = remove ?? throw new ArgumentNullException(nameof(remove));
+        EditCommand = new RelayCommand(() => this.editRequested(this));
+        FinishEditingCommand = new RelayCommand(FinishEditing);
         ChooseIconCommand = new AsyncRelayCommand(() => this.chooseIconAsync(this));
         RemoveCommand = new RelayCommand(() => this.remove(this));
         RefreshIconPreview();
@@ -80,6 +87,29 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
 
     public string? IconPreviewError { get; private set; }
 
+    public ObservableCollection<string> InlineErrors { get; } = [];
+
+    public bool HasInlineErrors => InlineErrors.Count > 0;
+
+    public bool IsEditing
+    {
+        get => isEditing;
+        private set
+        {
+            if (isEditing == value)
+            {
+                return;
+            }
+
+            isEditing = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public RelayCommand EditCommand { get; }
+
+    public RelayCommand FinishEditingCommand { get; }
+
     public AsyncRelayCommand ChooseIconCommand { get; }
 
     public RelayCommand RemoveCommand { get; }
@@ -96,6 +126,7 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
 
             draftEntry.DisplayName = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(CompactTitle));
             changed();
         }
     }
@@ -112,6 +143,7 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
 
             draftEntry.DefaultFolderName = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(CompactFolderName));
             changed();
         }
     }
@@ -131,6 +163,10 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
             groupChanged();
         }
     }
+
+    public string CompactTitle => string.IsNullOrWhiteSpace(DisplayName) ? "(без названия)" : DisplayName;
+
+    public string CompactFolderName => string.IsNullOrWhiteSpace(DefaultFolderName) ? "Новая папка" : DefaultFolderName;
 
     public void RefreshIconState()
     {
@@ -170,6 +206,44 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
             OnPropertyChanged();
             changed();
         }
+    }
+
+    public void BeginEditing()
+    {
+        IsEditing = true;
+    }
+
+    public void CollapseEditing()
+    {
+        IsEditing = false;
+    }
+
+    public void AddInlineError(string message)
+    {
+        InlineErrors.Add(message);
+        OnPropertyChanged(nameof(HasInlineErrors));
+        BeginEditing();
+    }
+
+    public void ClearInlineErrors()
+    {
+        if (InlineErrors.Count == 0)
+        {
+            return;
+        }
+
+        InlineErrors.Clear();
+        OnPropertyChanged(nameof(HasInlineErrors));
+    }
+
+    private void FinishEditing()
+    {
+        if (HasInlineErrors)
+        {
+            return;
+        }
+
+        CollapseEditing();
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
