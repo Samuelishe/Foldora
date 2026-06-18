@@ -247,4 +247,52 @@ public sealed class CliCommandParserTests
         Assert.True(command.IsValid);
         Assert.Equal(CliCommandKind.UnregisterMenu, command.Kind);
     }
+
+    [Fact]
+    public void Parse_AcceptsDesktopIniPolicyDiagnostics()
+    {
+        var command = CliCommandParser.Parse([
+            "diagnostics",
+            "desktop-ini-policy",
+            "--target",
+            @"C:\Temp\Foldora Tests",
+            "--icon",
+            @"C:\Icons\folder.ico"
+        ]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.DiagnosticsDesktopIniPolicy, command.Kind);
+        Assert.Equal(@"C:\Temp\Foldora Tests", command.TargetPath);
+        Assert.Equal(@"C:\Icons\folder.ico", command.IconPath);
+    }
+
+    [Fact]
+    public void Parse_RejectsDesktopIniPolicyDiagnosticsWithoutTarget()
+    {
+        var command = CliCommandParser.Parse([
+            "diagnostics",
+            "desktop-ini-policy",
+            "--icon",
+            @"C:\Icons\folder.ico"
+        ]);
+
+        Assert.False(command.IsValid);
+        Assert.Equal(CliCommandKind.DiagnosticsDesktopIniPolicy, command.Kind);
+        Assert.Contains("--target", command.Error);
+    }
+
+    [Fact]
+    public void Parse_RejectsDesktopIniPolicyDiagnosticsWithoutIcon()
+    {
+        var command = CliCommandParser.Parse([
+            "diagnostics",
+            "desktop-ini-policy",
+            "--target",
+            @"C:\Temp\Foldora Tests"
+        ]);
+
+        Assert.False(command.IsValid);
+        Assert.Equal(CliCommandKind.DiagnosticsDesktopIniPolicy, command.Kind);
+        Assert.Contains("--icon", command.Error);
+    }
 }

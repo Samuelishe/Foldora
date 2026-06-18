@@ -46,6 +46,11 @@
 
 Modern context menu, installer/MSIX, pack import/export, preview generation, nested menu runtime/storage и расширенная валидация паков рассматриваются после рабочего MVP.
 
+Отдельные post-MVP investigation tracks:
+
+- Выбрать deletion-friendly `desktop.ini` attribute policy после ручной проверки matrix из `docs/DESKTOP_INI.md`.
+- Исследовать создание desktop icon под курсором только через advanced shell integration layer (`IExplorerCommand`, COM shell extension, Explorer view positioning или другой явный path). MVP legacy registry menu получает только target directory path и не решает позиционирование.
+
 Текущая ручная разработка должна указывать registry menu на Debug MenuHost path:
 
 ```text

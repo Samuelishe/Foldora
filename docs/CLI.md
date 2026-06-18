@@ -18,6 +18,7 @@ foldora list-styles
 foldora register-menu
 foldora register-menu --host-path "<absolute-path-to-Foldora.MenuHost.exe>"
 foldora unregister-menu
+foldora diagnostics desktop-ini-policy --target "<directory>" --icon "<absolute-icon-path>"
 foldora settings
 ```
 
@@ -38,6 +39,7 @@ foldora settings
 - выполняет `register-menu --host-path "<path-to-Foldora.MenuHost.exe>"` для ручной проверки с publish/install path;
 - выполняет `register-menu --cli-path "<path>"` как legacy/dev alias для старого console host behavior;
 - выполняет `unregister-menu`, удаляя только Foldora-owned HKCU roots;
+- выполняет `diagnostics desktop-ini-policy --target ... --icon ...`, создавая тестовые папки для ручной проверки desktop.ini attribute policies;
 - для неготовых команд пишет понятное skeleton-сообщение;
 
 Ограничения текущего CLI:
@@ -65,3 +67,22 @@ CLI не исправляет явно невалидный `--folder-name` мо
 `menu reset --yes` - полный сброс пользовательского меню к пустому дефолту. Команда не удаляет весь `%AppData%\Foldora`, не удаляет `settings.json`, не трогает `packs` и не удаляет импортированные `.ico` на этом шаге. Без `--yes` reset отказывается выполняться.
 
 Будущее улучшение: `unregister-menu --dry-run`, который покажет удаляемые Foldora-owned roots без записи в registry и без изменения settings.
+
+## Diagnostics
+
+`diagnostics desktop-ini-policy` предназначена только для ручной проверки deletion UX в Explorer. Команда не пишет в registry, не использует AppData settings и не требует admin rights.
+
+Пример:
+
+```text
+foldora diagnostics desktop-ini-policy --target "C:\Users\User\Desktop" --icon "C:\Icons\test.ico"
+```
+
+Она создаёт по одной папке на каждую policy:
+
+- `CompatibilitySystem`
+- `ReadOnlyFolderSystemDesktopIni`
+- `ReadOnlyFolderHiddenDesktopIni`
+- `SystemFolderHiddenDesktopIni`
+
+После запуска нужно вручную проверить, видна ли кастомная иконка после refresh/reopen Explorer и появляется ли warning при удалении папки.

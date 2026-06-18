@@ -16,6 +16,79 @@ public sealed class DesktopIniServiceTests
     }
 
     [Fact]
+    public void DefaultAttributePolicy_MatchesCurrentCompatibilityBehavior()
+    {
+        var policy = DesktopIniAttributePolicy.Default;
+
+        Assert.Same(DesktopIniAttributePolicy.CompatibilitySystem, policy);
+        Assert.Equal(FileAttributes.System, policy.FolderAttributes);
+        Assert.Equal(FileAttributes.Hidden | FileAttributes.System, policy.DesktopIniAttributes);
+    }
+
+    [Theory]
+    [MemberData(nameof(AttributePolicyCases))]
+    public async Task ApplyIconAsync_AppliesSelectedAttributePolicy(
+        DesktopIniAttributePolicy policy,
+        FileAttributes expectedFolderAttributes,
+        FileAttributes expectedDesktopIniAttributes)
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraTests-");
+        var folder = Directory.CreateDirectory(Path.Combine(root.FullName, policy.Name));
+        var iconPath = Path.Combine(root.FullName, "icon.ico");
+
+        await File.WriteAllTextAsync(iconPath, "bootstrap placeholder");
+
+        try
+        {
+            var service = new DesktopIniService();
+
+            await service.ApplyIconAsync(new DesktopIniOptions(folder.FullName, iconPath, policy));
+
+            var desktopIniPath = Path.Combine(folder.FullName, DesktopIniService.FileName);
+            var desktopIniAttributes = File.GetAttributes(desktopIniPath);
+            var folderAttributes = folder.Attributes;
+
+            Assert.True(folderAttributes.HasFlag(expectedFolderAttributes));
+            Assert.Equal(expectedDesktopIniAttributes, desktopIniAttributes & (FileAttributes.Hidden | FileAttributes.System));
+        }
+        finally
+        {
+            ClearAttributes(root);
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ApplyIconAsync_WithSelectedPolicy_KeepsDesktopIniContentShape()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraTests-");
+        var folder = Directory.CreateDirectory(Path.Combine(root.FullName, "Target"));
+        var iconPath = Path.Combine(root.FullName, "icon.ico");
+
+        await File.WriteAllTextAsync(iconPath, "bootstrap placeholder");
+
+        try
+        {
+            var service = new DesktopIniService();
+
+            await service.ApplyIconAsync(new DesktopIniOptions(
+                folder.FullName,
+                iconPath,
+                DesktopIniAttributePolicy.ReadOnlyFolderHiddenDesktopIni));
+
+            var content = await File.ReadAllTextAsync(Path.Combine(folder.FullName, DesktopIniService.FileName));
+
+            Assert.Contains("[.ShellClassInfo]", content);
+            Assert.Contains($"IconResource={Path.GetFullPath(iconPath)},0", content);
+        }
+        finally
+        {
+            ClearAttributes(root);
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task ApplyIconAsync_WritesDesktopIniInsideTargetFolder()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraTests-");
@@ -179,5 +252,32 @@ public sealed class DesktopIniServiceTests
         }
 
         directory.Attributes = FileAttributes.Normal;
+    }
+
+    public static TheoryData<DesktopIniAttributePolicy, FileAttributes, FileAttributes> AttributePolicyCases()
+    {
+        return new TheoryData<DesktopIniAttributePolicy, FileAttributes, FileAttributes>
+        {
+            {
+                DesktopIniAttributePolicy.CompatibilitySystem,
+                FileAttributes.System,
+                FileAttributes.Hidden | FileAttributes.System
+            },
+            {
+                DesktopIniAttributePolicy.ReadOnlyFolderSystemDesktopIni,
+                FileAttributes.ReadOnly,
+                FileAttributes.Hidden | FileAttributes.System
+            },
+            {
+                DesktopIniAttributePolicy.ReadOnlyFolderHiddenDesktopIni,
+                FileAttributes.ReadOnly,
+                FileAttributes.Hidden
+            },
+            {
+                DesktopIniAttributePolicy.SystemFolderHiddenDesktopIni,
+                FileAttributes.System,
+                FileAttributes.Hidden
+            }
+        };
     }
 }

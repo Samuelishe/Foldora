@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-06-18 - Desktop.ini attribute policy investigation
+
+- Зафиксировано MVP-ограничение legacy registry menu: Foldora получает target directory path (`%1`/`%V`), но не получает cursor coordinates или desktop icon-view coordinates; позицию нового значка выбирает Explorer.
+- Добавлена Core-модель `DesktopIniAttributePolicy` с policies `CompatibilitySystem`, `ReadOnlyFolderSystemDesktopIni`, `ReadOnlyFolderHiddenDesktopIni` и `SystemFolderHiddenDesktopIni`.
+- `DesktopIniService` теперь применяет выбранную attribute policy через `DesktopIniOptions`, но default production behavior оставлен прежним: folder `System`, `desktop.ini` `Hidden + System`.
+- Добавлена CLI diagnostic command `foldora diagnostics desktop-ini-policy --target "<directory>" --icon "<ico>"`.
+- Diagnostic command создаёт по одной тестовой папке на policy, применяет custom icon и печатает manual checklist; registry/AppData не трогаются.
+- `docs/DESKTOP_INI.md` получил manual verification matrix с результатами `TBD`, чтобы выбрать deletion-friendly default после ручной проверки Explorer.
+- Добавлены tests для policy attributes, desktop.ini content shape, parser diagnostics command и diagnostic runner.
+
 ## 2026-06-18 - WPF UX cleanup phase 1
 
 - Главное окно WPF переведено с технического `DataGrid` на список карточек пунктов меню.

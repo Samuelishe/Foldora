@@ -6,12 +6,14 @@
 
 Documentation consolidation: продуктовая концепция вынесена в `docs/PRODUCT_VISION.md`, целевой WPF/staged-save flow - в `docs/UX_FLOW.md`. Главный MVP-объект зафиксирован как пользовательский `FolderMenuEntry`; packs остаются будущим import/export механизмом.
 
-Текущий фокус: ручная проверка WPF card/list layout, empty state, separated dangerous zone и hidden technical details.
+Текущий фокус: manual-test-driven investigation для `desktop.ini` attribute policies и Explorer UX observations. Default production behavior для folder icon apply остаётся `CompatibilitySystem`: folder `System`, `desktop.ini` `Hidden + System`. Добавлена diagnostic CLI-команда `foldora diagnostics desktop-ini-policy --target "<directory>" --icon "<ico>"`, которая создаёт тестовые папки для ручного выбора deletion-friendly policy. Также зафиксировано MVP-ограничение legacy registry menu: Foldora получает target directory path, но не cursor/icon-view coordinates, поэтому Explorer сам выбирает позицию нового значка на рабочем столе.
 
 Открытые вопросы:
 
 - Финальное публичное имя продукта.
 - Точный UX для выбора custom style.
 - Правила снятия атрибута `System` с папки после clear, если в будущем появится надёжное определение владельца shell-настроек.
+- Какая `DesktopIniAttributePolicy` сохраняет custom icon, но убирает deletion warning про системный `desktop.ini`.
+- Возможен ли user-grade UX создания desktop folder под курсором без COM/modern shell integration.
 - Фактическое поведение Explorer placeholders `%1` и `%V` на Windows 11 после повторной ручной проверки.
 - Preview generation/cache policy, если прямой WPF preview из `.ico` окажется недостаточным.

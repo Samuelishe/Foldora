@@ -79,6 +79,12 @@ Placeholder policy на текущем этапе:
 
 Это documented placeholder policy для тестов plan builder. Manual verification на Windows 11 требуется всякий раз, когда эта policy меняется.
 
+## Desktop Placement Limitation
+
+Legacy registry context menu передаёт Foldora target directory path (`%1` или `%V`), но не передаёт cursor coordinates или координаты desktop icon-view. Поэтому при создании папки из desktop background menu Foldora может создать папку в правильной директории, но позицию нового значка на рабочем столе выбирает Explorer.
+
+Создание папки именно под курсором не поддерживается текущей MVP-интеграцией. Для такого поведения нужен отдельный advanced shell integration path, например `IExplorerCommand`, COM shell extension, работа с Explorer view positioning или другой глубокий shell layer. Это future/non-MVP и не должно решаться registry/placeholder hacks.
+
 ## Registry Writer
 
 `ExplorerMenuRegistryWriter` всегда валидирует plan перед применением. Writer пишет только через `IRegistryAccess`; реальный доступ к Windows Registry находится только в `WindowsRegistryAccess`.

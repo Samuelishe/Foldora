@@ -79,6 +79,13 @@ try
             await UnregisterMenuAsync();
             return 0;
 
+        case CliCommandKind.DiagnosticsDesktopIniPolicy:
+            await new DesktopIniPolicyDiagnosticsRunner().RunAsync(
+                parsedCommand.TargetPath!,
+                parsedCommand.IconPath!,
+                Console.Out);
+            return 0;
+
         case CliCommandKind.Quote:
             Console.WriteLine(CommandLineQuoter.Quote(parsedCommand.QuoteValue ?? string.Empty));
             return 0;
@@ -118,6 +125,7 @@ Usage:
   foldora menu reset --yes
   foldora register-menu [--dry-run] [--host-path "<absolute-path-to-Foldora.MenuHost.exe>"] [--cli-path "<legacy-dev-override>"]
   foldora unregister-menu
+  foldora diagnostics desktop-ini-policy --target "<directory>" --icon "<absolute-icon-path>"
   foldora import-pack --path "<pack-path>"
   foldora list-packs
   foldora list-styles
@@ -134,6 +142,7 @@ Implemented now:
   menu reset --yes
   register-menu [--dry-run] [--host-path] [--cli-path]
   unregister-menu
+  diagnostics desktop-ini-policy --target --icon
 
 The --style flow, pack import, Explorer restart, and icon cache reset are not implemented in this step.
 """);

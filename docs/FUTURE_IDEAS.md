@@ -20,6 +20,8 @@
 - Preview generation в `%AppData%\Foldora\previews\`, если прямой WPF preview из `.ico` будет недостаточен.
 - Валидация `.ico` размеров.
 - Orphan icon cleanup для импортированных `.ico`, отдельная команда/UX после `menu reset --yes`.
+- Deletion-friendly default для `desktop.ini` attributes после ручной проверки `CompatibilitySystem`, `ReadOnlyFolderSystemDesktopIni`, `ReadOnlyFolderHiddenDesktopIni`, `SystemFolderHiddenDesktopIni`.
+- Создание папки под cursor position на рабочем столе через отдельное shell integration исследование. Legacy registry menu даёт только target directory path, не desktop icon-view coordinates.
 - `unregister-menu --dry-run`.
 - Installer/MSIX/publish flow со стабильным installed path для `Foldora.App.exe` и `Foldora.Cli.exe`.
 - Автоматическая миграция настроек при смене рабочего имени продукта.

@@ -34,6 +34,7 @@ public sealed class DesktopIniService
             throw new InvalidOperationException("Foldora MVP supports only .ico files for folder icons.");
         }
 
+        var attributePolicy = options.AttributePolicy ?? DesktopIniAttributePolicy.Default;
         var desktopIniPath = Path.Combine(folder.FullName, FileName);
         var lines = File.Exists(desktopIniPath)
             ? await File.ReadAllLinesAsync(desktopIniPath, cancellationToken)
@@ -47,8 +48,8 @@ public sealed class DesktopIniService
         }
 
         await File.WriteAllTextAsync(desktopIniPath, BuildContent(lines), Encoding.Unicode, cancellationToken);
-        File.SetAttributes(desktopIniPath, FileAttributes.Hidden | FileAttributes.System);
-        folder.Attributes |= FileAttributes.System;
+        File.SetAttributes(desktopIniPath, attributePolicy.DesktopIniAttributes);
+        folder.Attributes |= attributePolicy.FolderAttributes;
     }
 
     public async Task ClearIconAsync(string folderPath, CancellationToken cancellationToken = default)

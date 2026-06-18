@@ -31,6 +31,7 @@
 - `src/Foldora.Core/Validation/FolderMenuValidationResult.cs` - результат валидации.
 - `src/Foldora.Core/Validation/FolderMenuValidationSeverity.cs` - severity валидации.
 - `src/Foldora.Core/Validation/IconFileValidator.cs` - structural validation `.ico`.
+- `src/Foldora.Core/DesktopIni/DesktopIniAttributePolicy.cs` - тестируемые политики атрибутов папки и `desktop.ini` для manual deletion UX investigation.
 - `src/Foldora.Core/DesktopIni/DesktopIniOptions.cs` - параметры записи desktop.ini.
 - `src/Foldora.Core/DesktopIni/DesktopIniService.cs` - минимальный сервис применения/очистки desktop.ini.
 - `src/Foldora.Shell/Foldora.Shell.csproj` - shell integration library.
@@ -56,7 +57,8 @@
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuTargetKind.cs` - Directory/DirectoryBackground target kind.
 - `src/Foldora.Cli/Foldora.Cli.csproj` - console app.
 - `src/Foldora.Cli/CliCommand.cs` - модель разобранной CLI-команды.
-- `src/Foldora.Cli/CliCommandParser.cs` - простой parser CLI-аргументов, включая `menu reset --yes` и `register-menu --host-path`.
+- `src/Foldora.Cli/CliCommandParser.cs` - простой parser CLI-аргументов, включая `menu reset --yes`, `register-menu --host-path` и diagnostics commands.
+- `src/Foldora.Cli/DesktopIniPolicyDiagnosticsRunner.cs` - runner manual diagnostic command для проверки `desktop.ini` attribute policies.
 - `src/Foldora.Cli/Program.cs` - CLI help/dispatch и вызов Core/Shell-сервисов.
 - `src/Foldora.MenuHost/Foldora.MenuHost.csproj` - no-console Windows host для Explorer menu commands.
 - `src/Foldora.MenuHost/Program.cs` - entry point MenuHost без console output.
@@ -89,7 +91,8 @@
 - `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
 - `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor.
 - `tests/Foldora.Tests/App/WpfIconPreviewServiceTests.cs` - тесты WPF preview service.
-- `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser, включая reset confirmation.
+- `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser, включая reset confirmation и diagnostics command.
+- `tests/Foldora.Tests/Cli/DesktopIniPolicyDiagnosticsRunnerTests.cs` - тесты diagnostic runner для `desktop.ini` attribute policies без Explorer/registry.
 - `tests/Foldora.Tests/Core/FoldoraDataPathsTests.cs` - тесты AppData paths.
 - `tests/Foldora.Tests/Core/DesktopIniServiceTests.cs` - тесты desktop.ini.
 - `tests/Foldora.Tests/Fixtures/IcoTestFile.cs` - helper ICO fixture для structural validation и WPF preview.

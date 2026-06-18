@@ -13,6 +13,7 @@ public enum CliCommandKind
     Skeleton,
     RegisterMenu,
     UnregisterMenu,
+    DiagnosticsDesktopIniPolicy,
     Quote,
     Unknown
 }

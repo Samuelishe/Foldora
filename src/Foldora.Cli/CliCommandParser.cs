@@ -30,10 +30,50 @@ public static class CliCommandParser
             "clear" => ParseClear(options),
             "register-menu" => ParseRegisterMenu(options),
             "unregister-menu" => new CliCommand(CliCommandKind.UnregisterMenu, command),
+            "diagnostics" => ParseDiagnostics(args.Skip(1).ToArray()),
             "quote" => new CliCommand(CliCommandKind.Quote, command, QuoteValue: args.Length > 1 ? args[1] : string.Empty),
             _ when SkeletonCommands.Contains(command) => new CliCommand(CliCommandKind.Skeleton, command),
             _ => new CliCommand(CliCommandKind.Unknown, command, Error: $"Unknown command '{command}'.")
         };
+    }
+
+    private static CliCommand ParseDiagnostics(string[] args)
+    {
+        if (args.Length == 0)
+        {
+            return new CliCommand(CliCommandKind.Unknown, "diagnostics", Error: "Missing diagnostics subcommand.");
+        }
+
+        var subcommand = args[0].ToLowerInvariant();
+        var options = ParseOptions(args.Skip(1).ToArray());
+
+        return subcommand switch
+        {
+            "desktop-ini-policy" => ParseDiagnosticsDesktopIniPolicy(options),
+            _ => new CliCommand(
+                CliCommandKind.Unknown,
+                $"diagnostics {subcommand}",
+                Error: $"Unknown diagnostics subcommand '{subcommand}'.")
+        };
+    }
+
+    private static CliCommand ParseDiagnosticsDesktopIniPolicy(IReadOnlyDictionary<string, string?> options)
+    {
+        if (!TryGetRequiredOption(options, "--target", out var targetError, out var targetPath))
+        {
+            return new CliCommand(CliCommandKind.DiagnosticsDesktopIniPolicy, "diagnostics desktop-ini-policy", Error: targetError);
+        }
+
+        if (!TryGetRequiredOption(options, "--icon", out var iconError, out var iconPath))
+        {
+            return new CliCommand(CliCommandKind.DiagnosticsDesktopIniPolicy, "diagnostics desktop-ini-policy", Error: iconError);
+        }
+
+        return new CliCommand(
+            CliCommandKind.DiagnosticsDesktopIniPolicy,
+            "diagnostics desktop-ini-policy",
+            TargetPath: targetPath,
+            IconPath: iconPath);
     }
 
     private static CliCommand ParseMenu(string[] args)
