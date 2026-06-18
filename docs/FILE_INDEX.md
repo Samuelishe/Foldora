@@ -38,14 +38,14 @@
 - `src/Foldora.Shell/Registry/WindowsRegistryAccess.cs` - реальный HKCU registry access через `Microsoft.Win32.Registry`.
 - `src/Foldora.Shell/Registry/ExplorerMenuRegistryWriter.cs` - применение validated registry plan.
 - `src/Foldora.Shell/Registry/ExplorerMenuRegistrationResult.cs` - результат register/dry-run/unregister.
-- `src/Foldora.Shell/Registry/ExplorerMenuRegistrationService.cs` - orchestration register-menu/unregister-menu.
+- `src/Foldora.Shell/Registry/ExplorerMenuRegistrationService.cs` - orchestration register-menu/unregister-menu/menu reset.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuCommandBuilder.cs` - command strings для будущих registry values.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryDeleteOperation.cs` - delete key operation.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryHive.cs` - registry hive model.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryKeyOperation.cs` - create key operation.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPaths.cs` - Foldora-owned registry roots.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlan.cs` - immutable registry plan.
-- `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanBuilder.cs` - testable registry plan builder.
+- `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanBuilder.cs` - testable registry plan builder для visible shape `<CreateFolderMenu.Title> -> entries`.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanValidationResult.cs` - validation result.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanValidator.cs` - safety validator для plan.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryValueOperation.cs` - set value operation.
@@ -53,8 +53,8 @@
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuTargetKind.cs` - Directory/DirectoryBackground target kind.
 - `src/Foldora.Cli/Foldora.Cli.csproj` - console app.
 - `src/Foldora.Cli/CliCommand.cs` - модель разобранной CLI-команды.
-- `src/Foldora.Cli/CliCommandParser.cs` - простой parser CLI-аргументов.
-- `src/Foldora.Cli/Program.cs` - CLI help/dispatch и вызов Core-сервисов.
+- `src/Foldora.Cli/CliCommandParser.cs` - простой parser CLI-аргументов, включая `menu reset --yes`.
+- `src/Foldora.Cli/Program.cs` - CLI help/dispatch и вызов Core/Shell-сервисов.
 - `src/Foldora.App/Foldora.App.csproj` - WPF settings app.
 - `src/Foldora.App/App.xaml` - WPF application entry.
 - `src/Foldora.App/App.xaml.cs` - WPF app code-behind.
@@ -62,7 +62,7 @@
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI plumbing.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project.
-- `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser.
+- `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser, включая reset confirmation.
 - `tests/Foldora.Tests/Core/FoldoraDataPathsTests.cs` - тесты AppData paths.
 - `tests/Foldora.Tests/Core/DesktopIniServiceTests.cs` - тесты desktop.ini.
 - `tests/Foldora.Tests/Fixtures/IcoTestFile.cs` - helper минимального ICO fixture.
@@ -74,11 +74,11 @@
 - `tests/Foldora.Tests/Menu/UniqueFolderNameServiceTests.cs` - тесты выбора свободного имени папки.
 - `tests/Foldora.Tests/Settings/FoldoraSettingsStorageTests.cs` - тесты JSON storage и default settings.
 - `tests/Foldora.Tests/Shell/CommandLineQuoterTests.cs` - тесты command line quoting.
-- `tests/Foldora.Tests/Shell/ExplorerMenuRegistryPlanBuilderTests.cs` - тесты registry plan builder.
+- `tests/Foldora.Tests/Shell/ExplorerMenuRegistryPlanBuilderTests.cs` - тесты registry plan builder и visible menu shape.
 - `tests/Foldora.Tests/Shell/ExplorerMenuRegistryPlanValidatorTests.cs` - тесты registry plan safety validator.
 - `tests/Foldora.Tests/Shell/Fakes/FakeRegistryAccess.cs` - fake registry access для тестов.
 - `tests/Foldora.Tests/Shell/ExplorerMenuRegistryWriterTests.cs` - тесты writer safety.
-- `tests/Foldora.Tests/Shell/ExplorerMenuRegistrationServiceTests.cs` - тесты register/dry-run/unregister service.
+- `tests/Foldora.Tests/Shell/ExplorerMenuRegistrationServiceTests.cs` - тесты register/dry-run/unregister/reset service.
 - `tests/Foldora.Tests/Validation/DisplayNameValidatorTests.cs` - тесты display name validation.
 - `tests/Foldora.Tests/Validation/FolderMenuSettingsValidatorTests.cs` - тесты лимитов menu settings.
 - `tests/Foldora.Tests/Validation/FolderNameSanitizerTests.cs` - тесты sanitizer имени папки.

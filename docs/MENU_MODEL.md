@@ -21,6 +21,25 @@
 
 Entry должен быть enabled, иметь непустой `IconPath`, а импортированная иконка должна существовать.
 
+## Explorer Menu Shape
+
+Текущий MVP генерирует legacy Explorer menu в форме:
+
+```text
+<CreateFolderMenu.Title>
+  <DisplayName entry 1>
+  <DisplayName entry 2>
+```
+
+Если `CreateFolderMenu.Title` пустой или состоит только из пробелов, используется fallback `Создать папку`. Технический registry root при этом остаётся `Foldora`, чтобы safety validator мог разрешать только Foldora-owned paths:
+
+```text
+HKCU\Software\Classes\Directory\shell\Foldora
+HKCU\Software\Classes\Directory\Background\shell\Foldora
+```
+
+Старый видимый слой `Foldora -> Создать папку -> entries` больше не используется в MVP. Entries находятся напрямую под `...\Foldora\shell\entry-...`. `DisplayName` остаётся только видимым текстом (`MUIVerb`) и никогда не используется как registry key path.
+
 ## Validation
 
 `DisplayName`: trim по краям, после fallback непустой, максимум 80 символов, control chars запрещены, кириллица/emoji/пробелы разрешены, дубликаты разрешены.
@@ -97,6 +116,8 @@ Foldora принимает только настоящие `.ico`: файл до
 - plan builder должен гарантировать, что все keys находятся только под Foldora-owned paths.
 
 Registry writer реализован как отдельный слой и применяет только validated plan. `register-menu --dry-run` строит и валидирует plan, но не пишет и не удаляет реальные registry keys.
+
+`unregister-menu` удаляет только Foldora-owned registry roots и отключает Explorer integration без удаления entries/settings. `menu reset --yes` очищает entries, возвращает title к `Создать папку`, ставит `ExplorerIntegrationEnabled = false` и удаляет только Foldora-owned registry roots. Импортированные `.ico` остаются в `%AppData%\Foldora\icons`; очистка orphan icons отложена.
 
 Будущие owned paths:
 

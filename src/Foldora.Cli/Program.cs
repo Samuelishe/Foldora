@@ -63,6 +63,10 @@ try
             await RemoveMenuEntryAsync(parsedCommand.EntryId!);
             return 0;
 
+        case CliCommandKind.MenuReset:
+            await ResetMenuAsync();
+            return 0;
+
         case CliCommandKind.Skeleton:
             Console.WriteLine($"Command '{parsedCommand.Name}' is a skeleton and is not implemented yet.");
             return 0;
@@ -111,6 +115,7 @@ Usage:
   foldora menu list
   foldora menu add --icon "<absolute-icon-path>" [--name "<display-name>"] [--folder-name "<default-folder-name>"]
   foldora menu remove --entry-id "<entry-id>"
+  foldora menu reset --yes
   foldora register-menu [--dry-run] [--cli-path "<absolute-path-to-Foldora.Cli.exe>"]
   foldora unregister-menu
   foldora import-pack --path "<pack-path>"
@@ -126,6 +131,7 @@ Implemented now:
   menu list
   menu add --icon [--name] [--folder-name]
   menu remove --entry-id
+  menu reset --yes
   register-menu [--dry-run] [--cli-path]
   unregister-menu
 
@@ -211,6 +217,13 @@ static async Task RegisterMenuAsync(bool dryRun, string? cliExecutablePath)
 static async Task UnregisterMenuAsync()
 {
     var result = await CreateRegistrationService().UnregisterAsync();
+    Console.WriteLine(result.Message);
+    Console.WriteLine($"ExplorerIntegrationEnabled: {result.ExplorerIntegrationEnabled}");
+}
+
+static async Task ResetMenuAsync()
+{
+    var result = await CreateRegistrationService().ResetMenuAsync();
     Console.WriteLine(result.Message);
     Console.WriteLine($"ExplorerIntegrationEnabled: {result.ExplorerIntegrationEnabled}");
 }

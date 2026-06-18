@@ -9,25 +9,15 @@ HKCU\Software\Classes\Directory\Background\shell
 
 HKLM не используется. Регистрация и удаление меню должны быть явными командами пользователя.
 
-Целевой вид меню:
+Текущий MVP-вид меню:
 
 ```text
-Foldora
-  Create folder
-    Documents
-    Code
-    Photos
-    Archive
-    Custom...
-  Apply icon
-    Documents
-    Code
-    Photos
-    Archive
-    Custom...
-  Clear icon
-  Settings
+<CreateFolderMenu.Title>
+  <DisplayName entry 1>
+  <DisplayName entry 2>
 ```
+
+Fallback title для пустого/whitespace `CreateFolderMenu.Title`: `Создать папку`. Старый видимый верхний слой `Foldora` больше не используется в MVP, но technical registry key остаётся `Foldora`.
 
 `Foldora.Shell` содержит безопасный skeleton registrar, testable registry plan builder и HKCU writer, который применяет только validated plan.
 
@@ -49,11 +39,23 @@ Builder поддерживает два target kind:
 Текущая flat menu shape:
 
 ```text
-Foldora
-  Создать папку
-    <DisplayName entry 1>
-    <DisplayName entry 2>
+Создать папку
+  <DisplayName entry 1>
+  <DisplayName entry 2>
 ```
+
+Registry shape сохраняет owned root `Foldora`:
+
+```text
+Software\Classes\Directory\shell\Foldora
+  MUIVerb = <CreateFolderMenu.Title>
+  SubCommands = ""
+
+Software\Classes\Directory\shell\Foldora\shell\entry-001-<entry-id>
+  MUIVerb = <DisplayName>
+```
+
+Для `Directory\Background` используется такой же layout под `Software\Classes\Directory\Background\shell\Foldora`. Промежуточный ключ `create-folder` больше не создаётся.
 
 Disabled entries не попадают в plan. Duplicate `DisplayName` разрешены. `DisplayName` используется только как menu text value (`MUIVerb`) и не используется как registry key name. Entry key names строятся по sort index и stable `entry-id`.
 
@@ -99,6 +101,12 @@ HKCU\Software\Classes\Directory\shell\Foldora
 
 Команда idempotent: отсутствие ключей не является ошибкой.
 
+`unregister-menu` является безопасным отключением Explorer integration: settings entries сохраняются, `ExplorerIntegrationEnabled` становится `false`, чужие registry keys не трогаются.
+
+`menu reset --yes` выполняет полный сброс пользовательского меню к пустому дефолту: удаляет только Foldora-owned registry roots, очищает `CreateFolderMenu.Entries`, возвращает title к `Создать папку`, ставит `ExplorerIntegrationEnabled = false` и сохраняет `settings.json`. AppData root, `packs` и импортированные `.ico` на этом шаге не удаляются.
+
+Отсутствие Foldora menu в Explorer является нормальным дефолтным состоянием.
+
 ## Manual Verification
 
 1. Добавить тестовый entry:
@@ -137,13 +145,19 @@ foldora register-menu --cli-path "<absolute-path-to-Foldora.Cli.exe>"
 - ПКМ по пустому месту внутри директории.
 - `Show more options`, если пункт попал в legacy menu.
 
-6. Если target placeholder работает неправильно:
+6. После ручной проверки или если target placeholder работает неправильно:
 
 ```text
 foldora unregister-menu
 ```
 
-7. Зафиксировать фактическое поведение `%1` и `%V`.
+7. Для полного сброса пользовательского меню:
+
+```text
+foldora menu reset --yes
+```
+
+8. Зафиксировать фактическое поведение `%1` и `%V`.
 
 Будущие registry safety rules:
 

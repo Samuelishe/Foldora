@@ -9,6 +9,7 @@ public enum CliCommandKind
     MenuList,
     MenuAdd,
     MenuRemove,
+    MenuReset,
     Skeleton,
     RegisterMenu,
     UnregisterMenu,
@@ -27,6 +28,7 @@ public sealed record CliCommand(
     string? EntryId = null,
     string? CliExecutablePath = null,
     bool DryRun = false,
+    bool Yes = false,
     string? QuoteValue = null,
     string? Error = null)
 {

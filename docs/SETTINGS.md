@@ -57,3 +57,21 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 Если старый entry не содержит `DefaultFolderName`, при загрузке используется fallback `Новая папка`.
 
 `ExplorerIntegrationEnabled` отражает состояние последнего успешного register/unregister flow. `register-menu --dry-run` не меняет этот флаг.
+
+`CreateFolderMenu.Title` является видимым top-level именем legacy Explorer menu. Если title пустой/whitespace при построении registry plan, используется fallback `Создать папку`. Technical registry key остаётся `Foldora` и не зависит от title.
+
+`unregister-menu` меняет только `ExplorerIntegrationEnabled = false` после удаления Foldora-owned registry roots; `CreateFolderMenu.Entries` и title сохраняются.
+
+`menu reset --yes` сохраняет `settings.json`, но сбрасывает пользовательское меню:
+
+```json
+{
+  "explorerIntegrationEnabled": false,
+  "createFolderMenu": {
+    "title": "Создать папку",
+    "entries": []
+  }
+}
+```
+
+Команда не удаляет `%AppData%\Foldora`, `packs` и импортированные `.ico`.

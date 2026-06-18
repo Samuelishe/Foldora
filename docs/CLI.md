@@ -11,6 +11,7 @@ foldora clear --folder "<folder>"
 foldora menu list
 foldora menu add --icon "<absolute-icon-path>" [--name "<display-name>"] [--folder-name "<default-folder-name>"]
 foldora menu remove --entry-id "<entry-id>"
+foldora menu reset --yes
 foldora import-pack --path "<pack-path>"
 foldora list-packs
 foldora list-styles
@@ -30,6 +31,7 @@ foldora settings
 - выполняет `menu list`, создавая AppData/settings при первом запуске;
 - выполняет `menu add --icon ... [--name ...] [--folder-name ...]`, импортируя `.ico` в `%AppData%\Foldora\icons`;
 - выполняет `menu remove --entry-id ...`, удаляя entry и принадлежащую ему копию `.ico`;
+- выполняет `menu reset --yes`, очищая пользовательские entries, возвращая title к `Создать папку`, удаляя только Foldora-owned registry roots и отключая Explorer integration;
 - выполняет `register-menu`, применяя validated HKCU registry plan;
 - выполняет `register-menu --dry-run`, печатая plan без записи в registry и без изменения settings;
 - выполняет `register-menu --cli-path "<path>"` для ручной проверки с publish/install path;
@@ -54,3 +56,8 @@ CLI не исправляет явно невалидный `--folder-name` мо
 `create --entry-id` создаёт папку внутри `--target`. Если имя занято файлом или папкой, используется схема `Name (2)`, `Name (3)` и так далее, максимум до разумного лимита попыток.
 
 `unregister-menu` idempotent: отсутствие Foldora-owned keys не считается ошибкой.
+`unregister-menu` не удаляет entries/settings и нужен для безопасного временного отключения Explorer integration.
+
+`menu reset --yes` - полный сброс пользовательского меню к пустому дефолту. Команда не удаляет весь `%AppData%\Foldora`, не удаляет `settings.json`, не трогает `packs` и не удаляет импортированные `.ico` на этом шаге. Без `--yes` reset отказывается выполняться.
+
+Будущее улучшение: `unregister-menu --dry-run`, который покажет удаляемые Foldora-owned roots без записи в registry и без изменения settings.

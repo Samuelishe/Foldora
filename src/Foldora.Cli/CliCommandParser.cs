@@ -51,6 +51,7 @@ public static class CliCommandParser
             "list" => new CliCommand(CliCommandKind.MenuList, "menu list"),
             "add" => ParseMenuAdd(options),
             "remove" => ParseMenuRemove(options),
+            "reset" => ParseMenuReset(options),
             _ => new CliCommand(CliCommandKind.Unknown, $"menu {subcommand}", Error: $"Unknown menu subcommand '{subcommand}'.")
         };
     }
@@ -128,6 +129,19 @@ public static class CliCommandParser
         }
 
         return new CliCommand(CliCommandKind.MenuRemove, "menu remove", EntryId: entryId);
+    }
+
+    private static CliCommand ParseMenuReset(IReadOnlyDictionary<string, string?> options)
+    {
+        if (!options.ContainsKey("--yes"))
+        {
+            return new CliCommand(
+                CliCommandKind.MenuReset,
+                "menu reset",
+                Error: "Reset requires explicit confirmation. Re-run with --yes to clear menu entries and unregister Explorer integration.");
+        }
+
+        return new CliCommand(CliCommandKind.MenuReset, "menu reset", Yes: true);
     }
 
     private static CliCommand ParseRegisterMenu(IReadOnlyDictionary<string, string?> options)

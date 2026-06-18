@@ -110,9 +110,50 @@ public sealed class ExplorerMenuRegistrationServiceTests
             var settings = await new FoldoraSettingsStorage(paths).LoadAsync();
 
             Assert.False(settings.ExplorerIntegrationEnabled);
+            Assert.Single(settings.CreateFolderMenu.Entries);
             Assert.False(registry.ContainsKey(ExplorerMenuRegistryPaths.DirectoryRoot));
             Assert.False(registry.ContainsKey(ExplorerMenuRegistryPaths.DirectoryBackgroundRoot));
             Assert.True(registry.ContainsKey(@"Software\Classes\Directory\shell\OtherApp"));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ResetMenu_ClearsEntriesRestoresTitleDisablesIntegrationAndDeletesOnlyOwnedKeys()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraReset-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, explorerIntegrationEnabled: true, CreateEntry("entry-skull", "Череп"));
+            var iconPath = Path.Combine(paths.IconsDirectory, "entry-skull.ico");
+            Directory.CreateDirectory(paths.IconsDirectory);
+            await File.WriteAllTextAsync(iconPath, "fake icon");
+            Directory.CreateDirectory(paths.PacksDirectory);
+
+            var registry = new FakeRegistryAccess();
+            registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryRoot);
+            registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryBackgroundRoot);
+            registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, @"Software\Classes\Directory\shell\OtherApp");
+
+            var result = await CreateService(paths, registry).ResetMenuAsync();
+            var settings = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.True(result.Applied);
+            Assert.False(settings.ExplorerIntegrationEnabled);
+            Assert.Equal("Создать папку", settings.CreateFolderMenu.Title);
+            Assert.Empty(settings.CreateFolderMenu.Entries);
+            Assert.False(registry.ContainsKey(ExplorerMenuRegistryPaths.DirectoryRoot));
+            Assert.False(registry.ContainsKey(ExplorerMenuRegistryPaths.DirectoryBackgroundRoot));
+            Assert.True(registry.ContainsKey(@"Software\Classes\Directory\shell\OtherApp"));
+            Assert.True(Directory.Exists(paths.RootDirectory));
+            Assert.True(File.Exists(paths.SettingsFile));
+            Assert.True(File.Exists(iconPath));
+            Assert.True(Directory.Exists(paths.PacksDirectory));
         }
         finally
         {

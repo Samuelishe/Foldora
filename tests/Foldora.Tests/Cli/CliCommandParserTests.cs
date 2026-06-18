@@ -161,6 +161,26 @@ public sealed class CliCommandParserTests
     }
 
     [Fact]
+    public void Parse_AcceptsMenuResetWithYes()
+    {
+        var command = CliCommandParser.Parse(["menu", "reset", "--yes"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.MenuReset, command.Kind);
+        Assert.True(command.Yes);
+    }
+
+    [Fact]
+    public void Parse_RejectsMenuResetWithoutYes()
+    {
+        var command = CliCommandParser.Parse(["menu", "reset"]);
+
+        Assert.False(command.IsValid);
+        Assert.Equal(CliCommandKind.MenuReset, command.Kind);
+        Assert.Contains("--yes", command.Error);
+    }
+
+    [Fact]
     public void Parse_AcceptsRegisterMenu()
     {
         var command = CliCommandParser.Parse(["register-menu"]);

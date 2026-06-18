@@ -7,8 +7,7 @@ namespace Foldora.Shell.RegistryPlan;
 /// </summary>
 public sealed class ExplorerMenuRegistryPlanBuilder
 {
-    private const string RootMenuText = "Foldora";
-    private const string CreateFolderKeyName = "create-folder";
+    private const string DefaultCreateFolderMenuTitle = "Создать папку";
 
     private readonly ExplorerMenuCommandBuilder commandBuilder;
     private readonly ExplorerMenuRegistryPlanValidator validator;
@@ -48,22 +47,17 @@ public sealed class ExplorerMenuRegistryPlanBuilder
 
         var keys = new List<ExplorerMenuRegistryKeyOperation>();
         var values = new List<ExplorerMenuRegistryValueOperation>();
-        var createFolderKey = $@"{root}\shell\{CreateFolderKeyName}";
-        var createFolderShellKey = $@"{createFolderKey}\shell";
+        var rootShellKey = $@"{root}\shell";
 
         AddKey(keys, root);
-        AddValue(values, root, "MUIVerb", RootMenuText);
+        AddValue(values, root, "MUIVerb", NormalizeRootMenuTitle(menuSettings.Title));
         AddValue(values, root, "SubCommands", string.Empty);
-
-        AddKey(keys, createFolderKey);
-        AddValue(values, createFolderKey, "MUIVerb", menuSettings.Title);
-        AddValue(values, createFolderKey, "SubCommands", string.Empty);
 
         for (var index = 0; index < enabledEntries.Length; index++)
         {
             var entry = enabledEntries[index];
             var entryKeyName = CreateEntryKeyName(index, entry.Id);
-            var entryKey = $@"{createFolderShellKey}\{entryKeyName}";
+            var entryKey = $@"{rootShellKey}\{entryKeyName}";
             var commandKey = $@"{entryKey}\command";
             var command = commandBuilder.BuildCreateFolderCommand(cliExecutablePath, targetKind, entry.Id);
 
@@ -74,6 +68,11 @@ public sealed class ExplorerMenuRegistryPlanBuilder
         }
 
         return CreateValidatedPlan(targetKind, deletes, keys, values);
+    }
+
+    private static string NormalizeRootMenuTitle(string? title)
+    {
+        return string.IsNullOrWhiteSpace(title) ? DefaultCreateFolderMenuTitle : title.Trim();
     }
 
     private ExplorerMenuRegistryPlan CreateValidatedPlan(

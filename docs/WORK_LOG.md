@@ -1,5 +1,16 @@
 # Work Log
 
+## 2026-06-18 - Simplified Explorer menu shape and menu reset
+
+- Registry plan builder больше не создаёт промежуточный ключ `create-folder`.
+- Видимое legacy menu теперь имеет форму `<CreateFolderMenu.Title> -> entries`; fallback title: `Создать папку`.
+- Technical safety boundary сохранён: owned roots остаются `Software\Classes\Directory\shell\Foldora` и `Software\Classes\Directory\Background\shell\Foldora`.
+- Entries создаются напрямую под `...\Foldora\shell\entry-...`; `DisplayName` используется только как `MUIVerb`, а не как registry key path.
+- `unregister-menu` сохранён как безопасное отключение Explorer integration без удаления пользовательских entries/settings.
+- Добавлена CLI-команда `menu reset --yes`: удаляет только Foldora-owned registry roots, очищает entries, возвращает title к `Создать папку`, ставит `ExplorerIntegrationEnabled = false`, не удаляет AppData root/settings/packs/icons.
+- `menu reset` без `--yes` отказывается выполнять сброс.
+- Обновлены unit-тесты registry shape, cleanup semantics, reset semantics и CLI parser.
+
 ## 2026-06-17 - HKCU registry writer and register-menu CLI
 
 - Добавлены `IRegistryAccess` и `WindowsRegistryAccess`; `Microsoft.Win32.Registry` используется только в `WindowsRegistryAccess`.

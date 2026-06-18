@@ -1,3 +1,4 @@
+using Foldora.Core.Menu;
 using Foldora.Core.Settings;
 using Foldora.Shell.RegistryPlan;
 
@@ -66,8 +67,7 @@ public sealed class ExplorerMenuRegistrationService
     public async Task<ExplorerMenuRegistrationResult> UnregisterAsync(CancellationToken cancellationToken = default)
     {
         var settings = await settingsStorage.LoadAsync(cancellationToken);
-        var emptySettings = FolderMenuSettingsFactory.CreateEmptyLike(settings);
-        var plans = BuildPlans("C:\\Foldora\\Foldora.Cli.exe", emptySettings);
+        var plans = BuildDeletePlans(settings.CreateFolderMenu.Title);
 
         foreach (var plan in plans)
         {
@@ -85,12 +85,48 @@ public sealed class ExplorerMenuRegistrationService
             plans);
     }
 
+    public async Task<ExplorerMenuRegistrationResult> ResetMenuAsync(CancellationToken cancellationToken = default)
+    {
+        var settings = await settingsStorage.LoadAsync(cancellationToken);
+        var plans = BuildDeletePlans(FolderMenuSettings.CreateDefault().Title);
+
+        foreach (var plan in plans)
+        {
+            writer.Apply(plan);
+        }
+
+        var updatedSettings = settings with
+        {
+            ExplorerIntegrationEnabled = false,
+            CreateFolderMenu = FolderMenuSettings.CreateDefault()
+        };
+        await SaveSettingsAfterRegistrySuccessAsync(updatedSettings, cancellationToken);
+
+        return new ExplorerMenuRegistrationResult(
+            dryRun: false,
+            applied: true,
+            explorerIntegrationEnabled: false,
+            message: "Foldora user menu was reset to the empty default.",
+            plans);
+    }
+
     private ExplorerMenuRegistryPlan[] BuildPlans(string cliExecutablePath, FoldoraSettings settings)
     {
         return
         [
             planBuilder.Build(cliExecutablePath, settings.CreateFolderMenu, ExplorerMenuTargetKind.Directory),
             planBuilder.Build(cliExecutablePath, settings.CreateFolderMenu, ExplorerMenuTargetKind.DirectoryBackground)
+        ];
+    }
+
+    private ExplorerMenuRegistryPlan[] BuildDeletePlans(string title)
+    {
+        var emptyMenu = new FolderMenuSettings { Title = title };
+
+        return
+        [
+            planBuilder.Build("C:\\Foldora\\Foldora.Cli.exe", emptyMenu, ExplorerMenuTargetKind.Directory),
+            planBuilder.Build("C:\\Foldora\\Foldora.Cli.exe", emptyMenu, ExplorerMenuTargetKind.DirectoryBackground)
         ];
     }
 
@@ -128,14 +164,6 @@ public sealed class ExplorerMenuRegistrationService
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
             throw new InvalidOperationException("Registry menu was updated, but settings could not be saved.", exception);
-        }
-    }
-
-    private static class FolderMenuSettingsFactory
-    {
-        public static FoldoraSettings CreateEmptyLike(FoldoraSettings settings)
-        {
-            return settings with { CreateFolderMenu = new Foldora.Core.Menu.FolderMenuSettings { Title = settings.CreateFolderMenu.Title } };
         }
     }
 }

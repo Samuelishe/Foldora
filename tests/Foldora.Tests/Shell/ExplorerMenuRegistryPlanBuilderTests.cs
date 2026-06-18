@@ -22,6 +22,7 @@ public sealed class ExplorerMenuRegistryPlanBuilderTests
 
         Assert.Equal(ExplorerMenuTargetKind.DirectoryBackground, plan.TargetKind);
         Assert.All(plan.KeyOperations, operation => Assert.StartsWith(ExplorerMenuRegistryPaths.DirectoryBackgroundRoot, operation.KeyPath));
+        Assert.DoesNotContain(plan.KeyOperations, operation => operation.KeyPath.Contains(@"\create-folder", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -31,6 +32,52 @@ public sealed class ExplorerMenuRegistryPlanBuilderTests
 
         Assert.Equal(ExplorerMenuTargetKind.Directory, plan.TargetKind);
         Assert.All(plan.KeyOperations, operation => Assert.StartsWith(ExplorerMenuRegistryPaths.DirectoryRoot, operation.KeyPath));
+        Assert.DoesNotContain(plan.KeyOperations, operation => operation.KeyPath.Contains(@"\create-folder", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void Build_UsesCreateFolderMenuTitleAsRootMuiVerb()
+    {
+        var settings = CreateSettings(CreateEntry("entry-skull", "Череп"));
+        settings = new FolderMenuSettings { Title = "Мои папки", Entries = settings.Entries };
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, settings);
+
+        Assert.Contains(
+            plan.ValueOperations,
+            operation => operation.KeyPath == ExplorerMenuRegistryPaths.DirectoryBackgroundRoot
+                         && operation.ValueName == "MUIVerb"
+                         && operation.ValueData == "Мои папки");
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void Build_UsesFallbackTitleWhenCreateFolderMenuTitleIsEmpty(string title)
+    {
+        var settings = CreateSettings(CreateEntry("entry-skull", "Череп"));
+        settings = new FolderMenuSettings { Title = title, Entries = settings.Entries };
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, settings);
+
+        Assert.Contains(
+            plan.ValueOperations,
+            operation => operation.KeyPath == ExplorerMenuRegistryPaths.DirectoryBackgroundRoot
+                         && operation.ValueName == "MUIVerb"
+                         && operation.ValueData == "Создать папку");
+    }
+
+    [Fact]
+    public void Build_PutsEntriesDirectlyUnderOwnedRootShell()
+    {
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettings(CreateEntry("entry-skull", "Череп")));
+
+        Assert.Contains(
+            plan.KeyOperations,
+            operation => operation.KeyPath == $@"{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}\shell\entry-001-entry-skull");
+        Assert.Contains(
+            plan.KeyOperations,
+            operation => operation.KeyPath == $@"{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}\shell\entry-001-entry-skull\command");
     }
 
     [Fact]
@@ -96,6 +143,7 @@ public sealed class ExplorerMenuRegistryPlanBuilderTests
         var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettings(CreateEntry("entry-skull", displayName)));
 
         Assert.DoesNotContain(plan.KeyOperations, operation => operation.KeyPath.Contains(displayName, StringComparison.Ordinal));
+        Assert.DoesNotContain(plan.ValueOperations, operation => operation.KeyPath.Contains(displayName, StringComparison.Ordinal));
         Assert.Contains(plan.ValueOperations, operation => operation.ValueName == "MUIVerb" && operation.ValueData == displayName);
     }
 
