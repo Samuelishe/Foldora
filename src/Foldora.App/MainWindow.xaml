@@ -4,13 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Foldora" Height="560" Width="900"
-        MinHeight="420" MinWidth="720">
+        Title="Foldora" Height="700" Width="980"
+        MinHeight="560" MinWidth="760">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -117,7 +118,46 @@
             </DataGrid>
         </Grid>
 
-        <StackPanel Grid.Row="3"
+        <GroupBox Grid.Row="3"
+                  Header="Интеграция с Проводником"
+                  Margin="0,16,0,0"
+                  Padding="12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="{Binding ExplorerIntegrationStatusText, StringFormat=Статус: {0}}"
+                           Margin="0,0,0,8" />
+
+                <WrapPanel Grid.Row="1">
+                    <Button Content="Проверить план"
+                            Command="{Binding DryRunCommand}"
+                            MinWidth="120"
+                            Margin="0,0,8,8" />
+                    <Button Content="Включить меню Проводника"
+                            Command="{Binding RegisterExplorerCommand}"
+                            MinWidth="180"
+                            Margin="0,0,8,8" />
+                    <Button Content="Отключить меню Проводника"
+                            Command="{Binding UnregisterExplorerCommand}"
+                            MinWidth="190"
+                            Margin="0,0,8,8" />
+                    <CheckBox Content="Я понимаю, что список пунктов будет очищен"
+                              IsChecked="{Binding IsResetConfirmed, Mode=TwoWay}"
+                              VerticalAlignment="Center"
+                              Margin="8,0,8,8" />
+                    <Button Content="Сбросить меню"
+                            Command="{Binding ResetMenuCommand}"
+                            MinWidth="120"
+                            Margin="0,0,0,8" />
+                </WrapPanel>
+            </Grid>
+        </GroupBox>
+
+        <StackPanel Grid.Row="4"
                     Orientation="Horizontal"
                     Margin="0,16,0,12">
             <Button Content="+ Добавить пункт"
@@ -136,8 +176,9 @@
                        Margin="16,0,0,0" />
         </StackPanel>
 
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="5">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -146,6 +187,18 @@
                        Text="{Binding StatusMessage}"
                        TextWrapping="Wrap" />
             <ItemsControl Grid.Row="1"
+                          ItemsSource="{Binding OperationDetails}"
+                          Margin="0,8,0,0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"
+                                   TextWrapping="Wrap"
+                                   Foreground="#333333"
+                                   Margin="0,0,0,4" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ItemsControl Grid.Row="2"
                           ItemsSource="{Binding Errors}"
                           Margin="0,8,0,0">
                 <ItemsControl.ItemTemplate>

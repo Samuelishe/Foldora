@@ -24,7 +24,7 @@
 - Checkbox `IsEnabled`.
 - Кнопки `Сохранить`, `Отменить изменения`, `Включить меню Проводника`, `Отключить меню Проводника`, `Сбросить меню`.
 - Inline validation/status area вместо опоры на `MessageBox` как основной механизм ошибок.
-- Registry rebuild только после явного save/enable action.
+- Registry operations только после явного integration action; обычный `Сохранить` пишет settings only.
 
 ## Не делать в MVP
 

@@ -1,5 +1,16 @@
 # Work Log
 
+## 2026-06-18 - WPF editor phase 4
+
+- Добавлен App-level `ExplorerIntegrationController` для WPF-команд dry-run/register/unregister/reset поверх существующего `ExplorerMenuRegistrationService`.
+- Главное окно получило отдельный блок `Интеграция с Проводником`: статус, `Проверить план`, `Включить меню Проводника`, `Отключить меню Проводника` и `Сбросить меню` с checkbox-подтверждением.
+- `Проверить план` строит validated registry plan, показывает summary операций/root paths/command example и не пишет registry/settings.
+- `Включить меню Проводника` требует clean draft, применяет validated HKCU plan и включает `ExplorerIntegrationEnabled`; при отсутствии enabled entries удаляет owned roots и оставляет integration disabled.
+- `Отключить меню Проводника` разрешено даже при unsaved draft changes, удаляет только Foldora-owned roots, сохраняет entries и ставит `ExplorerIntegrationEnabled = false`.
+- `Сбросить меню` очищает entries, возвращает title к `Создать папку`, отключает integration и не удаляет AppData root/settings/packs/imported icons.
+- Обычный WPF `Сохранить` не перестраивает registry menu.
+- Добавлены controller tests с fake registry для dry-run/register/unregister/reset и dirty-state policy.
+
 ## 2026-06-18 - WPF editor phase 3
 
 - Добавлен App/WPF preview service для прямой загрузки `.ico` без генерации файлов в `%AppData%\Foldora\previews`.

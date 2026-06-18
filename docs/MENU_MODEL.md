@@ -80,19 +80,20 @@ WPF editor не должен применять изменения сразу:
       -> validate draft
       -> import pending icons
       -> write settings.json
-      -> if explorerIntegrationEnabled: rebuild HKCU Foldora menu
       -> show success/error
 ```
 
-При добавлении/удалении элементов в UI registry не трогать. Registry перестраивать только по явному `Сохранить` или отдельному integration action.
+При добавлении/удалении элементов в UI registry не трогать. В текущем MVP обычный WPF `Сохранить` не перестраивает registry menu; registry меняется только отдельными integration actions.
 
 Phase 2 WPF editor использует draft-состояние для title, entries, add/remove и pending icon source. Выбранный `.ico` хранится как pending source path и не становится постоянным `IconPath` до `Save`. Save импортирует pending icons в `%AppData%\Foldora\icons\<entry-id>.ico`, сохраняет `settings.json` и не перестраивает registry menu.
 
 Phase 3 WPF editor показывает preview напрямую из pending source path или saved `IconPath`. Preview не меняет модель entries, не пишет `PreviewPath` и не создаёт файлы в `%AppData%\Foldora\previews`.
 
+Phase 4 WPF editor добавляет explicit Explorer integration controls. `Проверить план` и `Включить меню Проводника` требуют clean draft, чтобы registry строился только из saved settings. `Отключить меню Проводника` можно выполнять при unsaved draft changes; оно не удаляет entries. `Сбросить меню` требует подтверждения, очищает saved entries, возвращает title к `Создать папку`, отключает integration и не удаляет imported `.ico`.
+
 Удаление entry в WPF phase 2 не удаляет импортированный `.ico`; orphan icon cleanup является отдельной будущей задачей.
 
-Если registry rebuild в будущем упадёт: `Настройки сохранены, но меню Проводника не обновлено.` Не делать сложный rollback settings из-за registry failure.
+Если отдельный registry operation упадёт после registry write, но до сохранения settings, пользователь должен получить понятную ошибку. Сложный rollback settings из-за registry failure не нужен; safety boundary обеспечивается plan validation и Foldora-owned roots.
 
 ## Future Nested Menu
 

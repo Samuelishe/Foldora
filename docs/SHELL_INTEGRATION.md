@@ -107,6 +107,20 @@ HKCU\Software\Classes\Directory\shell\Foldora
 
 Отсутствие Foldora menu в Explorer является нормальным дефолтным состоянием.
 
+## WPF Explorer Integration Controls
+
+WPF phase 4 использует тот же `ExplorerMenuRegistrationService`, что и CLI, через App-level controller. Это не вторая registry implementation.
+
+`Проверить план` соответствует `register-menu --dry-run`: строит и валидирует plan, показывает summary delete/create/set operations, Foldora-owned roots и пример command value. Registry и settings не меняются.
+
+`Включить меню Проводника` соответствует `register-menu`: требует отсутствия unsaved draft changes, строит validated plan из saved settings, применяет HKCU writer и сохраняет `ExplorerIntegrationEnabled = true`, если есть enabled entries. Если enabled entries нет, пустое menu не создаётся: Foldora-owned roots удаляются, а `ExplorerIntegrationEnabled = false`.
+
+`Отключить меню Проводника` соответствует `unregister-menu`: удаляет только Foldora-owned roots, сохраняет entries/title и ставит `ExplorerIntegrationEnabled = false`. Operation idempotent и разрешена даже при unsaved draft changes.
+
+`Сбросить меню` соответствует `menu reset --yes` после UI confirmation: очищает entries, возвращает title к `Создать папку`, ставит `ExplorerIntegrationEnabled = false`, удаляет только Foldora-owned roots и не удаляет AppData root, `settings.json`, packs или imported `.ico`.
+
+Обычный WPF `Сохранить` не перестраивает registry menu. Пользователь должен явно нажать integration action, чтобы Explorer menu изменилось.
+
 ## Manual Verification
 
 1. Добавить тестовый entry:

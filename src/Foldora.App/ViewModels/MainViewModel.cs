@@ -6,34 +6,49 @@ using Foldora.Core.Settings;
 using Foldora.Core.Storage;
 using Foldora.Core.Validation;
 using Foldora.App.Services;
+using Foldora.Shell.Registry;
+using Foldora.Shell.RegistryPlan;
 
 namespace Foldora.App.ViewModels;
 
 /// <summary>
-/// ViewModel главного окна phase 1: staged editing существующих menu entries.
+/// ViewModel главного окна WPF editor с staged editing и явными Explorer integration commands.
 /// </summary>
 public sealed class MainViewModel : INotifyPropertyChanged
 {
     private readonly FolderMenuDraftEditor draftEditor;
     private readonly IIconFilePicker iconFilePicker;
     private readonly IIconPreviewService iconPreviewService;
+    private readonly ExplorerIntegrationController explorerIntegrationController;
     private readonly AsyncRelayCommand saveCommand;
+    private readonly AsyncRelayCommand dryRunCommand;
+    private readonly AsyncRelayCommand registerExplorerCommand;
+    private readonly AsyncRelayCommand unregisterExplorerCommand;
+    private readonly AsyncRelayCommand resetMenuCommand;
     private readonly RelayCommand reloadCommand;
     private readonly RelayCommand addEntryCommand;
     private string title = "Создать папку";
     private string statusMessage = "Загрузка настроек...";
+    private bool explorerIntegrationEnabled;
     private bool hasUnsavedChanges;
+    private bool isResetConfirmed;
 
     public MainViewModel(
         FolderMenuDraftEditor draftEditor,
         IIconFilePicker iconFilePicker,
-        IIconPreviewService iconPreviewService)
+        IIconPreviewService iconPreviewService,
+        ExplorerIntegrationController explorerIntegrationController)
     {
         this.draftEditor = draftEditor ?? throw new ArgumentNullException(nameof(draftEditor));
         this.iconFilePicker = iconFilePicker ?? throw new ArgumentNullException(nameof(iconFilePicker));
         this.iconPreviewService = iconPreviewService ?? throw new ArgumentNullException(nameof(iconPreviewService));
+        this.explorerIntegrationController = explorerIntegrationController ?? throw new ArgumentNullException(nameof(explorerIntegrationController));
 
         saveCommand = new AsyncRelayCommand(SaveAsync, () => HasUnsavedChanges);
+        dryRunCommand = new AsyncRelayCommand(DryRunExplorerIntegrationAsync);
+        registerExplorerCommand = new AsyncRelayCommand(RegisterExplorerIntegrationAsync);
+        unregisterExplorerCommand = new AsyncRelayCommand(UnregisterExplorerIntegrationAsync);
+        resetMenuCommand = new AsyncRelayCommand(ResetMenuAsync, () => IsResetConfirmed);
         reloadCommand = new RelayCommand(ReloadDraft, () => HasUnsavedChanges);
         addEntryCommand = new RelayCommand(AddEntry);
     }
@@ -44,7 +59,17 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public ObservableCollection<string> Errors { get; } = [];
 
+    public ObservableCollection<string> OperationDetails { get; } = [];
+
     public AsyncRelayCommand SaveCommand => saveCommand;
+
+    public AsyncRelayCommand DryRunCommand => dryRunCommand;
+
+    public AsyncRelayCommand RegisterExplorerCommand => registerExplorerCommand;
+
+    public AsyncRelayCommand UnregisterExplorerCommand => unregisterExplorerCommand;
+
+    public AsyncRelayCommand ResetMenuCommand => resetMenuCommand;
 
     public RelayCommand ReloadCommand => reloadCommand;
 
@@ -82,6 +107,40 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
     }
 
+    public string ExplorerIntegrationStatusText => ExplorerIntegrationEnabled ? "Включена" : "Отключена";
+
+    public bool ExplorerIntegrationEnabled
+    {
+        get => explorerIntegrationEnabled;
+        private set
+        {
+            if (explorerIntegrationEnabled == value)
+            {
+                return;
+            }
+
+            explorerIntegrationEnabled = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(ExplorerIntegrationStatusText));
+        }
+    }
+
+    public bool IsResetConfirmed
+    {
+        get => isResetConfirmed;
+        set
+        {
+            if (isResetConfirmed == value)
+            {
+                return;
+            }
+
+            isResetConfirmed = value;
+            OnPropertyChanged();
+            resetMenuCommand.RaiseCanExecuteChanged();
+        }
+    }
+
     public bool HasUnsavedChanges
     {
         get => hasUnsavedChanges;
@@ -105,10 +164,21 @@ public sealed class MainViewModel : INotifyPropertyChanged
     {
         var paths = FoldoraDataPaths.CreateDefault();
         var storage = new FoldoraSettingsStorage(paths);
+        var draftEditor = new FolderMenuDraftEditor(storage, paths);
+        var registrationService = new ExplorerMenuRegistrationService(
+            storage,
+            new ExplorerMenuRegistryPlanBuilder(),
+            new ExplorerMenuRegistryWriter(new WindowsRegistryAccess()));
+        var integrationController = new ExplorerIntegrationController(
+            draftEditor,
+            registrationService,
+            new ExplorerCliPathResolver());
+
         return new MainViewModel(
-            new FolderMenuDraftEditor(storage, paths),
+            draftEditor,
             new WindowsIconFilePicker(),
-            new WpfIconPreviewService());
+            new WpfIconPreviewService(),
+            integrationController);
     }
 
     public async Task LoadAsync(CancellationToken cancellationToken = default)
@@ -116,16 +186,19 @@ public sealed class MainViewModel : INotifyPropertyChanged
         await draftEditor.LoadAsync(cancellationToken);
         LoadDraftIntoViewModels();
         Errors.Clear();
+        OperationDetails.Clear();
         OnPropertyChanged(nameof(HasErrors));
         StatusMessage = Entries.Count == 0
             ? "Пункты меню не настроены. Пустое меню является нормальным состоянием."
             : "Настройки загружены.";
+        ExplorerIntegrationEnabled = draftEditor.ExplorerIntegrationEnabled;
         RefreshDirtyState();
     }
 
     private async Task SaveAsync()
     {
         Errors.Clear();
+        OperationDetails.Clear();
         var result = await draftEditor.SaveAsync();
         if (!result.Saved)
         {
@@ -145,6 +218,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         StatusMessage = draftEditor.ExplorerIntegrationEnabled
             ? "Настройки сохранены. Меню Проводника не обновлялось в этом шаге."
             : "Настройки сохранены.";
+        ExplorerIntegrationEnabled = draftEditor.ExplorerIntegrationEnabled;
         RefreshDirtyState();
     }
 
@@ -153,8 +227,62 @@ public sealed class MainViewModel : INotifyPropertyChanged
         draftEditor.Reload();
         LoadDraftIntoViewModels();
         Errors.Clear();
+        OperationDetails.Clear();
         OnPropertyChanged(nameof(HasErrors));
         StatusMessage = "Несохранённые изменения отменены.";
+        ExplorerIntegrationEnabled = draftEditor.ExplorerIntegrationEnabled;
+        RefreshDirtyState();
+    }
+
+    private async Task DryRunExplorerIntegrationAsync()
+    {
+        var result = await explorerIntegrationController.DryRunAsync();
+        ApplyIntegrationResult(result, reloadDraft: false);
+    }
+
+    private async Task RegisterExplorerIntegrationAsync()
+    {
+        var result = await explorerIntegrationController.RegisterAsync();
+        ApplyIntegrationResult(result, reloadDraft: result.Success);
+    }
+
+    private async Task UnregisterExplorerIntegrationAsync()
+    {
+        var hadUnsavedChanges = HasUnsavedChanges;
+        var result = await explorerIntegrationController.UnregisterAsync();
+        ApplyIntegrationResult(result, reloadDraft: result.Success && !hadUnsavedChanges);
+    }
+
+    private async Task ResetMenuAsync()
+    {
+        var result = await explorerIntegrationController.ResetMenuAsync();
+        IsResetConfirmed = false;
+        ApplyIntegrationResult(result, reloadDraft: result.Success);
+    }
+
+    private void ApplyIntegrationResult(ExplorerIntegrationOperationResult result, bool reloadDraft)
+    {
+        Errors.Clear();
+        OperationDetails.Clear();
+
+        if (reloadDraft)
+        {
+            LoadDraftIntoViewModels();
+        }
+
+        foreach (var detail in result.Details)
+        {
+            OperationDetails.Add(detail);
+        }
+
+        if (!result.Success)
+        {
+            Errors.Add(result.Message);
+        }
+
+        OnPropertyChanged(nameof(HasErrors));
+        ExplorerIntegrationEnabled = result.ExplorerIntegrationEnabled;
+        StatusMessage = result.Message;
         RefreshDirtyState();
     }
 
@@ -163,6 +291,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         var entry = draftEditor.AddEntry();
         Entries.Add(CreateEntryViewModel(entry));
         Errors.Clear();
+        OperationDetails.Clear();
         OnPropertyChanged(nameof(HasErrors));
         StatusMessage = "Добавлен draft-пункт. Выберите .ico перед сохранением.";
         RefreshDirtyState();
@@ -180,6 +309,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         var validation = draftEditor.SetPendingIconSource(entry.Id, result.FilePath!);
         if (!validation.IsValid)
         {
+            OperationDetails.Clear();
             foreach (var issue in validation.Issues.Where(issue => issue.Severity == FolderMenuValidationSeverity.Error))
             {
                 Errors.Add(FormatIssue(issue));
@@ -191,6 +321,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
 
         entry.RefreshIconState();
+        OperationDetails.Clear();
         OnPropertyChanged(nameof(HasErrors));
         StatusMessage = "Иконка выбрана и будет импортирована при сохранении.";
         RefreshDirtyState();
@@ -206,6 +337,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
         Entries.Remove(entry);
         Errors.Clear();
+        OperationDetails.Clear();
         OnPropertyChanged(nameof(HasErrors));
         StatusMessage = "Пункт удалён из draft. Файлы и настройки изменятся только после сохранения.";
         RefreshDirtyState();

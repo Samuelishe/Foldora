@@ -59,11 +59,20 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 
 `ExplorerIntegrationEnabled` отражает состояние последнего успешного register/unregister flow. `register-menu --dry-run` не меняет этот флаг.
 
-WPF editor phase 2 сохраняет draft в `settings.json` только по кнопке `Сохранить`. Он сохраняет существующее значение `ExplorerIntegrationEnabled`, но не перестраивает registry menu и не меняет этот флаг.
+WPF editor сохраняет draft в `settings.json` только по кнопке `Сохранить`. Обычный `Сохранить` сохраняет существующее значение `ExplorerIntegrationEnabled`, но не перестраивает registry menu и не меняет этот флаг.
 
 Выбранные в WPF `.ico` до save хранятся только как draft pending source path и не попадают в `settings.json`. Во время save они импортируются в `%AppData%\Foldora\icons\<entry-id>.ico`, после чего постоянный `IconPath` указывает только на AppData-копию.
 
 WPF phase 3 preview не меняет JSON format: `PreviewPath` не заполняется, preview-файлы не создаются, `%AppData%\Foldora\previews\` остаётся зарезервированным future layout.
+
+WPF phase 4 меняет `ExplorerIntegrationEnabled` только через явные Explorer integration actions:
+
+- `Проверить план` не меняет settings.
+- `Включить меню Проводника` сохраняет `ExplorerIntegrationEnabled = true`, если есть enabled entries; если enabled entries нет, сохраняет `false`.
+- `Отключить меню Проводника` сохраняет `ExplorerIntegrationEnabled = false` и не удаляет entries/title.
+- `Сбросить меню` сохраняет `ExplorerIntegrationEnabled = false`, очищает entries и возвращает title к `Создать папку`.
+
+`Проверить план` и `Включить меню Проводника` требуют отсутствия unsaved draft changes. `Отключить меню Проводника` можно выполнить при unsaved draft changes; в этом случае saved settings получают только новое значение integration flag, а текущий draft в UI не перезатирается.
 
 `CreateFolderMenu.Title` является видимым top-level именем legacy Explorer menu. Если title пустой/whitespace при построении registry plan, используется fallback `Создать папку`. Technical registry key остаётся `Foldora` и не зависит от title.
 
