@@ -42,12 +42,55 @@ public sealed class DesignResourceTests
         Assert.Contains("PrimaryButtonStyle", keys);
         Assert.Contains("SecondaryButtonStyle", keys);
         Assert.Contains("DangerButtonStyle", keys);
+        Assert.Contains("ActionButtonStyle", keys);
         Assert.Contains("IconButtonStyle", keys);
         Assert.Contains("TextBoxStyle", keys);
         Assert.Contains("CheckBoxStyle", keys);
         Assert.Contains("CardContainerStyle", keys);
         Assert.Contains("GroupContainerStyle", keys);
         Assert.Contains("StatusBannerStyle", keys);
+    }
+
+    [Fact]
+    public void PrimarySecondaryAndDangerButtons_UseSharedActionButtonGeometry()
+    {
+        var controls = LoadXml("src", "Foldora.App", "Resources", "Controls.xaml");
+        XName keyName = XName.Get("Key", "http://schemas.microsoft.com/winfx/2006/xaml");
+
+        var styleBases = controls.Descendants()
+            .Where(element => element.Name.LocalName == "Style")
+            .Where(element => element.Attribute(keyName)?.Value is "PrimaryButtonStyle" or "SecondaryButtonStyle" or "DangerButtonStyle")
+            .ToDictionary(
+                element => element.Attribute(keyName)!.Value,
+                element => element.Attribute("BasedOn")?.Value,
+                StringComparer.Ordinal);
+
+        Assert.Equal("{StaticResource ActionButtonStyle}", styleBases["PrimaryButtonStyle"]);
+        Assert.Equal("{StaticResource ActionButtonStyle}", styleBases["SecondaryButtonStyle"]);
+        Assert.Equal("{StaticResource ActionButtonStyle}", styleBases["DangerButtonStyle"]);
+    }
+
+    [Fact]
+    public void SettingsWindow_IsResizableAndKeepsScrollableContentWithFixedFooter()
+    {
+        var settingsWindow = LoadXml("src", "Foldora.App", "SettingsWindow.xaml");
+        var root = settingsWindow.Root ?? throw new InvalidOperationException("SettingsWindow root was not found.");
+
+        Assert.Equal("CanResize", root.Attribute("ResizeMode")?.Value);
+        Assert.Equal("Manual", root.Attribute("SizeToContent")?.Value);
+
+        var scrollViewer = settingsWindow.Descendants()
+            .SingleOrDefault(element => element.Name.LocalName == "ScrollViewer");
+        Assert.NotNull(scrollViewer);
+        Assert.Equal("1", scrollViewer!.Attribute("Grid.Row")?.Value);
+        Assert.Equal("Auto", scrollViewer.Attribute("VerticalScrollBarVisibility")?.Value);
+        Assert.Equal("Disabled", scrollViewer.Attribute("HorizontalScrollBarVisibility")?.Value);
+
+        var footer = settingsWindow.Descendants()
+            .Where(element => element.Name.LocalName == "StackPanel")
+            .SingleOrDefault(element => element.Attribute("Grid.Row")?.Value == "2");
+
+        Assert.NotNull(footer);
     }
 
     private static XDocument LoadXml(params string[] pathParts)

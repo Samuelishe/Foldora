@@ -32,6 +32,8 @@ public sealed class InMemoryLocalizationService : ILocalizationService
     private static readonly IReadOnlyDictionary<string, string> Russian = new Dictionary<string, string>
     {
         ["AppTitle"] = "Foldora",
+        ["PageTitle"] = "Меню папок",
+        ["PageSubtitle"] = "Создавайте и настраивайте пункты контекстного меню Проводника.",
         ["MenuSettings"] = "Настройка меню",
         ["MenuTitle"] = "Название меню:",
         ["MenuEntries"] = "Пункты меню",
@@ -78,6 +80,8 @@ public sealed class InMemoryLocalizationService : ILocalizationService
     private static readonly IReadOnlyDictionary<string, string> English = new Dictionary<string, string>
     {
         ["AppTitle"] = "Foldora",
+        ["PageTitle"] = "Folder menu",
+        ["PageSubtitle"] = "Create and configure File Explorer context menu entries.",
         ["MenuSettings"] = "Menu settings",
         ["MenuTitle"] = "Menu title:",
         ["MenuEntries"] = "Menu entries",

@@ -13,6 +13,8 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public string AppTitle => Get();
+    public string PageTitle => Get();
+    public string PageSubtitle => Get();
     public string MenuSettings => Get();
     public string MenuTitle => Get();
     public string MenuEntries => Get();

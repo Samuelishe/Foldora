@@ -252,3 +252,5 @@ Settings UI минимален:
 ```
 
 `Language` сохраняется в `%AppData%\Foldora\settings.json`. Supported values: `ru`, `en`; default/fallback: `ru`. Часть основных labels может обновиться сразу через localization foundation, но полный runtime language switching для всех status/error messages остаётся future cleanup. UI честно предупреждает, что некоторые изменения языка могут применяться после перезапуска.
+
+Settings window должен оставаться пригодным для будущих секций настроек. Окно resizable; содержимое настроек находится в scrollable центральной области, а footer actions `Сохранить`/`Закрыть` закреплены снизу и не прокручиваются. Проверка открытия modal settings window выполняется вручную; автоматические UIAutomation-клики не используются как критерий acceptance для custom-chrome/modal WPF.

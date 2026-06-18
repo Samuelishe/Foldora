@@ -92,6 +92,25 @@ Control and container styles:
 
 Disabled states must be visibly different from enabled states. Hover/pressed/focus states are part of reusable control styles, not one-off window markup.
 
+## Layout Correctness
+
+Custom title bar остаётся единственным местом, где приложение показывает имя `Foldora` как application title. В content area главное окно использует semantic page header:
+
+- `Меню папок`;
+- краткий subtitle о настройке пунктов контекстного меню Проводника.
+
+Это убирает визуальное дублирование `Foldora` между title bar и содержимым окна.
+
+Action buttons одного ряда используют общую геометрию через `ActionButtonStyle`. `PrimaryButtonStyle`, `SecondaryButtonStyle` и `DangerButtonStyle` отличаются цветовой семантикой, но не высотой, padding, border thickness или focus behavior. Локальные margins допустимы только для расстояния между кнопками в конкретном ряду.
+
+Settings window является resizable и подготовлен к будущему росту настроек. Layout:
+
+- header/title в верхней `Auto`-строке;
+- settings content в единственном `ScrollViewer` со `VerticalScrollBarVisibility=Auto`;
+- footer actions в нижней fixed `Auto`-строке.
+
+Footer buttons `Сохранить`/`Закрыть` не прокручиваются вместе с содержимым и остаются доступными при уменьшении окна. Открытие modal settings window проверяется вручную пользователем; UIAutomation не является acceptance criterion для modal/custom-chrome WPF dialog.
+
 ## Реализовано в phase 4
 
 - Загрузка settings из `%AppData%\Foldora\settings.json`.

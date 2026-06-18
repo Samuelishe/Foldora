@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-06-18 - WPF layout correctness after design system
+
+- Убрано визуальное дублирование `Foldora`: custom title bar остаётся application title, а content area использует semantic page header `Меню папок`/`Folder menu` с subtitle.
+- `PrimaryButtonStyle`, `SecondaryButtonStyle` и `DangerButtonStyle` переведены на общий `ActionButtonStyle`, чтобы action buttons одного ряда имели одинаковую геометрию.
+- `SettingsWindow` сделан resizable и перестроен на layout `header / scrollable content / fixed footer`.
+- Language section больше не зависит от фиксированной высоты окна; central settings content прокручивается, а footer actions остаются доступными.
+- Settings command/dialog flow не менялся; открытие окна настроек считается ручной проверкой пользователя, UIAutomation не используется как acceptance criterion для modal/custom-chrome WPF.
+
 ## 2026-06-18 - WPF design system foundation
 
 - Добавлены `DesignTokens.xaml`, `Typography.xaml` и `Controls.xaml` как базовая WPF design system foundation.

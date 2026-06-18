@@ -79,10 +79,15 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0"
-                       Text="{Binding L.AppTitle}"
-                       Style="{StaticResource PageTitleTextStyle}"
-                       Margin="0,0,0,18" />
+            <StackPanel Grid.Row="0"
+                        Margin="0,0,0,18">
+                <TextBlock Text="{Binding L.PageTitle}"
+                           Style="{StaticResource PageTitleTextStyle}"
+                           Margin="0,0,0,4" />
+                <TextBlock Text="{Binding L.PageSubtitle}"
+                           Style="{StaticResource SecondaryBodyTextStyle}"
+                           TextWrapping="Wrap" />
+            </StackPanel>
 
             <ScrollViewer Grid.Row="1"
                           VerticalScrollBarVisibility="Auto"
@@ -362,15 +367,18 @@
                         <WrapPanel>
                             <Button Content="{Binding L.DryRun}"
                                     Command="{Binding DryRunCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}" />
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Margin="{DynamicResource ButtonInlineMargin}" />
                             <Button Content="{Binding L.RegisterExplorer}"
                                     Command="{Binding RegisterExplorerCommand}"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    MinWidth="190" />
+                                    MinWidth="190"
+                                    Margin="{DynamicResource ButtonInlineMargin}" />
                             <Button Content="{Binding L.UnregisterExplorer}"
                                     Command="{Binding UnregisterExplorerCommand}"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    MinWidth="200" />
+                                    MinWidth="200"
+                                    Margin="{DynamicResource ButtonInlineMargin}" />
                         </WrapPanel>
                         <Expander Header="{Binding L.TechnicalDetails}"
                                   IsExpanded="{Binding ShowTechnicalDetails, Mode=TwoWay}"
@@ -430,7 +438,8 @@
                     <Button Content="{Binding L.Reload}"
                             Command="{Binding ReloadCommand}"
                             Style="{StaticResource SecondaryButtonStyle}"
-                            MinWidth="160" />
+                            MinWidth="160"
+                            Margin="0,0,8,0" />
                     <Button Content="{Binding L.Save}"
                             Command="{Binding SaveCommand}"
                             Style="{StaticResource PrimaryButtonStyle}" />
