@@ -70,6 +70,9 @@
 - `src/Foldora.App/Foldora.App.csproj` - WPF settings app.
 - `src/Foldora.App/App.xaml` - WPF application entry.
 - `src/Foldora.App/App.xaml.cs` - WPF app startup plumbing и обработка startup exceptions.
+- `src/Foldora.App/Resources/DesignTokens.xaml` - semantic colors/brushes, spacing, radius and size tokens for WPF design system.
+- `src/Foldora.App/Resources/Typography.xaml` - reusable WPF typography styles and app font family.
+- `src/Foldora.App/Resources/Controls.xaml` - reusable WPF control, card/container and status banner styles.
 - `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, empty state, Explorer integration controls, dangerous zone и technical details expander.
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI/window plumbing, custom title bar controls и установка `DataContext`.
 - `src/Foldora.App/SettingsWindow.xaml` - WPF окно настроек приложения с выбором языка.
@@ -102,6 +105,7 @@
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project на `net10.0-windows`.
 - `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.
 - `tests/Foldora.Tests/App/ExplorerIntegrationControllerTests.cs` - тесты WPF Explorer integration controller с fake registry.
+- `tests/Foldora.Tests/App/DesignResourceTests.cs` - lightweight tests for WPF design resource dictionary wiring and core style keys.
 - `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
 - `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor.
 - `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.

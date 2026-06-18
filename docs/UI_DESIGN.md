@@ -8,6 +8,14 @@ Startup bugfix сохраняет custom title bar и settings gear. Окно с
 
 WPF UX cleanup после one-level grouping заменяет emoji/font-dependent settings glyph на self-authored XAML vector gear. Внешние icon packs не используются.
 
+Design system foundation добавляет централизованные WPF resource dictionaries:
+
+- `DesignTokens.xaml` - semantic colors/brushes, spacing, radius and sizing tokens.
+- `Typography.xaml` - reusable text styles and app font family.
+- `Controls.xaml` - reusable button, text input, checkbox, card, group container and status banner styles.
+
+Будущая dark theme должна переопределять semantic colors/brushes, а не дублировать layout XAML.
+
 Целевой WPF MVP описан подробно в `UX_FLOW.md`. Этот документ фиксирует короткие UI-правила, которые должны соблюдаться при реализации.
 
 Правила:
@@ -37,6 +45,52 @@ WPF UX cleanup после one-level grouping заменяет emoji/font-depende
 - Settings gear находится в title/header area и открывает настройки приложения.
 - Language setting выбирается в settings UI. Default language: `ru`; supported values: `ru`, `en`.
 - Основные labels/buttons подключены к минимальному localization foundation. Полная локализация всех status/error strings остаётся future cleanup.
+
+## Design System Foundation
+
+Semantic resources are the source of visual truth for WPF. MainWindow and SettingsWindow should use named brushes/styles instead of local random hex values.
+
+Core roles:
+
+- `PageBackgroundBrush`;
+- `SurfaceBrush`;
+- `SurfaceSecondaryBrush`;
+- `BorderBrush`;
+- `BorderStrongBrush`;
+- `TextPrimaryBrush`;
+- `TextSecondaryBrush`;
+- `TextDisabledBrush`;
+- `AccentBrush`;
+- `DangerBrush`;
+- `SuccessBrush`;
+- `WarningBrush`;
+- `FocusBrush`.
+
+Typography styles:
+
+- `WindowTitleTextStyle`;
+- `PageTitleTextStyle`;
+- `SectionTitleStyle`;
+- `GroupTitleTextStyle`;
+- `BodyTextStyle`;
+- `SecondaryBodyTextStyle`;
+- `CaptionTextStyle`;
+- `FieldLabelStyle`;
+- `ValidationErrorTextStyle`;
+- `StatusTextStyle`.
+
+Control and container styles:
+
+- `PrimaryButtonStyle` for the main action, currently `Сохранить`;
+- `SecondaryButtonStyle` for normal actions;
+- `DangerButtonStyle` for confirmed destructive actions;
+- `IconButtonStyle` / `DangerIconButtonStyle` for compact chrome/local actions;
+- `TextBoxStyle`, `CheckBoxStyle`, `ComboBoxStyle`;
+- `CardContainerStyle`, `GroupContainerStyle`, `SectionContainerStyle`;
+- `StatusBannerStyle`, `DangerBannerStyle`;
+- `PreviewBoxStyle`.
+
+Disabled states must be visibly different from enabled states. Hover/pressed/focus states are part of reusable control styles, not one-off window markup.
 
 ## Реализовано в phase 4
 

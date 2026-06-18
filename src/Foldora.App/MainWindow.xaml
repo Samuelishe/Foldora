@@ -22,66 +22,29 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-
-        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Margin" Value="0,0,0,10" />
-        </Style>
-
-        <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#555555" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="0,0,10,6" />
-        </Style>
-
-        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
-            <Setter Property="MinWidth" Value="120" />
-            <Setter Property="Padding" Value="14,6" />
-            <Setter Property="Margin" Value="8,0,0,0" />
-        </Style>
-
-        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
-            <Setter Property="MinWidth" Value="120" />
-            <Setter Property="Padding" Value="12,5" />
-            <Setter Property="Margin" Value="0,0,8,8" />
-        </Style>
-
-        <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
-            <Setter Property="Foreground" Value="#9A1B1B" />
-        </Style>
-
-        <Style x:Key="TitleBarButtonStyle" TargetType="Button">
-            <Setter Property="Width" Value="42" />
-            <Setter Property="Height" Value="32" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
-        </Style>
     </Window.Resources>
 
-    <Grid Background="#F4F5F7">
+    <Grid Background="{DynamicResource PageBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="44" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0"
-                Background="#F4F5F7"
-                BorderBrush="#DDDEE3"
+                Background="{DynamicResource PageBackgroundBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
                 BorderThickness="0,0,0,1">
             <DockPanel LastChildFill="True">
                 <StackPanel DockPanel.Dock="Right"
                             Orientation="Horizontal"
                             shell:WindowChrome.IsHitTestVisibleInChrome="True">
                     <Button ToolTip="{Binding L.Settings}"
+                            AutomationProperties.Name="{Binding L.Settings}"
                             Command="{Binding OpenSettingsCommand}"
                             Style="{StaticResource TitleBarButtonStyle}"
                             Margin="0,0,6,0">
                         <Viewbox Width="16" Height="16">
-                            <Path Fill="#30343A"
+                            <Path Fill="{DynamicResource TextPrimaryBrush}"
                                   Data="F0 M9,1 L12,1 L12.45,3.1 C13.05,3.28 13.62,3.52 14.15,3.84 L15.95,2.82 L17.38,4.25 L16.34,6.05 C16.66,6.58 16.9,7.15 17.08,7.75 L19,8.28 L19,10.72 L17.08,11.25 C16.9,11.85 16.66,12.42 16.34,12.95 L17.38,14.75 L15.95,16.18 L14.15,15.16 C13.62,15.48 13.05,15.72 12.45,15.9 L12,18 L9,18 L8.55,15.9 C7.95,15.72 7.38,15.48 6.85,15.16 L5.05,16.18 L3.62,14.75 L4.66,12.95 C4.34,12.42 4.1,11.85 3.92,11.25 L2,10.72 L2,8.28 L3.92,7.75 C4.1,7.15 4.34,6.58 4.66,6.05 L3.62,4.25 L5.05,2.82 L6.85,3.84 C7.38,3.52 7.95,3.28 8.55,3.1 Z M10.5,6.5 C8.84,6.5 7.5,7.84 7.5,9.5 C7.5,11.16 8.84,12.5 10.5,12.5 C12.16,12.5 13.5,11.16 13.5,9.5 C13.5,7.84 12.16,6.5 10.5,6.5 Z" />
                         </Viewbox>
                     </Button>
@@ -102,14 +65,13 @@
                 </StackPanel>
 
                 <TextBlock Text="{Binding L.AppTitle}"
-                           FontSize="16"
-                           FontWeight="SemiBold"
+                           Style="{StaticResource WindowTitleTextStyle}"
                            VerticalAlignment="Center"
                            Margin="18,0,0,0" />
             </DockPanel>
         </Border>
 
-        <Grid Grid.Row="1" Margin="22">
+        <Grid Grid.Row="1" Margin="{DynamicResource PagePadding}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -119,15 +81,14 @@
 
             <TextBlock Grid.Row="0"
                        Text="{Binding L.AppTitle}"
-                       FontSize="26"
-                       FontWeight="SemiBold"
+                       Style="{StaticResource PageTitleTextStyle}"
                        Margin="0,0,0,18" />
 
             <ScrollViewer Grid.Row="1"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled">
                 <StackPanel>
-                    <StackPanel Margin="0,0,0,20">
+                    <StackPanel Margin="{DynamicResource SectionSpacing}">
                         <TextBlock Text="{Binding L.MenuSettings}"
                                    Style="{StaticResource SectionTitleStyle}" />
                         <Grid>
@@ -146,7 +107,7 @@
                         </Grid>
                     </StackPanel>
 
-                    <StackPanel Margin="0,0,0,20">
+                    <StackPanel Margin="{DynamicResource SectionSpacing}">
                         <DockPanel Margin="0,0,0,10">
                             <TextBlock DockPanel.Dock="Left"
                                        Text="{Binding L.MenuEntries}"
@@ -155,25 +116,21 @@
                             <Button DockPanel.Dock="Right"
                                     Content="{Binding L.AddEntry}"
                                     Command="{Binding AddEntryCommand}"
-                                    Padding="12,5"
+                                    Style="{StaticResource SecondaryButtonStyle}"
                                     MinWidth="140"
                                     HorizontalAlignment="Right" />
                             <Button DockPanel.Dock="Right"
                                     Content="{Binding L.AddGroup}"
                                     Command="{Binding AddGroupCommand}"
-                                    Padding="12,5"
+                                    Style="{StaticResource SecondaryButtonStyle}"
                                     MinWidth="140"
                                     Margin="0,0,8,0"
                                     HorizontalAlignment="Right" />
                         </DockPanel>
 
-                        <Border BorderBrush="#D7D7D7"
-                                BorderThickness="1"
-                                CornerRadius="6"
-                                Padding="18"
-                                Background="#FAFAFA">
+                        <Border>
                             <Border.Style>
-                                <Style TargetType="Border">
+                                <Style TargetType="Border" BasedOn="{StaticResource SectionContainerStyle}">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding HasEntries}" Value="False">
@@ -184,15 +141,15 @@
                             </Border.Style>
                             <StackPanel>
                                 <TextBlock Text="{Binding L.EmptyTitle}"
-                                           FontWeight="SemiBold"
+                                           Style="{StaticResource GroupTitleTextStyle}"
                                            Margin="0,0,0,6" />
                                 <TextBlock Text="{Binding L.EmptyDescription}"
+                                           Style="{StaticResource SecondaryBodyTextStyle}"
                                            TextWrapping="Wrap"
-                                           Foreground="#555555"
                                            Margin="0,0,0,14" />
                                 <Button Content="{Binding L.AddEntry}"
                                         Command="{Binding AddEntryCommand}"
-                                        Padding="12,5"
+                                        Style="{StaticResource SecondaryButtonStyle}"
                                         MinWidth="140"
                                         HorizontalAlignment="Left" />
                             </StackPanel>
@@ -211,12 +168,7 @@
                             </ItemsControl.Style>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border BorderBrush="#D7DCE3"
-                                            BorderThickness="1"
-                                            CornerRadius="6"
-                                            Padding="14"
-                                            Margin="0,0,0,16"
-                                            Background="#FDFDFD">
+                                    <Border Style="{StaticResource GroupContainerStyle}">
                                         <StackPanel>
                                             <Grid Margin="0,0,0,10">
                                                 <Grid.ColumnDefinitions>
@@ -226,12 +178,9 @@
 
                                                 <TextBlock Grid.Column="0"
                                                            Text="{Binding Title}"
-                                                           FontSize="15"
-                                                           FontWeight="SemiBold"
-                                                           Foreground="#30343A"
                                                            VerticalAlignment="Center">
                                                     <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
+                                                        <Style TargetType="TextBlock" BasedOn="{StaticResource GroupTitleTextStyle}">
                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsRootSection}" Value="True">
@@ -244,14 +193,10 @@
 
                                                 <TextBox Grid.Column="0"
                                                          Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                         FontSize="15"
                                                          FontWeight="SemiBold"
-                                                         BorderThickness="0,0,0,1"
-                                                         Background="Transparent"
-                                                         Padding="0,2,0,4"
                                                          VerticalAlignment="Center">
                                                     <TextBox.Style>
-                                                        <Style TargetType="TextBox">
+                                                        <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle}">
                                                             <Setter Property="Visibility" Value="Visible" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsRootSection}" Value="True">
@@ -266,15 +211,11 @@
                                                         Content="×"
                                                         Command="{Binding DeleteGroupCommand}"
                                                         ToolTip="{Binding DeleteGroupText}"
-                                                        Width="30"
-                                                        Height="28"
-                                                        Padding="0"
                                                         Margin="12,0,0,0"
                                                         FontSize="16">
                                                     <Button.Style>
-                                                        <Style TargetType="Button">
+                                                        <Style TargetType="Button" BasedOn="{StaticResource DangerIconButtonStyle}">
                                                             <Setter Property="Visibility" Value="Visible" />
-                                                            <Setter Property="Foreground" Value="#9A1B1B" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding CanDeleteGroup}" Value="False">
                                                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -285,12 +226,8 @@
                                                 </Button>
                                             </Grid>
 
-                                            <Border BorderBrush="#E2B7B7"
-                                                    BorderThickness="1"
-                                                    CornerRadius="6"
-                                                    Padding="10"
+                                            <Border Style="{StaticResource DangerBannerStyle}"
                                                     Margin="0,0,0,10"
-                                                    Background="#FFF8F8"
                                                     Visibility="{Binding IsDeleteConfirmationVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                 <DockPanel LastChildFill="False">
                                                     <TextBlock DockPanel.Dock="Left"
@@ -301,25 +238,19 @@
                                                     <Button DockPanel.Dock="Right"
                                                             Content="{Binding CancelText}"
                                                             Command="{Binding CancelDeleteGroupCommand}"
-                                                            Padding="10,4"
+                                                            Style="{StaticResource SecondaryButtonStyle}"
                                                             Margin="8,0,0,0" />
                                                     <Button DockPanel.Dock="Right"
                                                             Content="{Binding ConfirmDeleteGroupText}"
                                                             Command="{Binding ConfirmDeleteGroupCommand}"
-                                                            Padding="10,4"
-                                                            Foreground="#9A1B1B" />
+                                                            Style="{StaticResource DangerButtonStyle}" />
                                                 </DockPanel>
                                             </Border>
 
                                         <ItemsControl ItemsSource="{Binding Entries}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderBrush="#DDDDDD"
-                                                            BorderThickness="1"
-                                                            CornerRadius="6"
-                                                            Padding="14"
-                                                            Margin="0,0,0,10"
-                                                            Background="White"
+                                                    <Border Style="{StaticResource CardContainerStyle}"
                                                             ToolTip="{Binding Id}">
                                                         <Grid>
                                                             <Grid.ColumnDefinitions>
@@ -328,16 +259,10 @@
                                                             </Grid.ColumnDefinitions>
 
                                                             <Border Grid.Column="0"
-                                                                    Width="52"
-                                                                    Height="52"
-                                                                    BorderBrush="#CCCCCC"
-                                                                    BorderThickness="1"
-                                                                    Background="#FAFAFA"
-                                                                    HorizontalAlignment="Left"
-                                                                    VerticalAlignment="Top">
+                                                                    Style="{StaticResource PreviewBoxStyle}">
                                                                 <Image Source="{Binding IconPreview}"
-                                                                       Width="50"
-                                                                       Height="50"
+                                                                       Width="{DynamicResource PreviewImageSize}"
+                                                                       Height="{DynamicResource PreviewImageSize}"
                                                                        Stretch="Uniform" />
                                                             </Border>
 
@@ -388,9 +313,9 @@
                                                                 <TextBlock Grid.Row="3"
                                                                            Grid.Column="1"
                                                                            Text="{Binding IconState}"
+                                                                           Style="{StaticResource SecondaryBodyTextStyle}"
                                                                            TextWrapping="Wrap"
                                                                            VerticalAlignment="Center"
-                                                                           Foreground="#555555"
                                                                            Margin="0,0,14,0" />
 
                                                                 <StackPanel Grid.Row="0"
@@ -400,12 +325,12 @@
                                                                             VerticalAlignment="Top">
                                                                     <Button Content="{Binding DataContext.L.ChooseIcon, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                             Command="{Binding ChooseIconCommand}"
-                                                                            Padding="10,4"
+                                                                            Style="{StaticResource SecondaryButtonStyle}"
                                                                             MinWidth="112"
                                                                             Margin="0,0,0,8" />
                                                                     <Button Content="{Binding DataContext.L.Delete, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                             Command="{Binding RemoveCommand}"
-                                                                            Padding="10,4"
+                                                                            Style="{StaticResource SecondaryButtonStyle}"
                                                                             MinWidth="112" />
                                                                 </StackPanel>
                                                             </Grid>
@@ -417,7 +342,7 @@
 
                                             <Button Content="{Binding AddEntryText}"
                                                     Command="{Binding AddEntryCommand}"
-                                                    Padding="10,4"
+                                                    Style="{StaticResource SecondaryButtonStyle}"
                                                     MinWidth="150"
                                                     HorizontalAlignment="Left"
                                                     Margin="64,0,0,0" />
@@ -428,10 +353,11 @@
                         </ItemsControl>
                     </StackPanel>
 
-                    <StackPanel Margin="0,0,0,20">
+                    <StackPanel Margin="{DynamicResource SectionSpacing}">
                         <TextBlock Text="{Binding L.ExplorerIntegration}"
                                    Style="{StaticResource SectionTitleStyle}" />
                         <TextBlock Text="{Binding ExplorerIntegrationStatusText, StringFormat=Статус: {0}}"
+                                   Style="{StaticResource SecondaryBodyTextStyle}"
                                    Margin="0,0,0,10" />
                         <WrapPanel>
                             <Button Content="{Binding L.DryRun}"
@@ -455,8 +381,8 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding}"
+                                                   Style="{StaticResource SecondaryBodyTextStyle}"
                                                    TextWrapping="Wrap"
-                                                   Foreground="#555555"
                                                    Margin="0,0,0,4" />
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -464,23 +390,20 @@
                         </Expander>
                     </StackPanel>
 
-                    <Border BorderBrush="#E2B7B7"
-                            BorderThickness="1"
-                            CornerRadius="6"
-                            Padding="14"
+                    <Border Style="{StaticResource DangerBannerStyle}"
                             Margin="0,0,0,20">
                         <StackPanel>
                             <TextBlock Text="{Binding L.DangerZone}"
-                                       FontSize="16"
-                                       FontWeight="SemiBold"
-                                       Foreground="#8A1F1F"
+                                       Style="{StaticResource SectionTitleStyle}"
+                                       Foreground="{DynamicResource DangerBrush}"
                                        Margin="0,0,0,8" />
                             <TextBlock Text="{Binding L.ResetDescription}"
+                                       Style="{StaticResource BodyTextStyle}"
                                        TextWrapping="Wrap"
                                        Margin="0,0,0,4" />
                             <TextBlock Text="{Binding L.ResetIconNote}"
+                                       Style="{StaticResource SecondaryBodyTextStyle}"
                                        TextWrapping="Wrap"
-                                       Foreground="#555555"
                                        Margin="0,0,0,12" />
                             <CheckBox Content="{Binding L.ResetConfirm}"
                                       IsChecked="{Binding IsResetConfirmed, Mode=TwoWay}"
@@ -498,14 +421,15 @@
                        Margin="0,16,0,14">
                 <TextBlock DockPanel.Dock="Left"
                            Text="{Binding HasUnsavedChanges, StringFormat=Несохранённые изменения: {0}}"
+                           Style="{StaticResource SecondaryBodyTextStyle}"
                            VerticalAlignment="Center"
-                           Foreground="#555555" />
+                           />
                 <StackPanel DockPanel.Dock="Right"
                             Orientation="Horizontal"
                             HorizontalAlignment="Right">
                     <Button Content="{Binding L.Reload}"
                             Command="{Binding ReloadCommand}"
-                            Style="{StaticResource PrimaryButtonStyle}"
+                            Style="{StaticResource SecondaryButtonStyle}"
                             MinWidth="160" />
                     <Button Content="{Binding L.Save}"
                             Command="{Binding SaveCommand}"
@@ -514,13 +438,10 @@
             </DockPanel>
 
             <Border Grid.Row="3"
-                    BorderBrush="#D7D7D7"
-                    BorderThickness="1"
-                    CornerRadius="6"
-                    Padding="12"
-                    Background="#FAFAFA">
+                    Style="{StaticResource StatusBannerStyle}">
                 <StackPanel>
                     <TextBlock Text="{Binding StatusMessage}"
+                               Style="{StaticResource StatusTextStyle}"
                                TextWrapping="Wrap"
                                Visibility="{Binding HasStatusMessage, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <ItemsControl ItemsSource="{Binding Errors}"
@@ -529,8 +450,8 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}"
+                                           Style="{StaticResource ValidationErrorTextStyle}"
                                            TextWrapping="Wrap"
-                                           Foreground="#B00020"
                                            Margin="0,0,0,4" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

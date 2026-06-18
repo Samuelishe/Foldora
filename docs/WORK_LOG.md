@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-06-18 - WPF design system foundation
+
+- Добавлены `DesignTokens.xaml`, `Typography.xaml` и `Controls.xaml` как базовая WPF design system foundation.
+- Вынесены semantic palette/brushes, spacing/radius/control-size tokens, reusable typography styles and reusable control/container styles.
+- `App.xaml` подключает resource dictionaries в порядке tokens -> typography -> controls.
+- `MainWindow.xaml` переведён с локальных hex/style definitions на semantic resources для page/title bar, buttons, cards/group containers, dangerous zone and status area.
+- `SettingsWindow.xaml` использует те же surface, typography and button styles.
+- Добавлены lightweight tests на подключение resource dictionaries и наличие ключевых semantic resources/styles.
+- Поведение ViewModel/Core/CLI/Shell/MenuHost/settings не менялось; dark theme не реализована, только подготовлена через semantic brushes.
+
 ## 2026-06-18 - WPF grouping container UX redesign
 
 - WPF groups redesigned from simple section headers into visual containers with header, nested entry cards and contextual add-entry button.
