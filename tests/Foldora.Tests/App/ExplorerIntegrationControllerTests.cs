@@ -19,7 +19,7 @@ public sealed class ExplorerIntegrationControllerTests
         {
             var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
             await SaveSettingsAsync(paths, explorerIntegrationEnabled: false, CreateEntry("entry-skull", "Череп"));
-            var cliPath = await CreateFakeCliAsync(root.FullName);
+            var cliPath = await CreateFakeHostAsync(root.FullName);
             var registry = new FakeRegistryAccess();
             var controller = await CreateControllerAsync(paths, registry, cliPath);
 
@@ -50,7 +50,7 @@ public sealed class ExplorerIntegrationControllerTests
         {
             var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
             await SaveSettingsAsync(paths, explorerIntegrationEnabled: true, CreateEntry("entry-skull", "Череп"));
-            var cliPath = await CreateFakeCliAsync(root.FullName);
+            var cliPath = await CreateFakeHostAsync(root.FullName);
             var registry = new FakeRegistryAccess();
             var (controller, editor) = await CreateControllerAndEditorAsync(paths, registry, cliPath);
             editor.Title = "Черновик";
@@ -80,7 +80,7 @@ public sealed class ExplorerIntegrationControllerTests
         {
             var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
             await SaveSettingsAsync(paths, explorerIntegrationEnabled: false, CreateEntry("entry-skull", "Череп"));
-            var cliPath = await CreateFakeCliAsync(root.FullName);
+            var cliPath = await CreateFakeHostAsync(root.FullName);
             var registry = new FakeRegistryAccess();
             var (controller, editor) = await CreateControllerAndEditorAsync(paths, registry, cliPath);
             editor.Title = "Черновик";
@@ -109,7 +109,7 @@ public sealed class ExplorerIntegrationControllerTests
         {
             var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
             await SaveSettingsAsync(paths, explorerIntegrationEnabled: false, CreateEntry("entry-skull", "Череп"));
-            var cliPath = await CreateFakeCliAsync(root.FullName);
+            var cliPath = await CreateFakeHostAsync(root.FullName);
             var registry = new FakeRegistryAccess();
             var controller = await CreateControllerAsync(paths, registry, cliPath);
 
@@ -139,7 +139,7 @@ public sealed class ExplorerIntegrationControllerTests
         {
             var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
             await SaveSettingsAsync(paths, explorerIntegrationEnabled: true, CreateEntry("entry-disabled", "Череп", isEnabled: false));
-            var cliPath = await CreateFakeCliAsync(root.FullName);
+            var cliPath = await CreateFakeHostAsync(root.FullName);
             var registry = new FakeRegistryAccess();
             registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryRoot);
             registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryBackgroundRoot);
@@ -176,7 +176,7 @@ public sealed class ExplorerIntegrationControllerTests
             registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryRoot);
             registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryBackgroundRoot);
             registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, @"Software\Classes\Directory\shell\OtherApp");
-            var controller = await CreateControllerAsync(paths, registry, await CreateFakeCliAsync(root.FullName));
+            var controller = await CreateControllerAsync(paths, registry, await CreateFakeHostAsync(root.FullName));
 
             var result = await controller.UnregisterAsync();
             var settings = await new FoldoraSettingsStorage(paths).LoadAsync();
@@ -206,7 +206,7 @@ public sealed class ExplorerIntegrationControllerTests
             var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
             await SaveSettingsAsync(paths, explorerIntegrationEnabled: true, CreateEntry("entry-skull", "Череп"));
             var registry = new FakeRegistryAccess();
-            var (controller, editor) = await CreateControllerAndEditorAsync(paths, registry, await CreateFakeCliAsync(root.FullName));
+            var (controller, editor) = await CreateControllerAndEditorAsync(paths, registry, await CreateFakeHostAsync(root.FullName));
             editor.Title = "Черновик";
 
             var result = await controller.UnregisterAsync();
@@ -242,7 +242,7 @@ public sealed class ExplorerIntegrationControllerTests
             registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryRoot);
             registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryBackgroundRoot);
             registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, @"Software\Classes\Directory\shell\OtherApp");
-            var controller = await CreateControllerAsync(paths, registry, await CreateFakeCliAsync(root.FullName));
+            var controller = await CreateControllerAsync(paths, registry, await CreateFakeHostAsync(root.FullName));
 
             var result = await controller.ResetMenuAsync();
             var settings = await new FoldoraSettingsStorage(paths).LoadAsync();
@@ -260,6 +260,93 @@ public sealed class ExplorerIntegrationControllerTests
             Assert.True(File.Exists(paths.SettingsFile));
             Assert.True(File.Exists(iconPath));
             Assert.True(Directory.Exists(paths.PacksDirectory));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task RebuildAfterSave_AppliesPlanWithCommandHostAndUpdatesStatus()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraAppIntegration-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var hostPath = await CreateFakeHostAsync(root.FullName);
+            await SaveSettingsAsync(paths, explorerIntegrationEnabled: true, CreateEntry("entry-skull", "Череп"));
+            var registry = new FakeRegistryAccess();
+            var controller = await CreateControllerAsync(paths, registry, hostPath);
+
+            var result = await controller.RebuildAfterSaveAsync();
+
+            Assert.True(result.Success);
+            Assert.Equal("Настройки сохранены. Меню Проводника обновлено.", result.Message);
+            Assert.True(result.ExplorerIntegrationEnabled);
+            Assert.Contains(
+                registry.Values.Values,
+                value => value.StartsWith($@"""{hostPath}""", StringComparison.Ordinal)
+                         && value.Contains("create", StringComparison.Ordinal));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task RebuildAfterSave_WithNoEnabledEntriesRemovesMenuAndDisablesIntegration()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraAppIntegration-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, explorerIntegrationEnabled: true, CreateEntry("entry-disabled", "Череп", isEnabled: false));
+            var registry = new FakeRegistryAccess();
+            registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryRoot);
+            registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryBackgroundRoot);
+            var controller = await CreateControllerAsync(paths, registry, await CreateFakeHostAsync(root.FullName));
+
+            var result = await controller.RebuildAfterSaveAsync();
+            var settings = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.True(result.Success);
+            Assert.Equal("Настройки сохранены. Включённых пунктов нет, меню Проводника отключено.", result.Message);
+            Assert.False(result.ExplorerIntegrationEnabled);
+            Assert.False(settings.ExplorerIntegrationEnabled);
+            Assert.False(registry.ContainsKey(ExplorerMenuRegistryPaths.DirectoryRoot));
+            Assert.False(registry.ContainsKey(ExplorerMenuRegistryPaths.DirectoryBackgroundRoot));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task RebuildAfterSave_WhenRegistryFailsKeepsSavedSettingsAndReportsFailure()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraAppIntegration-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, explorerIntegrationEnabled: true, CreateEntry("entry-skull", "Череп"));
+            var missingHostPath = Path.Combine(root.FullName, "Missing", "Foldora.MenuHost.exe");
+            var registry = new FakeRegistryAccess();
+            var controller = await CreateControllerAsync(paths, registry, missingHostPath);
+
+            var result = await controller.RebuildAfterSaveAsync();
+            var settings = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.False(result.Success);
+            Assert.Equal("Настройки сохранены, но меню Проводника не обновлено.", result.Message);
+            Assert.True(settings.ExplorerIntegrationEnabled);
+            Assert.Single(settings.CreateFolderMenu.Entries);
+            Assert.Empty(registry.Calls);
         }
         finally
         {
@@ -290,7 +377,7 @@ public sealed class ExplorerIntegrationControllerTests
             new ExplorerMenuRegistryPlanBuilder(),
             new ExplorerMenuRegistryWriter(registry));
 
-        return (new ExplorerIntegrationController(editor, service, new FixedCliPathResolver(cliPath)), editor);
+        return (new ExplorerIntegrationController(editor, service, new FixedHostPathResolver(cliPath)), editor);
     }
 
     private static async Task SaveSettingsAsync(
@@ -319,9 +406,9 @@ public sealed class ExplorerIntegrationControllerTests
         };
     }
 
-    private static async Task<string> CreateFakeCliAsync(string root)
+    private static async Task<string> CreateFakeHostAsync(string root)
     {
-        var path = Path.Combine(root, "Program Files", "Foldora", "Foldora.Cli.exe");
+        var path = Path.Combine(root, "Program Files", "Foldora", "Foldora.MenuHost.exe");
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         await File.WriteAllTextAsync(path, "fake exe");
         return path;
@@ -333,18 +420,18 @@ public sealed class ExplorerIntegrationControllerTests
                || fullKey.StartsWith($@"{ExplorerMenuRegistryHive.CurrentUser}\{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}", StringComparison.OrdinalIgnoreCase);
     }
 
-    private sealed class FixedCliPathResolver : IExplorerCliPathResolver
+    private sealed class FixedHostPathResolver : IExplorerCommandHostPathResolver
     {
-        private readonly string cliPath;
+        private readonly string hostPath;
 
-        public FixedCliPathResolver(string cliPath)
+        public FixedHostPathResolver(string hostPath)
         {
-            this.cliPath = cliPath;
+            this.hostPath = hostPath;
         }
 
-        public string ResolveCliPath()
+        public string ResolveCommandHostPath()
         {
-            return cliPath;
+            return hostPath;
         }
     }
 }

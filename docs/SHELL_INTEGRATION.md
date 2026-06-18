@@ -53,21 +53,24 @@ Software\Classes\Directory\shell\Foldora
 
 Software\Classes\Directory\shell\Foldora\shell\entry-001-<entry-id>
   MUIVerb = <DisplayName>
+  Icon = <entry.IconPath>
 ```
 
 Для `Directory\Background` используется такой же layout под `Software\Classes\Directory\Background\shell\Foldora`. Промежуточный ключ `create-folder` больше не создаётся.
 
-Disabled entries не попадают в plan. Duplicate `DisplayName` разрешены. `DisplayName` используется только как menu text value (`MUIVerb`) и не используется как registry key name. Entry key names строятся по sort index и stable `entry-id`.
+`Icon` пишется только если `entry.IconPath` непустой и файл существует. Это маленькая shell-иконка legacy menu, не WPF preview 50x50 и не generated preview file.
+
+Disabled entries не попадают в plan. Duplicate `DisplayName` разрешены. `DisplayName` используется только как menu text value (`MUIVerb`) и не используется как registry key name или `Icon` value. Entry key names строятся по sort index и stable `entry-id`.
 
 Если enabled entries нет, builder строит только delete operation для Foldora-owned root. Это безопаснее, чем оставлять пустое активное submenu в Explorer.
 
-Command values вызывают существующий CLI:
+Command values вызывают no-console MenuHost:
 
 ```text
-"<Foldora.Cli.exe>" create --target "<placeholder>" --entry-id "<entry-id>"
+"<Foldora.MenuHost.exe>" create --target "<placeholder>" --entry-id "<entry-id>"
 ```
 
-Путь к exe, shell target placeholder и `entry-id` quote-ятся через `CommandLineQuoter`.
+Путь к executable host, shell target placeholder и `entry-id` quote-ятся через `CommandLineQuoter`. `Foldora.Cli.exe` остаётся console tool для ручных команд; Explorer context menu должен использовать `Foldora.MenuHost.exe`, чтобы не мигало console window.
 
 Placeholder policy на текущем этапе:
 
@@ -91,6 +94,8 @@ Placeholder policy на текущем этапе:
 Если enabled entries нет, пустое меню не создаётся: writer удаляет Foldora-owned roots и сохраняет `ExplorerIntegrationEnabled = false`.
 
 `register-menu --dry-run` строит и валидирует plan, печатает delete/create/set операции, но не пишет в registry и не меняет settings.
+
+`register-menu --host-path "<absolute-path-to-Foldora.MenuHost.exe>"` задаёт executable host для registry commands. Старый `--cli-path` сохранён как legacy/dev override, но для Explorer UX предпочтителен `--host-path`.
 
 `unregister-menu` удаляет только:
 
@@ -119,7 +124,7 @@ WPF phase 4 использует тот же `ExplorerMenuRegistrationService`, 
 
 `Сбросить меню` соответствует `menu reset --yes` после UI confirmation: очищает entries, возвращает title к `Создать папку`, ставит `ExplorerIntegrationEnabled = false`, удаляет только Foldora-owned roots и не удаляет AppData root, `settings.json`, packs или imported `.ico`.
 
-Обычный WPF `Сохранить` не перестраивает registry menu. Пользователь должен явно нажать integration action, чтобы Explorer menu изменилось.
+WPF `Сохранить` rebuild-ит registry menu только если `ExplorerIntegrationEnabled` уже был `true`. Если integration disabled, Save пишет только settings. Если rebuild после settings save упал, settings не откатываются, UI показывает `Настройки сохранены, но меню Проводника не обновлено.`
 
 ## Manual Verification
 
@@ -150,8 +155,10 @@ foldora register-menu
 Если текущий exe path не совпадает с будущим install/publish path, использовать:
 
 ```text
-foldora register-menu --cli-path "<absolute-path-to-Foldora.Cli.exe>"
+foldora register-menu --host-path "<absolute-path-to-Foldora.MenuHost.exe>"
 ```
+
+`--cli-path` можно использовать как legacy/dev override, но тогда Explorer будет запускать console app и может кратко показать console window.
 
 5. Проверить в Windows 11 Explorer:
 

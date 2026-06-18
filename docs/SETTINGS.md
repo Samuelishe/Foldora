@@ -59,7 +59,7 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 
 `ExplorerIntegrationEnabled` отражает состояние последнего успешного register/unregister flow. `register-menu --dry-run` не меняет этот флаг.
 
-WPF editor сохраняет draft в `settings.json` только по кнопке `Сохранить`. Обычный `Сохранить` сохраняет существующее значение `ExplorerIntegrationEnabled`, но не перестраивает registry menu и не меняет этот флаг.
+WPF editor сохраняет draft в `settings.json` только по кнопке `Сохранить`. Если `ExplorerIntegrationEnabled = false`, Save пишет только settings и сохраняет flag false. Если `ExplorerIntegrationEnabled = true`, Save после записи settings rebuild-ит Foldora-owned registry menu из только что сохранённых settings.
 
 Выбранные в WPF `.ico` до save хранятся только как draft pending source path и не попадают в `settings.json`. Во время save они импортируются в `%AppData%\Foldora\icons\<entry-id>.ico`, после чего постоянный `IconPath` указывает только на AppData-копию.
 
@@ -73,6 +73,8 @@ WPF phase 4 меняет `ExplorerIntegrationEnabled` только через я
 - `Сбросить меню` сохраняет `ExplorerIntegrationEnabled = false`, очищает entries и возвращает title к `Создать папку`.
 
 `Проверить план` и `Включить меню Проводника` требуют отсутствия unsaved draft changes. `Отключить меню Проводника` можно выполнить при unsaved draft changes; в этом случае saved settings получают только новое значение integration flag, а текущий draft в UI не перезатирается.
+
+После save-triggered rebuild current register-service policy сохраняется: если enabled entries нет, Foldora-owned registry roots удаляются и `ExplorerIntegrationEnabled` становится `false`. Если registry rebuild падает после успешного settings save, settings не откатываются; UI показывает warning/error.
 
 `CreateFolderMenu.Title` является видимым top-level именем legacy Explorer menu. Если title пустой/whitespace при построении registry plan, используется fallback `Создать папку`. Technical registry key остаётся `Foldora` и не зависит от title.
 

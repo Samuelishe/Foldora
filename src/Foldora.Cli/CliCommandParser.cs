@@ -147,10 +147,12 @@ public static class CliCommandParser
     private static CliCommand ParseRegisterMenu(IReadOnlyDictionary<string, string?> options)
     {
         options.TryGetValue("--cli-path", out var cliPath);
+        options.TryGetValue("--host-path", out var hostPath);
         return new CliCommand(
             CliCommandKind.RegisterMenu,
             "register-menu",
             CliExecutablePath: cliPath,
+            CommandHostPath: string.IsNullOrWhiteSpace(hostPath) ? cliPath : hostPath,
             DryRun: options.ContainsKey("--dry-run"));
     }
 

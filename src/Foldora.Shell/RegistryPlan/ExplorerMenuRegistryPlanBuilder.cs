@@ -21,11 +21,11 @@ public sealed class ExplorerMenuRegistryPlanBuilder
     }
 
     public ExplorerMenuRegistryPlan Build(
-        string cliExecutablePath,
+        string commandHostPath,
         FolderMenuSettings menuSettings,
         ExplorerMenuTargetKind targetKind)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(cliExecutablePath);
+        ArgumentException.ThrowIfNullOrWhiteSpace(commandHostPath);
         ArgumentNullException.ThrowIfNull(menuSettings);
 
         var root = ExplorerMenuRegistryPaths.GetOwnedRoot(targetKind);
@@ -59,10 +59,11 @@ public sealed class ExplorerMenuRegistryPlanBuilder
             var entryKeyName = CreateEntryKeyName(index, entry.Id);
             var entryKey = $@"{rootShellKey}\{entryKeyName}";
             var commandKey = $@"{entryKey}\command";
-            var command = commandBuilder.BuildCreateFolderCommand(cliExecutablePath, targetKind, entry.Id);
+            var command = commandBuilder.BuildCreateFolderCommand(commandHostPath, targetKind, entry.Id);
 
             AddKey(keys, entryKey);
             AddValue(values, entryKey, "MUIVerb", entry.DisplayName);
+            AddIconValueIfAvailable(values, entryKey, entry.IconPath);
             AddKey(keys, commandKey);
             AddValue(values, commandKey, string.Empty, command);
         }
@@ -107,6 +108,19 @@ public sealed class ExplorerMenuRegistryPlanBuilder
             keyPath,
             valueName,
             valueData));
+    }
+
+    private static void AddIconValueIfAvailable(
+        ICollection<ExplorerMenuRegistryValueOperation> operations,
+        string keyPath,
+        string? iconPath)
+    {
+        if (string.IsNullOrWhiteSpace(iconPath) || !File.Exists(iconPath))
+        {
+            return;
+        }
+
+        AddValue(operations, keyPath, "Icon", iconPath);
     }
 
     private static string CreateEntryKeyName(int index, string entryId)

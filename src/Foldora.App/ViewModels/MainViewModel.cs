@@ -44,7 +44,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         this.iconPreviewService = iconPreviewService ?? throw new ArgumentNullException(nameof(iconPreviewService));
         this.explorerIntegrationController = explorerIntegrationController ?? throw new ArgumentNullException(nameof(explorerIntegrationController));
 
-        saveCommand = new AsyncRelayCommand(SaveAsync, () => HasUnsavedChanges);
+        saveCommand = new AsyncRelayCommand(SaveDraftAsync, () => HasUnsavedChanges);
         dryRunCommand = new AsyncRelayCommand(DryRunExplorerIntegrationAsync);
         registerExplorerCommand = new AsyncRelayCommand(RegisterExplorerIntegrationAsync);
         unregisterExplorerCommand = new AsyncRelayCommand(UnregisterExplorerIntegrationAsync);
@@ -172,7 +172,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         var integrationController = new ExplorerIntegrationController(
             draftEditor,
             registrationService,
-            new ExplorerCliPathResolver());
+            new ExplorerCommandHostPathResolver());
 
         return new MainViewModel(
             draftEditor,
@@ -195,10 +195,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
         RefreshDirtyState();
     }
 
-    private async Task SaveAsync()
+    public async Task SaveDraftAsync()
     {
         Errors.Clear();
         OperationDetails.Clear();
+        var shouldRebuildExplorerMenu = draftEditor.ExplorerIntegrationEnabled;
         var result = await draftEditor.SaveAsync();
         if (!result.Saved)
         {
@@ -215,10 +216,16 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
         LoadDraftIntoViewModels();
         OnPropertyChanged(nameof(HasErrors));
-        StatusMessage = draftEditor.ExplorerIntegrationEnabled
-            ? "Настройки сохранены. Меню Проводника не обновлялось в этом шаге."
-            : "Настройки сохранены.";
         ExplorerIntegrationEnabled = draftEditor.ExplorerIntegrationEnabled;
+
+        if (shouldRebuildExplorerMenu)
+        {
+            var rebuildResult = await explorerIntegrationController.RebuildAfterSaveAsync();
+            ApplyIntegrationResult(rebuildResult, reloadDraft: rebuildResult.Success);
+            return;
+        }
+
+        StatusMessage = "Настройки сохранены.";
         RefreshDirtyState();
     }
 

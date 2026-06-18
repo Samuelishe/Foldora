@@ -24,7 +24,7 @@
 - Checkbox `IsEnabled`.
 - Кнопки `Сохранить`, `Отменить изменения`, `Включить меню Проводника`, `Отключить меню Проводника`, `Сбросить меню`.
 - Inline validation/status area вместо опоры на `MessageBox` как основной механизм ошибок.
-- Registry operations только после явного integration action; обычный `Сохранить` пишет settings only.
+- Registry operations только после явного user action: integration buttons или `Сохранить`, когда integration уже включена.
 
 ## Не делать в MVP
 
@@ -46,10 +46,10 @@
 
 Modern context menu, installer/MSIX, pack import/export, preview generation, nested menu runtime/storage и расширенная валидация паков рассматриваются после рабочего MVP.
 
-Текущая ручная разработка может указывать registry menu на Debug CLI path:
+Текущая ручная разработка должна указывать registry menu на Debug MenuHost path:
 
 ```text
-src\Foldora.Cli\bin\Debug\net10.0\Foldora.Cli.exe
+src\Foldora.MenuHost\bin\Debug\net10.0-windows\Foldora.MenuHost.exe
 ```
 
 Будущий installer/publish должен дать стабильные installed paths:
@@ -57,6 +57,7 @@ src\Foldora.Cli\bin\Debug\net10.0\Foldora.Cli.exe
 ```text
 Foldora.App.exe
 Foldora.Cli.exe
+Foldora.MenuHost.exe
 ```
 
-Production registry menu должен указывать на стабильный installed `Foldora.Cli.exe`, а не на Debug build output.
+Production registry menu должен указывать на стабильный installed `Foldora.MenuHost.exe`, а не на Debug build output и не на console `Foldora.Cli.exe`.

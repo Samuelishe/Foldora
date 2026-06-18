@@ -210,6 +210,33 @@ public sealed class CliCommandParserTests
         Assert.True(command.IsValid);
         Assert.Equal(CliCommandKind.RegisterMenu, command.Kind);
         Assert.Equal(cliPath, command.CliExecutablePath);
+        Assert.Equal(cliPath, command.CommandHostPath);
+    }
+
+    [Fact]
+    public void Parse_AcceptsRegisterMenuHostPath()
+    {
+        var hostPath = @"C:\Program Files\Фолдора\Foldora.MenuHost.exe";
+
+        var command = CliCommandParser.Parse(["register-menu", "--host-path", hostPath]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.RegisterMenu, command.Kind);
+        Assert.Equal(hostPath, command.CommandHostPath);
+        Assert.Null(command.CliExecutablePath);
+    }
+
+    [Fact]
+    public void Parse_RegisterMenuHostPathWinsOverLegacyCliPath()
+    {
+        var cliPath = @"C:\Program Files\Фолдора\Foldora.Cli.exe";
+        var hostPath = @"C:\Program Files\Фолдора\Foldora.MenuHost.exe";
+
+        var command = CliCommandParser.Parse(["register-menu", "--cli-path", cliPath, "--host-path", hostPath]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(hostPath, command.CommandHostPath);
+        Assert.Equal(cliPath, command.CliExecutablePath);
     }
 
     [Fact]

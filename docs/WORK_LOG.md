@@ -1,5 +1,18 @@
 # Work Log
 
+## 2026-06-18 - Explorer integration UX hardening
+
+- Registry plan теперь пишет `Icon = <entry.IconPath>` на entry key, если imported `.ico` существует; `DisplayName` по-прежнему используется только как `MUIVerb`.
+- Добавлен `Foldora.MenuHost` как no-console `WinExe` для запуска Explorer menu commands без мигания console window.
+- `Foldora.MenuHost` поддерживает `create --target --entry-id` и `apply --folder --entry-id`, используя существующий `FolderMenuEntryActionService`.
+- `register-menu` получил `--host-path "<absolute-path-to-Foldora.MenuHost.exe>"`; legacy `--cli-path` сохранён как dev/backward-compatible alias.
+- Default register path resolution предпочитает `Foldora.MenuHost.exe`; CLI остаётся console tool для ручных команд.
+- WPF command-host resolver предпочитает `Foldora.MenuHost.exe` и имеет fallback на CLI только для dev/debug ситуации.
+- WPF `Сохранить` теперь rebuild-ит Foldora-owned registry menu, если integration уже была enabled; при disabled integration Save пишет только settings.
+- Если rebuild после settings save падает, settings не откатываются, UI показывает `Настройки сохранены, но меню Проводника не обновлено.`
+- Если после Save enabled entries нет, register-service удаляет owned roots, сохраняет `ExplorerIntegrationEnabled = false`, UI сообщает, что меню отключено.
+- Добавлены tests для registry `Icon`, MenuHost, `--host-path`, WPF save rebuild и failure semantics.
+
 ## 2026-06-18 - WPF editor phase 4
 
 - Добавлен App-level `ExplorerIntegrationController` для WPF-команд dry-run/register/unregister/reset поверх существующего `ExplorerMenuRegistrationService`.

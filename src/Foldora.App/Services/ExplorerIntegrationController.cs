@@ -11,16 +11,16 @@ public sealed class ExplorerIntegrationController
 {
     private readonly FolderMenuDraftEditor draftEditor;
     private readonly ExplorerMenuRegistrationService registrationService;
-    private readonly IExplorerCliPathResolver cliPathResolver;
+    private readonly IExplorerCommandHostPathResolver commandHostPathResolver;
 
     public ExplorerIntegrationController(
         FolderMenuDraftEditor draftEditor,
         ExplorerMenuRegistrationService registrationService,
-        IExplorerCliPathResolver cliPathResolver)
+        IExplorerCommandHostPathResolver commandHostPathResolver)
     {
         this.draftEditor = draftEditor ?? throw new ArgumentNullException(nameof(draftEditor));
         this.registrationService = registrationService ?? throw new ArgumentNullException(nameof(registrationService));
-        this.cliPathResolver = cliPathResolver ?? throw new ArgumentNullException(nameof(cliPathResolver));
+        this.commandHostPathResolver = commandHostPathResolver ?? throw new ArgumentNullException(nameof(commandHostPathResolver));
     }
 
     public bool ExplorerIntegrationEnabled => draftEditor.ExplorerIntegrationEnabled;
@@ -35,7 +35,7 @@ public sealed class ExplorerIntegrationController
         try
         {
             var result = await registrationService.RegisterAsync(
-                cliPathResolver.ResolveCliPath(),
+                commandHostPathResolver.ResolveCommandHostPath(),
                 dryRun: true,
                 cancellationToken);
 
@@ -61,7 +61,7 @@ public sealed class ExplorerIntegrationController
         try
         {
             var result = await registrationService.RegisterAsync(
-                cliPathResolver.ResolveCliPath(),
+                commandHostPathResolver.ResolveCommandHostPath(),
                 dryRun: false,
                 cancellationToken);
 
@@ -80,6 +80,37 @@ public sealed class ExplorerIntegrationController
         catch (Exception exception) when (IsUserFacingOperationException(exception))
         {
             return Failed(exception, draftEditor.ExplorerIntegrationEnabled);
+        }
+    }
+
+    public async Task<ExplorerIntegrationOperationResult> RebuildAfterSaveAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var result = await registrationService.RegisterAsync(
+                commandHostPathResolver.ResolveCommandHostPath(),
+                dryRun: false,
+                cancellationToken);
+
+            await draftEditor.LoadAsync(cancellationToken);
+
+            var message = result.ExplorerIntegrationEnabled
+                ? "Настройки сохранены. Меню Проводника обновлено."
+                : "Настройки сохранены. Включённых пунктов нет, меню Проводника отключено.";
+
+            return new ExplorerIntegrationOperationResult(
+                true,
+                message,
+                result.ExplorerIntegrationEnabled,
+                BuildPlanSummary(result));
+        }
+        catch (Exception exception) when (IsUserFacingOperationException(exception))
+        {
+            return new ExplorerIntegrationOperationResult(
+                false,
+                "Настройки сохранены, но меню Проводника не обновлено.",
+                draftEditor.ExplorerIntegrationEnabled,
+                [$"Ошибка Explorer integration: {exception.Message}"]);
         }
     }
 

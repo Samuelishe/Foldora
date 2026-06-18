@@ -16,6 +16,7 @@ foldora import-pack --path "<pack-path>"
 foldora list-packs
 foldora list-styles
 foldora register-menu
+foldora register-menu --host-path "<absolute-path-to-Foldora.MenuHost.exe>"
 foldora unregister-menu
 foldora settings
 ```
@@ -34,7 +35,8 @@ foldora settings
 - выполняет `menu reset --yes`, очищая пользовательские entries, возвращая title к `Создать папку`, удаляя только Foldora-owned registry roots и отключая Explorer integration;
 - выполняет `register-menu`, применяя validated HKCU registry plan;
 - выполняет `register-menu --dry-run`, печатая plan без записи в registry и без изменения settings;
-- выполняет `register-menu --cli-path "<path>"` для ручной проверки с publish/install path;
+- выполняет `register-menu --host-path "<path-to-Foldora.MenuHost.exe>"` для ручной проверки с publish/install path;
+- выполняет `register-menu --cli-path "<path>"` как legacy/dev alias для старого console host behavior;
 - выполняет `unregister-menu`, удаляя только Foldora-owned HKCU roots;
 - для неготовых команд пишет понятное skeleton-сообщение;
 
@@ -43,7 +45,7 @@ foldora settings
 - `--style` пока не реализован.
 - `import-pack` пока не реализован.
 - Legacy registry context menu использует HKCU и Foldora-owned roots. Modern Windows 11 compact menu не реализован.
-- При запуске через `dotnet run` путь текущего процесса может отличаться от будущего publish/install path; для ручной проверки используйте `register-menu --cli-path`.
+- При запуске через `dotnet run` путь текущего процесса может отличаться от будущего publish/install path; для ручной проверки Explorer UX используйте `register-menu --host-path`.
 - Explorer restart и icon cache reset не выполняются.
 - Explorer может не обновить иконку мгновенно из-за кэша.
 
@@ -57,6 +59,8 @@ CLI не исправляет явно невалидный `--folder-name` мо
 
 `unregister-menu` idempotent: отсутствие Foldora-owned keys не считается ошибкой.
 `unregister-menu` не удаляет entries/settings и нужен для безопасного временного отключения Explorer integration.
+
+`register-menu` по умолчанию пытается использовать `Foldora.MenuHost.exe` рядом с текущим executable или в соседнем Debug output. MenuHost - Windows-subsystem executable без console window; именно он должен быть target для Explorer legacy menu. `Foldora.Cli.exe` остаётся console app для ручных команд, diagnostics и разработки. `--cli-path` сохранён как backward-compatible override, но может вернуть console flash при запуске из Explorer.
 
 `menu reset --yes` - полный сброс пользовательского меню к пустому дефолту. Команда не удаляет весь `%AppData%\Foldora`, не удаляет `settings.json`, не трогает `packs` и не удаляет импортированные `.ico` на этом шаге. Без `--yes` reset отказывается выполняться.
 

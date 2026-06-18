@@ -27,6 +27,7 @@ public sealed record CliCommand(
     string? DefaultFolderName = null,
     string? EntryId = null,
     string? CliExecutablePath = null,
+    string? CommandHostPath = null,
     bool DryRun = false,
     bool Yes = false,
     string? QuoteValue = null,

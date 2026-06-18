@@ -23,6 +23,7 @@
     <ProjectReference Include="..\..\src\Foldora.Shell\Foldora.Shell.csproj" />
     <ProjectReference Include="..\..\src\Foldora.Cli\Foldora.Cli.csproj" />
     <ProjectReference Include="..\..\src\Foldora.App\Foldora.App.csproj" />
+    <ProjectReference Include="..\..\src\Foldora.MenuHost\Foldora.MenuHost.csproj" />
   </ItemGroup>
 
 </Project>

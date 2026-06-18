@@ -56,8 +56,13 @@
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuTargetKind.cs` - Directory/DirectoryBackground target kind.
 - `src/Foldora.Cli/Foldora.Cli.csproj` - console app.
 - `src/Foldora.Cli/CliCommand.cs` - модель разобранной CLI-команды.
-- `src/Foldora.Cli/CliCommandParser.cs` - простой parser CLI-аргументов, включая `menu reset --yes`.
+- `src/Foldora.Cli/CliCommandParser.cs` - простой parser CLI-аргументов, включая `menu reset --yes` и `register-menu --host-path`.
 - `src/Foldora.Cli/Program.cs` - CLI help/dispatch и вызов Core/Shell-сервисов.
+- `src/Foldora.MenuHost/Foldora.MenuHost.csproj` - no-console Windows host для Explorer menu commands.
+- `src/Foldora.MenuHost/Program.cs` - entry point MenuHost без console output.
+- `src/Foldora.MenuHost/MenuHostCommand.cs` - модель команды MenuHost.
+- `src/Foldora.MenuHost/MenuHostCommandParser.cs` - минимальный parser MenuHost для `create`/`apply` по entry id.
+- `src/Foldora.MenuHost/MenuHostCommandRunner.cs` - запуск существующего Core action service из MenuHost.
 - `src/Foldora.App/Foldora.App.csproj` - WPF settings app.
 - `src/Foldora.App/App.xaml` - WPF application entry.
 - `src/Foldora.App/App.xaml.cs` - WPF app code-behind.
@@ -74,13 +79,14 @@
 - `src/Foldora.App/Services/IIconPreviewService.cs` - abstraction загрузки `.ico` preview для WPF.
 - `src/Foldora.App/Services/IconPreviewResult.cs` - structured result загрузки preview.
 - `src/Foldora.App/Services/WpfIconPreviewService.cs` - WPF decoder preview из `.ico` без генерации файлов.
-- `src/Foldora.App/Services/IExplorerCliPathResolver.cs` - abstraction поиска `Foldora.Cli.exe` для WPF Explorer integration.
-- `src/Foldora.App/Services/ExplorerCliPathResolver.cs` - resolver `Foldora.Cli.exe` рядом с текущим executable.
+- `src/Foldora.App/Services/IExplorerCommandHostPathResolver.cs` - abstraction поиска executable host для WPF Explorer integration.
+- `src/Foldora.App/Services/ExplorerCommandHostPathResolver.cs` - resolver `Foldora.MenuHost.exe` рядом с текущим executable или в Debug output.
 - `src/Foldora.App/Services/ExplorerIntegrationOperationResult.cs` - result model для WPF Explorer integration operations.
 - `src/Foldora.App/Services/ExplorerIntegrationController.cs` - App-level controller для dry-run/register/unregister/reset из WPF поверх Shell service.
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project на `net10.0-windows`.
 - `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.
 - `tests/Foldora.Tests/App/ExplorerIntegrationControllerTests.cs` - тесты WPF Explorer integration controller с fake registry.
+- `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
 - `tests/Foldora.Tests/App/WpfIconPreviewServiceTests.cs` - тесты WPF preview service.
 - `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser, включая reset confirmation.
 - `tests/Foldora.Tests/Core/FoldoraDataPathsTests.cs` - тесты AppData paths.
@@ -93,6 +99,7 @@
 - `tests/Foldora.Tests/Menu/IconImportServiceTests.cs` - тесты импорта `.ico`.
 - `tests/Foldora.Tests/Menu/FolderMenuServiceTests.cs` - тесты управления menu entries.
 - `tests/Foldora.Tests/Menu/UniqueFolderNameServiceTests.cs` - тесты выбора свободного имени папки.
+- `tests/Foldora.Tests/MenuHost/MenuHostCommandRunnerTests.cs` - тесты no-console MenuHost command runner и csproj settings.
 - `tests/Foldora.Tests/Settings/FoldoraSettingsStorageTests.cs` - тесты JSON storage и default settings.
 - `tests/Foldora.Tests/Shell/CommandLineQuoterTests.cs` - тесты command line quoting.
 - `tests/Foldora.Tests/Shell/ExplorerMenuRegistryPlanBuilderTests.cs` - тесты registry plan builder и visible menu shape.

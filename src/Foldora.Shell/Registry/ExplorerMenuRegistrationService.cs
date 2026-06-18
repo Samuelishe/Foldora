@@ -24,14 +24,14 @@ public sealed class ExplorerMenuRegistrationService
     }
 
     public async Task<ExplorerMenuRegistrationResult> RegisterAsync(
-        string cliExecutablePath,
+        string commandHostPath,
         bool dryRun,
         CancellationToken cancellationToken = default)
     {
-        ValidateCliExecutablePath(cliExecutablePath);
+        ValidateCommandHostPath(commandHostPath);
 
         var settings = await settingsStorage.LoadAsync(cancellationToken);
-        var plans = BuildPlans(cliExecutablePath, settings);
+        var plans = BuildPlans(commandHostPath, settings);
 
         if (dryRun)
         {
@@ -110,12 +110,12 @@ public sealed class ExplorerMenuRegistrationService
             plans);
     }
 
-    private ExplorerMenuRegistryPlan[] BuildPlans(string cliExecutablePath, FoldoraSettings settings)
+    private ExplorerMenuRegistryPlan[] BuildPlans(string commandHostPath, FoldoraSettings settings)
     {
         return
         [
-            planBuilder.Build(cliExecutablePath, settings.CreateFolderMenu, ExplorerMenuTargetKind.Directory),
-            planBuilder.Build(cliExecutablePath, settings.CreateFolderMenu, ExplorerMenuTargetKind.DirectoryBackground)
+            planBuilder.Build(commandHostPath, settings.CreateFolderMenu, ExplorerMenuTargetKind.Directory),
+            planBuilder.Build(commandHostPath, settings.CreateFolderMenu, ExplorerMenuTargetKind.DirectoryBackground)
         ];
     }
 
@@ -125,31 +125,31 @@ public sealed class ExplorerMenuRegistrationService
 
         return
         [
-            planBuilder.Build("C:\\Foldora\\Foldora.Cli.exe", emptyMenu, ExplorerMenuTargetKind.Directory),
-            planBuilder.Build("C:\\Foldora\\Foldora.Cli.exe", emptyMenu, ExplorerMenuTargetKind.DirectoryBackground)
+            planBuilder.Build("C:\\Foldora\\Foldora.MenuHost.exe", emptyMenu, ExplorerMenuTargetKind.Directory),
+            planBuilder.Build("C:\\Foldora\\Foldora.MenuHost.exe", emptyMenu, ExplorerMenuTargetKind.DirectoryBackground)
         ];
     }
 
-    private static void ValidateCliExecutablePath(string cliExecutablePath)
+    private static void ValidateCommandHostPath(string commandHostPath)
     {
-        if (string.IsNullOrWhiteSpace(cliExecutablePath))
+        if (string.IsNullOrWhiteSpace(commandHostPath))
         {
-            throw new InvalidOperationException("CLI executable path is required.");
+            throw new InvalidOperationException("Explorer command host path is required.");
         }
 
-        if (!Path.IsPathFullyQualified(cliExecutablePath))
+        if (!Path.IsPathFullyQualified(commandHostPath))
         {
-            throw new InvalidOperationException("CLI executable path must be absolute.");
+            throw new InvalidOperationException("Explorer command host path must be absolute.");
         }
 
-        if (!File.Exists(cliExecutablePath))
+        if (!File.Exists(commandHostPath))
         {
-            throw new FileNotFoundException($"CLI executable was not found: {cliExecutablePath}", cliExecutablePath);
+            throw new FileNotFoundException($"Explorer command host was not found: {commandHostPath}", commandHostPath);
         }
 
-        if (!string.Equals(Path.GetExtension(cliExecutablePath), ".exe", StringComparison.OrdinalIgnoreCase))
+        if (!string.Equals(Path.GetExtension(commandHostPath), ".exe", StringComparison.OrdinalIgnoreCase))
         {
-            throw new InvalidOperationException("CLI executable path must point to an .exe file.");
+            throw new InvalidOperationException("Explorer command host path must point to an .exe file.");
         }
     }
 

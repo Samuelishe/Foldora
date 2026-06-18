@@ -95,6 +95,67 @@ public sealed class ExplorerMenuRegistryPlanBuilderTests
     }
 
     [Fact]
+    public void Build_WritesEntryIconValueWhenIconFileExists()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraPlanIcon-");
+
+        try
+        {
+            var iconPath = Path.Combine(root.FullName, "entry-skull.ico");
+            File.WriteAllText(iconPath, "fake icon");
+            var entry = CreateEntry("entry-skull", "Череп");
+            entry.IconPath = iconPath;
+
+            var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettings(entry));
+
+            Assert.Contains(
+                plan.ValueOperations,
+                operation => operation.KeyPath == $@"{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}\shell\entry-001-entry-skull"
+                             && operation.ValueName == "Icon"
+                             && operation.ValueData == iconPath);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public void Build_DoesNotWriteIconValueWhenIconPathIsEmpty()
+    {
+        var entry = CreateEntry("entry-skull", "Череп");
+        entry.IconPath = string.Empty;
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettings(entry));
+
+        Assert.DoesNotContain(plan.ValueOperations, operation => operation.ValueName == "Icon");
+    }
+
+    [Fact]
+    public void Build_DoesNotWriteIconValueWhenIconFileIsMissing()
+    {
+        var entry = CreateEntry("entry-skull", "Череп");
+        entry.IconPath = @"C:\Foldora\icons\missing.ico";
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettings(entry));
+
+        Assert.DoesNotContain(plan.ValueOperations, operation => operation.ValueName == "Icon");
+    }
+
+    [Fact]
+    public void Build_DoesNotUseDisplayNameAsIconValue()
+    {
+        var displayName = @"C:\NotAnIcon\Череп.ico";
+        var entry = CreateEntry("entry-skull", displayName);
+        entry.IconPath = string.Empty;
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettings(entry));
+
+        Assert.DoesNotContain(plan.ValueOperations, operation => operation.ValueName == "Icon" && operation.ValueData == displayName);
+        Assert.Contains(plan.ValueOperations, operation => operation.ValueName == "MUIVerb" && operation.ValueData == displayName);
+    }
+
+    [Fact]
     public void Build_UsesDirectoryPlaceholderForDirectoryTarget()
     {
         var plan = BuildPlan(ExplorerMenuTargetKind.Directory, CreateSettings(CreateEntry("entry-skull", "Череп")));
@@ -148,17 +209,17 @@ public sealed class ExplorerMenuRegistryPlanBuilderTests
     }
 
     [Fact]
-    public void Build_QuotesCliPathWithSpacesAndCyrillic()
+    public void Build_QuotesCommandHostPathWithSpacesAndCyrillic()
     {
-        var cliPath = @"C:\Program Files\Фолдора\Foldora.Cli.exe";
+        var hostPath = @"C:\Program Files\Фолдора\Foldora.MenuHost.exe";
 
         var plan = new ExplorerMenuRegistryPlanBuilder().Build(
-            cliPath,
+            hostPath,
             CreateSettings(CreateEntry("entry-skull", "Череп")),
             ExplorerMenuTargetKind.DirectoryBackground);
 
         var command = Assert.Single(plan.ValueOperations, operation => operation.KeyPath.EndsWith(@"\command") && operation.ValueName == string.Empty);
-        Assert.StartsWith(@"""C:\Program Files\Фолдора\Foldora.Cli.exe""", command.ValueData);
+        Assert.StartsWith(@"""C:\Program Files\Фолдора\Foldora.MenuHost.exe""", command.ValueData);
     }
 
     [Fact]
@@ -191,7 +252,7 @@ public sealed class ExplorerMenuRegistryPlanBuilderTests
     private static ExplorerMenuRegistryPlan BuildPlan(ExplorerMenuTargetKind targetKind, FolderMenuSettings settings)
     {
         return new ExplorerMenuRegistryPlanBuilder().Build(
-            @"C:\Program Files\Foldora\Foldora.Cli.exe",
+            @"C:\Program Files\Foldora\Foldora.MenuHost.exe",
             settings,
             targetKind);
     }

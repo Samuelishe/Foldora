@@ -72,7 +72,7 @@ try
             return 0;
 
         case CliCommandKind.RegisterMenu:
-            await RegisterMenuAsync(parsedCommand.DryRun, parsedCommand.CliExecutablePath);
+            await RegisterMenuAsync(parsedCommand.DryRun, parsedCommand.CommandHostPath);
             return 0;
 
         case CliCommandKind.UnregisterMenu:
@@ -116,7 +116,7 @@ Usage:
   foldora menu add --icon "<absolute-icon-path>" [--name "<display-name>"] [--folder-name "<default-folder-name>"]
   foldora menu remove --entry-id "<entry-id>"
   foldora menu reset --yes
-  foldora register-menu [--dry-run] [--cli-path "<absolute-path-to-Foldora.Cli.exe>"]
+  foldora register-menu [--dry-run] [--host-path "<absolute-path-to-Foldora.MenuHost.exe>"] [--cli-path "<legacy-dev-override>"]
   foldora unregister-menu
   foldora import-pack --path "<pack-path>"
   foldora list-packs
@@ -132,7 +132,7 @@ Implemented now:
   menu add --icon [--name] [--folder-name]
   menu remove --entry-id
   menu reset --yes
-  register-menu [--dry-run] [--cli-path]
+  register-menu [--dry-run] [--host-path] [--cli-path]
   unregister-menu
 
 The --style flow, pack import, Explorer restart, and icon cache reset are not implemented in this step.
@@ -198,13 +198,13 @@ static ExplorerMenuRegistrationService CreateRegistrationService()
     return new ExplorerMenuRegistrationService(storage, new ExplorerMenuRegistryPlanBuilder(), writer);
 }
 
-static async Task RegisterMenuAsync(bool dryRun, string? cliExecutablePath)
+static async Task RegisterMenuAsync(bool dryRun, string? commandHostPath)
 {
-    var resolvedCliPath = string.IsNullOrWhiteSpace(cliExecutablePath)
-        ? Environment.ProcessPath ?? throw new InvalidOperationException("Current CLI executable path could not be resolved.")
-        : cliExecutablePath;
+    var resolvedHostPath = string.IsNullOrWhiteSpace(commandHostPath)
+        ? ResolveDefaultCommandHostPath()
+        : commandHostPath;
 
-    var result = await CreateRegistrationService().RegisterAsync(resolvedCliPath, dryRun);
+    var result = await CreateRegistrationService().RegisterAsync(resolvedHostPath, dryRun);
     Console.WriteLine(result.Message);
     Console.WriteLine($"ExplorerIntegrationEnabled: {result.ExplorerIntegrationEnabled}");
 
@@ -212,6 +212,44 @@ static async Task RegisterMenuAsync(bool dryRun, string? cliExecutablePath)
     {
         PrintPlans(result.Plans);
     }
+}
+
+static string ResolveDefaultCommandHostPath()
+{
+    var processPath = Environment.ProcessPath
+        ?? throw new InvalidOperationException("Current CLI executable path could not be resolved.");
+    var processDirectory = Path.GetDirectoryName(processPath)
+        ?? throw new InvalidOperationException("Current CLI executable directory could not be resolved.");
+
+    var installedHostPath = Path.Combine(processDirectory, "Foldora.MenuHost.exe");
+    if (File.Exists(installedHostPath))
+    {
+        return installedHostPath;
+    }
+
+    var targetFrameworkDirectory = new DirectoryInfo(processDirectory);
+    var configurationDirectory = targetFrameworkDirectory.Parent;
+    if (configurationDirectory is not null)
+    {
+        var devHostPath = Path.GetFullPath(Path.Combine(
+            processDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "Foldora.MenuHost",
+            "bin",
+            configurationDirectory.Name,
+            "net10.0-windows",
+            "Foldora.MenuHost.exe"));
+
+        if (File.Exists(devHostPath))
+        {
+            return devHostPath;
+        }
+    }
+
+    return installedHostPath;
 }
 
 static async Task UnregisterMenuAsync()
