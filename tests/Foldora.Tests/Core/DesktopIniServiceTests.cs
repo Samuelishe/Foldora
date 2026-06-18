@@ -16,13 +16,47 @@ public sealed class DesktopIniServiceTests
     }
 
     [Fact]
-    public void DefaultAttributePolicy_MatchesCurrentCompatibilityBehavior()
+    public void DefaultAttributePolicy_UsesDeletionFriendlyReadOnlyFolderHiddenDesktopIni()
     {
         var policy = DesktopIniAttributePolicy.Default;
 
-        Assert.Same(DesktopIniAttributePolicy.CompatibilitySystem, policy);
-        Assert.Equal(FileAttributes.System, policy.FolderAttributes);
-        Assert.Equal(FileAttributes.Hidden | FileAttributes.System, policy.DesktopIniAttributes);
+        Assert.Same(DesktopIniAttributePolicy.ReadOnlyFolderHiddenDesktopIni, policy);
+        Assert.Equal(FileAttributes.ReadOnly, policy.FolderAttributes);
+        Assert.Equal(FileAttributes.Hidden, policy.DesktopIniAttributes);
+    }
+
+    [Fact]
+    public async Task ApplyIconAsync_WithDefaultPolicy_UsesReadOnlyFolderAndHiddenDesktopIni()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraTests-");
+        var folder = Directory.CreateDirectory(Path.Combine(root.FullName, "Target"));
+        var iconPath = Path.Combine(root.FullName, "icon.ico");
+
+        await File.WriteAllTextAsync(iconPath, "bootstrap placeholder");
+
+        try
+        {
+            var service = new DesktopIniService();
+
+            await service.ApplyIconAsync(new DesktopIniOptions(folder.FullName, iconPath));
+
+            var desktopIniPath = Path.Combine(folder.FullName, DesktopIniService.FileName);
+            var desktopIniAttributes = File.GetAttributes(desktopIniPath);
+            var folderAttributes = folder.Attributes;
+            var content = await File.ReadAllTextAsync(desktopIniPath);
+
+            Assert.True(folderAttributes.HasFlag(FileAttributes.ReadOnly));
+            Assert.False(folderAttributes.HasFlag(FileAttributes.System));
+            Assert.True(desktopIniAttributes.HasFlag(FileAttributes.Hidden));
+            Assert.False(desktopIniAttributes.HasFlag(FileAttributes.System));
+            Assert.Contains("[.ShellClassInfo]", content);
+            Assert.Contains($"IconResource={Path.GetFullPath(iconPath)},0", content);
+        }
+        finally
+        {
+            ClearAttributes(root);
+            root.Delete(recursive: true);
+        }
     }
 
     [Theory]

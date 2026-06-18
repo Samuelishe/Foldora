@@ -33,7 +33,7 @@ public sealed record DesktopIniAttributePolicy(
         FileAttributes.System,
         FileAttributes.Hidden);
 
-    public static DesktopIniAttributePolicy Default => CompatibilitySystem;
+    public static DesktopIniAttributePolicy Default => ReadOnlyFolderHiddenDesktopIni;
 
     public static IReadOnlyList<DesktopIniAttributePolicy> Supported { get; } =
     [

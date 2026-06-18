@@ -85,6 +85,12 @@ Legacy registry context menu передаёт Foldora target directory path (`%1
 
 Создание папки именно под курсором не поддерживается текущей MVP-интеграцией. Для такого поведения нужен отдельный advanced shell integration path, например `IExplorerCommand`, COM shell extension, работа с Explorer view positioning или другой глубокий shell layer. Это future/non-MVP и не должно решаться registry/placeholder hacks.
 
+## Folder Icon Attribute Policy
+
+Explorer menu commands в итоге вызывают `DesktopIniService` через Core action services. Для новых папок используется default `DesktopIniAttributePolicy.ReadOnlyFolderHiddenDesktopIni`: folder получает `ReadOnly`, а `desktop.ini` получает только `Hidden`.
+
+Этот default выбран после ручной проверки Windows 11, потому что `System` на папке или `desktop.ini` вызывает плохой deletion UX. Старые папки, созданные прежней policy `CompatibilitySystem`, автоматически не исправляются и могут сохранять warning при удалении.
+
 ## Registry Writer
 
 `ExplorerMenuRegistryWriter` всегда валидирует plan перед применением. Writer пишет только через `IRegistryAccess`; реальный доступ к Windows Registry находится только в `WindowsRegistryAccess`.

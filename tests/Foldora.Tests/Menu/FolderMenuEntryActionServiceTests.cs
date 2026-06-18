@@ -25,6 +25,8 @@ public sealed class FolderMenuEntryActionServiceTests
             var desktopIniPath = Path.Combine(targetFolder.FullName, "desktop.ini");
             var content = await File.ReadAllTextAsync(desktopIniPath);
             Assert.Contains($"IconResource={Path.GetFullPath(iconPath)},0", content);
+            Assert.True(targetFolder.Attributes.HasFlag(FileAttributes.ReadOnly));
+            Assert.False(targetFolder.Attributes.HasFlag(FileAttributes.System));
         }
         finally
         {
@@ -114,6 +116,8 @@ public sealed class FolderMenuEntryActionServiceTests
             Assert.True(Directory.Exists(createdPath));
             var content = await File.ReadAllTextAsync(Path.Combine(createdPath, "desktop.ini"));
             Assert.Contains($"IconResource={Path.GetFullPath(iconPath)},0", content);
+            Assert.True(new DirectoryInfo(createdPath).Attributes.HasFlag(FileAttributes.ReadOnly));
+            Assert.False(new DirectoryInfo(createdPath).Attributes.HasFlag(FileAttributes.System));
         }
         finally
         {

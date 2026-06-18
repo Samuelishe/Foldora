@@ -14,10 +14,12 @@ IconResource=<absolute-path-to-icon>,0
 1. Создать или обновить `desktop.ini`.
 2. Записать секцию `[.ShellClassInfo]`.
 3. Записать `IconResource=<absolute-path-to-icon>,0`.
-4. Поставить атрибуты `desktop.ini`: Hidden + System.
-5. Поставить атрибут System целевой папке.
+4. Поставить атрибуты `desktop.ini`: Hidden.
+5. Поставить атрибут ReadOnly целевой папке.
 
-Это текущая default policy `CompatibilitySystem`. Она оставлена без изменения, потому что уже подтверждена как рабочая для custom folder icon. При этом ручная проверка показала плохой deletion UX: Windows может предупреждать, что файл `desktop.ini` является системным, если пользователь удаляет созданную Foldora папку.
+Это текущая default policy `ReadOnlyFolderHiddenDesktopIni`. Она выбрана после ручной проверки на Windows 11: custom icon остаётся видимой после refresh/reopen Explorer, а deletion warning, связанный с `System` attributes, исчезает для новых папок.
+
+Старые папки, созданные прежней policy, могут иметь folder `System` и `desktop.ini` `Hidden + System`. Foldora не мигрирует и не чинит такие папки автоматически в этом шаге; они могут продолжать показывать warning при удалении. Отдельная repair/normalize command рассматривается как future work.
 
 ## Attribute Policies
 
@@ -27,12 +29,12 @@ Foldora теперь имеет тестируемую модель `DesktopIniA
 
 | Policy | Folder attributes | desktop.ini attributes | Icon visible | Delete warning | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `CompatibilitySystem` | System | Hidden + System | TBD | TBD | current default |
-| `ReadOnlyFolderSystemDesktopIni` | ReadOnly | Hidden + System | TBD | TBD | candidate |
-| `ReadOnlyFolderHiddenDesktopIni` | ReadOnly | Hidden | TBD | TBD | candidate |
-| `SystemFolderHiddenDesktopIni` | System | Hidden | TBD | TBD | candidate |
+| `CompatibilitySystem` | System | Hidden + System | Yes | Yes | previous default; warning may mention `desktop.ini` or folder |
+| `ReadOnlyFolderSystemDesktopIni` | ReadOnly | Hidden + System | Yes | Yes | `desktop.ini` still has System |
+| `ReadOnlyFolderHiddenDesktopIni` | ReadOnly | Hidden | Yes | No | current default |
+| `SystemFolderHiddenDesktopIni` | System | Hidden | Yes | Yes | folder still has System |
 
-Результаты `Icon visible` и `Delete warning` намеренно оставлены `TBD`: Codex не может надёжно проверить Explorer UI warning автоматическими тестами. Лучший deletion-friendly default нужно выбрать после ручной проверки на Windows 11.
+Результаты основаны на ручной проверке Windows 11. Вывод: `System` на папке даёт плохой deletion UX, и `System` на `desktop.ini` тоже нежелателен. Для новых Foldora-created folders используется `ReadOnlyFolderHiddenDesktopIni`.
 
 Manual diagnostic command:
 
@@ -65,7 +67,7 @@ Diagnostic command ничего не пишет в registry, не требует
 2. Удалить строку `IconResource` из секции `[.ShellClassInfo]`.
 3. Если после очистки `desktop.ini` не содержит полезных строк, удалить файл.
 4. Если в `desktop.ini` есть другие секции или данные, сохранить их.
-5. Не снимать агрессивно атрибут `System` с папки, потому что он может быть нужен другим shell-настройкам.
+5. Не снимать агрессивно атрибуты папки, потому что они могут быть нужны другим shell-настройкам или старой Foldora policy.
 
 В MVP не делать агрессивный reset icon cache и не перезапускать Explorer по умолчанию. Explorer может не обновить иконку мгновенно из-за кэша.
 

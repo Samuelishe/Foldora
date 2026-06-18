@@ -6,14 +6,13 @@
 
 Documentation consolidation: продуктовая концепция вынесена в `docs/PRODUCT_VISION.md`, целевой WPF/staged-save flow - в `docs/UX_FLOW.md`. Главный MVP-объект зафиксирован как пользовательский `FolderMenuEntry`; packs остаются будущим import/export механизмом.
 
-Текущий фокус: manual-test-driven investigation для `desktop.ini` attribute policies и Explorer UX observations. Default production behavior для folder icon apply остаётся `CompatibilitySystem`: folder `System`, `desktop.ini` `Hidden + System`. Добавлена diagnostic CLI-команда `foldora diagnostics desktop-ini-policy --target "<directory>" --icon "<ico>"`, которая создаёт тестовые папки для ручного выбора deletion-friendly policy. Также зафиксировано MVP-ограничение legacy registry menu: Foldora получает target directory path, но не cursor/icon-view coordinates, поэтому Explorer сам выбирает позицию нового значка на рабочем столе.
+Текущий фокус: выбран production default для `desktop.ini` attribute policy после ручной проверки Windows 11. Новые Foldora-created/apply folders используют `ReadOnlyFolderHiddenDesktopIni`: folder `ReadOnly`, `desktop.ini` `Hidden`. Это сохраняет custom icon после refresh/reopen Explorer и избегает deletion warning, вызванного `System` attributes. Старые папки, созданные прежней policy `CompatibilitySystem`, автоматически не мигрируются и могут продолжать показывать warning при удалении. Diagnostic CLI-команда `foldora diagnostics desktop-ini-policy --target "<directory>" --icon "<ico>"` сохранена для проверки policies. Также зафиксировано MVP-ограничение legacy registry menu: Foldora получает target directory path, но не cursor/icon-view coordinates, поэтому Explorer сам выбирает позицию нового значка на рабочем столе.
 
 Открытые вопросы:
 
 - Финальное публичное имя продукта.
 - Точный UX для выбора custom style.
-- Правила снятия атрибута `System` с папки после clear, если в будущем появится надёжное определение владельца shell-настроек.
-- Какая `DesktopIniAttributePolicy` сохраняет custom icon, но убирает deletion warning про системный `desktop.ini`.
+- Нужна ли отдельная repair/normalize command для старых Foldora-created folders с прежними `System` attributes.
 - Возможен ли user-grade UX создания desktop folder под курсором без COM/modern shell integration.
 - Фактическое поведение Explorer placeholders `%1` и `%V` на Windows 11 после повторной ручной проверки.
 - Preview generation/cache policy, если прямой WPF preview из `.ico` окажется недостаточным.

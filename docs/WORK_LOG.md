@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-06-18 - Desktop.ini production default policy
+
+- После ручной проверки Windows 11 production default изменён на `ReadOnlyFolderHiddenDesktopIni`.
+- Новые Foldora-created/apply folders получают folder `ReadOnly`, а `desktop.ini` получает только `Hidden`.
+- `System` больше не ставится по default ни на папку, ни на `desktop.ini`, чтобы избежать Windows deletion warning.
+- `CompatibilitySystem` и остальные policies сохранены для diagnostic/manual verification.
+- Старые папки, созданные прежней policy, не мигрируются автоматически и могут сохранять `System` attributes.
+- В roadmap/future ideas добавлена будущая repair/normalize command для старых папок, но она не реализована в этом шаге.
+- Обновлены tests default policy, default apply attributes, entry-id apply/create и MenuHost create behavior.
+
 ## 2026-06-18 - Desktop.ini attribute policy investigation
 
 - Зафиксировано MVP-ограничение legacy registry menu: Foldora получает target directory path (`%1`/`%V`), но не получает cursor coordinates или desktop icon-view coordinates; позицию нового значка выбирает Explorer.

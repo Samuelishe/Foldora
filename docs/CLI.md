@@ -59,6 +59,8 @@ CLI не исправляет явно невалидный `--folder-name` мо
 
 `create --entry-id` создаёт папку внутри `--target`. Если имя занято файлом или папкой, используется схема `Name (2)`, `Name (3)` и так далее, максимум до разумного лимита попыток.
 
+Обычные `apply` и `create` используют текущий default `desktop.ini` attribute policy из Core: `ReadOnlyFolderHiddenDesktopIni` (`folder: ReadOnly`, `desktop.ini: Hidden`). `System` не ставится по default ни на папку, ни на `desktop.ini`.
+
 `unregister-menu` idempotent: отсутствие Foldora-owned keys не считается ошибкой.
 `unregister-menu` не удаляет entries/settings и нужен для безопасного временного отключения Explorer integration.
 
@@ -86,3 +88,5 @@ foldora diagnostics desktop-ini-policy --target "C:\Users\User\Desktop" --icon "
 - `SystemFolderHiddenDesktopIni`
 
 После запуска нужно вручную проверить, видна ли кастомная иконка после refresh/reopen Explorer и появляется ли warning при удалении папки.
+
+Текущий production default уже выбран: `ReadOnlyFolderHiddenDesktopIni`. Остальные policies оставлены для diagnostics и regression/manual verification.

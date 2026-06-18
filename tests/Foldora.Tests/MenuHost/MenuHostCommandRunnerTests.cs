@@ -40,11 +40,15 @@ public sealed class MenuHostCommandRunnerTests
                 actionService);
 
             Assert.Equal(0, exitCode);
-            Assert.True(Directory.Exists(Path.Combine(target, "Череп")));
-            Assert.True(File.Exists(Path.Combine(target, "Череп", "desktop.ini")));
+            var createdFolder = new DirectoryInfo(Path.Combine(target, "Череп"));
+            Assert.True(createdFolder.Exists);
+            Assert.True(File.Exists(Path.Combine(createdFolder.FullName, "desktop.ini")));
+            Assert.True(createdFolder.Attributes.HasFlag(FileAttributes.ReadOnly));
+            Assert.False(createdFolder.Attributes.HasFlag(FileAttributes.System));
         }
         finally
         {
+            ClearAttributes(root);
             root.Delete(recursive: true);
         }
     }
@@ -134,5 +138,20 @@ public sealed class MenuHostCommandRunnerTests
         }
 
         throw new DirectoryNotFoundException("Could not find repository root.");
+    }
+
+    private static void ClearAttributes(DirectoryInfo directory)
+    {
+        foreach (var file in directory.EnumerateFiles("*", SearchOption.AllDirectories))
+        {
+            file.Attributes = FileAttributes.Normal;
+        }
+
+        foreach (var childDirectory in directory.EnumerateDirectories("*", SearchOption.AllDirectories))
+        {
+            childDirectory.Attributes = FileAttributes.Normal;
+        }
+
+        directory.Attributes = FileAttributes.Normal;
     }
 }
