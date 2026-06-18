@@ -22,7 +22,8 @@ Example visible legacy menu:
   Цветные
     Синяя
     Красная
-  Череп
+  Готические
+    Череп
   Музыка
 ```
 
@@ -33,6 +34,7 @@ Selecting an entry creates a folder and applies its icon through `desktop.ini`.
 - WPF editor for the user menu.
 - Add/remove menu entries.
 - One-level grouping for menu entries.
+- `DisplayName`, `DefaultFolderName`, `GroupName`, and enabled/disabled entry state.
 - Staged save: changes are not written until `Save`.
 - `.ico` import into `%AppData%\Foldora\icons\`.
 - Direct `.ico` preview in the WPF editor.
@@ -40,6 +42,7 @@ Selecting an entry creates a folder and applies its icon through `desktop.ini`.
 - No-console `Foldora.MenuHost.exe` for Explorer menu commands.
 - Small icons in the legacy Explorer menu.
 - Folder creation with a custom icon through `desktop.ini`.
+- Deletion-friendly folder icon attributes: folder `ReadOnly`, `desktop.ini` `Hidden`.
 - Unregister flow that disables Explorer integration without deleting entries.
 - Reset flow that clears the user menu and disables Explorer integration.
 
@@ -92,8 +95,14 @@ foldora unregister-menu
 - The current Explorer integration uses the legacy context menu, so the menu may appear under `Show more options`.
 - Creating a desktop folder exactly under the mouse cursor is not supported in the current legacy-menu MVP; Explorer chooses the new desktop icon position.
 - No installer/MSIX yet.
+- Manual/dev registry registration may point to a Debug `Foldora.MenuHost.exe`; production needs stable installed paths for `Foldora.App.exe`, `Foldora.Cli.exe`, and `Foldora.MenuHost.exe`.
 - No icon pack import/export yet.
 - No PNG-to-ICO conversion yet.
+- No full nested tree storage beyond the current one-level `GroupName`.
+- No drag-and-drop ordering or group icons yet.
+- No orphan icon cleanup yet.
+- No user-facing diagnostics if `Foldora.MenuHost.exe` fails when invoked by Explorer.
+- Full runtime localization of all status/error strings is not complete yet.
 - No Explorer restart or icon cache reset flow.
 
 ## Documentation

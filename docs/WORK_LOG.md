@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-06-18 - MVP stabilization documentation
+
+- Добавлен `docs/SMOKE_TEST.md` как ручной Windows 11 checklist для build/test, WPF startup, entry editing, Explorer integration, folder creation, save-triggered rebuild, unregister/reset и startup logs.
+- `docs/SMOKE_TEST.md` добавлен в `AGENTS.md`, `docs/README.md` и `docs/FILE_INDEX.md`.
+- Root `README.md` уточняет implemented one-level grouping, deletion-friendly `desktop.ini` attributes, known limitations и необходимость stable installed paths.
+- `docs/ROADMAP.md` разделён на implemented MVP, next stage publish/dev layout и future work.
+- `docs/PROJECT_STATE.md` обновлён с текущим stabilization status и следующим этапом stable `Foldora.App.exe`/`Foldora.Cli.exe`/`Foldora.MenuHost.exe` paths.
+- Production-код не менялся.
+
 ## 2026-06-18 - One-level grouping MVP
 
 - `FolderMenuEntry` расширен полем `GroupName`; пустое/whitespace значение означает root-level entry.

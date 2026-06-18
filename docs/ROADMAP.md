@@ -1,57 +1,24 @@
 # Roadmap
 
-## MVP 0.1
+## Implemented MVP
 
-1. Применить иконку к выбранной папке.
-2. Убрать иконку с выбранной папки.
-3. Создать новую папку с выбранной иконкой.
-4. Управлять пользовательскими menu entries: `.ico`, подпись, имя создаваемой папки, enabled state.
-5. Зарегистрировать legacy context menu в HKCU под Foldora-owned roots.
-6. Удалить legacy context menu без удаления entries/settings.
-7. Сбросить пользовательское меню к пустому дефолту.
-8. Открыть простое WPF-окно настроек.
-9. Реализовать staged-save WPF-редактор пользовательского меню.
-10. Хранить настройки в AppData.
+Foldora currently has a working MVP loop:
 
-## WPF MVP
-
-- Custom title bar/window shell без видимой стандартной Windows title bar.
-- Settings UI с выбором языка.
-- Поле title top-level menu, default `Создать папку`.
-- Список пользовательских entries.
-- Добавление и удаление entries.
-- Поля `DisplayName` и `DefaultFolderName`.
-- Поле `GroupName` для простой one-level grouping.
-- Выбор `.ico`.
-- Preview иконки примерно 50x50.
-- Checkbox `IsEnabled`.
-- Кнопки `Сохранить`, `Отменить изменения`, `Включить меню Проводника`, `Отключить меню Проводника`, `Сбросить меню`.
-- Inline validation/status area вместо опоры на `MessageBox` как основной механизм ошибок.
-- Registry operations только после явного user action: integration buttons или `Сохранить`, когда integration уже включена.
-
-## Не делать в MVP
-
-- Полноценную Windows 11 modern context menu integration.
-- COM shell extension.
-- Фоновый сервис.
-- Автозапуск.
-- Marketplace паков.
-- Синхронизацию.
-- Сложный редактор иконок.
-- Preview generation файлов, если WPF может показать `.ico` напрямую.
-- PNG conversion.
-- Патчинг системных DLL.
-- Глобальную замену стандартной иконки всех папок Windows.
-- Зависимость от сторонних shell-кастомайзеров.
-- Explorer restart и icon cache reset по умолчанию.
-
-## Будущее
-
-Modern context menu, installer/MSIX, pack import/export, preview generation, nested menu runtime/storage и расширенная валидация паков рассматриваются после рабочего MVP.
-
-Implemented MVP grouping:
-
-- One-level grouping через `FolderMenuEntry.GroupName` перед full tree migration:
+- WPF editor with custom window chrome.
+- Settings gear and persisted language setting `ru`/`en`.
+- Minimal localization foundation for main WPF labels/buttons.
+- User menu entries with:
+  - `DisplayName`;
+  - `DefaultFolderName`;
+  - `GroupName` for one-level grouping;
+  - enabled/disabled state;
+  - imported `.ico`.
+- Add/remove entries.
+- Staged save/cancel.
+- Staged icon import into `%AppData%\Foldora\icons`.
+- Direct `.ico` preview in WPF.
+- Safe HKCU legacy Explorer menu registration under Foldora-owned roots.
+- Visible menu shape:
 
 ```text
 Создать папку
@@ -63,21 +30,21 @@ Implemented MVP grouping:
   Музыка
 ```
 
-Future grouping work:
+- No-console `Foldora.MenuHost.exe` for Explorer menu commands.
+- Small menu icons through registry `Icon`.
+- `register-menu`, `register-menu --dry-run`, `register-menu --host-path`, `unregister-menu`.
+- `menu reset --yes`.
+- `apply`, `create`, and `clear` through `desktop.ini`.
+- Deletion-friendly default desktop.ini policy:
+  - folder: `ReadOnly`;
+  - `desktop.ini`: `Hidden`.
+- Startup diagnostics in `%AppData%\Foldora\Logs\startup-error.log`.
 
-- Full tree storage/runtime, drag-and-drop group ordering, group icons and nested depth > 1.
+## Next Stage
 
-Отдельные post-MVP investigation tracks:
+Prepare the MVP for repeatable manual release/publish testing:
 
-- Исследовать создание desktop icon под курсором только через advanced shell integration layer (`IExplorerCommand`, COM shell extension, Explorer view positioning или другой явный path). MVP legacy registry menu получает только target directory path и не решает позиционирование.
-
-Текущая ручная разработка должна указывать registry menu на Debug MenuHost path:
-
-```text
-src\Foldora.MenuHost\bin\Debug\net10.0-windows\Foldora.MenuHost.exe
-```
-
-Будущий installer/publish должен дать стабильные installed paths:
+- Define publish/dev layout with stable paths:
 
 ```text
 Foldora.App.exe
@@ -85,4 +52,37 @@ Foldora.Cli.exe
 Foldora.MenuHost.exe
 ```
 
-Production registry menu должен указывать на стабильный installed `Foldora.MenuHost.exe`, а не на Debug build output и не на console `Foldora.Cli.exe`.
+- Ensure production Explorer registry commands point to installed `Foldora.MenuHost.exe`, not Debug build output and not console `Foldora.Cli.exe`.
+- Document manual release packaging steps.
+- Decide how WPF resolves command host path in published layout.
+- Keep installer/MSIX as a later step unless the publish layout reveals a hard requirement.
+
+## Known MVP Limitations
+
+- Modern Windows 11 compact context menu is not implemented.
+- Legacy menu may appear under `Show more options`.
+- Foldora does not control desktop icon placement under the mouse cursor; Explorer chooses the icon position.
+- No installer/MSIX yet.
+- No pack import/export yet.
+- No PNG-to-ICO conversion.
+- No full nested tree storage/runtime beyond one-level `GroupName`.
+- No drag-and-drop group ordering.
+- No group icons.
+- No orphan icon cleanup for imported `.ico`.
+- No user-facing diagnostics for `Foldora.MenuHost.exe` failures launched from Explorer.
+- Full runtime localization of all status/error/detail strings is not complete.
+- No Explorer restart or icon cache reset flow.
+
+## Future
+
+- Installer/MSIX after stable publish layout.
+- Modern Windows 11 context menu research.
+- COM/IExplorerCommand research for advanced shell integration.
+- Full tree menu runtime/storage beyond current one-level groups.
+- Drag-and-drop ordering.
+- Group icons.
+- Pack import/export.
+- PNG-to-ICO conversion.
+- Preview generation/cache if direct `.ico` preview becomes insufficient.
+- Orphan icon cleanup.
+- Optional repair/normalize command only if old `System`-attribute folders become a real user need.

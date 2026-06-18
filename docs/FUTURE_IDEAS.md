@@ -24,5 +24,5 @@
 - Low-priority optional repair command, например `foldora repair-folder --folder "<folder>"` или `foldora normalize-attributes --folder "<folder>"`, только если появится реальная потребность чинить старые Foldora-created папки с прежними `System` attributes. Это не planned MVP task.
 - Создание папки под cursor position на рабочем столе через отдельное shell integration исследование. Legacy registry menu даёт только target directory path, не desktop icon-view coordinates.
 - `unregister-menu --dry-run`.
-- Installer/MSIX/publish flow со стабильным installed path для `Foldora.App.exe` и `Foldora.Cli.exe`.
+- Installer/MSIX/publish flow со стабильным installed path для `Foldora.App.exe`, `Foldora.Cli.exe` и `Foldora.MenuHost.exe`.
 - Автоматическая миграция настроек при смене рабочего имени продукта.

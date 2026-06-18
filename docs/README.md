@@ -9,8 +9,9 @@
 5. `ARCHITECTURE.md` - проекты, слои и зависимости.
 6. `REQUIREMENTS.md` - платформа, локальные инструменты и ограничения.
 7. `DESKTOP_INI.md` и `SHELL_INTEGRATION.md` - ключевые Windows-механизмы.
-8. `MENU_MODEL.md`, `PACKS.md`, `SETTINGS.md`, `CLI.md`, `UI_DESIGN.md` - пользовательские форматы и интерфейсы.
-9. `CODING_RULES.md` и `FILE_INDEX.md` - правила разработки и карта файлов.
+8. `SMOKE_TEST.md` - ручной checklist проверки MVP на Windows 11.
+9. `MENU_MODEL.md`, `PACKS.md`, `SETTINGS.md`, `CLI.md`, `UI_DESIGN.md` - пользовательские форматы и интерфейсы.
+10. `CODING_RULES.md` и `FILE_INDEX.md` - правила разработки и карта файлов.
 
 Foldora пока является рабочим названием и может измениться перед публичным релизом.
 

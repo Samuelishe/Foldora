@@ -164,6 +164,8 @@ WPF `Сохранить` rebuild-ит registry menu только если `Explo
 
 ## Manual Verification
 
+Полный MVP checklist находится в `SMOKE_TEST.md`. Короткий CLI/manual flow:
+
 1. Добавить тестовый entry:
 
 ```text
@@ -215,6 +217,17 @@ foldora menu reset --yes
 ```
 
 8. Зафиксировать фактическое поведение `%1` и `%V`.
+
+Для grouped menu дополнительно проверить:
+
+```text
+Создать папку
+  Цветные
+    <entry>
+  <root entry>
+```
+
+Small icons должны отображаться у root-level и grouped entries. Console window при выборе пункта не должен мигать, если registry command указывает на `Foldora.MenuHost.exe`.
 
 Будущие registry safety rules:
 

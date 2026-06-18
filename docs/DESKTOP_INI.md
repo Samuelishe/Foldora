@@ -30,6 +30,8 @@ warning про системный desktop.ini исчез
 warning про системную папку исчез для новых папок
 ```
 
+Эти проверки включены в общий `SMOKE_TEST.md`. Для MVP нет automatic repair/normalize старых папок с прежними `System` attributes.
+
 Старые папки, созданные прежней policy, могут иметь folder `System` и `desktop.ini` `Hidden + System`. Foldora не мигрирует и не чинит такие папки автоматически. Это нормально для текущего MVP: старые тестовые папки в текущем рабочем сценарии не нужны, а repair/normalize command не добавляется без реальной пользовательской потребности.
 
 ## Attribute Policies

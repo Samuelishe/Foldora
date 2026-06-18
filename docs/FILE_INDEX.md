@@ -144,6 +144,7 @@
 - `docs/SETTINGS.md` - настройки.
 - `docs/SHELL_INTEGRATION.md` - shell integration.
 - `docs/DESKTOP_INI.md` - механизм desktop.ini.
+- `docs/SMOKE_TEST.md` - ручной smoke-test checklist для Windows 11 MVP.
 - `docs/PACKS.md` - pack manifest.
 - `docs/MENU_MODEL.md` - модель пользовательского меню, validation, staged-save, nested menu и registry safety.
 - `docs/CLI.md` - CLI.
