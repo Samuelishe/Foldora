@@ -19,8 +19,11 @@ WPF UX cleanup после one-level grouping заменяет emoji/font-depende
 - Главный экран MVP должен быть редактором пользовательского меню, а не landing page.
 - Минимальный редактор должен иметь title меню, список entries, user-facing поля `Название в меню` и `Имя создаваемой папки`, выбор `.ico`, preview около 50x50, checkbox `Показывать в меню`, `Сохранить`, `Отменить изменения`, `Включить меню Проводника`, `Отключить меню Проводника`, `Сбросить меню`.
 - Для one-level grouping карточка entry имеет поле `Группа`; пустое значение означает пункт в корне меню.
-- Entries визуально группируются по `GroupName`: пустая группа показывается как `Без группы`, непустые значения показываются отдельными секциями. Пустые группы не являются persistent model object; текущая модель остаётся entry-based.
-- `+ Добавить группу` создаёт обычный draft entry с новым `GroupName`, а не отдельную persisted group entity.
+- Entries визуально группируются по `GroupName`: пустая группа показывается как `Без группы`, непустые значения показываются отдельными group containers. Пустые группы не являются persistent model object; текущая модель остаётся entry-based.
+- `+ Добавить группу` создаёт обычный draft entry с новым `GroupName`, а UI показывает это как новую группу с первым пунктом. Отдельная persisted group entity не создаётся.
+- `Без группы` - специальная root-секция, а не удаляемая группа.
+- Non-empty group container имеет заголовок, inline rename, staged delete-group confirmation и вложенные entry cards.
+- Удаление группы означает staged удаление всех entries с этим `GroupName`; settings и registry меняются только после `Сохранить`.
 - Основной entry UI должен быть карточным/list-style, а не технической таблицей.
 - `EntryId` не показывать в основном пользовательском flow.
 - Technical registry plan details скрывать по умолчанию за раскрываемым блоком.
@@ -61,7 +64,8 @@ WPF UX cleanup после one-level grouping заменяет emoji/font-depende
 - Технические labels `DisplayName`, `DefaultFolderName`, `EntryId` убраны из основного UI.
 - Карточка entry показывает preview, `Название в меню`, `Имя создаваемой папки`, `Показывать в меню`, icon status и действия `Выбрать .ico`/`Удалить`.
 - После grouping MVP карточка также показывает поле `Группа` с подсказкой, что пустое значение оставляет entry в root menu.
-- После WPF grouping UX cleanup карточки показываются внутри section headers `Без группы` или `<GroupName>`. Поле `Группа` остаётся способом переместить entry между секциями без drag-and-drop.
+- После WPF grouping container cleanup карточки показываются внутри visual group containers `Без группы` или `<GroupName>`. Постоянное поле `Группа` убрано из основной карточки; group rename выполняется в заголовке контейнера.
+- Visual reference для grouping использован только как грубая структура `группа -> элементы`, без копирования цветов, размеров, шрифтов или геометрии.
 - Пустой список entries показывает empty state и кнопку `+ Добавить пункт`.
 - `Интеграция с Проводником` содержит только normal controls: dry-run/register/unregister.
 - Reset вынесен в отдельную `Опасная зона` с подтверждением.

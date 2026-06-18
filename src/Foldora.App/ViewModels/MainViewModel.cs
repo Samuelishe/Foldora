@@ -474,7 +474,13 @@ public sealed class MainViewModel : INotifyPropertyChanged
                 L.RootGroupTitle,
                 rootEntries,
                 L.AddEntry,
-                AddEntryToGroup));
+                L.DeleteGroup,
+                L.ConfirmDeleteGroup,
+                L.Cancel,
+                isRootSection: true,
+                AddEntryToGroup,
+                DeleteGroup,
+                RenameGroup));
         }
 
         foreach (var group in Entries
@@ -487,8 +493,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
                 group.Key,
                 group.Key,
                 group,
-                string.Format(L.AddEntryToGroupFormat, group.Key),
-                AddEntryToGroup));
+                L.AddEntryToThisGroup,
+                L.DeleteGroup,
+                L.ConfirmDeleteGroup,
+                L.Cancel,
+                isRootSection: false,
+                AddEntryToGroup,
+                DeleteGroup,
+                RenameGroup));
         }
 
         OnPropertyChanged(nameof(EntryGroups));
@@ -512,6 +524,48 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
 
         return $"{L.NewGroupNameBase} {Guid.NewGuid():N}";
+    }
+
+    private void DeleteGroup(string groupName)
+    {
+        if (string.IsNullOrWhiteSpace(groupName))
+        {
+            return;
+        }
+
+        var entriesToRemove = Entries
+            .Where(entry => string.Equals(entry.GroupName.Trim(), groupName.Trim(), StringComparison.Ordinal))
+            .ToList();
+
+        foreach (var entry in entriesToRemove)
+        {
+            draftEditor.RemoveEntry(entry.Id);
+            Entries.Remove(entry);
+        }
+
+        Errors.Clear();
+        OperationDetails.Clear();
+        RebuildEntryGroups();
+        NotifyEntryStateChanged();
+        NotifyErrorAndDetailsStateChanged();
+        StatusMessage = "Группа удалена из draft. Настройки изменятся только после сохранения.";
+        RefreshDirtyState();
+    }
+
+    private void RenameGroup(string oldGroupName, string newGroupName)
+    {
+        if (string.IsNullOrWhiteSpace(oldGroupName) || string.Equals(oldGroupName, newGroupName, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        foreach (var entry in Entries.Where(entry => string.Equals(entry.GroupName.Trim(), oldGroupName.Trim(), StringComparison.Ordinal)))
+        {
+            entry.GroupName = newGroupName;
+        }
+
+        RebuildEntryGroups();
+        RefreshDirtyState();
     }
 
     private void RefreshDirtyState()

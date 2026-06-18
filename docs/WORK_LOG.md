@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-06-18 - WPF grouping container UX redesign
+
+- WPF groups redesigned from simple section headers into visual containers with header, nested entry cards and contextual add-entry button.
+- `Без группы` remains a special root section and has no delete-group action.
+- Non-empty group containers support inline title rename; rename updates `GroupName` for all entries in that group in draft.
+- Delete group is staged and removes all draft entries with that `GroupName` only after inline confirmation; settings/registry still change only on `Сохранить`.
+- Entry cards no longer show the always-visible technical `Группа:` textbox; grouping is controlled at container level.
+- The supplied visual reference was used only as structural guidance, not as visual styling.
+- Core menu model, registry shape, CLI behavior and one-level grouping limits were not changed.
+
 ## 2026-06-18 - WPF UX cleanup and resource policy
 
 - Settings gear в custom title bar заменён с emoji/font-dependent glyph на self-authored XAML vector icon; внешние ассеты не добавлялись.

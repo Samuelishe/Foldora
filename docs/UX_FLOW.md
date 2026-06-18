@@ -147,6 +147,17 @@ WPF показывает эту flat-модель как секции:
 
 Секции являются только presentation layer. Пустые группы не сохраняются как отдельные сущности. `+ Добавить группу` создаёт draft entry с новым `GroupName`; если пользователь отменит изменения или удалит этот entry, такая группа исчезнет.
 
+После grouping container UX cleanup non-empty groups показываются как отдельные visual containers:
+
+- editable group title in header;
+- delete-group button with inline confirmation;
+- nested entry cards;
+- contextual `+ Добавить пункт в эту группу`.
+
+`Без группы` является root-секцией для entries с пустым `GroupName`; она не имеет кнопки удаления группы. Удаление группы в UI удаляет из draft все entries с этим `GroupName`, но не пишет settings и registry до `Сохранить`. Переименование группы обновляет `GroupName` у всех entries этой группы в draft.
+
+Схематичный visual reference для этого UX используется только как структура `группа -> элементы`; цвета, размеры, шрифты и грубая геометрия не копируются.
+
 ## Icon Preview
 
 WPF phase 3 показывает `.ico` напрямую в строке entry, примерно 50x50.

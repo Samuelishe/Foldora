@@ -20,6 +20,11 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string AddGroup => Get();
     public string RootGroupTitle => Get();
     public string AddEntryToGroupFormat => Get();
+    public string AddEntryToThisGroup => Get();
+    public string DeleteGroup => Get();
+    public string DeleteGroupPrompt => Get();
+    public string ConfirmDeleteGroup => Get();
+    public string Cancel => Get();
     public string NewGroupNameBase => Get();
     public string EmptyTitle => Get();
     public string EmptyDescription => Get();

@@ -153,6 +153,125 @@ public sealed class MainViewModelPresentationTests
     }
 
     [Fact]
+    public async Task DeleteGroup_RemovesAllEntriesInGroupFromDraft()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var blue = CreateEntry("entry-blue", "Синяя");
+            blue.GroupName = "Цветные";
+            var red = CreateEntry("entry-red", "Красная");
+            red.GroupName = "Цветные";
+            var music = CreateEntry("entry-music", "Музыка");
+            await SaveSettingsAsync(paths, blue, red, music);
+
+            var viewModel = await CreateViewModelAsync(paths);
+            var group = viewModel.EntryGroups.Single(section => section.Title == "Цветные");
+
+            group.DeleteGroupCommand.Execute(null);
+
+            Assert.True(group.IsDeleteConfirmationVisible);
+
+            group.ConfirmDeleteGroupCommand.Execute(null);
+
+            Assert.DoesNotContain(viewModel.Entries, entry => entry.GroupName == "Цветные");
+            Assert.Single(viewModel.Entries);
+            Assert.Equal("Музыка", viewModel.Entries[0].DisplayName);
+            Assert.True(viewModel.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task DeleteEntry_RemovesOnlyThatEntryFromDraft()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var blue = CreateEntry("entry-blue", "Синяя");
+            blue.GroupName = "Цветные";
+            var red = CreateEntry("entry-red", "Красная");
+            red.GroupName = "Цветные";
+            await SaveSettingsAsync(paths, blue, red);
+
+            var viewModel = await CreateViewModelAsync(paths);
+
+            viewModel.Entries.First(entry => entry.Id == "entry-blue").RemoveCommand.Execute(null);
+
+            Assert.Single(viewModel.Entries);
+            Assert.Equal("entry-red", viewModel.Entries[0].Id);
+            Assert.Single(viewModel.EntryGroups);
+            Assert.Equal("Цветные", viewModel.EntryGroups[0].Title);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task GroupSection_DisappearsWhenLastEntryIsRemoved()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var blue = CreateEntry("entry-blue", "Синяя");
+            blue.GroupName = "Цветные";
+            await SaveSettingsAsync(paths, blue);
+
+            var viewModel = await CreateViewModelAsync(paths);
+
+            viewModel.Entries[0].RemoveCommand.Execute(null);
+
+            Assert.Empty(viewModel.Entries);
+            Assert.Empty(viewModel.EntryGroups);
+            Assert.False(viewModel.HasEntries);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task RenameGroup_UpdatesAllEntriesInGroup()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var blue = CreateEntry("entry-blue", "Синяя");
+            blue.GroupName = "Цветные";
+            var red = CreateEntry("entry-red", "Красная");
+            red.GroupName = "Цветные";
+            await SaveSettingsAsync(paths, blue, red);
+
+            var viewModel = await CreateViewModelAsync(paths);
+
+            viewModel.EntryGroups.Single(section => section.Title == "Цветные").Title = "Палитра";
+
+            Assert.All(viewModel.Entries, entry => Assert.Equal("Палитра", entry.GroupName));
+            Assert.Single(viewModel.EntryGroups);
+            Assert.Equal("Палитра", viewModel.EntryGroups[0].Title);
+            Assert.True(viewModel.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task ShowTechnicalDetails_CanBeToggled()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");

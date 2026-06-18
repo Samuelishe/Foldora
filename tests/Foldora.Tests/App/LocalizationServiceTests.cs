@@ -42,5 +42,11 @@ public sealed class LocalizationServiceTests
         Assert.Equal("+ Add group", english.Resources.AddGroup);
         Assert.Equal("Без группы", russian.Resources.RootGroupTitle);
         Assert.Equal("No group", english.Resources.RootGroupTitle);
+        Assert.Equal("+ Добавить пункт в эту группу", russian.Resources.AddEntryToThisGroup);
+        Assert.Equal("+ Add entry to this group", english.Resources.AddEntryToThisGroup);
+        Assert.Equal("Удалить группу", russian.Resources.DeleteGroup);
+        Assert.Equal("Delete group", english.Resources.DeleteGroup);
+        Assert.Equal("Удалить группу и все её пункты?", russian.Resources.DeleteGroupPrompt);
+        Assert.Equal("Delete the group and all its entries?", english.Resources.DeleteGroupPrompt);
     }
 }

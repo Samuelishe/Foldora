@@ -211,21 +211,105 @@
                             </ItemsControl.Style>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Margin="0,0,0,16">
-                                        <DockPanel Margin="0,0,0,8">
-                                            <TextBlock DockPanel.Dock="Left"
-                                                       Text="{Binding Title}"
-                                                       FontSize="15"
-                                                       FontWeight="SemiBold"
-                                                       Foreground="#30343A"
-                                                       VerticalAlignment="Center" />
-                                            <Button DockPanel.Dock="Right"
-                                                    Content="{Binding AddEntryText}"
-                                                    Command="{Binding AddEntryCommand}"
-                                                    Padding="10,4"
-                                                    MinWidth="150"
-                                                    HorizontalAlignment="Right" />
-                                        </DockPanel>
+                                    <Border BorderBrush="#D7DCE3"
+                                            BorderThickness="1"
+                                            CornerRadius="6"
+                                            Padding="14"
+                                            Margin="0,0,0,16"
+                                            Background="#FDFDFD">
+                                        <StackPanel>
+                                            <Grid Margin="0,0,0,10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{Binding Title}"
+                                                           FontSize="15"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="#30343A"
+                                                           VerticalAlignment="Center">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsRootSection}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+
+                                                <TextBox Grid.Column="0"
+                                                         Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                                         FontSize="15"
+                                                         FontWeight="SemiBold"
+                                                         BorderThickness="0,0,0,1"
+                                                         Background="Transparent"
+                                                         Padding="0,2,0,4"
+                                                         VerticalAlignment="Center">
+                                                    <TextBox.Style>
+                                                        <Style TargetType="TextBox">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsRootSection}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBox.Style>
+                                                </TextBox>
+
+                                                <Button Grid.Column="1"
+                                                        Content="×"
+                                                        Command="{Binding DeleteGroupCommand}"
+                                                        ToolTip="{Binding DeleteGroupText}"
+                                                        Width="30"
+                                                        Height="28"
+                                                        Padding="0"
+                                                        Margin="12,0,0,0"
+                                                        FontSize="16">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                            <Setter Property="Foreground" Value="#9A1B1B" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding CanDeleteGroup}" Value="False">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                </Button>
+                                            </Grid>
+
+                                            <Border BorderBrush="#E2B7B7"
+                                                    BorderThickness="1"
+                                                    CornerRadius="6"
+                                                    Padding="10"
+                                                    Margin="0,0,0,10"
+                                                    Background="#FFF8F8"
+                                                    Visibility="{Binding IsDeleteConfirmationVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <DockPanel LastChildFill="False">
+                                                    <TextBlock DockPanel.Dock="Left"
+                                                               Text="{Binding DataContext.L.DeleteGroupPrompt, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                               VerticalAlignment="Center"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,0,12,0" />
+                                                    <Button DockPanel.Dock="Right"
+                                                            Content="{Binding CancelText}"
+                                                            Command="{Binding CancelDeleteGroupCommand}"
+                                                            Padding="10,4"
+                                                            Margin="8,0,0,0" />
+                                                    <Button DockPanel.Dock="Right"
+                                                            Content="{Binding ConfirmDeleteGroupText}"
+                                                            Command="{Binding ConfirmDeleteGroupCommand}"
+                                                            Padding="10,4"
+                                                            Foreground="#9A1B1B" />
+                                                </DockPanel>
+                                            </Border>
 
                                         <ItemsControl ItemsSource="{Binding Entries}">
                                             <ItemsControl.ItemTemplate>
@@ -263,7 +347,6 @@
                                                                     <RowDefinition Height="Auto" />
                                                                     <RowDefinition Height="Auto" />
                                                                     <RowDefinition Height="Auto" />
-                                                                    <RowDefinition Height="Auto" />
                                                                 </Grid.RowDefinitions>
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="170" />
@@ -288,32 +371,21 @@
                                                                 <TextBox Grid.Row="1"
                                                                          Grid.Column="1"
                                                                          Text="{Binding DefaultFolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                         Margin="0,0,14,6"
-                                                                         MinWidth="220" />
+                                                                        Margin="0,0,14,6"
+                                                                        MinWidth="220" />
 
-                                                                <TextBlock Grid.Row="2"
-                                                                           Grid.Column="0"
-                                                                           Text="{Binding DataContext.L.EntryGroupName, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                           Style="{StaticResource FieldLabelStyle}" />
-                                                                <TextBox Grid.Row="2"
-                                                                         Grid.Column="1"
-                                                                         Text="{Binding GroupName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                                         ToolTip="{Binding DataContext.L.EntryGroupHelp, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                         Margin="0,0,14,6"
-                                                                         MinWidth="220" />
-
-                                                                <CheckBox Grid.Row="3"
+                                                                <CheckBox Grid.Row="2"
                                                                           Grid.Column="1"
                                                                           Content="{Binding DataContext.L.EntryEnabled, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                           IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                                           Margin="0,2,0,8" />
 
-                                                                <TextBlock Grid.Row="4"
+                                                                <TextBlock Grid.Row="3"
                                                                            Grid.Column="0"
                                                                            Text="{Binding DataContext.L.EntryIcon, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                            Style="{StaticResource FieldLabelStyle}"
                                                                            Margin="0,0,10,0" />
-                                                                <TextBlock Grid.Row="4"
+                                                                <TextBlock Grid.Row="3"
                                                                            Grid.Column="1"
                                                                            Text="{Binding IconState}"
                                                                            TextWrapping="Wrap"
@@ -322,7 +394,7 @@
                                                                            Margin="0,0,14,0" />
 
                                                                 <StackPanel Grid.Row="0"
-                                                                            Grid.RowSpan="5"
+                                                                            Grid.RowSpan="4"
                                                                             Grid.Column="2"
                                                                             Orientation="Vertical"
                                                                             VerticalAlignment="Top">
@@ -342,7 +414,15 @@
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-                                    </StackPanel>
+
+                                            <Button Content="{Binding AddEntryText}"
+                                                    Command="{Binding AddEntryCommand}"
+                                                    Padding="10,4"
+                                                    MinWidth="150"
+                                                    HorizontalAlignment="Left"
+                                                    Margin="64,0,0,0" />
+                                        </StackPanel>
+                                    </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
