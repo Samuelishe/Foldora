@@ -1,6 +1,6 @@
 # UX Flow
 
-Этот документ фиксирует целевой пользовательский flow для WPF MVP. Phase 4 уже реализует staged editing, add/remove entries, staged выбор `.ico`, прямой preview из `.ico` и явные Explorer integration controls.
+Этот документ фиксирует целевой пользовательский flow для WPF MVP. WPF editor реализует staged editing, add/remove entries, staged выбор `.ico`, прямой preview из `.ico`, явные Explorer integration controls и user-facing card/list layout.
 
 ## WPF MVP Editor
 
@@ -20,6 +20,15 @@
 - кнопку `Включить меню Проводника`;
 - кнопку `Отключить меню Проводника`;
 - кнопку `Сбросить меню`.
+
+После UX cleanup phase 1 список entries отображается как карточки, а не как technical table. Основные labels:
+
+- `Название в меню`;
+- `Имя создаваемой папки`;
+- `Показывать в меню`;
+- `Иконка`.
+
+`EntryId` скрыт из основного пользовательского flow.
 
 UI не должен полагаться на `MessageBox` как основной механизм ошибок. Предпочтительные механизмы:
 
@@ -146,7 +155,22 @@ Preview generation всё ещё future:
 
 `Сбросить меню` требует явного подтверждения в UI. Reset очищает saved entries, возвращает title к `Создать папку`, удаляет только Foldora-owned registry roots, сохраняет `settings.json`, не удаляет AppData root, packs и импортированные `.ico`.
 
+Dangerous reset отображается в отдельной `Опасная зона`, а не рядом с dry-run/register/unregister.
+
+Technical registry plan details скрыты по умолчанию. Обычный status показывает краткий user-facing результат; operation roots, counts и command example доступны в раскрываемом technical details block.
+
 Отсутствие меню в Explorer является нормальным состоянием, а не ошибкой.
+
+## Empty State
+
+Если entries нет, WPF показывает empty state:
+
+```text
+Пока нет пунктов меню.
+Добавьте первый пункт: выберите .ico, задайте название в меню и имя создаваемой папки.
+```
+
+Demo entries автоматически не создаются.
 
 ## Manual Verification Flow
 

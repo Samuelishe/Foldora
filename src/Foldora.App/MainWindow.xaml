@@ -4,212 +4,346 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Foldora" Height="700" Width="980"
-        MinHeight="560" MinWidth="760">
-    <Grid Margin="20">
+        Title="Foldora" Height="780" Width="980"
+        MinHeight="640" MinWidth="780">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+
+        <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#555555" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,10,6" />
+        </Style>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="Padding" Value="14,6" />
+            <Setter Property="Margin" Value="8,0,0,0" />
+        </Style>
+
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="Padding" Value="12,5" />
+            <Setter Property="Margin" Value="0,0,8,8" />
+        </Style>
+
+        <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="Foreground" Value="#9A1B1B" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="22">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
                    Text="Foldora"
-                   FontSize="24"
+                   FontSize="26"
                    FontWeight="SemiBold"
                    Margin="0,0,0,18" />
 
-        <Grid Grid.Row="1" Margin="0,0,0,16">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+                <StackPanel Margin="0,0,0,20">
+                    <TextBlock Text="Настройка меню"
+                               Style="{StaticResource SectionTitleStyle}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0"
-                       Text="Название меню:"
-                       VerticalAlignment="Center"
-                       Margin="0,0,12,0" />
-            <TextBox Grid.Column="1"
-                     Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     MinWidth="280" />
-        </Grid>
+                        <TextBlock Grid.Column="0"
+                                   Text="Название меню:"
+                                   Style="{StaticResource FieldLabelStyle}" />
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 MinWidth="280"
+                                 MaxWidth="520"
+                                 HorizontalAlignment="Left" />
+                    </Grid>
+                </StackPanel>
 
-        <Grid Grid.Row="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+                <StackPanel Margin="0,0,0,20">
+                    <DockPanel Margin="0,0,0,10">
+                        <TextBlock DockPanel.Dock="Left"
+                                   Text="Пункты меню"
+                                   Style="{StaticResource SectionTitleStyle}"
+                                   Margin="0" />
+                        <Button DockPanel.Dock="Right"
+                                Content="+ Добавить пункт"
+                                Command="{Binding AddEntryCommand}"
+                                Padding="12,5"
+                                MinWidth="140"
+                                HorizontalAlignment="Right" />
+                    </DockPanel>
 
-            <TextBlock Grid.Row="0"
-                       Text="Пункты меню:"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,8" />
+                    <Border BorderBrush="#D7D7D7"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Padding="18"
+                            Background="#FAFAFA">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasEntries}" Value="False">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel>
+                            <TextBlock Text="Пока нет пунктов меню."
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,6" />
+                            <TextBlock Text="Добавьте первый пункт: выберите .ico, задайте название в меню и имя создаваемой папки."
+                                       TextWrapping="Wrap"
+                                       Foreground="#555555"
+                                       Margin="0,0,0,14" />
+                            <Button Content="+ Добавить пункт"
+                                    Command="{Binding AddEntryCommand}"
+                                    Padding="12,5"
+                                    MinWidth="140"
+                                    HorizontalAlignment="Left" />
+                        </StackPanel>
+                    </Border>
 
-            <DataGrid Grid.Row="1"
-                      ItemsSource="{Binding Entries}"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
-                      CanUserDeleteRows="False"
-                      HeadersVisibility="Column"
-                      GridLinesVisibility="Horizontal"
-                      SelectionMode="Single"
-                      RowHeight="62">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="Preview"
-                                            Width="72">
-                        <DataGridTemplateColumn.CellTemplate>
+                    <ItemsControl ItemsSource="{Binding Entries}">
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasEntries}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
+                        <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Width="52"
-                                        Height="52"
-                                        BorderBrush="#CCCCCC"
+                                <Border BorderBrush="#DDDDDD"
                                         BorderThickness="1"
-                                        Background="#FAFAFA"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center">
-                                    <Image Source="{Binding IconPreview}"
-                                           Width="50"
-                                           Height="50"
-                                           Stretch="Uniform" />
+                                        CornerRadius="6"
+                                        Padding="14"
+                                        Margin="0,0,0,10"
+                                        Background="White"
+                                        ToolTip="{Binding Id}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="64" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border Grid.Column="0"
+                                                Width="52"
+                                                Height="52"
+                                                BorderBrush="#CCCCCC"
+                                                BorderThickness="1"
+                                                Background="#FAFAFA"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top">
+                                            <Image Source="{Binding IconPreview}"
+                                                   Width="50"
+                                                   Height="50"
+                                                   Stretch="Uniform" />
+                                        </Border>
+
+                                        <Grid Grid.Column="1">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="170" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       Text="Название в меню:"
+                                                       Style="{StaticResource FieldLabelStyle}" />
+                                            <TextBox Grid.Row="0"
+                                                     Grid.Column="1"
+                                                     Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                     Margin="0,0,14,6"
+                                                     MinWidth="220" />
+
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       Text="Имя создаваемой папки:"
+                                                       Style="{StaticResource FieldLabelStyle}" />
+                                            <TextBox Grid.Row="1"
+                                                     Grid.Column="1"
+                                                     Text="{Binding DefaultFolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                     Margin="0,0,14,6"
+                                                     MinWidth="220" />
+
+                                            <CheckBox Grid.Row="2"
+                                                      Grid.Column="1"
+                                                      Content="Показывать в меню"
+                                                      IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                      Margin="0,2,0,8" />
+
+                                            <TextBlock Grid.Row="3"
+                                                       Grid.Column="0"
+                                                       Text="Иконка:"
+                                                       Style="{StaticResource FieldLabelStyle}"
+                                                       Margin="0,0,10,0" />
+                                            <TextBlock Grid.Row="3"
+                                                       Grid.Column="1"
+                                                       Text="{Binding IconState}"
+                                                       TextWrapping="Wrap"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="#555555"
+                                                       Margin="0,0,14,0" />
+
+                                            <StackPanel Grid.Row="0"
+                                                        Grid.RowSpan="4"
+                                                        Grid.Column="2"
+                                                        Orientation="Vertical"
+                                                        VerticalAlignment="Top">
+                                                <Button Content="Выбрать .ico"
+                                                        Command="{Binding ChooseIconCommand}"
+                                                        Padding="10,4"
+                                                        MinWidth="112"
+                                                        Margin="0,0,0,8" />
+                                                <Button Content="Удалить"
+                                                        Command="{Binding RemoveCommand}"
+                                                        Padding="10,4"
+                                                        MinWidth="112" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
                                 </Border>
                             </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridCheckBoxColumn Header="Вкл."
-                                            Width="56"
-                                            Binding="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <DataGridTextColumn Header="DisplayName"
-                                        Width="2*"
-                                        Binding="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <DataGridTextColumn Header="DefaultFolderName"
-                                        Width="2*"
-                                        Binding="{Binding DefaultFolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <DataGridTextColumn Header="EntryId"
-                                        Width="2*"
-                                        IsReadOnly="True"
-                                        Binding="{Binding Id}" />
-                    <DataGridTextColumn Header="Иконка"
-                                        Width="2*"
-                                        IsReadOnly="True"
-                                        Binding="{Binding IconState}" />
-                    <DataGridTemplateColumn Header=""
-                                            Width="120">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Content="Выбрать .ico"
-                                        Command="{Binding ChooseIconCommand}"
-                                        Padding="8,2" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header=""
-                                            Width="84">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Content="Удалить"
-                                        Command="{Binding RemoveCommand}"
-                                        Padding="8,2" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
 
-        <GroupBox Grid.Row="3"
-                  Header="Интеграция с Проводником"
-                  Margin="0,16,0,0"
-                  Padding="12">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+                <StackPanel Margin="0,0,0,20">
+                    <TextBlock Text="Интеграция с Проводником"
+                               Style="{StaticResource SectionTitleStyle}" />
+                    <TextBlock Text="{Binding ExplorerIntegrationStatusText, StringFormat=Статус: {0}}"
+                               Margin="0,0,0,10" />
+                    <WrapPanel>
+                        <Button Content="Проверить план"
+                                Command="{Binding DryRunCommand}"
+                                Style="{StaticResource SecondaryButtonStyle}" />
+                        <Button Content="Включить меню Проводника"
+                                Command="{Binding RegisterExplorerCommand}"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                MinWidth="190" />
+                        <Button Content="Отключить меню Проводника"
+                                Command="{Binding UnregisterExplorerCommand}"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                MinWidth="200" />
+                    </WrapPanel>
+                    <Expander Header="Показать технические детали"
+                              IsExpanded="{Binding ShowTechnicalDetails, Mode=TwoWay}"
+                              Visibility="{Binding HasTechnicalDetails, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              Margin="0,4,0,0">
+                        <ItemsControl ItemsSource="{Binding TechnicalDetails}"
+                                      Margin="0,8,0,0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}"
+                                               TextWrapping="Wrap"
+                                               Foreground="#555555"
+                                               Margin="0,0,0,4" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Expander>
+                </StackPanel>
 
-                <TextBlock Grid.Row="0"
-                           Text="{Binding ExplorerIntegrationStatusText, StringFormat=Статус: {0}}"
-                           Margin="0,0,0,8" />
+                <Border BorderBrush="#E2B7B7"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="14"
+                        Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="Опасная зона"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="#8A1F1F"
+                                   Margin="0,0,0,8" />
+                        <TextBlock Text="Сброс очищает список пунктов меню и отключает интеграцию с Проводником."
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,4" />
+                        <TextBlock Text="Импортированные .ico пока не удаляются."
+                                   TextWrapping="Wrap"
+                                   Foreground="#555555"
+                                   Margin="0,0,0,12" />
+                        <CheckBox Content="Я понимаю, что список пунктов будет очищен"
+                                  IsChecked="{Binding IsResetConfirmed, Mode=TwoWay}"
+                                  Margin="0,0,0,10" />
+                        <Button Content="Сбросить меню"
+                                Command="{Binding ResetMenuCommand}"
+                                Style="{StaticResource DangerButtonStyle}"
+                                HorizontalAlignment="Left" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
 
-                <WrapPanel Grid.Row="1">
-                    <Button Content="Проверить план"
-                            Command="{Binding DryRunCommand}"
-                            MinWidth="120"
-                            Margin="0,0,8,8" />
-                    <Button Content="Включить меню Проводника"
-                            Command="{Binding RegisterExplorerCommand}"
-                            MinWidth="180"
-                            Margin="0,0,8,8" />
-                    <Button Content="Отключить меню Проводника"
-                            Command="{Binding UnregisterExplorerCommand}"
-                            MinWidth="190"
-                            Margin="0,0,8,8" />
-                    <CheckBox Content="Я понимаю, что список пунктов будет очищен"
-                              IsChecked="{Binding IsResetConfirmed, Mode=TwoWay}"
-                              VerticalAlignment="Center"
-                              Margin="8,0,8,8" />
-                    <Button Content="Сбросить меню"
-                            Command="{Binding ResetMenuCommand}"
-                            MinWidth="120"
-                            Margin="0,0,0,8" />
-                </WrapPanel>
-            </Grid>
-        </GroupBox>
-
-        <StackPanel Grid.Row="4"
-                    Orientation="Horizontal"
-                    Margin="0,16,0,12">
-            <Button Content="+ Добавить пункт"
-                    Command="{Binding AddEntryCommand}"
-                    MinWidth="140"
-                    Margin="0,0,8,0" />
-            <Button Content="Сохранить"
-                    Command="{Binding SaveCommand}"
-                    MinWidth="120"
-                    Margin="0,0,8,0" />
-            <Button Content="Отменить изменения"
-                    Command="{Binding ReloadCommand}"
-                    MinWidth="160" />
-            <TextBlock Text="{Binding HasUnsavedChanges, StringFormat=Несохранённые изменения: {0}}"
+        <DockPanel Grid.Row="2"
+                   Margin="0,16,0,14">
+            <TextBlock DockPanel.Dock="Left"
+                       Text="{Binding HasUnsavedChanges, StringFormat=Несохранённые изменения: {0}}"
                        VerticalAlignment="Center"
-                       Margin="16,0,0,0" />
-        </StackPanel>
+                       Foreground="#555555" />
+            <StackPanel DockPanel.Dock="Right"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Content="Отменить изменения"
+                        Command="{Binding ReloadCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        MinWidth="160" />
+                <Button Content="Сохранить"
+                        Command="{Binding SaveCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
 
-        <Grid Grid.Row="5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <TextBlock Grid.Row="0"
-                       Text="{Binding StatusMessage}"
-                       TextWrapping="Wrap" />
-            <ItemsControl Grid.Row="1"
-                          ItemsSource="{Binding OperationDetails}"
-                          Margin="0,8,0,0">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}"
-                                   TextWrapping="Wrap"
-                                   Foreground="#333333"
-                                   Margin="0,0,0,4" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            <ItemsControl Grid.Row="2"
-                          ItemsSource="{Binding Errors}"
-                          Margin="0,8,0,0">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}"
-                                   TextWrapping="Wrap"
-                                   Foreground="#B00020"
-                                   Margin="0,0,0,4" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Grid>
+        <Border Grid.Row="3"
+                BorderBrush="#D7D7D7"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="12"
+                Background="#FAFAFA">
+            <StackPanel>
+                <TextBlock Text="{Binding StatusMessage}"
+                           TextWrapping="Wrap"
+                           Visibility="{Binding HasStatusMessage, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <ItemsControl ItemsSource="{Binding Errors}"
+                              Visibility="{Binding HasValidationErrors, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              Margin="0,8,0,0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"
+                                       TextWrapping="Wrap"
+                                       Foreground="#B00020"
+                                       Margin="0,0,0,4" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

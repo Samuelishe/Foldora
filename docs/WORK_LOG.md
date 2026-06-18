@@ -1,5 +1,17 @@
 # Work Log
 
+## 2026-06-18 - WPF UX cleanup phase 1
+
+- Главное окно WPF переведено с технического `DataGrid` на список карточек пунктов меню.
+- User-facing labels заменили technical names: `Название в меню`, `Имя создаваемой папки`, `Показывать в меню`, `Иконка`.
+- `EntryId` скрыт из основного UI; он остаётся внутренним идентификатором и доступен только как tooltip карточки.
+- Добавлено нормальное empty state для пустого списка entries без demo entries.
+- Normal integration controls отделены от `Опасная зона`; reset больше не находится рядом с dry-run/register/unregister.
+- Technical registry plan details скрыты в `Expander` и показываются только при наличии деталей операции.
+- Status area разделяет user-facing status и список ошибок; technical details больше не выводятся прямо в основном статусе.
+- Добавлены presentation properties в `MainViewModel` и минимальные tests для empty/non-empty state, details toggle и reset confirmation state.
+- Core/CLI/Shell/MenuHost/settings/registry behavior не изменялись.
+
 ## 2026-06-18 - Explorer integration UX hardening
 
 - Registry plan теперь пишет `Icon = <entry.IconPath>` на entry key, если imported `.ico` существует; `DisplayName` по-прежнему используется только как `MUIVerb`.

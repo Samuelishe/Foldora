@@ -66,10 +66,10 @@
 - `src/Foldora.App/Foldora.App.csproj` - WPF settings app.
 - `src/Foldora.App/App.xaml` - WPF application entry.
 - `src/Foldora.App/App.xaml.cs` - WPF app code-behind.
-- `src/Foldora.App/MainWindow.xaml` - минимальный WPF editor phase 4 для title, entries, add/remove, выбора `.ico`, preview и Explorer integration controls.
+- `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, empty state, Explorer integration controls, dangerous zone и technical details expander.
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI plumbing и установка `DataContext`.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
-- `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor phase 4.
+- `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands и presentation state для card/list UI.
 - `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню с icon status и preview.
 - `src/Foldora.App/ViewModels/RelayCommand.cs` - простая синхронная WPF-команда.
 - `src/Foldora.App/ViewModels/AsyncRelayCommand.cs` - простая асинхронная WPF-команда.
@@ -87,6 +87,7 @@
 - `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.
 - `tests/Foldora.Tests/App/ExplorerIntegrationControllerTests.cs` - тесты WPF Explorer integration controller с fake registry.
 - `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
+- `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor.
 - `tests/Foldora.Tests/App/WpfIconPreviewServiceTests.cs` - тесты WPF preview service.
 - `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser, включая reset confirmation.
 - `tests/Foldora.Tests/Core/FoldoraDataPathsTests.cs` - тесты AppData paths.

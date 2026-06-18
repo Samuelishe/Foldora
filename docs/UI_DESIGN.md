@@ -1,6 +1,6 @@
 # UI Design
 
-WPF editor phase 4 содержит минимальный редактор пользовательских menu entries с add/remove, staged выбором `.ico`, прямым preview и явными Explorer integration controls.
+WPF editor после UX cleanup phase 1 содержит user-facing редактор menu entries с карточками, staged выбором `.ico`, прямым preview и явными Explorer integration controls.
 
 Целевой WPF MVP описан подробно в `UX_FLOW.md`. Этот документ фиксирует короткие UI-правила, которые должны соблюдаться при реализации.
 
@@ -11,7 +11,11 @@ WPF editor phase 4 содержит минимальный редактор по
 - Настройки и операции вызываются через сервисы Core/Shell.
 - Интерфейс MVP должен быть простым: список стилей, состояние integration, кнопки register/unregister и базовые настройки.
 - Главный экран MVP должен быть редактором пользовательского меню, а не landing page.
-- Минимальный редактор должен иметь title меню, список entries, `DisplayName`, `DefaultFolderName`, выбор `.ico`, preview около 50x50, `IsEnabled`, `Сохранить`, `Отменить изменения`, `Включить меню Проводника`, `Отключить меню Проводника`, `Сбросить меню`.
+- Минимальный редактор должен иметь title меню, список entries, user-facing поля `Название в меню` и `Имя создаваемой папки`, выбор `.ico`, preview около 50x50, checkbox `Показывать в меню`, `Сохранить`, `Отменить изменения`, `Включить меню Проводника`, `Отключить меню Проводника`, `Сбросить меню`.
+- Основной entry UI должен быть карточным/list-style, а не технической таблицей.
+- `EntryId` не показывать в основном пользовательском flow.
+- Technical registry plan details скрывать по умолчанию за раскрываемым блоком.
+- Dangerous reset отделять визуально от обычных integration controls.
 - Редактор пользовательского меню должен работать через draft state и применять изменения только по кнопке `Сохранить`.
 - При редактировании списка registry не трогать. `Сохранить` rebuild-ит registry только если Explorer integration уже была включена; при disabled integration пишет settings only. Registry operations также выполняются отдельными кнопками integration.
 - Если settings сохранены, но registry rebuild упал, показывать: `Настройки сохранены, но меню Проводника не обновлено.`
@@ -39,7 +43,18 @@ WPF editor phase 4 содержит минимальный редактор по
 - `Сбросить меню` требует checkbox-подтверждения, очищает entries и не удаляет импортированные `.ico`.
 - Status area и список ошибок без `MessageBox` как основного механизма.
 
-## Не реализовано в phase 4
+## Реализовано в UX cleanup phase 1
+
+- `DataGrid` заменён на `ItemsControl` с карточками entries.
+- Технические labels `DisplayName`, `DefaultFolderName`, `EntryId` убраны из основного UI.
+- Карточка entry показывает preview, `Название в меню`, `Имя создаваемой папки`, `Показывать в меню`, icon status и действия `Выбрать .ico`/`Удалить`.
+- Пустой список entries показывает empty state и кнопку `+ Добавить пункт`.
+- `Интеграция с Проводником` содержит только normal controls: dry-run/register/unregister.
+- Reset вынесен в отдельную `Опасная зона` с подтверждением.
+- Technical plan details показываются через `Expander` только при наличии details.
+- Status/errors area отделена от technical details.
+
+## Не реализовано
 
 - Preview file generation/cache в `%AppData%\Foldora\previews`.
 - Drag-and-drop.

@@ -32,6 +32,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private bool explorerIntegrationEnabled;
     private bool hasUnsavedChanges;
     private bool isResetConfirmed;
+    private bool showTechnicalDetails;
 
     public MainViewModel(
         FolderMenuDraftEditor draftEditor,
@@ -60,6 +61,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public ObservableCollection<string> Errors { get; } = [];
 
     public ObservableCollection<string> OperationDetails { get; } = [];
+
+    public ObservableCollection<string> TechnicalDetails => OperationDetails;
 
     public AsyncRelayCommand SaveCommand => saveCommand;
 
@@ -104,8 +107,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
             statusMessage = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(HasStatusMessage));
         }
     }
+
+    public bool HasStatusMessage => !string.IsNullOrWhiteSpace(StatusMessage);
 
     public string ExplorerIntegrationStatusText => ExplorerIntegrationEnabled ? "Включена" : "Отключена";
 
@@ -137,9 +143,12 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
             isResetConfirmed = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(CanResetMenu));
             resetMenuCommand.RaiseCanExecuteChanged();
         }
     }
+
+    public bool CanResetMenu => IsResetConfirmed;
 
     public bool HasUnsavedChanges
     {
@@ -158,7 +167,28 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
     }
 
+    public bool HasEntries => Entries.Count > 0;
+
     public bool HasErrors => Errors.Count > 0;
+
+    public bool HasValidationErrors => HasErrors;
+
+    public bool HasTechnicalDetails => OperationDetails.Count > 0;
+
+    public bool ShowTechnicalDetails
+    {
+        get => showTechnicalDetails;
+        set
+        {
+            if (showTechnicalDetails == value)
+            {
+                return;
+            }
+
+            showTechnicalDetails = value;
+            OnPropertyChanged();
+        }
+    }
 
     public static MainViewModel CreateDefault()
     {
@@ -187,7 +217,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         LoadDraftIntoViewModels();
         Errors.Clear();
         OperationDetails.Clear();
-        OnPropertyChanged(nameof(HasErrors));
+        NotifyErrorAndDetailsStateChanged();
         StatusMessage = Entries.Count == 0
             ? "Пункты меню не настроены. Пустое меню является нормальным состоянием."
             : "Настройки загружены.";
@@ -208,14 +238,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
                 Errors.Add(FormatIssue(issue));
             }
 
-            OnPropertyChanged(nameof(HasErrors));
+            NotifyErrorAndDetailsStateChanged();
             StatusMessage = "Настройки не сохранены. Исправьте ошибки.";
             RefreshDirtyState();
             return;
         }
 
         LoadDraftIntoViewModels();
-        OnPropertyChanged(nameof(HasErrors));
+        NotifyErrorAndDetailsStateChanged();
         ExplorerIntegrationEnabled = draftEditor.ExplorerIntegrationEnabled;
 
         if (shouldRebuildExplorerMenu)
@@ -235,7 +265,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         LoadDraftIntoViewModels();
         Errors.Clear();
         OperationDetails.Clear();
-        OnPropertyChanged(nameof(HasErrors));
+        NotifyErrorAndDetailsStateChanged();
         StatusMessage = "Несохранённые изменения отменены.";
         ExplorerIntegrationEnabled = draftEditor.ExplorerIntegrationEnabled;
         RefreshDirtyState();
@@ -287,7 +317,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             Errors.Add(result.Message);
         }
 
-        OnPropertyChanged(nameof(HasErrors));
+        NotifyErrorAndDetailsStateChanged();
         ExplorerIntegrationEnabled = result.ExplorerIntegrationEnabled;
         StatusMessage = result.Message;
         RefreshDirtyState();
@@ -299,7 +329,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         Entries.Add(CreateEntryViewModel(entry));
         Errors.Clear();
         OperationDetails.Clear();
-        OnPropertyChanged(nameof(HasErrors));
+        NotifyEntryStateChanged();
+        NotifyErrorAndDetailsStateChanged();
         StatusMessage = "Добавлен draft-пункт. Выберите .ico перед сохранением.";
         RefreshDirtyState();
     }
@@ -322,14 +353,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
                 Errors.Add(FormatIssue(issue));
             }
 
-            OnPropertyChanged(nameof(HasErrors));
+            NotifyErrorAndDetailsStateChanged();
             StatusMessage = "Иконка не выбрана. Исправьте ошибку файла.";
             return;
         }
 
         entry.RefreshIconState();
         OperationDetails.Clear();
-        OnPropertyChanged(nameof(HasErrors));
+        NotifyErrorAndDetailsStateChanged();
         StatusMessage = "Иконка выбрана и будет импортирована при сохранении.";
         RefreshDirtyState();
         await Task.CompletedTask;
@@ -345,7 +376,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         Entries.Remove(entry);
         Errors.Clear();
         OperationDetails.Clear();
-        OnPropertyChanged(nameof(HasErrors));
+        NotifyEntryStateChanged();
+        NotifyErrorAndDetailsStateChanged();
         StatusMessage = "Пункт удалён из draft. Файлы и настройки изменятся только после сохранения.";
         RefreshDirtyState();
     }
@@ -360,6 +392,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         {
             Entries.Add(CreateEntryViewModel(entry));
         }
+
+        NotifyEntryStateChanged();
     }
 
     private FolderMenuEntryViewModel CreateEntryViewModel(FolderMenuDraftEntry entry)
@@ -370,6 +404,18 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private void RefreshDirtyState()
     {
         HasUnsavedChanges = draftEditor.HasUnsavedChanges;
+    }
+
+    private void NotifyEntryStateChanged()
+    {
+        OnPropertyChanged(nameof(HasEntries));
+    }
+
+    private void NotifyErrorAndDetailsStateChanged()
+    {
+        OnPropertyChanged(nameof(HasErrors));
+        OnPropertyChanged(nameof(HasValidationErrors));
+        OnPropertyChanged(nameof(HasTechnicalDetails));
     }
 
     private static string FormatIssue(FolderMenuValidationIssue issue)
