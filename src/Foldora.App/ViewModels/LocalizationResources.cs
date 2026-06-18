@@ -21,6 +21,8 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string EmptyDescription => Get();
     public string EntryDisplayName => Get();
     public string EntryFolderName => Get();
+    public string EntryGroupName => Get();
+    public string EntryGroupHelp => Get();
     public string EntryEnabled => Get();
     public string EntryIcon => Get();
     public string ChooseIcon => Get();

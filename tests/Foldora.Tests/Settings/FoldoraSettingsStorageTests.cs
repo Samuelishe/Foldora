@@ -149,6 +149,7 @@ public sealed class FoldoraSettingsStorageTests
             Assert.Equal("entry-stable-id", entry.Id);
             Assert.Equal("Череп", entry.DisplayName);
             Assert.Equal("Новая папка", entry.DefaultFolderName);
+            Assert.Equal(string.Empty, entry.GroupName);
             Assert.NotEqual(entry.DisplayName, entry.Id);
         }
         finally
@@ -190,6 +191,82 @@ public sealed class FoldoraSettingsStorageTests
             var entry = Assert.Single(loaded.CreateFolderMenu.Entries);
 
             Assert.Equal("Новая папка", entry.DefaultFolderName);
+            Assert.Equal(string.Empty, entry.GroupName);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task SaveAndLoadAsync_PreservesGroupName()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettings-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var storage = new FoldoraSettingsStorage(paths);
+            var settings = new FoldoraSettings();
+            settings.CreateFolderMenu.Entries.Add(new FolderMenuEntry
+            {
+                Id = "entry-blue",
+                DisplayName = "Синяя",
+                DefaultFolderName = "Синяя",
+                GroupName = "Цветные",
+                IconPath = Path.Combine(paths.IconsDirectory, "entry-blue.ico"),
+                SortOrder = 0
+            });
+
+            await storage.SaveAsync(settings);
+
+            var loaded = await storage.LoadAsync();
+            var entry = Assert.Single(loaded.CreateFolderMenu.Entries);
+
+            Assert.Equal("Цветные", entry.GroupName);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task LoadAsync_NormalizesWhitespaceGroupNameToRoot()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettings-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            Directory.CreateDirectory(paths.RootDirectory);
+            await File.WriteAllTextAsync(
+                paths.SettingsFile,
+                """
+                {
+                  "explorerIntegrationEnabled": false,
+                  "createFolderMenu": {
+                    "title": "Создать папку",
+                    "entries": [
+                      {
+                        "id": "entry-old",
+                        "displayName": "Череп",
+                        "defaultFolderName": "Череп",
+                        "groupName": "   ",
+                        "iconPath": "C:\\Foldora\\icons\\entry-old.ico",
+                        "sortOrder": 0,
+                        "isEnabled": true
+                      }
+                    ]
+                  }
+                }
+                """);
+
+            var loaded = await new FoldoraSettingsStorage(paths).LoadAsync();
+            var entry = Assert.Single(loaded.CreateFolderMenu.Entries);
+
+            Assert.Equal(string.Empty, entry.GroupName);
         }
         finally
         {

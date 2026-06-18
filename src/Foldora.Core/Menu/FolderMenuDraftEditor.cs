@@ -239,6 +239,7 @@ public sealed class FolderMenuDraftEditor
         return string.Equals(left.Id, right.Id, StringComparison.Ordinal)
                && string.Equals(left.DisplayName, right.DisplayName, StringComparison.Ordinal)
                && string.Equals(left.DefaultFolderName, right.DefaultFolderName, StringComparison.Ordinal)
+               && string.Equals(left.GroupName, right.GroupName, StringComparison.Ordinal)
                && string.Equals(left.IconPath, right.IconPath, StringComparison.Ordinal)
                && string.Equals(left.PreviewPath, right.PreviewPath, StringComparison.Ordinal)
                && left.SortOrder == right.SortOrder

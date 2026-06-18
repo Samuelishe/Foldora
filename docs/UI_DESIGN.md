@@ -16,6 +16,7 @@ Startup bugfix сохраняет custom title bar и settings gear. Окно с
 - Интерфейс MVP должен быть простым: список стилей, состояние integration, кнопки register/unregister и базовые настройки.
 - Главный экран MVP должен быть редактором пользовательского меню, а не landing page.
 - Минимальный редактор должен иметь title меню, список entries, user-facing поля `Название в меню` и `Имя создаваемой папки`, выбор `.ico`, preview около 50x50, checkbox `Показывать в меню`, `Сохранить`, `Отменить изменения`, `Включить меню Проводника`, `Отключить меню Проводника`, `Сбросить меню`.
+- Для one-level grouping карточка entry имеет поле `Группа`; пустое значение означает пункт в корне меню.
 - Основной entry UI должен быть карточным/list-style, а не технической таблицей.
 - `EntryId` не показывать в основном пользовательском flow.
 - Technical registry plan details скрывать по умолчанию за раскрываемым блоком.
@@ -55,6 +56,7 @@ Startup bugfix сохраняет custom title bar и settings gear. Окно с
 - `DataGrid` заменён на `ItemsControl` с карточками entries.
 - Технические labels `DisplayName`, `DefaultFolderName`, `EntryId` убраны из основного UI.
 - Карточка entry показывает preview, `Название в меню`, `Имя создаваемой папки`, `Показывать в меню`, icon status и действия `Выбрать .ico`/`Удалить`.
+- После grouping MVP карточка также показывает поле `Группа` с подсказкой, что пустое значение оставляет entry в root menu.
 - Пустой список entries показывает empty state и кнопку `+ Добавить пункт`.
 - `Интеграция с Проводником` содержит только normal controls: dry-run/register/unregister.
 - Reset вынесен в отдельную `Опасная зона` с подтверждением.
@@ -65,7 +67,7 @@ Startup bugfix сохраняет custom title bar и settings gear. Окно с
 
 - Preview file generation/cache в `%AppData%\Foldora\previews`.
 - Full localization cleanup всех status/error messages.
-- One-level grouping UI.
+- Full tree grouping UI.
 - Drag-and-drop.
 - Orphan icon cleanup.
 - Explorer restart и icon cache reset.

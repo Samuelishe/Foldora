@@ -1,5 +1,16 @@
 # Work Log
 
+## 2026-06-18 - One-level grouping MVP
+
+- `FolderMenuEntry` расширен полем `GroupName`; пустое/whitespace значение означает root-level entry.
+- Добавлена validation для `GroupName`: trim, максимум 80 символов, control chars запрещены, `/` и `\` запрещены как not-yet-supported nested groups.
+- `FolderMenuSettingsValidator` теперь проверяет max 30 groups и max 30 enabled children per group.
+- CLI `menu add` получил `--group`, а `menu list` показывает `Group: <root>` или имя группы.
+- WPF карточка entry получила поле `Группа`/`Group` с подсказкой, что пустое значение оставляет пункт в корне меню.
+- Registry plan builder строит one-level submenus под техническими keys `group-NNN`; `GroupName` пишется только как `MUIVerb`, не как registry path.
+- Entry icon values продолжают работать для root-level и grouped entries.
+- Full tree storage, nested depth > 1, drag-and-drop ordering и group icons не реализованы.
+
 ## 2026-06-18 - WPF startup bugfix
 
 - Исправлен startup hang после custom title bar/settings/language foundation: `MainViewModel.CreateDefault()` больше не вызывает `LoadAsync().GetAwaiter().GetResult()` на WPF startup path.

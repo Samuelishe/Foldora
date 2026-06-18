@@ -70,6 +70,7 @@ public sealed class FoldoraSettingsStorage
         foreach (var entry in settings.CreateFolderMenu.Entries)
         {
             entry.DefaultFolderName = FolderNameValidator.NormalizeOrDefault(entry.DefaultFolderName);
+            entry.GroupName = GroupNameValidator.Normalize(entry.GroupName);
         }
 
         return settings with { Language = FoldoraLanguage.NormalizeOrDefault(settings.Language) };

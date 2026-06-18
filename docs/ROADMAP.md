@@ -21,6 +21,7 @@
 - Список пользовательских entries.
 - Добавление и удаление entries.
 - Поля `DisplayName` и `DefaultFolderName`.
+- Поле `GroupName` для простой one-level grouping.
 - Выбор `.ico`.
 - Preview иконки примерно 50x50.
 - Checkbox `IsEnabled`.
@@ -48,7 +49,7 @@
 
 Modern context menu, installer/MSIX, pack import/export, preview generation, nested menu runtime/storage и расширенная валидация паков рассматриваются после рабочего MVP.
 
-Near future:
+Implemented MVP grouping:
 
 - One-level grouping через `FolderMenuEntry.GroupName` перед full tree migration:
 
@@ -61,6 +62,10 @@ Near future:
     Череп
   Музыка
 ```
+
+Future grouping work:
+
+- Full tree storage/runtime, drag-and-drop group ordering, group icons and nested depth > 1.
 
 Отдельные post-MVP investigation tracks:
 

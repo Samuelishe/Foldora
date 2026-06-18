@@ -19,6 +19,9 @@ Example visible legacy menu:
 
 ```text
 Создать папку
+  Цветные
+    Синяя
+    Красная
   Череп
   Музыка
 ```
@@ -29,6 +32,7 @@ Selecting an entry creates a folder and applies its icon through `desktop.ini`.
 
 - WPF editor for the user menu.
 - Add/remove menu entries.
+- One-level grouping for menu entries.
 - Staged save: changes are not written until `Save`.
 - `.ico` import into `%AppData%\Foldora\icons\`.
 - Direct `.ico` preview in the WPF editor.
@@ -75,6 +79,7 @@ After building/publishing, use the CLI executable for manual commands:
 
 ```text
 foldora menu add --icon "<path-to-icon.ico>" --name "Череп" --folder-name "Череп"
+foldora menu add --icon "<path-to-blue.ico>" --name "Синяя" --folder-name "Синяя" --group "Цветные"
 foldora register-menu --host-path "<path-to-Foldora.MenuHost.exe>"
 foldora unregister-menu
 ```

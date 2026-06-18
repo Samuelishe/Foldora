@@ -131,6 +131,52 @@ public sealed class FolderMenuServiceTests
     }
 
     [Fact]
+    public async Task AddAsync_PersistsGroupName()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraMenu-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var service = CreateService(paths);
+            var sourceIconPath = await CreateSourceIconAsync(root.FullName, "blue.ico");
+
+            var entry = await service.AddAsync(sourceIconPath, "Синяя", "Синяя", "Цветные");
+
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+            Assert.Equal("Цветные", entry.GroupName);
+            Assert.Equal("Цветные", Assert.Single(saved.CreateFolderMenu.Entries).GroupName);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task AddAsync_RejectsInvalidGroupBeforeImport()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraMenu-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var service = CreateService(paths);
+            var sourceIconPath = await CreateSourceIconAsync(root.FullName, "blue.ico");
+
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+                () => service.AddAsync(sourceIconPath, "Синяя", "Синяя", "Цветные/Тёмные"));
+
+            Assert.Contains("Nested groups", exception.Message);
+            Assert.Empty(Directory.EnumerateFiles(paths.IconsDirectory));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task RemoveAsync_ReportsMissingEntry()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraMenu-");

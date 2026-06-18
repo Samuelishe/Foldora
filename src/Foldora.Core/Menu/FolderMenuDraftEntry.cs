@@ -13,6 +13,8 @@ public sealed class FolderMenuDraftEntry
 
     public string DefaultFolderName { get; set; } = FolderNameValidator.DefaultFolderName;
 
+    public string GroupName { get; set; } = string.Empty;
+
     public string IconPath { get; set; } = string.Empty;
 
     public string? PendingIconSourcePath { get; set; }
@@ -32,6 +34,7 @@ public sealed class FolderMenuDraftEntry
             Id = entry.Id,
             DisplayName = entry.DisplayName,
             DefaultFolderName = entry.DefaultFolderName,
+            GroupName = entry.GroupName,
             IconPath = entry.IconPath,
             PreviewPath = entry.PreviewPath,
             SortOrder = entry.SortOrder,
@@ -51,6 +54,7 @@ public sealed class FolderMenuDraftEntry
             Id = Id,
             DisplayName = DisplayName,
             DefaultFolderName = DefaultFolderName,
+            GroupName = GroupName,
             IconPath = iconPath,
             PreviewPath = PreviewPath,
             SortOrder = SortOrder,

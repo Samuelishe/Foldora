@@ -15,6 +15,7 @@ public sealed class FolderMenuEntryValidator
         issues.AddRange(DisplayNameValidator.ValidateResolved(entry.DisplayName, entry.Id).Issues);
         issues.AddRange(FolderNameValidator.Validate(entry.DefaultFolderName).Issues.Select(
             issue => issue with { EntryId = entry.Id }));
+        issues.AddRange(GroupNameValidator.Validate(entry.GroupName, entry.Id).Issues);
 
         if (string.IsNullOrWhiteSpace(entry.Id))
         {

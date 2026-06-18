@@ -233,6 +233,7 @@
                                                     <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="170" />
@@ -260,18 +261,29 @@
                                                          Margin="0,0,14,6"
                                                          MinWidth="220" />
 
-                                                <CheckBox Grid.Row="2"
+                                                <TextBlock Grid.Row="2"
+                                                           Grid.Column="0"
+                                                           Text="{Binding DataContext.L.EntryGroupName, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Style="{StaticResource FieldLabelStyle}" />
+                                                <TextBox Grid.Row="2"
+                                                         Grid.Column="1"
+                                                         Text="{Binding GroupName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         ToolTip="{Binding DataContext.L.EntryGroupHelp, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                         Margin="0,0,14,6"
+                                                         MinWidth="220" />
+
+                                                <CheckBox Grid.Row="3"
                                                           Grid.Column="1"
                                                           Content="{Binding DataContext.L.EntryEnabled, RelativeSource={RelativeSource AncestorType=Window}}"
                                                           IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                           Margin="0,2,0,8" />
 
-                                                <TextBlock Grid.Row="3"
+                                                <TextBlock Grid.Row="4"
                                                            Grid.Column="0"
                                                            Text="{Binding DataContext.L.EntryIcon, RelativeSource={RelativeSource AncestorType=Window}}"
                                                            Style="{StaticResource FieldLabelStyle}"
                                                            Margin="0,0,10,0" />
-                                                <TextBlock Grid.Row="3"
+                                                <TextBlock Grid.Row="4"
                                                            Grid.Column="1"
                                                            Text="{Binding IconState}"
                                                            TextWrapping="Wrap"
@@ -280,7 +292,7 @@
                                                            Margin="0,0,14,0" />
 
                                                 <StackPanel Grid.Row="0"
-                                                            Grid.RowSpan="4"
+                                                            Grid.RowSpan="5"
                                                             Grid.Column="2"
                                                             Orientation="Vertical"
                                                             VerticalAlignment="Top">

@@ -58,13 +58,15 @@ WPF startup не должен синхронно читать `settings.json` в
 - `Id` - стабильный технический идентификатор, не зависящий от подписи.
 - `DisplayName` - пользовательская подпись для будущего Explorer submenu.
 - `DefaultFolderName` - имя папки, которую Foldora создаст при выборе пункта.
+- `GroupName` - optional visible name одноуровневой группы; empty означает root-level entry.
 - `IconPath` - импортированная копия `.ico` внутри `%AppData%\Foldora\icons`.
 - `PreviewPath` - optional/future путь preview.
 - `SortOrder` - порядок пунктов.
 - `IsEnabled` - возможность скрыть пункт без удаления.
 
-`DisplayName` нельзя использовать как имя файла, registry key или stable id.
+`DisplayName` и `GroupName` нельзя использовать как имя файла, registry key или stable id.
 Дубликаты `DisplayName` разрешены и сохраняются как пользовательский выбор.
+Одинаковые `GroupName` разрешены и объединяют entries в одно submenu. Старые settings без `groupName` загружаются как root-level entries.
 
 Если старый entry не содержит `DefaultFolderName`, при загрузке используется fallback `Новая папка`.
 

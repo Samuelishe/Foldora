@@ -125,6 +125,19 @@ public sealed class CliCommandParserTests
     }
 
     [Fact]
+    public void Parse_AcceptsMenuAddWithGroup()
+    {
+        var icon = @"C:\Users\User\Иконки\blue.ico";
+
+        var command = CliCommandParser.Parse(
+            ["menu", "add", "--icon", icon, "--name", "Синяя", "--folder-name", "Синяя", "--group", "Цветные"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.MenuAdd, command.Kind);
+        Assert.Equal("Цветные", command.GroupName);
+    }
+
+    [Fact]
     public void Parse_AcceptsMenuAddWithEmptyFolderName()
     {
         var icon = @"C:\Users\User\Иконки\skull.ico";

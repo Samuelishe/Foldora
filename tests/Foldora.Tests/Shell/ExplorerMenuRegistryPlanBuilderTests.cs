@@ -209,6 +209,111 @@ public sealed class ExplorerMenuRegistryPlanBuilderTests
     }
 
     [Fact]
+    public void Build_PutsGroupedEntryUnderGroupSubmenu()
+    {
+        var entry = CreateEntry("entry-blue", "Синяя");
+        entry.GroupName = "Цветные";
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettings(entry));
+
+        Assert.Contains(
+            plan.KeyOperations,
+            operation => operation.KeyPath == $@"{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}\shell\group-001");
+        Assert.Contains(
+            plan.KeyOperations,
+            operation => operation.KeyPath == $@"{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}\shell\group-001\shell\entry-001-entry-blue");
+        Assert.Contains(
+            plan.ValueOperations,
+            operation => operation.KeyPath == $@"{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}\shell\group-001"
+                         && operation.ValueName == "MUIVerb"
+                         && operation.ValueData == "Цветные");
+    }
+
+    [Fact]
+    public void Build_DoesNotUseGroupNameAsRegistryKeyName()
+    {
+        var groupName = "💀 Готические";
+        var entry = CreateEntry("entry-skull", "Череп");
+        entry.GroupName = groupName;
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettings(entry));
+
+        Assert.DoesNotContain(plan.KeyOperations, operation => operation.KeyPath.Contains(groupName, StringComparison.Ordinal));
+        Assert.DoesNotContain(plan.ValueOperations, operation => operation.KeyPath.Contains(groupName, StringComparison.Ordinal));
+        Assert.Contains(plan.ValueOperations, operation => operation.ValueName == "MUIVerb" && operation.ValueData == groupName);
+    }
+
+    [Fact]
+    public void Build_DuplicateGroupNamesProduceOneGroupSubmenu()
+    {
+        var first = CreateEntry("entry-blue", "Синяя");
+        first.GroupName = "Цветные";
+        var second = CreateEntry("entry-red", "Красная");
+        second.GroupName = "Цветные";
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettings(first, second));
+
+        Assert.Single(plan.KeyOperations, operation => operation.KeyPath == $@"{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}\shell\group-001");
+        Assert.Contains(plan.ValueOperations, operation => operation.ValueData.Contains("entry-blue"));
+        Assert.Contains(plan.ValueOperations, operation => operation.ValueData.Contains("entry-red"));
+    }
+
+    [Fact]
+    public void Build_DisabledGroupedEntryDoesNotCreateGroup()
+    {
+        var entry = CreateEntry("entry-blue", "Синяя");
+        entry.GroupName = "Цветные";
+        entry.IsEnabled = false;
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettings(entry));
+
+        Assert.Empty(plan.KeyOperations);
+        Assert.Empty(plan.ValueOperations);
+    }
+
+    [Fact]
+    public void Build_EntryIconValueWorksInsideGroup()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraPlanGroupedIcon-");
+
+        try
+        {
+            var iconPath = Path.Combine(root.FullName, "entry-blue.ico");
+            File.WriteAllText(iconPath, "fake icon");
+            var entry = CreateEntry("entry-blue", "Синяя");
+            entry.GroupName = "Цветные";
+            entry.IconPath = iconPath;
+
+            var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettings(entry));
+
+            Assert.Contains(
+                plan.ValueOperations,
+                operation => operation.KeyPath == $@"{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}\shell\group-001\shell\entry-001-entry-blue"
+                             && operation.ValueName == "Icon"
+                             && operation.ValueData == iconPath);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Theory]
+    [InlineData(ExplorerMenuTargetKind.Directory)]
+    [InlineData(ExplorerMenuTargetKind.DirectoryBackground)]
+    public void Build_SupportsGroupsForBothTargets(ExplorerMenuTargetKind targetKind)
+    {
+        var entry = CreateEntry("entry-blue", "Синяя");
+        entry.GroupName = "Цветные";
+
+        var plan = BuildPlan(targetKind, CreateSettings(entry));
+        var root = ExplorerMenuRegistryPaths.GetOwnedRoot(targetKind);
+
+        Assert.Contains(plan.KeyOperations, operation => operation.KeyPath == $@"{root}\shell\group-001");
+        Assert.Contains(plan.KeyOperations, operation => operation.KeyPath == $@"{root}\shell\group-001\shell\entry-001-entry-blue");
+    }
+
+    [Fact]
     public void Build_QuotesCommandHostPathWithSpacesAndCyrillic()
     {
         var hostPath = @"C:\Program Files\Фолдора\Foldora.MenuHost.exe";

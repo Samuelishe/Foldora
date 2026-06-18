@@ -11,7 +11,7 @@
 - `src/Foldora.Core/Settings/FoldoraSettingsStorage.cs` - JSON storage настроек в AppData.
 - `src/Foldora.Core/Settings/FoldoraLanguage.cs` - supported language values и fallback-нормализация `ru`/`en`.
 - `src/Foldora.Core/Storage/FoldoraDataPaths.cs` - AppData paths.
-- `src/Foldora.Core/Menu/FolderMenuEntry.cs` - пользовательский пункт будущего submenu.
+- `src/Foldora.Core/Menu/FolderMenuEntry.cs` - пользовательский пункт будущего submenu, включая optional one-level `GroupName`.
 - `src/Foldora.Core/Menu/FolderMenuSettings.cs` - настройки меню создания папки.
 - `src/Foldora.Core/Menu/FolderMenuNameGenerator.cs` - генератор fallback-имён `Вид N`.
 - `src/Foldora.Core/Menu/IconImportResult.cs` - результат импорта иконки.
@@ -25,9 +25,10 @@
 - `src/Foldora.Core/Menu/FolderMenuDraftSaveResult.cs` - результат сохранения draft-состояния меню.
 - `src/Foldora.Core/Validation/DisplayNameValidator.cs` - валидация подписи пункта меню.
 - `src/Foldora.Core/Validation/FolderNameValidator.cs` - валидация имени создаваемой папки.
+- `src/Foldora.Core/Validation/GroupNameValidator.cs` - валидация имени одноуровневой группы меню.
 - `src/Foldora.Core/Validation/FolderNameSanitizer.cs` - sanitizer имени папки для будущего UI.
 - `src/Foldora.Core/Validation/FolderMenuEntryValidator.cs` - валидация одного menu entry.
-- `src/Foldora.Core/Validation/FolderMenuSettingsValidator.cs` - валидация flat menu и лимитов.
+- `src/Foldora.Core/Validation/FolderMenuSettingsValidator.cs` - валидация меню, group limits и entry limits.
 - `src/Foldora.Core/Validation/FolderMenuValidationIssue.cs` - issue валидации.
 - `src/Foldora.Core/Validation/FolderMenuValidationResult.cs` - результат валидации.
 - `src/Foldora.Core/Validation/FolderMenuValidationSeverity.cs` - severity валидации.
@@ -50,7 +51,7 @@
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryKeyOperation.cs` - create key operation.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPaths.cs` - Foldora-owned registry roots.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlan.cs` - immutable registry plan.
-- `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanBuilder.cs` - testable registry plan builder для visible shape `<CreateFolderMenu.Title> -> entries`.
+- `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanBuilder.cs` - testable registry plan builder для visible shape `<CreateFolderMenu.Title> -> groups/entries`.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanValidationResult.cs` - validation result.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanValidator.cs` - safety validator для plan.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryValueOperation.cs` - set value operation.
@@ -130,6 +131,7 @@
 - `tests/Foldora.Tests/Validation/FolderMenuSettingsValidatorTests.cs` - тесты лимитов menu settings.
 - `tests/Foldora.Tests/Validation/FolderNameSanitizerTests.cs` - тесты sanitizer имени папки.
 - `tests/Foldora.Tests/Validation/FolderNameValidatorTests.cs` - тесты Windows folder name validation.
+- `tests/Foldora.Tests/Validation/GroupNameValidatorTests.cs` - тесты validation one-level group names.
 - `tests/Foldora.Tests/Validation/IconFileValidatorTests.cs` - тесты structural ICO validation.
 - `docs/README.md` - карта документации.
 - `docs/PROJECT_STATE.md` - состояние проекта.

@@ -113,6 +113,22 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
         }
     }
 
+    public string GroupName
+    {
+        get => draftEntry.GroupName;
+        set
+        {
+            if (draftEntry.GroupName == value)
+            {
+                return;
+            }
+
+            draftEntry.GroupName = value;
+            OnPropertyChanged();
+            changed();
+        }
+    }
+
     public void RefreshIconState()
     {
         RefreshIconPreview();

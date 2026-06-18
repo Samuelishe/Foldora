@@ -56,7 +56,7 @@ try
             return 0;
 
         case CliCommandKind.MenuAdd:
-            await AddMenuEntryAsync(parsedCommand.IconPath!, parsedCommand.DisplayName, parsedCommand.DefaultFolderName);
+            await AddMenuEntryAsync(parsedCommand.IconPath!, parsedCommand.DisplayName, parsedCommand.DefaultFolderName, parsedCommand.GroupName);
             return 0;
 
         case CliCommandKind.MenuRemove:
@@ -120,7 +120,7 @@ Usage:
   foldora create --target "<directory>" --entry-id "<entry-id>"
   foldora clear --folder "<folder>"
   foldora menu list
-  foldora menu add --icon "<absolute-icon-path>" [--name "<display-name>"] [--folder-name "<default-folder-name>"]
+  foldora menu add --icon "<absolute-icon-path>" [--name "<display-name>"] [--folder-name "<default-folder-name>"] [--group "<group-name>"]
   foldora menu remove --entry-id "<entry-id>"
   foldora menu reset --yes
   foldora register-menu [--dry-run] [--host-path "<absolute-path-to-Foldora.MenuHost.exe>"] [--cli-path "<legacy-dev-override>"]
@@ -137,7 +137,7 @@ Implemented now:
   create --target --entry-id
   clear --folder
   menu list
-  menu add --icon [--name] [--folder-name]
+  menu add --icon [--name] [--folder-name] [--group]
   menu remove --entry-id
   menu reset --yes
   register-menu [--dry-run] [--host-path] [--cli-path]
@@ -175,18 +175,20 @@ static async Task ListMenuAsync()
     foreach (var entry in entries)
     {
         var enabledState = entry.IsEnabled ? "enabled" : "disabled";
-        Console.WriteLine($"{entry.Id}\t{entry.DisplayName}\t{entry.DefaultFolderName}\t{enabledState}\t{entry.IconPath}");
+        var group = string.IsNullOrWhiteSpace(entry.GroupName) ? "<root>" : entry.GroupName;
+        Console.WriteLine($"{entry.Id}\t{entry.DisplayName}\t{entry.DefaultFolderName}\tGroup: {group}\t{enabledState}\t{entry.IconPath}");
     }
 }
 
-static async Task AddMenuEntryAsync(string iconPath, string? displayName, string? defaultFolderName)
+static async Task AddMenuEntryAsync(string iconPath, string? displayName, string? defaultFolderName, string? groupName)
 {
-    var entry = await CreateFolderMenuService().AddAsync(iconPath, displayName, defaultFolderName);
+    var entry = await CreateFolderMenuService().AddAsync(iconPath, displayName, defaultFolderName, groupName);
 
     Console.WriteLine("Menu entry added.");
     Console.WriteLine($"EntryId: {entry.Id}");
     Console.WriteLine($"DisplayName: {entry.DisplayName}");
     Console.WriteLine($"DefaultFolderName: {entry.DefaultFolderName}");
+    Console.WriteLine($"Group: {(string.IsNullOrWhiteSpace(entry.GroupName) ? "<root>" : entry.GroupName)}");
     Console.WriteLine($"IconPath: {entry.IconPath}");
 }
 

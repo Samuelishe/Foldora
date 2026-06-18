@@ -7,7 +7,9 @@ namespace Foldora.Core.Validation;
 /// </summary>
 public sealed class FolderMenuSettingsValidator
 {
+    public const int MaxChildrenPerGroup = 30;
     public const int MaxEnabledEntries = 50;
+    public const int MaxGroups = 30;
     public const int MaxTotalEntries = 100;
 
     private readonly FolderMenuEntryValidator entryValidator = new();
@@ -28,6 +30,26 @@ public sealed class FolderMenuSettingsValidator
         if (enabledEntries > MaxEnabledEntries)
         {
             issues.Add(Error($"Menu can contain at most {MaxEnabledEntries} enabled entries.", "menu_enabled_entries_limit"));
+        }
+
+        var enabledGroups = settings.Entries
+            .Where(entry => entry.IsEnabled)
+            .Select(entry => GroupNameValidator.Normalize(entry.GroupName))
+            .Where(groupName => groupName.Length > 0)
+            .GroupBy(groupName => groupName, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        if (enabledGroups.Length > MaxGroups)
+        {
+            issues.Add(Error($"Menu can contain at most {MaxGroups} groups.", "menu_group_limit"));
+        }
+
+        foreach (var group in enabledGroups)
+        {
+            if (group.Count() > MaxChildrenPerGroup)
+            {
+                issues.Add(Error($"Group '{group.Key}' can contain at most {MaxChildrenPerGroup} enabled entries.", "menu_group_children_limit"));
+            }
         }
 
         foreach (var entry in settings.Entries)

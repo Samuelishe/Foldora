@@ -73,6 +73,39 @@ public sealed class MainViewModelExplorerSaveTests
         }
     }
 
+    [Fact]
+    public async Task SaveDraft_WithExplorerIntegrationEnabledRebuildsGroupedRegistryMenu()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraMainVmSave-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var hostPath = await CreateFakeHostAsync(root.FullName);
+            var iconPath = await CreateIconAsync(paths, "entry-blue");
+            var entry = CreateEntry("entry-blue", "Синяя", iconPath);
+            entry.GroupName = "Цветные";
+            await SaveSettingsAsync(paths, explorerIntegrationEnabled: true, entry);
+            var registry = new FakeRegistryAccess();
+            var viewModel = await CreateViewModelAsync(paths, registry, hostPath);
+
+            viewModel.Title = "Мои папки";
+            await viewModel.SaveDraftAsync();
+
+            Assert.True(registry.ContainsKey($@"{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}\shell\group-001"));
+            Assert.True(registry.ContainsKey($@"{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}\shell\group-001\shell\entry-001-entry-blue"));
+            Assert.Contains(
+                registry.Values,
+                value => value.Key.KeyPath == $@"{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}\shell\group-001"
+                         && value.Key.ValueName == "MUIVerb"
+                         && value.Value == "Цветные");
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
     private static async Task<MainViewModel> CreateViewModelAsync(
         FoldoraDataPaths paths,
         FakeRegistryAccess registry,

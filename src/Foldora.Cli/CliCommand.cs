@@ -26,6 +26,7 @@ public sealed record CliCommand(
     string? IconPath = null,
     string? DisplayName = null,
     string? DefaultFolderName = null,
+    string? GroupName = null,
     string? EntryId = null,
     string? CliExecutablePath = null,
     string? CommandHostPath = null,

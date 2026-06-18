@@ -1,4 +1,5 @@
 using Foldora.Core.Menu;
+using Foldora.Core.Validation;
 
 namespace Foldora.Shell.RegistryPlan;
 
@@ -53,22 +54,65 @@ public sealed class ExplorerMenuRegistryPlanBuilder
         AddValue(values, root, "MUIVerb", NormalizeRootMenuTitle(menuSettings.Title));
         AddValue(values, root, "SubCommands", string.Empty);
 
-        for (var index = 0; index < enabledEntries.Length; index++)
+        var rootEntries = enabledEntries
+            .Where(entry => GroupNameValidator.Normalize(entry.GroupName).Length == 0)
+            .ToArray();
+        var groups = enabledEntries
+            .Where(entry => GroupNameValidator.Normalize(entry.GroupName).Length > 0)
+            .GroupBy(entry => GroupNameValidator.Normalize(entry.GroupName), StringComparer.OrdinalIgnoreCase)
+            .OrderBy(group => group.Min(entry => entry.SortOrder))
+            .ThenBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        for (var index = 0; index < rootEntries.Length; index++)
         {
-            var entry = enabledEntries[index];
+            var entry = rootEntries[index];
             var entryKeyName = CreateEntryKeyName(index, entry.Id);
             var entryKey = $@"{rootShellKey}\{entryKeyName}";
-            var commandKey = $@"{entryKey}\command";
-            var command = commandBuilder.BuildCreateFolderCommand(commandHostPath, targetKind, entry.Id);
 
-            AddKey(keys, entryKey);
-            AddValue(values, entryKey, "MUIVerb", entry.DisplayName);
-            AddIconValueIfAvailable(values, entryKey, entry.IconPath);
-            AddKey(keys, commandKey);
-            AddValue(values, commandKey, string.Empty, command);
+            AddEntry(keys, values, commandHostPath, targetKind, entry, entryKey);
+        }
+
+        for (var groupIndex = 0; groupIndex < groups.Length; groupIndex++)
+        {
+            var group = groups[groupIndex];
+            var groupKey = $@"{rootShellKey}\{CreateGroupKeyName(groupIndex)}";
+            var groupShellKey = $@"{groupKey}\shell";
+            AddKey(keys, groupKey);
+            AddValue(values, groupKey, "MUIVerb", group.Key);
+            AddValue(values, groupKey, "SubCommands", string.Empty);
+
+            var entries = group
+                .OrderBy(entry => entry.SortOrder)
+                .ThenBy(entry => entry.Id, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+            for (var entryIndex = 0; entryIndex < entries.Length; entryIndex++)
+            {
+                var entry = entries[entryIndex];
+                var entryKey = $@"{groupShellKey}\{CreateEntryKeyName(entryIndex, entry.Id)}";
+                AddEntry(keys, values, commandHostPath, targetKind, entry, entryKey);
+            }
         }
 
         return CreateValidatedPlan(targetKind, deletes, keys, values);
+    }
+
+    private void AddEntry(
+        ICollection<ExplorerMenuRegistryKeyOperation> keys,
+        ICollection<ExplorerMenuRegistryValueOperation> values,
+        string commandHostPath,
+        ExplorerMenuTargetKind targetKind,
+        FolderMenuEntry entry,
+        string entryKey)
+    {
+        var commandKey = $@"{entryKey}\command";
+        var command = commandBuilder.BuildCreateFolderCommand(commandHostPath, targetKind, entry.Id);
+
+        AddKey(keys, entryKey);
+        AddValue(values, entryKey, "MUIVerb", entry.DisplayName);
+        AddIconValueIfAvailable(values, entryKey, entry.IconPath);
+        AddKey(keys, commandKey);
+        AddValue(values, commandKey, string.Empty, command);
     }
 
     private static string NormalizeRootMenuTitle(string? title)
@@ -126,6 +170,11 @@ public sealed class ExplorerMenuRegistryPlanBuilder
     private static string CreateEntryKeyName(int index, string entryId)
     {
         return $"entry-{index + 1:000}-{SanitizeRegistryKeySegment(entryId)}";
+    }
+
+    private static string CreateGroupKeyName(int index)
+    {
+        return $"group-{index + 1:000}";
     }
 
     private static string SanitizeRegistryKeySegment(string value)

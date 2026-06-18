@@ -13,6 +13,8 @@ public sealed class FolderMenuEntry
 
     public string DefaultFolderName { get; set; } = FolderNameValidator.DefaultFolderName;
 
+    public string GroupName { get; set; } = string.Empty;
+
     public string IconPath { get; set; } = string.Empty;
 
     public string? PreviewPath { get; set; }

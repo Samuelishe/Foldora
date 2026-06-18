@@ -46,6 +46,7 @@ public sealed class FolderMenuDraftEditorTests
             Assert.Equal("entry-skull", entry.Id);
             Assert.Equal("Череп", entry.DisplayName);
             Assert.Equal("Череп", entry.DefaultFolderName);
+            Assert.Equal(string.Empty, entry.GroupName);
             Assert.True(entry.IsEnabled);
             Assert.True(editor.ExplorerIntegrationEnabled);
         }
@@ -80,7 +81,7 @@ public sealed class FolderMenuDraftEditorTests
     }
 
     [Fact]
-    public async Task SaveAsync_WritesChangedDisplayNameDefaultFolderNameAndIsEnabled()
+    public async Task SaveAsync_WritesChangedDisplayNameDefaultFolderNameGroupNameAndIsEnabled()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
 
@@ -94,6 +95,7 @@ public sealed class FolderMenuDraftEditorTests
             editor.Title = "Мои папки";
             editor.Entries[0].DisplayName = "Скелет";
             editor.Entries[0].DefaultFolderName = "Скелет";
+            editor.Entries[0].GroupName = "Готические";
             editor.Entries[0].IsEnabled = false;
             var result = await editor.SaveAsync();
             var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
@@ -102,6 +104,7 @@ public sealed class FolderMenuDraftEditorTests
             Assert.Equal("Мои папки", saved.CreateFolderMenu.Title);
             Assert.Equal("Скелет", saved.CreateFolderMenu.Entries[0].DisplayName);
             Assert.Equal("Скелет", saved.CreateFolderMenu.Entries[0].DefaultFolderName);
+            Assert.Equal("Готические", saved.CreateFolderMenu.Entries[0].GroupName);
             Assert.False(saved.CreateFolderMenu.Entries[0].IsEnabled);
             Assert.True(saved.ExplorerIntegrationEnabled);
             Assert.False(editor.HasUnsavedChanges);
@@ -126,10 +129,12 @@ public sealed class FolderMenuDraftEditorTests
 
             editor.Title = "Draft";
             editor.Entries[0].DisplayName = "Draft";
+            editor.Entries[0].GroupName = "Draft";
             editor.Reload();
 
             Assert.Equal("Создать папку", editor.Title);
             Assert.Equal("Череп", editor.Entries[0].DisplayName);
+            Assert.Equal(string.Empty, editor.Entries[0].GroupName);
             Assert.False(editor.HasUnsavedChanges);
         }
         finally
@@ -181,6 +186,32 @@ public sealed class FolderMenuDraftEditorTests
 
             Assert.False(result.Saved);
             Assert.Contains(result.Issues, issue => issue.Code == "display_name_too_long");
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task SaveAsync_BlocksInvalidGroupName()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(paths, false, "Создать папку", CreateEntry("entry-skull", "Череп", "Череп", true));
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            editor.Entries[0].GroupName = "Готические/Черепа";
+            var result = await editor.SaveAsync();
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.False(result.Saved);
+            Assert.Contains(result.Issues, issue => issue.Code == "group_name_nested_not_supported");
+            Assert.Equal(string.Empty, saved.CreateFolderMenu.Entries[0].GroupName);
         }
         finally
         {
@@ -258,6 +289,7 @@ public sealed class FolderMenuDraftEditorTests
             Assert.StartsWith("entry-", entry.Id, StringComparison.Ordinal);
             Assert.Equal("Вид 1", entry.DisplayName);
             Assert.Equal("Новая папка", entry.DefaultFolderName);
+            Assert.Equal(string.Empty, entry.GroupName);
             Assert.True(entry.IsEnabled);
             Assert.True(editor.HasUnsavedChanges);
             Assert.Empty(saved.CreateFolderMenu.Entries);

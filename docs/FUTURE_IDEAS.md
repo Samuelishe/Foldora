@@ -2,7 +2,7 @@
 
 - Modern Windows 11 context menu через отдельный исследовательский этап.
 - Import/export icon packs.
-- Nested menu runtime/storage:
+- Full tree menu runtime/storage beyond current one-level `GroupName`:
 
 ```text
 Создать папку

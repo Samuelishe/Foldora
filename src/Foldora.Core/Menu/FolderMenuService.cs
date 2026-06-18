@@ -37,6 +37,7 @@ public sealed class FolderMenuService
         string sourceIconPath,
         string? displayName,
         string? defaultFolderName = null,
+        string? groupName = null,
         CancellationToken cancellationToken = default)
     {
         var settings = await storage.LoadAsync(cancellationToken);
@@ -44,8 +45,9 @@ public sealed class FolderMenuService
             ? FolderMenuNameGenerator.GetNextName(settings.CreateFolderMenu.Entries)
             : DisplayNameValidator.Normalize(displayName);
         var resolvedDefaultFolderName = FolderNameValidator.NormalizeOrDefault(defaultFolderName);
+        var resolvedGroupName = GroupNameValidator.Normalize(groupName);
 
-        ValidateInputBeforeImport(resolvedDisplayName, resolvedDefaultFolderName, settings.CreateFolderMenu);
+        ValidateInputBeforeImport(resolvedDisplayName, resolvedDefaultFolderName, resolvedGroupName, settings.CreateFolderMenu);
 
         var importedIcon = await iconImportService.ImportAsync(sourceIconPath, paths, cancellationToken);
 
@@ -54,6 +56,7 @@ public sealed class FolderMenuService
             Id = importedIcon.EntryId,
             DisplayName = resolvedDisplayName,
             DefaultFolderName = resolvedDefaultFolderName,
+            GroupName = resolvedGroupName,
             IconPath = importedIcon.ImportedIconPath,
             SortOrder = GetNextSortOrder(settings.CreateFolderMenu.Entries),
             IsEnabled = true
@@ -90,11 +93,13 @@ public sealed class FolderMenuService
     private void ValidateInputBeforeImport(
         string displayName,
         string defaultFolderName,
+        string groupName,
         FolderMenuSettings menuSettings)
     {
         var issues = new List<FolderMenuValidationIssue>();
         issues.AddRange(DisplayNameValidator.ValidateResolved(displayName).Issues);
         issues.AddRange(FolderNameValidator.Validate(defaultFolderName).Issues);
+        issues.AddRange(GroupNameValidator.Validate(groupName).Issues);
 
         var prospectiveSettings = new FolderMenuSettings();
         foreach (var existingEntry in menuSettings.Entries)
@@ -107,6 +112,7 @@ public sealed class FolderMenuService
             Id = "entry-validation-preview",
             DisplayName = displayName,
             DefaultFolderName = defaultFolderName,
+            GroupName = groupName,
             IconPath = "validation-preview.ico",
             SortOrder = GetNextSortOrder(menuSettings.Entries)
         });

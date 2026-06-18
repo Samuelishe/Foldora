@@ -37,6 +37,48 @@ public sealed class FolderMenuSettingsValidatorTests
         Assert.True(result.IsValid);
     }
 
+    [Fact]
+    public void Validate_AllowsDuplicateGroupNames()
+    {
+        var settings = new FolderMenuSettings();
+        settings.Entries.Add(CreateEntry(1, enabled: true, displayName: "Синяя", groupName: "Цветные"));
+        settings.Entries.Add(CreateEntry(2, enabled: true, displayName: "Красная", groupName: "Цветные"));
+
+        var result = new FolderMenuSettingsValidator().Validate(settings);
+
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void Validate_RejectsMoreThanThirtyGroups()
+    {
+        var settings = new FolderMenuSettings();
+        for (var index = 0; index < 31; index++)
+        {
+            settings.Entries.Add(CreateEntry(index, enabled: true, $"Вид {index}", $"Группа {index}"));
+        }
+
+        var result = new FolderMenuSettingsValidator().Validate(settings);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Issues, issue => issue.Code == "menu_group_limit");
+    }
+
+    [Fact]
+    public void Validate_RejectsMoreThanThirtyChildrenPerGroup()
+    {
+        var settings = new FolderMenuSettings();
+        for (var index = 0; index < 31; index++)
+        {
+            settings.Entries.Add(CreateEntry(index, enabled: true, $"Вид {index}", "Цветные"));
+        }
+
+        var result = new FolderMenuSettingsValidator().Validate(settings);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Issues, issue => issue.Code == "menu_group_children_limit");
+    }
+
     private static FolderMenuSettings CreateSettings(int count, bool enabled)
     {
         var settings = new FolderMenuSettings();
@@ -48,13 +90,14 @@ public sealed class FolderMenuSettingsValidatorTests
         return settings;
     }
 
-    private static FolderMenuEntry CreateEntry(int index, bool enabled, string displayName)
+    private static FolderMenuEntry CreateEntry(int index, bool enabled, string displayName, string groupName = "")
     {
         return new FolderMenuEntry
         {
             Id = $"entry-{index}",
             DisplayName = displayName,
             DefaultFolderName = "Новая папка",
+            GroupName = groupName,
             IconPath = $"entry-{index}.ico",
             IsEnabled = enabled
         };

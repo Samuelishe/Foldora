@@ -9,7 +9,7 @@ foldora apply --folder "<folder>" --entry-id "<entry-id>"
 foldora create --target "<directory>" --entry-id "<entry-id>"
 foldora clear --folder "<folder>"
 foldora menu list
-foldora menu add --icon "<absolute-icon-path>" [--name "<display-name>"] [--folder-name "<default-folder-name>"]
+foldora menu add --icon "<absolute-icon-path>" [--name "<display-name>"] [--folder-name "<default-folder-name>"] [--group "<group-name>"]
 foldora menu remove --entry-id "<entry-id>"
 foldora menu reset --yes
 foldora import-pack --path "<pack-path>"
@@ -31,7 +31,7 @@ foldora settings
 - выполняет `create --target --entry-id`, создавая папку с `DefaultFolderName` entry и применяя его иконку;
 - выполняет `clear --folder` через `DesktopIniService`;
 - выполняет `menu list`, создавая AppData/settings при первом запуске;
-- выполняет `menu add --icon ... [--name ...] [--folder-name ...]`, импортируя `.ico` в `%AppData%\Foldora\icons`;
+- выполняет `menu add --icon ... [--name ...] [--folder-name ...] [--group ...]`, импортируя `.ico` в `%AppData%\Foldora\icons`;
 - выполняет `menu remove --entry-id ...`, удаляя entry и принадлежащую ему копию `.ico`;
 - выполняет `menu reset --yes`, очищая пользовательские entries, возвращая title к `Создать папку`, удаляя только Foldora-owned registry roots и отключая Explorer integration;
 - выполняет `register-menu`, применяя validated HKCU registry plan;
@@ -53,7 +53,10 @@ foldora settings
 
 Если `--name` не указан или пустой, `menu add` использует первое свободное fallback-имя `Вид N`.
 Если `--folder-name` не указан или пустой, используется `Новая папка`.
+Если `--group` не указан или пустой, entry остаётся в root menu. Если `--group "Цветные"` указан, entry попадает в одноуровневую группу `Цветные`. `/` и `\` в group name запрещены, потому что nested groups пока не поддерживаются.
 CLI не исправляет явно невалидный `--folder-name` молча: запрещённые Windows filename characters, reserved device names, trailing dot/space, control chars и слишком длинные значения дают понятную ошибку, entry не создаётся.
+
+`menu list` показывает группу как `Group: <root>` или `Group: <group-name>`.
 
 Для `apply` доступны два взаимоисключающих режима: `--icon` для прямого пути к `.ico` или `--entry-id` для сохранённого entry. Если указаны оба или не указан ни один, CLI возвращает ошибку.
 

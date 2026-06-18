@@ -57,6 +57,30 @@ public sealed class MainViewModelPresentationTests
     }
 
     [Fact]
+    public async Task EntriesExposeEditableGroupName()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var entry = CreateEntry("entry-blue", "Синяя");
+            entry.GroupName = "Цветные";
+            await SaveSettingsAsync(paths, entry);
+
+            var viewModel = await CreateViewModelAsync(paths);
+            viewModel.Entries[0].GroupName = "Готические";
+
+            Assert.Equal("Готические", viewModel.Entries[0].GroupName);
+            Assert.True(viewModel.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task ShowTechnicalDetails_CanBeToggled()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
