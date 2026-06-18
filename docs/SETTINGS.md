@@ -28,6 +28,14 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 - `OpenPickerForCustomStyle`
 - `CreateFolderMenu`
 
+`Language`:
+
+- supported values: `ru`, `en`;
+- default: `ru`;
+- старые settings без `language` загружаются как `ru`;
+- unsupported values нормализуются в `ru`;
+- settings UI сохраняет язык в тот же `settings.json`.
+
 При первом обращении `FoldoraSettingsStorage` создаёт root, `icons`, `previews`, `packs` и `settings.json`, если они отсутствуют. Пустой список entries после первого запуска является нормальным состоянием: Foldora не добавляет demo entries автоматически.
 
 Минимальный JSON по смыслу:
@@ -35,6 +43,7 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 ```json
 {
   "explorerIntegrationEnabled": false,
+  "language": "ru",
   "createFolderMenu": {
     "title": "Создать папку",
     "entries": []

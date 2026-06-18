@@ -9,6 +9,7 @@
 - `src/Foldora.Core/Models/FolderIconStyle.cs` - модель стиля иконки.
 - `src/Foldora.Core/Settings/FoldoraSettings.cs` - модель пользовательских настроек.
 - `src/Foldora.Core/Settings/FoldoraSettingsStorage.cs` - JSON storage настроек в AppData.
+- `src/Foldora.Core/Settings/FoldoraLanguage.cs` - supported language values и fallback-нормализация `ru`/`en`.
 - `src/Foldora.Core/Storage/FoldoraDataPaths.cs` - AppData paths.
 - `src/Foldora.Core/Menu/FolderMenuEntry.cs` - пользовательский пункт будущего submenu.
 - `src/Foldora.Core/Menu/FolderMenuSettings.cs` - настройки меню создания папки.
@@ -69,10 +70,14 @@
 - `src/Foldora.App/App.xaml` - WPF application entry.
 - `src/Foldora.App/App.xaml.cs` - WPF app code-behind.
 - `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, empty state, Explorer integration controls, dangerous zone и technical details expander.
-- `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI plumbing и установка `DataContext`.
+- `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI/window plumbing, custom title bar controls и установка `DataContext`.
+- `src/Foldora.App/SettingsWindow.xaml` - WPF окно настроек приложения с выбором языка.
+- `src/Foldora.App/SettingsWindow.xaml.cs` - минимальный plumbing окна настроек.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
 - `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands и presentation state для card/list UI.
 - `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню с icon status и preview.
+- `src/Foldora.App/ViewModels/SettingsViewModel.cs` - ViewModel настроек языка приложения.
+- `src/Foldora.App/ViewModels/LocalizationResources.cs` - bindable набор локализованных строк для WPF.
 - `src/Foldora.App/ViewModels/RelayCommand.cs` - простая синхронная WPF-команда.
 - `src/Foldora.App/ViewModels/AsyncRelayCommand.cs` - простая асинхронная WPF-команда.
 - `src/Foldora.App/Services/IIconFilePicker.cs` - abstraction выбора `.ico` для WPF.
@@ -85,11 +90,19 @@
 - `src/Foldora.App/Services/ExplorerCommandHostPathResolver.cs` - resolver `Foldora.MenuHost.exe` рядом с текущим executable или в Debug output.
 - `src/Foldora.App/Services/ExplorerIntegrationOperationResult.cs` - result model для WPF Explorer integration operations.
 - `src/Foldora.App/Services/ExplorerIntegrationController.cs` - App-level controller для dry-run/register/unregister/reset из WPF поверх Shell service.
+- `src/Foldora.App/Services/ISettingsDialogService.cs` - abstraction открытия settings UI.
+- `src/Foldora.App/Services/SettingsDialogResult.cs` - результат settings dialog.
+- `src/Foldora.App/Services/WindowSettingsDialogService.cs` - WPF implementation settings dialog service.
+- `src/Foldora.App/Services/LanguageOption.cs` - option model для выбора языка в settings UI.
+- `src/Foldora.App/Services/ILocalizationService.cs` - abstraction локализации WPF.
+- `src/Foldora.App/Services/InMemoryLocalizationService.cs` - минимальная in-memory локализация RU/EN для основных WPF labels.
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project на `net10.0-windows`.
 - `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.
 - `tests/Foldora.Tests/App/ExplorerIntegrationControllerTests.cs` - тесты WPF Explorer integration controller с fake registry.
 - `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
 - `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor.
+- `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.
+- `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты минимальной локализации RU/EN.
 - `tests/Foldora.Tests/App/WpfIconPreviewServiceTests.cs` - тесты WPF preview service.
 - `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser, включая reset confirmation и diagnostics command.
 - `tests/Foldora.Tests/Cli/DesktopIniPolicyDiagnosticsRunnerTests.cs` - тесты diagnostic runner для `desktop.ini` attribute policies без Explorer/registry.

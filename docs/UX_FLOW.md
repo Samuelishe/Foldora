@@ -2,6 +2,8 @@
 
 Этот документ фиксирует целевой пользовательский flow для WPF MVP. WPF editor реализует staged editing, add/remove entries, staged выбор `.ico`, прямой preview из `.ico`, явные Explorer integration controls и user-facing card/list layout.
 
+Window shell foundation: главное окно использует custom title bar с названием приложения, settings gear и window controls. Settings gear открывает настройки языка; изменение языка сохраняется отдельно от draft entries и не пишет registry.
+
 ## WPF MVP Editor
 
 Минимальный редактор пользовательского меню должен содержать:
@@ -193,3 +195,18 @@ foldora unregister-menu
 ```text
 foldora menu reset --yes
 ```
+
+## Settings Flow
+
+Settings UI минимален:
+
+```text
+Настройки
+
+Язык приложения:
+[Русский / English]
+
+[Сохранить] [Закрыть]
+```
+
+`Language` сохраняется в `%AppData%\Foldora\settings.json`. Supported values: `ru`, `en`; default/fallback: `ru`. Часть основных labels может обновиться сразу через localization foundation, но полный runtime language switching для всех status/error messages остаётся future cleanup. UI честно предупреждает, что некоторые изменения языка могут применяться после перезапуска.

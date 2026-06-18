@@ -92,7 +92,35 @@ public sealed class MainViewModelPresentationTests
         }
     }
 
-    private static async Task<MainViewModel> CreateViewModelAsync(FoldoraDataPaths paths)
+    [Fact]
+    public async Task OpenSettingsAsync_UsesSettingsDialogService()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var settingsDialog = new RecordingSettingsDialogService();
+            var viewModel = await CreateViewModelAsync(paths, settingsDialog);
+
+            await viewModel.OpenSettingsAsync();
+
+            Assert.True(settingsDialog.WasCalled);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    private static Task<MainViewModel> CreateViewModelAsync(FoldoraDataPaths paths)
+    {
+        return CreateViewModelAsync(paths, new RecordingSettingsDialogService());
+    }
+
+    private static async Task<MainViewModel> CreateViewModelAsync(
+        FoldoraDataPaths paths,
+        ISettingsDialogService settingsDialogService)
     {
         var storage = new FoldoraSettingsStorage(paths);
         var draftEditor = new FolderMenuDraftEditor(storage, paths);
@@ -107,7 +135,8 @@ public sealed class MainViewModelPresentationTests
             new ExplorerIntegrationController(
                 draftEditor,
                 registrationService,
-                new FixedHostPathResolver(Path.Combine(paths.RootDirectory, "Foldora.MenuHost.exe"))));
+                new FixedHostPathResolver(Path.Combine(paths.RootDirectory, "Foldora.MenuHost.exe"))),
+            settingsDialogService);
 
         await viewModel.LoadAsync();
         return viewModel;
@@ -164,6 +193,17 @@ public sealed class MainViewModelPresentationTests
         public IconPreviewResult LoadPreview(string? iconPath)
         {
             return IconPreviewResult.NoIcon;
+        }
+    }
+
+    private sealed class RecordingSettingsDialogService : ISettingsDialogService
+    {
+        public bool WasCalled { get; private set; }
+
+        public Task<SettingsDialogResult> ShowSettingsAsync()
+        {
+            WasCalled = true;
+            return Task.FromResult(new SettingsDialogResult(false, "ru"));
         }
     }
 }

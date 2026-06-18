@@ -20,7 +20,10 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private readonly IIconFilePicker iconFilePicker;
     private readonly IIconPreviewService iconPreviewService;
     private readonly ExplorerIntegrationController explorerIntegrationController;
+    private readonly ISettingsDialogService settingsDialogService;
+    private readonly ILocalizationService localizationService;
     private readonly AsyncRelayCommand saveCommand;
+    private readonly AsyncRelayCommand openSettingsCommand;
     private readonly AsyncRelayCommand dryRunCommand;
     private readonly AsyncRelayCommand registerExplorerCommand;
     private readonly AsyncRelayCommand unregisterExplorerCommand;
@@ -38,14 +41,19 @@ public sealed class MainViewModel : INotifyPropertyChanged
         FolderMenuDraftEditor draftEditor,
         IIconFilePicker iconFilePicker,
         IIconPreviewService iconPreviewService,
-        ExplorerIntegrationController explorerIntegrationController)
+        ExplorerIntegrationController explorerIntegrationController,
+        ISettingsDialogService? settingsDialogService = null,
+        ILocalizationService? localizationService = null)
     {
         this.draftEditor = draftEditor ?? throw new ArgumentNullException(nameof(draftEditor));
         this.iconFilePicker = iconFilePicker ?? throw new ArgumentNullException(nameof(iconFilePicker));
         this.iconPreviewService = iconPreviewService ?? throw new ArgumentNullException(nameof(iconPreviewService));
         this.explorerIntegrationController = explorerIntegrationController ?? throw new ArgumentNullException(nameof(explorerIntegrationController));
+        this.settingsDialogService = settingsDialogService ?? new NoopSettingsDialogService();
+        this.localizationService = localizationService ?? new InMemoryLocalizationService();
 
         saveCommand = new AsyncRelayCommand(SaveDraftAsync, () => HasUnsavedChanges);
+        openSettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
         dryRunCommand = new AsyncRelayCommand(DryRunExplorerIntegrationAsync);
         registerExplorerCommand = new AsyncRelayCommand(RegisterExplorerIntegrationAsync);
         unregisterExplorerCommand = new AsyncRelayCommand(UnregisterExplorerIntegrationAsync);
@@ -64,7 +72,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public ObservableCollection<string> TechnicalDetails => OperationDetails;
 
+    public LocalizationResources L => localizationService.Resources;
+
     public AsyncRelayCommand SaveCommand => saveCommand;
+
+    public AsyncRelayCommand OpenSettingsCommand => openSettingsCommand;
 
     public AsyncRelayCommand DryRunCommand => dryRunCommand;
 
@@ -195,6 +207,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         var paths = FoldoraDataPaths.CreateDefault();
         var storage = new FoldoraSettingsStorage(paths);
         var draftEditor = new FolderMenuDraftEditor(storage, paths);
+        var settings = storage.LoadAsync().GetAwaiter().GetResult();
+        var localizationService = new InMemoryLocalizationService(settings.Language);
         var registrationService = new ExplorerMenuRegistrationService(
             storage,
             new ExplorerMenuRegistryPlanBuilder(),
@@ -208,7 +222,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
             draftEditor,
             new WindowsIconFilePicker(),
             new WpfIconPreviewService(),
-            integrationController);
+            integrationController,
+            new WindowSettingsDialogService(storage),
+            localizationService);
     }
 
     public async Task LoadAsync(CancellationToken cancellationToken = default)
@@ -295,6 +311,19 @@ public sealed class MainViewModel : INotifyPropertyChanged
         var result = await explorerIntegrationController.ResetMenuAsync();
         IsResetConfirmed = false;
         ApplyIntegrationResult(result, reloadDraft: result.Success);
+    }
+
+    public async Task OpenSettingsAsync()
+    {
+        var result = await settingsDialogService.ShowSettingsAsync();
+        if (!result.Changed)
+        {
+            return;
+        }
+
+        localizationService.SetLanguage(result.Language);
+        OnPropertyChanged(nameof(L));
+        StatusMessage = "Настройки сохранены. Некоторые изменения языка могут применяться после перезапуска.";
     }
 
     private void ApplyIntegrationResult(ExplorerIntegrationOperationResult result, bool reloadDraft)
@@ -428,5 +457,13 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private sealed class NoopSettingsDialogService : ISettingsDialogService
+    {
+        public Task<SettingsDialogResult> ShowSettingsAsync()
+        {
+            return Task.FromResult(new SettingsDialogResult(false, FoldoraLanguage.Russian));
+        }
     }
 }

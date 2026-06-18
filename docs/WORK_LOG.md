@@ -1,5 +1,16 @@
 # Work Log
 
+## 2026-06-18 - WPF shell/settings foundation
+
+- Главное окно WPF переведено на custom title bar через `WindowChrome`: `Foldora`, settings gear, minimize, maximize/restore и close находятся в единой шапке.
+- Standard visible Windows title bar скрыт, resize border сохранён; maximize должен respect Windows work area/taskbar за счёт `WindowChrome`, без WinAPI `WM_GETMINMAXINFO`.
+- Code-behind расширен только window plumbing: загрузка ViewModel, minimize, maximize/restore, close и обновление glyph maximize/restore.
+- Добавлено settings window для выбора языка приложения.
+- `FoldoraSettings.Language` нормализуется в `ru`/`en`; default и fallback для старых/невалидных settings - `ru`.
+- Добавлен минимальный App-level localization service и bindable `LocalizationResources` для основных labels/buttons WPF editor.
+- Runtime смена языка обновляет часть основных labels, но полный перевод всех status/error messages оставлен future cleanup.
+- Группировка пунктов меню не реализована; roadmap фиксирует near-future one-level `FolderMenuEntry.GroupName` перед full tree model.
+
 ## 2026-06-18 - Documentation cleanup and public README
 
 - Root `README.md` переписан как публичная GitHub-страница проекта: продуктовая идея, early MVP status, Windows 11/.NET 10/WPF stack, текущие возможности, ограничения, build/run и базовые CLI-примеры.

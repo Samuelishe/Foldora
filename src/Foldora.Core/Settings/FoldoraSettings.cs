@@ -9,7 +9,7 @@ public sealed record FoldoraSettings
 {
     public string? ActivePackId { get; init; }
 
-    public string Language { get; init; } = "ru";
+    public string Language { get; init; } = FoldoraLanguage.Russian;
 
     public bool ExplorerIntegrationEnabled { get; init; }
 

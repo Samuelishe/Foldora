@@ -72,6 +72,6 @@ public sealed class FoldoraSettingsStorage
             entry.DefaultFolderName = FolderNameValidator.NormalizeOrDefault(entry.DefaultFolderName);
         }
 
-        return settings;
+        return settings with { Language = FoldoraLanguage.NormalizeOrDefault(settings.Language) };
     }
 }

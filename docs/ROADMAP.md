@@ -15,6 +15,8 @@
 
 ## WPF MVP
 
+- Custom title bar/window shell без видимой стандартной Windows title bar.
+- Settings UI с выбором языка.
 - Поле title top-level menu, default `Создать папку`.
 - Список пользовательских entries.
 - Добавление и удаление entries.
@@ -45,6 +47,20 @@
 ## Будущее
 
 Modern context menu, installer/MSIX, pack import/export, preview generation, nested menu runtime/storage и расширенная валидация паков рассматриваются после рабочего MVP.
+
+Near future:
+
+- One-level grouping через `FolderMenuEntry.GroupName` перед full tree migration:
+
+```text
+Создать папку
+  Цветные
+    Синяя
+    Красная
+  Готические
+    Череп
+  Музыка
+```
 
 Отдельные post-MVP investigation tracks:
 

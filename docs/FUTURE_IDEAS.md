@@ -20,6 +20,7 @@
 - Preview generation в `%AppData%\Foldora\previews\`, если прямой WPF preview из `.ico` будет недостаточен.
 - Валидация `.ico` размеров.
 - Orphan icon cleanup для импортированных `.ico`, отдельная команда/UX после `menu reset --yes`.
+- Полная локализация всех status/error/detail strings и runtime language switching без перезапуска.
 - Low-priority optional repair command, например `foldora repair-folder --folder "<folder>"` или `foldora normalize-attributes --folder "<folder>"`, только если появится реальная потребность чинить старые Foldora-created папки с прежними `System` attributes. Это не planned MVP task.
 - Создание папки под cursor position на рабочем столе через отдельное shell integration исследование. Legacy registry menu даёт только target directory path, не desktop icon-view coordinates.
 - `unregister-menu --dry-run`.

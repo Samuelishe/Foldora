@@ -3,9 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         mc:Ignorable="d"
-        Title="Foldora" Height="780" Width="980"
-        MinHeight="640" MinWidth="780">
+        Title="Foldora"
+        Height="780"
+        Width="980"
+        MinHeight="640"
+        MinWidth="780"
+        WindowStyle="None"
+        ResizeMode="CanResize">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="44"
+                            ResizeBorderThickness="6"
+                            CornerRadius="0"
+                            GlassFrameThickness="0"
+                            UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
@@ -36,314 +50,367 @@
         <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
             <Setter Property="Foreground" Value="#9A1B1B" />
         </Style>
+
+        <Style x:Key="TitleBarButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="42" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        </Style>
     </Window.Resources>
 
-    <Grid Margin="22">
+    <Grid Background="#F4F5F7">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="44" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Text="Foldora"
-                   FontSize="26"
-                   FontWeight="SemiBold"
-                   Margin="0,0,0,18" />
-
-        <ScrollViewer Grid.Row="1"
-                      VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Disabled">
-            <StackPanel>
-                <StackPanel Margin="0,0,0,20">
-                    <TextBlock Text="Настройка меню"
-                               Style="{StaticResource SectionTitleStyle}" />
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0"
-                                   Text="Название меню:"
-                                   Style="{StaticResource FieldLabelStyle}" />
-                        <TextBox Grid.Column="1"
-                                 Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 MinWidth="280"
-                                 MaxWidth="520"
-                                 HorizontalAlignment="Left" />
-                    </Grid>
+        <Border Grid.Row="0"
+                Background="#F4F5F7"
+                BorderBrush="#DDDEE3"
+                BorderThickness="0,0,0,1">
+            <DockPanel LastChildFill="True">
+                <StackPanel DockPanel.Dock="Right"
+                            Orientation="Horizontal"
+                            shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Button Content="⚙"
+                            ToolTip="{Binding L.Settings}"
+                            Command="{Binding OpenSettingsCommand}"
+                            Style="{StaticResource TitleBarButtonStyle}"
+                            Margin="0,0,6,0" />
+                    <Button Content="—"
+                            ToolTip="{Binding L.Minimize}"
+                            Click="OnMinimizeClick"
+                            Style="{StaticResource TitleBarButtonStyle}" />
+                    <Button x:Name="MaximizeRestoreButton"
+                            Content="□"
+                            ToolTip="{Binding L.Maximize}"
+                            Click="OnMaximizeRestoreClick"
+                            Style="{StaticResource TitleBarButtonStyle}" />
+                    <Button Content="×"
+                            ToolTip="{Binding L.Close}"
+                            Click="OnCloseClick"
+                            Style="{StaticResource TitleBarButtonStyle}"
+                            FontSize="18" />
                 </StackPanel>
 
-                <StackPanel Margin="0,0,0,20">
-                    <DockPanel Margin="0,0,0,10">
-                        <TextBlock DockPanel.Dock="Left"
-                                   Text="Пункты меню"
-                                   Style="{StaticResource SectionTitleStyle}"
-                                   Margin="0" />
-                        <Button DockPanel.Dock="Right"
-                                Content="+ Добавить пункт"
-                                Command="{Binding AddEntryCommand}"
-                                Padding="12,5"
-                                MinWidth="140"
-                                HorizontalAlignment="Right" />
-                    </DockPanel>
+                <TextBlock Text="{Binding L.AppTitle}"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           Margin="18,0,0,0" />
+            </DockPanel>
+        </Border>
 
-                    <Border BorderBrush="#D7D7D7"
-                            BorderThickness="1"
-                            CornerRadius="6"
-                            Padding="18"
-                            Background="#FAFAFA">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasEntries}" Value="False">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <StackPanel>
-                            <TextBlock Text="Пока нет пунктов меню."
-                                       FontWeight="SemiBold"
-                                       Margin="0,0,0,6" />
-                            <TextBlock Text="Добавьте первый пункт: выберите .ico, задайте название в меню и имя создаваемой папки."
-                                       TextWrapping="Wrap"
-                                       Foreground="#555555"
-                                       Margin="0,0,0,14" />
-                            <Button Content="+ Добавить пункт"
+        <Grid Grid.Row="1" Margin="22">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Text="{Binding L.AppTitle}"
+                       FontSize="26"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,18" />
+
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+                    <StackPanel Margin="0,0,0,20">
+                        <TextBlock Text="{Binding L.MenuSettings}"
+                                   Style="{StaticResource SectionTitleStyle}" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="{Binding L.MenuTitle}"
+                                       Style="{StaticResource FieldLabelStyle}" />
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MinWidth="280"
+                                     MaxWidth="520"
+                                     HorizontalAlignment="Left" />
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,20">
+                        <DockPanel Margin="0,0,0,10">
+                            <TextBlock DockPanel.Dock="Left"
+                                       Text="{Binding L.MenuEntries}"
+                                       Style="{StaticResource SectionTitleStyle}"
+                                       Margin="0" />
+                            <Button DockPanel.Dock="Right"
+                                    Content="{Binding L.AddEntry}"
                                     Command="{Binding AddEntryCommand}"
                                     Padding="12,5"
                                     MinWidth="140"
+                                    HorizontalAlignment="Right" />
+                        </DockPanel>
+
+                        <Border BorderBrush="#D7D7D7"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Padding="18"
+                                Background="#FAFAFA">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasEntries}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <StackPanel>
+                                <TextBlock Text="{Binding L.EmptyTitle}"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,6" />
+                                <TextBlock Text="{Binding L.EmptyDescription}"
+                                           TextWrapping="Wrap"
+                                           Foreground="#555555"
+                                           Margin="0,0,0,14" />
+                                <Button Content="{Binding L.AddEntry}"
+                                        Command="{Binding AddEntryCommand}"
+                                        Padding="12,5"
+                                        MinWidth="140"
+                                        HorizontalAlignment="Left" />
+                            </StackPanel>
+                        </Border>
+
+                        <ItemsControl ItemsSource="{Binding Entries}">
+                            <ItemsControl.Style>
+                                <Style TargetType="ItemsControl">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasEntries}" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ItemsControl.Style>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#DDDDDD"
+                                            BorderThickness="1"
+                                            CornerRadius="6"
+                                            Padding="14"
+                                            Margin="0,0,0,10"
+                                            Background="White"
+                                            ToolTip="{Binding Id}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="64" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Border Grid.Column="0"
+                                                    Width="52"
+                                                    Height="52"
+                                                    BorderBrush="#CCCCCC"
+                                                    BorderThickness="1"
+                                                    Background="#FAFAFA"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top">
+                                                <Image Source="{Binding IconPreview}"
+                                                       Width="50"
+                                                       Height="50"
+                                                       Stretch="Uniform" />
+                                            </Border>
+
+                                            <Grid Grid.Column="1">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="170" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Row="0"
+                                                           Grid.Column="0"
+                                                           Text="{Binding DataContext.L.EntryDisplayName, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Style="{StaticResource FieldLabelStyle}" />
+                                                <TextBox Grid.Row="0"
+                                                         Grid.Column="1"
+                                                         Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         Margin="0,0,14,6"
+                                                         MinWidth="220" />
+
+                                                <TextBlock Grid.Row="1"
+                                                           Grid.Column="0"
+                                                           Text="{Binding DataContext.L.EntryFolderName, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Style="{StaticResource FieldLabelStyle}" />
+                                                <TextBox Grid.Row="1"
+                                                         Grid.Column="1"
+                                                         Text="{Binding DefaultFolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         Margin="0,0,14,6"
+                                                         MinWidth="220" />
+
+                                                <CheckBox Grid.Row="2"
+                                                          Grid.Column="1"
+                                                          Content="{Binding DataContext.L.EntryEnabled, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                          IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                          Margin="0,2,0,8" />
+
+                                                <TextBlock Grid.Row="3"
+                                                           Grid.Column="0"
+                                                           Text="{Binding DataContext.L.EntryIcon, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Style="{StaticResource FieldLabelStyle}"
+                                                           Margin="0,0,10,0" />
+                                                <TextBlock Grid.Row="3"
+                                                           Grid.Column="1"
+                                                           Text="{Binding IconState}"
+                                                           TextWrapping="Wrap"
+                                                           VerticalAlignment="Center"
+                                                           Foreground="#555555"
+                                                           Margin="0,0,14,0" />
+
+                                                <StackPanel Grid.Row="0"
+                                                            Grid.RowSpan="4"
+                                                            Grid.Column="2"
+                                                            Orientation="Vertical"
+                                                            VerticalAlignment="Top">
+                                                    <Button Content="{Binding DataContext.L.ChooseIcon, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            Command="{Binding ChooseIconCommand}"
+                                                            Padding="10,4"
+                                                            MinWidth="112"
+                                                            Margin="0,0,0,8" />
+                                                    <Button Content="{Binding DataContext.L.Delete, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            Command="{Binding RemoveCommand}"
+                                                            Padding="10,4"
+                                                            MinWidth="112" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,20">
+                        <TextBlock Text="{Binding L.ExplorerIntegration}"
+                                   Style="{StaticResource SectionTitleStyle}" />
+                        <TextBlock Text="{Binding ExplorerIntegrationStatusText, StringFormat=Статус: {0}}"
+                                   Margin="0,0,0,10" />
+                        <WrapPanel>
+                            <Button Content="{Binding L.DryRun}"
+                                    Command="{Binding DryRunCommand}"
+                                    Style="{StaticResource SecondaryButtonStyle}" />
+                            <Button Content="{Binding L.RegisterExplorer}"
+                                    Command="{Binding RegisterExplorerCommand}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    MinWidth="190" />
+                            <Button Content="{Binding L.UnregisterExplorer}"
+                                    Command="{Binding UnregisterExplorerCommand}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    MinWidth="200" />
+                        </WrapPanel>
+                        <Expander Header="{Binding L.TechnicalDetails}"
+                                  IsExpanded="{Binding ShowTechnicalDetails, Mode=TwoWay}"
+                                  Visibility="{Binding HasTechnicalDetails, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Margin="0,4,0,0">
+                            <ItemsControl ItemsSource="{Binding TechnicalDetails}"
+                                          Margin="0,8,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="#555555"
+                                                   Margin="0,0,0,4" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Expander>
+                    </StackPanel>
+
+                    <Border BorderBrush="#E2B7B7"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Padding="14"
+                            Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="{Binding L.DangerZone}"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="#8A1F1F"
+                                       Margin="0,0,0,8" />
+                            <TextBlock Text="{Binding L.ResetDescription}"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,4" />
+                            <TextBlock Text="{Binding L.ResetIconNote}"
+                                       TextWrapping="Wrap"
+                                       Foreground="#555555"
+                                       Margin="0,0,0,12" />
+                            <CheckBox Content="{Binding L.ResetConfirm}"
+                                      IsChecked="{Binding IsResetConfirmed, Mode=TwoWay}"
+                                      Margin="0,0,0,10" />
+                            <Button Content="{Binding L.ResetMenu}"
+                                    Command="{Binding ResetMenuCommand}"
+                                    Style="{StaticResource DangerButtonStyle}"
                                     HorizontalAlignment="Left" />
                         </StackPanel>
                     </Border>
+                </StackPanel>
+            </ScrollViewer>
 
-                    <ItemsControl ItemsSource="{Binding Entries}">
-                        <ItemsControl.Style>
-                            <Style TargetType="ItemsControl">
-                                <Setter Property="Visibility" Value="Visible" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasEntries}" Value="False">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ItemsControl.Style>
+            <DockPanel Grid.Row="2"
+                       Margin="0,16,0,14">
+                <TextBlock DockPanel.Dock="Left"
+                           Text="{Binding HasUnsavedChanges, StringFormat=Несохранённые изменения: {0}}"
+                           VerticalAlignment="Center"
+                           Foreground="#555555" />
+                <StackPanel DockPanel.Dock="Right"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <Button Content="{Binding L.Reload}"
+                            Command="{Binding ReloadCommand}"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            MinWidth="160" />
+                    <Button Content="{Binding L.Save}"
+                            Command="{Binding SaveCommand}"
+                            Style="{StaticResource PrimaryButtonStyle}" />
+                </StackPanel>
+            </DockPanel>
+
+            <Border Grid.Row="3"
+                    BorderBrush="#D7D7D7"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="12"
+                    Background="#FAFAFA">
+                <StackPanel>
+                    <TextBlock Text="{Binding StatusMessage}"
+                               TextWrapping="Wrap"
+                               Visibility="{Binding HasStatusMessage, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <ItemsControl ItemsSource="{Binding Errors}"
+                                  Visibility="{Binding HasValidationErrors, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Margin="0,8,0,0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderBrush="#DDDDDD"
-                                        BorderThickness="1"
-                                        CornerRadius="6"
-                                        Padding="14"
-                                        Margin="0,0,0,10"
-                                        Background="White"
-                                        ToolTip="{Binding Id}">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="64" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Border Grid.Column="0"
-                                                Width="52"
-                                                Height="52"
-                                                BorderBrush="#CCCCCC"
-                                                BorderThickness="1"
-                                                Background="#FAFAFA"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top">
-                                            <Image Source="{Binding IconPreview}"
-                                                   Width="50"
-                                                   Height="50"
-                                                   Stretch="Uniform" />
-                                        </Border>
-
-                                        <Grid Grid.Column="1">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="170" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBlock Grid.Row="0"
-                                                       Grid.Column="0"
-                                                       Text="Название в меню:"
-                                                       Style="{StaticResource FieldLabelStyle}" />
-                                            <TextBox Grid.Row="0"
-                                                     Grid.Column="1"
-                                                     Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                     Margin="0,0,14,6"
-                                                     MinWidth="220" />
-
-                                            <TextBlock Grid.Row="1"
-                                                       Grid.Column="0"
-                                                       Text="Имя создаваемой папки:"
-                                                       Style="{StaticResource FieldLabelStyle}" />
-                                            <TextBox Grid.Row="1"
-                                                     Grid.Column="1"
-                                                     Text="{Binding DefaultFolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                     Margin="0,0,14,6"
-                                                     MinWidth="220" />
-
-                                            <CheckBox Grid.Row="2"
-                                                      Grid.Column="1"
-                                                      Content="Показывать в меню"
-                                                      IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                      Margin="0,2,0,8" />
-
-                                            <TextBlock Grid.Row="3"
-                                                       Grid.Column="0"
-                                                       Text="Иконка:"
-                                                       Style="{StaticResource FieldLabelStyle}"
-                                                       Margin="0,0,10,0" />
-                                            <TextBlock Grid.Row="3"
-                                                       Grid.Column="1"
-                                                       Text="{Binding IconState}"
-                                                       TextWrapping="Wrap"
-                                                       VerticalAlignment="Center"
-                                                       Foreground="#555555"
-                                                       Margin="0,0,14,0" />
-
-                                            <StackPanel Grid.Row="0"
-                                                        Grid.RowSpan="4"
-                                                        Grid.Column="2"
-                                                        Orientation="Vertical"
-                                                        VerticalAlignment="Top">
-                                                <Button Content="Выбрать .ico"
-                                                        Command="{Binding ChooseIconCommand}"
-                                                        Padding="10,4"
-                                                        MinWidth="112"
-                                                        Margin="0,0,0,8" />
-                                                <Button Content="Удалить"
-                                                        Command="{Binding RemoveCommand}"
-                                                        Padding="10,4"
-                                                        MinWidth="112" />
-                                            </StackPanel>
-                                        </Grid>
-                                    </Grid>
-                                </Border>
+                                <TextBlock Text="{Binding}"
+                                           TextWrapping="Wrap"
+                                           Foreground="#B00020"
+                                           Margin="0,0,0,4" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
-
-                <StackPanel Margin="0,0,0,20">
-                    <TextBlock Text="Интеграция с Проводником"
-                               Style="{StaticResource SectionTitleStyle}" />
-                    <TextBlock Text="{Binding ExplorerIntegrationStatusText, StringFormat=Статус: {0}}"
-                               Margin="0,0,0,10" />
-                    <WrapPanel>
-                        <Button Content="Проверить план"
-                                Command="{Binding DryRunCommand}"
-                                Style="{StaticResource SecondaryButtonStyle}" />
-                        <Button Content="Включить меню Проводника"
-                                Command="{Binding RegisterExplorerCommand}"
-                                Style="{StaticResource SecondaryButtonStyle}"
-                                MinWidth="190" />
-                        <Button Content="Отключить меню Проводника"
-                                Command="{Binding UnregisterExplorerCommand}"
-                                Style="{StaticResource SecondaryButtonStyle}"
-                                MinWidth="200" />
-                    </WrapPanel>
-                    <Expander Header="Показать технические детали"
-                              IsExpanded="{Binding ShowTechnicalDetails, Mode=TwoWay}"
-                              Visibility="{Binding HasTechnicalDetails, Converter={StaticResource BooleanToVisibilityConverter}}"
-                              Margin="0,4,0,0">
-                        <ItemsControl ItemsSource="{Binding TechnicalDetails}"
-                                      Margin="0,8,0,0">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}"
-                                               TextWrapping="Wrap"
-                                               Foreground="#555555"
-                                               Margin="0,0,0,4" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </Expander>
-                </StackPanel>
-
-                <Border BorderBrush="#E2B7B7"
-                        BorderThickness="1"
-                        CornerRadius="6"
-                        Padding="14"
-                        Margin="0,0,0,20">
-                    <StackPanel>
-                        <TextBlock Text="Опасная зона"
-                                   FontSize="16"
-                                   FontWeight="SemiBold"
-                                   Foreground="#8A1F1F"
-                                   Margin="0,0,0,8" />
-                        <TextBlock Text="Сброс очищает список пунктов меню и отключает интеграцию с Проводником."
-                                   TextWrapping="Wrap"
-                                   Margin="0,0,0,4" />
-                        <TextBlock Text="Импортированные .ico пока не удаляются."
-                                   TextWrapping="Wrap"
-                                   Foreground="#555555"
-                                   Margin="0,0,0,12" />
-                        <CheckBox Content="Я понимаю, что список пунктов будет очищен"
-                                  IsChecked="{Binding IsResetConfirmed, Mode=TwoWay}"
-                                  Margin="0,0,0,10" />
-                        <Button Content="Сбросить меню"
-                                Command="{Binding ResetMenuCommand}"
-                                Style="{StaticResource DangerButtonStyle}"
-                                HorizontalAlignment="Left" />
-                    </StackPanel>
-                </Border>
-            </StackPanel>
-        </ScrollViewer>
-
-        <DockPanel Grid.Row="2"
-                   Margin="0,16,0,14">
-            <TextBlock DockPanel.Dock="Left"
-                       Text="{Binding HasUnsavedChanges, StringFormat=Несохранённые изменения: {0}}"
-                       VerticalAlignment="Center"
-                       Foreground="#555555" />
-            <StackPanel DockPanel.Dock="Right"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Right">
-                <Button Content="Отменить изменения"
-                        Command="{Binding ReloadCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        MinWidth="160" />
-                <Button Content="Сохранить"
-                        Command="{Binding SaveCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}" />
-            </StackPanel>
-        </DockPanel>
-
-        <Border Grid.Row="3"
-                BorderBrush="#D7D7D7"
-                BorderThickness="1"
-                CornerRadius="6"
-                Padding="12"
-                Background="#FAFAFA">
-            <StackPanel>
-                <TextBlock Text="{Binding StatusMessage}"
-                           TextWrapping="Wrap"
-                           Visibility="{Binding HasStatusMessage, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                <ItemsControl ItemsSource="{Binding Errors}"
-                              Visibility="{Binding HasValidationErrors, Converter={StaticResource BooleanToVisibilityConverter}}"
-                              Margin="0,8,0,0">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}"
-                                       TextWrapping="Wrap"
-                                       Foreground="#B00020"
-                                       Margin="0,0,0,4" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
-        </Border>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

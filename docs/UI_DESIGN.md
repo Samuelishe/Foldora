@@ -2,6 +2,8 @@
 
 WPF editor после UX cleanup phase 1 содержит user-facing редактор menu entries с карточками, staged выбором `.ico`, прямым preview и явными Explorer integration controls.
 
+WPF shell/settings foundation переводит окно на custom title bar через `WindowChrome`. Видимый стандартный Windows title bar не используется; в шапке находятся название `Foldora`, кнопка настроек с gear glyph и window controls minimize/maximize/close. Resize должен сохраняться, а maximize должен respect Windows work area/taskbar.
+
 Целевой WPF MVP описан подробно в `UX_FLOW.md`. Этот документ фиксирует короткие UI-правила, которые должны соблюдаться при реализации.
 
 Правила:
@@ -22,6 +24,9 @@ WPF editor после UX cleanup phase 1 содержит user-facing редак
 - Ошибки показывать через inline validation, status area или список ошибок/предупреждений. `MessageBox` не должен быть основным UX-механизмом ошибок.
 - Для `DefaultFolderName` при ручном вводе желательно блокировать invalid Windows filename chars; при paste допустимо заменить/удалить их и показать предупреждение. Validator всё равно обязан проверить данные при сохранении.
 - Для preview в WPF MVP можно показывать `.ico` напрямую. Генерация файлов в `%AppData%\Foldora\previews\` остаётся future-задачей.
+- Settings gear находится в title/header area и открывает настройки приложения.
+- Language setting выбирается в settings UI. Default language: `ru`; supported values: `ru`, `en`.
+- Основные labels/buttons подключены к минимальному localization foundation. Полная локализация всех status/error strings остаётся future cleanup.
 
 ## Реализовано в phase 4
 
@@ -57,6 +62,8 @@ WPF editor после UX cleanup phase 1 содержит user-facing редак
 ## Не реализовано
 
 - Preview file generation/cache в `%AppData%\Foldora\previews`.
+- Full localization cleanup всех status/error messages.
+- One-level grouping UI.
 - Drag-and-drop.
 - Orphan icon cleanup.
 - Explorer restart и icon cache reset.
