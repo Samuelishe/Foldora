@@ -4,12 +4,115 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Foldora" Height="320" Width="520"
-        MinHeight="240" MinWidth="420">
-    <Grid Margin="24">
-        <TextBlock Text="Foldora MVP bootstrap build"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="20" />
+        Title="Foldora" Height="560" Width="900"
+        MinHeight="420" MinWidth="720">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Foldora"
+                   FontSize="24"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,18" />
+
+        <Grid Grid.Row="1" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Text="Название меню:"
+                       VerticalAlignment="Center"
+                       Margin="0,0,12,0" />
+            <TextBox Grid.Column="1"
+                     Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     MinWidth="280" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Text="Пункты меню:"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,8" />
+
+            <DataGrid Grid.Row="1"
+                      ItemsSource="{Binding Entries}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="Horizontal"
+                      SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Header="Вкл."
+                                            Width="56"
+                                            Binding="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="DisplayName"
+                                        Width="2*"
+                                        Binding="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="DefaultFolderName"
+                                        Width="2*"
+                                        Binding="{Binding DefaultFolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="EntryId"
+                                        Width="2*"
+                                        IsReadOnly="True"
+                                        Binding="{Binding Id}" />
+                    <DataGridTextColumn Header="Иконка"
+                                        Width="80"
+                                        IsReadOnly="True"
+                                        Binding="{Binding IconState}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    Margin="0,16,0,12">
+            <Button Content="Сохранить"
+                    Command="{Binding SaveCommand}"
+                    MinWidth="120"
+                    Margin="0,0,8,0" />
+            <Button Content="Отменить изменения"
+                    Command="{Binding ReloadCommand}"
+                    MinWidth="160" />
+            <TextBlock Text="{Binding HasUnsavedChanges, StringFormat=Несохранённые изменения: {0}}"
+                       VerticalAlignment="Center"
+                       Margin="16,0,0,0" />
+        </StackPanel>
+
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Text="{Binding StatusMessage}"
+                       TextWrapping="Wrap" />
+            <ItemsControl Grid.Row="1"
+                          ItemsSource="{Binding Errors}"
+                          Margin="0,8,0,0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"
+                                   TextWrapping="Wrap"
+                                   Foreground="#B00020"
+                                   Margin="0,0,0,4" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
     </Grid>
 </Window>

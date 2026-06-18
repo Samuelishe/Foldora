@@ -59,6 +59,8 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 
 `ExplorerIntegrationEnabled` отражает состояние последнего успешного register/unregister flow. `register-menu --dry-run` не меняет этот флаг.
 
+WPF editor phase 1 сохраняет draft в `settings.json` только по кнопке `Сохранить`. Он сохраняет существующее значение `ExplorerIntegrationEnabled`, но не перестраивает registry menu и не меняет этот флаг.
+
 `CreateFolderMenu.Title` является видимым top-level именем legacy Explorer menu. Если title пустой/whitespace при построении registry plan, используется fallback `Создать папку`. Technical registry key остаётся `Foldora` и не зависит от title.
 
 `unregister-menu` меняет только `ExplorerIntegrationEnabled = false` после удаления Foldora-owned registry roots; `CreateFolderMenu.Entries` и title сохраняются.

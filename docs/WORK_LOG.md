@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-06-18 - WPF editor phase 1
+
+- Добавлен Core draft editor для staged-save редактирования `CreateFolderMenu.Title` и существующих `FolderMenuEntry` без WPF/registry-зависимостей.
+- WPF bootstrap-окно заменено на минимальный редактор: title, список entries, `DisplayName`, `DefaultFolderName`, `IsEnabled`, `EntryId`, статус и ошибки.
+- Добавлены ViewModel-классы и команды; code-behind оставлен только для `InitializeComponent`, `DataContext` и initial load.
+- `Сохранить` валидирует draft через существующий Core validation layer и пишет `settings.json` только при отсутствии ошибок.
+- `Отменить изменения` перезагружает draft из сохранённого baseline.
+- WPF phase 1 не выбирает `.ico`, не показывает preview, не добавляет/удаляет entries и не перестраивает registry menu.
+- Добавлены unit-тесты draft editor logic на временном storage root без реального AppData/registry.
+
 ## 2026-06-18 - Documentation consolidation
 
 - Добавлен `docs/PRODUCT_VISION.md` с продуктовой концепцией, главным MVP-объектом `FolderMenuEntry`, ролью packs и принципом freedom with safety.

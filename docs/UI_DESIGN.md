@@ -1,6 +1,6 @@
 # UI Design
 
-Bootstrap WPF UI содержит только окно-заглушку `Foldora`.
+WPF editor phase 1 содержит минимальный редактор существующих пользовательских menu entries.
 
 Целевой WPF MVP описан подробно в `UX_FLOW.md`. Этот документ фиксирует короткие UI-правила, которые должны соблюдаться при реализации.
 
@@ -18,3 +18,22 @@ Bootstrap WPF UI содержит только окно-заглушку `Foldor
 - Ошибки показывать через inline validation, status area или список ошибок/предупреждений. `MessageBox` не должен быть основным UX-механизмом ошибок.
 - Для `DefaultFolderName` при ручном вводе желательно блокировать invalid Windows filename chars; при paste допустимо заменить/удалить их и показать предупреждение. Validator всё равно обязан проверить данные при сохранении.
 - Для preview в WPF MVP можно показывать `.ico` напрямую. Генерация файлов в `%AppData%\Foldora\previews\` остаётся future-задачей.
+
+## Реализовано в phase 1
+
+- Загрузка settings из `%AppData%\Foldora\settings.json`.
+- Показ и редактирование `CreateFolderMenu.Title`.
+- Показ существующих entries.
+- Редактирование `DisplayName`, `DefaultFolderName`, `IsEnabled`.
+- `Сохранить` с validation перед записью settings.
+- `Отменить изменения` с возвратом draft к сохранённому состоянию.
+- Status area и список ошибок без `MessageBox` как основного механизма.
+
+## Не реализовано в phase 1
+
+- Выбор `.ico`.
+- Импорт `.ico`.
+- Preview иконок.
+- Добавление/удаление entries.
+- Registry rebuild после save.
+- Кнопки `Включить меню Проводника`, `Отключить меню Проводника`, `Сбросить меню`.

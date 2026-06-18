@@ -68,7 +68,7 @@ Foldora принимает только настоящие `.ico`: файл до
 
 ## Staged Save
 
-Будущий WPF editor не должен применять изменения сразу:
+WPF editor не должен применять изменения сразу:
 
 ```text
 Открыть Foldora
@@ -84,7 +84,9 @@ Foldora принимает только настоящие `.ico`: файл до
       -> show success/error
 ```
 
-При добавлении/удалении элементов в UI registry не трогать. Registry перестраивать только по явному `Сохранить`.
+При добавлении/удалении элементов в UI registry не трогать. Registry перестраивать только по явному `Сохранить` или отдельному integration action.
+
+Phase 1 WPF editor уже использует draft-состояние для title и существующих entries. Save в этой фазе сохраняет только `settings.json` и не перестраивает registry menu.
 
 Если registry rebuild в будущем упадёт: `Настройки сохранены, но меню Проводника не обновлено.` Не делать сложный rollback settings из-за registry failure.
 

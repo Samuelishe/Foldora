@@ -28,3 +28,5 @@ Validation/model слой находится в `Foldora.Core`, а не в CLI/W
 `ExplorerMenuRegistryWriter` применяет только validated plan через `IRegistryAccess`. `WindowsRegistryAccess` - единственное место, где используется `Microsoft.Win32.Registry`; тесты используют fake/in-memory registry access.
 
 Cleanup flow разделён на две операции. `unregister-menu` удаляет только Foldora-owned registry roots и ставит `ExplorerIntegrationEnabled = false`, не удаляя entries/settings. `menu reset --yes` удаляет те же owned roots, очищает `CreateFolderMenu.Entries`, возвращает title к `Создать папку` и сохраняет settings; AppData root, `settings.json`, packs и импортированные `.ico` не удаляются.
+
+WPF editor phase 1 использует staged-save слой в `Foldora.Core`: `FolderMenuDraftEditor` и `FolderMenuDraftEntry`. Этот слой загружает settings, держит draft-копии, валидирует через существующий validation layer и сохраняет settings только по явному `SaveAsync`. `Foldora.App` содержит ViewModel-слой поверх draft editor; code-behind не содержит бизнес-логики и не пишет registry.
