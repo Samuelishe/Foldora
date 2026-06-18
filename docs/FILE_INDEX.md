@@ -14,13 +14,13 @@
 - `src/Foldora.Core/Menu/FolderMenuSettings.cs` - настройки меню создания папки.
 - `src/Foldora.Core/Menu/FolderMenuNameGenerator.cs` - генератор fallback-имён `Вид N`.
 - `src/Foldora.Core/Menu/IconImportResult.cs` - результат импорта иконки.
-- `src/Foldora.Core/Menu/IconImportService.cs` - импорт `.ico` в AppData.
+- `src/Foldora.Core/Menu/IconImportService.cs` - импорт `.ico` в AppData, включая staged WPF import для существующего entry id.
 - `src/Foldora.Core/Menu/FolderMenuService.cs` - управление пользовательскими пунктами меню.
 - `src/Foldora.Core/Menu/FolderMenuEntryResolver.cs` - поиск enabled entry в settings.
 - `src/Foldora.Core/Menu/FolderMenuEntryActionService.cs` - выполнение apply/create по entry id.
 - `src/Foldora.Core/Menu/UniqueFolderNameService.cs` - подбор свободного имени папки.
-- `src/Foldora.Core/Menu/FolderMenuDraftEntry.cs` - draft-копия entry для staged WPF editor.
-- `src/Foldora.Core/Menu/FolderMenuDraftEditor.cs` - staged-save редактор меню без WPF/registry-зависимостей.
+- `src/Foldora.Core/Menu/FolderMenuDraftEntry.cs` - draft-копия entry для staged WPF editor, включая pending icon source.
+- `src/Foldora.Core/Menu/FolderMenuDraftEditor.cs` - staged-save редактор меню без WPF/registry-зависимостей, add/remove и pending icon import.
 - `src/Foldora.Core/Menu/FolderMenuDraftSaveResult.cs` - результат сохранения draft-состояния меню.
 - `src/Foldora.Core/Validation/DisplayNameValidator.cs` - валидация подписи пункта меню.
 - `src/Foldora.Core/Validation/FolderNameValidator.cs` - валидация имени создаваемой папки.
@@ -61,13 +61,16 @@
 - `src/Foldora.App/Foldora.App.csproj` - WPF settings app.
 - `src/Foldora.App/App.xaml` - WPF application entry.
 - `src/Foldora.App/App.xaml.cs` - WPF app code-behind.
-- `src/Foldora.App/MainWindow.xaml` - минимальный WPF editor phase 1 для title и существующих menu entries.
+- `src/Foldora.App/MainWindow.xaml` - минимальный WPF editor phase 2 для title, entries, add/remove и выбора `.ico`.
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI plumbing и установка `DataContext`.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
-- `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor phase 1.
+- `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor phase 2.
 - `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню.
 - `src/Foldora.App/ViewModels/RelayCommand.cs` - простая синхронная WPF-команда.
 - `src/Foldora.App/ViewModels/AsyncRelayCommand.cs` - простая асинхронная WPF-команда.
+- `src/Foldora.App/Services/IIconFilePicker.cs` - abstraction выбора `.ico` для WPF.
+- `src/Foldora.App/Services/IconFilePickerResult.cs` - результат выбора `.ico`.
+- `src/Foldora.App/Services/WindowsIconFilePicker.cs` - WPF file picker для `.ico`.
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project.
 - `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser, включая reset confirmation.
 - `tests/Foldora.Tests/Core/FoldoraDataPathsTests.cs` - тесты AppData paths.
@@ -75,7 +78,7 @@
 - `tests/Foldora.Tests/Fixtures/IcoTestFile.cs` - helper минимального ICO fixture.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryTests.cs` - тесты defaults menu entry.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryActionServiceTests.cs` - тесты apply/create по entry id.
-- `tests/Foldora.Tests/Menu/FolderMenuDraftEditorTests.cs` - тесты staged-save draft editor logic.
+- `tests/Foldora.Tests/Menu/FolderMenuDraftEditorTests.cs` - тесты staged-save draft editor logic, add/remove и pending icon import.
 - `tests/Foldora.Tests/Menu/FolderMenuNameGeneratorTests.cs` - тесты fallback-имён.
 - `tests/Foldora.Tests/Menu/IconImportServiceTests.cs` - тесты импорта `.ico`.
 - `tests/Foldora.Tests/Menu/FolderMenuServiceTests.cs` - тесты управления menu entries.

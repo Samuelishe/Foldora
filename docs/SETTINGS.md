@@ -59,7 +59,9 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 
 `ExplorerIntegrationEnabled` отражает состояние последнего успешного register/unregister flow. `register-menu --dry-run` не меняет этот флаг.
 
-WPF editor phase 1 сохраняет draft в `settings.json` только по кнопке `Сохранить`. Он сохраняет существующее значение `ExplorerIntegrationEnabled`, но не перестраивает registry menu и не меняет этот флаг.
+WPF editor phase 2 сохраняет draft в `settings.json` только по кнопке `Сохранить`. Он сохраняет существующее значение `ExplorerIntegrationEnabled`, но не перестраивает registry menu и не меняет этот флаг.
+
+Выбранные в WPF `.ico` до save хранятся только как draft pending source path и не попадают в `settings.json`. Во время save они импортируются в `%AppData%\Foldora\icons\<entry-id>.ico`, после чего постоянный `IconPath` указывает только на AppData-копию.
 
 `CreateFolderMenu.Title` является видимым top-level именем legacy Explorer menu. Если title пустой/whitespace при построении registry plan, используется fallback `Создать папку`. Technical registry key остаётся `Foldora` и не зависит от title.
 

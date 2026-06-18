@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-06-18 - WPF editor phase 2
+
+- WPF editor получил `+ Добавить пункт`, staged удаление entries, row action `Выбрать .ico` и row action `Удалить`.
+- Выбор `.ico` через WPF file picker сохраняет только pending source path в draft; AppData и `settings.json` не меняются до `Сохранить`.
+- `SaveAsync` draft editor валидирует pending `.ico`, импортирует их через `IconImportService` в `%AppData%\Foldora\icons\<entry-id>.ico`, обновляет `IconPath` и затем сохраняет settings.
+- Добавлен App-layer picker abstraction `IIconFilePicker`; file picker не находится в Core и не размещён в code-behind.
+- Удаление entry из WPF остаётся staged и не удаляет импортированные `.ico`; orphan cleanup отложен.
+- Preview, registry rebuild/buttons, reset UI, nested UI и drag-and-drop не реализованы.
+- Расширены unit-тесты draft editor на add/remove/pending icon import/invalid icon/cancel/orphan behavior.
+
 ## 2026-06-18 - WPF editor phase 1
 
 - Добавлен Core draft editor для staged-save редактирования `CreateFolderMenu.Title` и существующих `FolderMenuEntry` без WPF/registry-зависимостей.

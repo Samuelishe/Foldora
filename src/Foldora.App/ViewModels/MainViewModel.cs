@@ -5,6 +5,7 @@ using Foldora.Core.Menu;
 using Foldora.Core.Settings;
 using Foldora.Core.Storage;
 using Foldora.Core.Validation;
+using Foldora.App.Services;
 
 namespace Foldora.App.ViewModels;
 
@@ -14,18 +15,22 @@ namespace Foldora.App.ViewModels;
 public sealed class MainViewModel : INotifyPropertyChanged
 {
     private readonly FolderMenuDraftEditor draftEditor;
+    private readonly IIconFilePicker iconFilePicker;
     private readonly AsyncRelayCommand saveCommand;
     private readonly RelayCommand reloadCommand;
+    private readonly RelayCommand addEntryCommand;
     private string title = "Создать папку";
     private string statusMessage = "Загрузка настроек...";
     private bool hasUnsavedChanges;
 
-    public MainViewModel(FolderMenuDraftEditor draftEditor)
+    public MainViewModel(FolderMenuDraftEditor draftEditor, IIconFilePicker iconFilePicker)
     {
         this.draftEditor = draftEditor ?? throw new ArgumentNullException(nameof(draftEditor));
+        this.iconFilePicker = iconFilePicker ?? throw new ArgumentNullException(nameof(iconFilePicker));
 
         saveCommand = new AsyncRelayCommand(SaveAsync, () => HasUnsavedChanges);
         reloadCommand = new RelayCommand(ReloadDraft, () => HasUnsavedChanges);
+        addEntryCommand = new RelayCommand(AddEntry);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -37,6 +42,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public AsyncRelayCommand SaveCommand => saveCommand;
 
     public RelayCommand ReloadCommand => reloadCommand;
+
+    public RelayCommand AddEntryCommand => addEntryCommand;
 
     public string Title
     {
@@ -93,7 +100,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     {
         var paths = FoldoraDataPaths.CreateDefault();
         var storage = new FoldoraSettingsStorage(paths);
-        return new MainViewModel(new FolderMenuDraftEditor(storage));
+        return new MainViewModel(new FolderMenuDraftEditor(storage, paths), new WindowsIconFilePicker());
     }
 
     public async Task LoadAsync(CancellationToken cancellationToken = default)
@@ -143,6 +150,59 @@ public sealed class MainViewModel : INotifyPropertyChanged
         RefreshDirtyState();
     }
 
+    private void AddEntry()
+    {
+        var entry = draftEditor.AddEntry();
+        Entries.Add(CreateEntryViewModel(entry));
+        Errors.Clear();
+        OnPropertyChanged(nameof(HasErrors));
+        StatusMessage = "Добавлен draft-пункт. Выберите .ico перед сохранением.";
+        RefreshDirtyState();
+    }
+
+    private async Task ChooseIconAsync(FolderMenuEntryViewModel entry)
+    {
+        var result = iconFilePicker.PickIcon();
+        if (!result.Selected)
+        {
+            return;
+        }
+
+        Errors.Clear();
+        var validation = draftEditor.SetPendingIconSource(entry.Id, result.FilePath!);
+        if (!validation.IsValid)
+        {
+            foreach (var issue in validation.Issues.Where(issue => issue.Severity == FolderMenuValidationSeverity.Error))
+            {
+                Errors.Add(FormatIssue(issue));
+            }
+
+            OnPropertyChanged(nameof(HasErrors));
+            StatusMessage = "Иконка не выбрана. Исправьте ошибку файла.";
+            return;
+        }
+
+        entry.RefreshIconState();
+        OnPropertyChanged(nameof(HasErrors));
+        StatusMessage = "Иконка выбрана и будет импортирована при сохранении.";
+        RefreshDirtyState();
+        await Task.CompletedTask;
+    }
+
+    private void RemoveEntry(FolderMenuEntryViewModel entry)
+    {
+        if (!draftEditor.RemoveEntry(entry.Id))
+        {
+            return;
+        }
+
+        Entries.Remove(entry);
+        Errors.Clear();
+        OnPropertyChanged(nameof(HasErrors));
+        StatusMessage = "Пункт удалён из draft. Файлы и настройки изменятся только после сохранения.";
+        RefreshDirtyState();
+    }
+
     private void LoadDraftIntoViewModels()
     {
         title = draftEditor.Title;
@@ -151,8 +211,13 @@ public sealed class MainViewModel : INotifyPropertyChanged
         Entries.Clear();
         foreach (var entry in draftEditor.Entries)
         {
-            Entries.Add(new FolderMenuEntryViewModel(entry, RefreshDirtyState));
+            Entries.Add(CreateEntryViewModel(entry));
         }
+    }
+
+    private FolderMenuEntryViewModel CreateEntryViewModel(FolderMenuDraftEntry entry)
+    {
+        return new FolderMenuEntryViewModel(entry, RefreshDirtyState, ChooseIconAsync, RemoveEntry);
     }
 
     private void RefreshDirtyState()

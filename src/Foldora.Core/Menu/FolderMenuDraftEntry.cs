@@ -13,7 +13,9 @@ public sealed class FolderMenuDraftEntry
 
     public string DefaultFolderName { get; set; } = FolderNameValidator.DefaultFolderName;
 
-    public string IconPath { get; init; } = string.Empty;
+    public string IconPath { get; set; } = string.Empty;
+
+    public string? PendingIconSourcePath { get; set; }
 
     public string? PreviewPath { get; init; }
 
@@ -39,12 +41,17 @@ public sealed class FolderMenuDraftEntry
 
     public FolderMenuEntry ToEntry()
     {
+        return ToEntry(IconPath);
+    }
+
+    public FolderMenuEntry ToEntry(string iconPath)
+    {
         return new FolderMenuEntry
         {
             Id = Id,
             DisplayName = DisplayName,
             DefaultFolderName = DefaultFolderName,
-            IconPath = IconPath,
+            IconPath = iconPath,
             PreviewPath = PreviewPath,
             SortOrder = SortOrder,
             IsEnabled = IsEnabled

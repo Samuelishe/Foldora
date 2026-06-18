@@ -70,9 +70,29 @@
                                         IsReadOnly="True"
                                         Binding="{Binding Id}" />
                     <DataGridTextColumn Header="Иконка"
-                                        Width="80"
+                                        Width="2*"
                                         IsReadOnly="True"
                                         Binding="{Binding IconState}" />
+                    <DataGridTemplateColumn Header=""
+                                            Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Выбрать .ico"
+                                        Command="{Binding ChooseIconCommand}"
+                                        Padding="8,2" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header=""
+                                            Width="84">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Удалить"
+                                        Command="{Binding RemoveCommand}"
+                                        Padding="8,2" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
@@ -80,6 +100,10 @@
         <StackPanel Grid.Row="3"
                     Orientation="Horizontal"
                     Margin="0,16,0,12">
+            <Button Content="+ Добавить пункт"
+                    Command="{Binding AddEntryCommand}"
+                    MinWidth="140"
+                    Margin="0,0,8,0" />
             <Button Content="Сохранить"
                     Command="{Binding SaveCommand}"
                     MinWidth="120"

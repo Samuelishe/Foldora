@@ -1,6 +1,7 @@
 using Foldora.Core.Menu;
 using Foldora.Core.Settings;
 using Foldora.Core.Storage;
+using Foldora.Tests.Fixtures;
 
 namespace Foldora.Tests.Menu;
 
@@ -239,6 +240,302 @@ public sealed class FolderMenuDraftEditorTests
         }
     }
 
+    [Fact]
+    public async Task AddEntry_CreatesDraftEntryOnly()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(paths, false, "Создать папку");
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var entry = editor.AddEntry();
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.StartsWith("entry-", entry.Id, StringComparison.Ordinal);
+            Assert.Equal("Вид 1", entry.DisplayName);
+            Assert.Equal("Новая папка", entry.DefaultFolderName);
+            Assert.True(entry.IsEnabled);
+            Assert.True(editor.HasUnsavedChanges);
+            Assert.Empty(saved.CreateFolderMenu.Entries);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task AddEntry_UsesNextFallbackName()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(paths, false, "Создать папку", CreateEntry("entry-view-1", "Вид 1", "Новая папка", true));
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var entry = editor.AddEntry();
+
+            Assert.Equal("Вид 2", entry.DisplayName);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task Reload_DiscardsAddedEntryAndPendingIcon()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            var sourceIcon = Path.Combine(root.FullName, "source.ico");
+            await IcoTestFile.WriteValidAsync(sourceIcon);
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var entry = editor.AddEntry();
+            var iconResult = editor.SetPendingIconSource(entry.Id, sourceIcon);
+            editor.Reload();
+
+            Assert.True(iconResult.IsValid);
+            Assert.Empty(editor.Entries);
+            Assert.False(editor.HasUnsavedChanges);
+            Assert.Empty(Directory.Exists(paths.IconsDirectory)
+                ? Directory.GetFiles(paths.IconsDirectory, "*.ico")
+                : []);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task RemoveEntry_IsStagedUntilSave()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(paths, false, "Создать папку", CreateEntry("entry-skull", "Череп", "Череп", true));
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var removed = editor.RemoveEntry("entry-skull");
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.True(removed);
+            Assert.Empty(editor.Entries);
+            Assert.Single(saved.CreateFolderMenu.Entries);
+            Assert.True(editor.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task Reload_RestoresRemovedEntry()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(paths, false, "Создать папка", CreateEntry("entry-skull", "Череп", "Череп", true));
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            editor.RemoveEntry("entry-skull");
+            editor.Reload();
+
+            Assert.Single(editor.Entries);
+            Assert.Equal("entry-skull", editor.Entries[0].Id);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task SaveAsync_PersistsAddedEntryWithPendingIcon()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            var sourceIcon = Path.Combine(root.FullName, "source.ico");
+            await IcoTestFile.WriteValidAsync(sourceIcon);
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var entry = editor.AddEntry();
+            editor.SetPendingIconSource(entry.Id, sourceIcon);
+            var result = await editor.SaveAsync();
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.True(result.Saved);
+            var savedEntry = Assert.Single(saved.CreateFolderMenu.Entries);
+            Assert.Equal(entry.Id, savedEntry.Id);
+            Assert.Equal(Path.Combine(paths.IconsDirectory, $"{entry.Id}.ico"), savedEntry.IconPath);
+            Assert.True(File.Exists(savedEntry.IconPath));
+            Assert.False(editor.Entries[0].PendingIconSourcePath is not null);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task SaveAsync_PersistsRemovalButDoesNotDeleteImportedIcon()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            var entry = CreateEntry("entry-skull", "Череп", "Череп", true);
+            await SaveSettingsAsync(paths, false, "Создать папку", entry);
+            var savedBefore = await new FoldoraSettingsStorage(paths).LoadAsync();
+            var iconPath = savedBefore.CreateFolderMenu.Entries[0].IconPath;
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            editor.RemoveEntry("entry-skull");
+            var result = await editor.SaveAsync();
+            var savedAfter = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.True(result.Saved);
+            Assert.Empty(savedAfter.CreateFolderMenu.Entries);
+            Assert.True(File.Exists(iconPath));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task SetPendingIconSource_DoesNotImmediatelyChangeSettings()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(paths, false, "Создать папку", CreateEntry("entry-skull", "Череп", "Череп", true));
+            var original = await new FoldoraSettingsStorage(paths).LoadAsync();
+            var originalIconPath = original.CreateFolderMenu.Entries[0].IconPath;
+            var sourceIcon = Path.Combine(root.FullName, "new.ico");
+            await IcoTestFile.WriteValidAsync(sourceIcon);
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var validation = editor.SetPendingIconSource("entry-skull", sourceIcon);
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.True(validation.IsValid);
+            Assert.Equal(originalIconPath, saved.CreateFolderMenu.Entries[0].IconPath);
+            Assert.Equal(sourceIcon, editor.Entries[0].PendingIconSourcePath);
+            Assert.True(editor.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task Reload_ClearsPendingIconSourceAndDoesNotChangeSettings()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(paths, false, "Создать папку", CreateEntry("entry-skull", "Череп", "Череп", true));
+            var original = await new FoldoraSettingsStorage(paths).LoadAsync();
+            var sourceIcon = Path.Combine(root.FullName, "new.ico");
+            await IcoTestFile.WriteValidAsync(sourceIcon);
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            editor.SetPendingIconSource("entry-skull", sourceIcon);
+            editor.Reload();
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.Null(editor.Entries[0].PendingIconSourcePath);
+            Assert.Equal(original.CreateFolderMenu.Entries[0].IconPath, saved.CreateFolderMenu.Entries[0].IconPath);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task SetPendingIconSource_RejectsInvalidIcon()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(paths, false, "Создать папку", CreateEntry("entry-skull", "Череп", "Череп", true));
+            var invalidIcon = Path.Combine(root.FullName, "bad.ico");
+            await File.WriteAllTextAsync(invalidIcon, "not ico");
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var validation = editor.SetPendingIconSource("entry-skull", invalidIcon);
+
+            Assert.False(validation.IsValid);
+            Assert.Contains(validation.Issues, issue => issue.Code is "icon_header_invalid" or "icon_header_too_small");
+            Assert.Null(editor.Entries[0].PendingIconSourcePath);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task SaveAsync_BlocksAddedEntryWithoutIcon()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var editor = CreateEditor(root.FullName);
+            await editor.LoadAsync();
+
+            editor.AddEntry();
+            var result = await editor.SaveAsync();
+
+            Assert.False(result.Saved);
+            Assert.Contains(result.Issues, issue => issue.Code == "entry_icon_path_empty");
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
     private static FolderMenuDraftEditor CreateEditor(string root)
     {
         return CreateEditor(CreatePaths(root));
@@ -246,7 +543,7 @@ public sealed class FolderMenuDraftEditorTests
 
     private static FolderMenuDraftEditor CreateEditor(FoldoraDataPaths paths)
     {
-        return new FolderMenuDraftEditor(new FoldoraSettingsStorage(paths));
+        return new FolderMenuDraftEditor(new FoldoraSettingsStorage(paths), paths);
     }
 
     private static FoldoraDataPaths CreatePaths(string root)
@@ -265,6 +562,13 @@ public sealed class FolderMenuDraftEditorTests
             ExplorerIntegrationEnabled = explorerIntegrationEnabled,
             CreateFolderMenu = new FolderMenuSettings { Title = title }
         };
+        foreach (var entry in entries)
+        {
+            var iconPath = Path.Combine(paths.IconsDirectory, $"{entry.Id}.ico");
+            await IcoTestFile.WriteValidAsync(iconPath);
+            entry.IconPath = iconPath;
+        }
+
         settings.CreateFolderMenu.Entries.AddRange(entries);
 
         await new FoldoraSettingsStorage(paths).SaveAsync(settings);
