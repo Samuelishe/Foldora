@@ -81,7 +81,7 @@ Placeholder policy на текущем этапе:
 
 ## Desktop Placement Limitation
 
-Legacy registry context menu передаёт Foldora target directory path (`%1` или `%V`), но не передаёт cursor coordinates или координаты desktop icon-view. Поэтому при создании папки из desktop background menu Foldora может создать папку в правильной директории, но позицию нового значка на рабочем столе выбирает Explorer.
+Legacy registry context menu передаёт Foldora target directory path (`%1` или `%V`), но не передаёт cursor coordinates или координаты desktop icon-view. Поэтому при создании папки из desktop background menu Foldora создаёт папку в правильной target directory, но позицию нового значка на рабочем столе выбирает Explorer.
 
 Создание папки именно под курсором не поддерживается текущей MVP-интеграцией. Для такого поведения нужен отдельный advanced shell integration path, например `IExplorerCommand`, COM shell extension, работа с Explorer view positioning или другой глубокий shell layer. Это future/non-MVP и не должно решаться registry/placeholder hacks.
 
@@ -90,6 +90,15 @@ Legacy registry context menu передаёт Foldora target directory path (`%1
 Explorer menu commands в итоге вызывают `DesktopIniService` через Core action services. Для новых папок используется default `DesktopIniAttributePolicy.ReadOnlyFolderHiddenDesktopIni`: folder получает `ReadOnly`, а `desktop.ini` получает только `Hidden`.
 
 Этот default выбран после ручной проверки Windows 11, потому что `System` на папке или `desktop.ini` вызывает плохой deletion UX. Старые папки, созданные прежней policy `CompatibilitySystem`, автоматически не исправляются и могут сохранять warning при удалении.
+
+Ручная проверка default policy подтвердила:
+
+```text
+folder attrib: R
+desktop.ini attrib: H
+custom icon survives Explorer refresh/reopen
+deletion warning caused by System attributes is gone for new folders
+```
 
 ## Registry Writer
 

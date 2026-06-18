@@ -48,7 +48,6 @@ Modern context menu, installer/MSIX, pack import/export, preview generation, nes
 
 Отдельные post-MVP investigation tracks:
 
-- Реализовать будущую repair/normalize command для старых папок, созданных прежней `desktop.ini` policy, если это потребуется после дополнительной ручной проверки.
 - Исследовать создание desktop icon под курсором только через advanced shell integration layer (`IExplorerCommand`, COM shell extension, Explorer view positioning или другой явный path). MVP legacy registry menu получает только target directory path и не решает позиционирование.
 
 Текущая ручная разработка должна указывать registry menu на Debug MenuHost path:

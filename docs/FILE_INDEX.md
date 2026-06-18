@@ -2,7 +2,7 @@
 
 - `Foldora.sln` - solution.
 - `.gitignore` - исключения для .NET/WPF и локальных файлов.
-- `README.md` - краткое описание репозитория.
+- `README.md` - публичный GitHub README: краткое описание продукта, текущие возможности, ограничения, build/run и базовые CLI-примеры.
 - `AGENTS.md` - правила для будущих агентных сессий.
 - `src/Foldora.Core/Foldora.Core.csproj` - доменная библиотека.
 - `src/Foldora.Core/Models/IconPack.cs` - модель набора иконок.

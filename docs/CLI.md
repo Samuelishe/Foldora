@@ -89,4 +89,4 @@ foldora diagnostics desktop-ini-policy --target "C:\Users\User\Desktop" --icon "
 
 После запуска нужно вручную проверить, видна ли кастомная иконка после refresh/reopen Explorer и появляется ли warning при удалении папки.
 
-Текущий production default уже выбран: `ReadOnlyFolderHiddenDesktopIni`. Остальные policies оставлены для diagnostics и regression/manual verification.
+Текущий production default уже выбран: `ReadOnlyFolderHiddenDesktopIni`. Остальные policies оставлены для diagnostics и regression/manual verification. Команда diagnostics не выполняет repair/migration старых папок.

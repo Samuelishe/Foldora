@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-06-18 - Documentation cleanup and public README
+
+- Root `README.md` переписан как публичная GitHub-страница проекта: продуктовая идея, early MVP status, Windows 11/.NET 10/WPF stack, текущие возможности, ограничения, build/run и базовые CLI-примеры.
+- `docs/DESKTOP_INI.md` уточняет результат ручной проверки default policy `ReadOnlyFolderHiddenDesktopIni`: folder attrib `R`, `desktop.ini` attrib `H`, custom icon сохраняется после refresh/reopen Explorer, deletion warnings из-за `System` attributes исчезли для новых папок.
+- Зафиксировано, что старые папки с прежней `CompatibilitySystem` policy не мигрируются автоматически, и это нормально для текущего MVP.
+- Repair/normalize command убрана из roadmap как ближайший investigation track; оставлена только как low-priority optional future idea при реальной потребности.
+- `docs/SHELL_INTEGRATION.md` дополнительно фиксирует limitation legacy menu: Foldora создаёт папку в target directory, но Explorer выбирает позицию desktop icon; размещение строго под курсором не поддерживается текущим MVP.
+- Production-код не менялся.
+
 ## 2026-06-18 - Desktop.ini production default policy
 
 - После ручной проверки Windows 11 production default изменён на `ReadOnlyFolderHiddenDesktopIni`.

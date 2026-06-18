@@ -19,7 +19,18 @@ IconResource=<absolute-path-to-icon>,0
 
 Это текущая default policy `ReadOnlyFolderHiddenDesktopIni`. Она выбрана после ручной проверки на Windows 11: custom icon остаётся видимой после refresh/reopen Explorer, а deletion warning, связанный с `System` attributes, исчезает для новых папок.
 
-Старые папки, созданные прежней policy, могут иметь folder `System` и `desktop.ini` `Hidden + System`. Foldora не мигрирует и не чинит такие папки автоматически в этом шаге; они могут продолжать показывать warning при удалении. Отдельная repair/normalize command рассматривается как future work.
+Фактический результат ручной проверки:
+
+```text
+attrib папки: R
+attrib desktop.ini: H
+кастомная иконка работает
+после обновления/переоткрытия Explorer иконка не пропадает
+warning про системный desktop.ini исчез
+warning про системную папку исчез для новых папок
+```
+
+Старые папки, созданные прежней policy, могут иметь folder `System` и `desktop.ini` `Hidden + System`. Foldora не мигрирует и не чинит такие папки автоматически. Это нормально для текущего MVP: старые тестовые папки в текущем рабочем сценарии не нужны, а repair/normalize command не добавляется без реальной пользовательской потребности.
 
 ## Attribute Policies
 
@@ -60,6 +71,8 @@ Manual checklist:
 5. Зафиксировать, где появляется warning про системный `desktop.ini`.
 
 Diagnostic command ничего не пишет в registry, не требует admin rights и не трогает папки вне явно указанного `--target`.
+
+Diagnostic command сохранена для regression/manual verification. Она не является repair/migration flow.
 
 Алгоритм `clear`:
 
