@@ -16,6 +16,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 {
     private readonly FolderMenuDraftEditor draftEditor;
     private readonly IIconFilePicker iconFilePicker;
+    private readonly IIconPreviewService iconPreviewService;
     private readonly AsyncRelayCommand saveCommand;
     private readonly RelayCommand reloadCommand;
     private readonly RelayCommand addEntryCommand;
@@ -23,10 +24,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private string statusMessage = "Загрузка настроек...";
     private bool hasUnsavedChanges;
 
-    public MainViewModel(FolderMenuDraftEditor draftEditor, IIconFilePicker iconFilePicker)
+    public MainViewModel(
+        FolderMenuDraftEditor draftEditor,
+        IIconFilePicker iconFilePicker,
+        IIconPreviewService iconPreviewService)
     {
         this.draftEditor = draftEditor ?? throw new ArgumentNullException(nameof(draftEditor));
         this.iconFilePicker = iconFilePicker ?? throw new ArgumentNullException(nameof(iconFilePicker));
+        this.iconPreviewService = iconPreviewService ?? throw new ArgumentNullException(nameof(iconPreviewService));
 
         saveCommand = new AsyncRelayCommand(SaveAsync, () => HasUnsavedChanges);
         reloadCommand = new RelayCommand(ReloadDraft, () => HasUnsavedChanges);
@@ -100,7 +105,10 @@ public sealed class MainViewModel : INotifyPropertyChanged
     {
         var paths = FoldoraDataPaths.CreateDefault();
         var storage = new FoldoraSettingsStorage(paths);
-        return new MainViewModel(new FolderMenuDraftEditor(storage, paths), new WindowsIconFilePicker());
+        return new MainViewModel(
+            new FolderMenuDraftEditor(storage, paths),
+            new WindowsIconFilePicker(),
+            new WpfIconPreviewService());
     }
 
     public async Task LoadAsync(CancellationToken cancellationToken = default)
@@ -217,7 +225,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     private FolderMenuEntryViewModel CreateEntryViewModel(FolderMenuDraftEntry entry)
     {
-        return new FolderMenuEntryViewModel(entry, RefreshDirtyState, ChooseIconAsync, RemoveEntry);
+        return new FolderMenuEntryViewModel(entry, iconPreviewService, RefreshDirtyState, ChooseIconAsync, RemoveEntry);
     }
 
     private void RefreshDirtyState()

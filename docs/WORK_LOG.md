@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-06-18 - WPF editor phase 3
+
+- Добавлен App/WPF preview service для прямой загрузки `.ico` без генерации файлов в `%AppData%\Foldora\previews`.
+- Entry rows теперь показывают preview около 50x50 для saved `IconPath` и pending выбранной `.ico`.
+- Pending icon preview обновляется до save, но импорт в AppData по-прежнему происходит только при `Сохранить`.
+- Missing/corrupt icon preview возвращает structured result и не валит окно; UI показывает empty preview/status.
+- Core project остаётся без WPF-зависимостей; preview loading находится только в `Foldora.App`.
+- Тесты переведены на `net10.0-windows` для проверки WPF preview service; добавлены tests для valid/missing/corrupt preview и project boundary.
+
 ## 2026-06-18 - WPF editor phase 2
 
 - WPF editor получил `+ Добавить пункт`, staged удаление entries, row action `Выбрать .ico` и row action `Удалить`.

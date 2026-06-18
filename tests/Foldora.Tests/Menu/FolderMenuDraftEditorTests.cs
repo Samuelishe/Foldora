@@ -392,6 +392,7 @@ public sealed class FolderMenuDraftEditorTests
             var savedEntry = Assert.Single(saved.CreateFolderMenu.Entries);
             Assert.Equal(entry.Id, savedEntry.Id);
             Assert.Equal(Path.Combine(paths.IconsDirectory, $"{entry.Id}.ico"), savedEntry.IconPath);
+            Assert.Null(savedEntry.PreviewPath);
             Assert.True(File.Exists(savedEntry.IconPath));
             Assert.False(editor.Entries[0].PendingIconSourcePath is not null);
         }

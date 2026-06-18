@@ -61,21 +61,26 @@
 - `src/Foldora.App/Foldora.App.csproj` - WPF settings app.
 - `src/Foldora.App/App.xaml` - WPF application entry.
 - `src/Foldora.App/App.xaml.cs` - WPF app code-behind.
-- `src/Foldora.App/MainWindow.xaml` - минимальный WPF editor phase 2 для title, entries, add/remove и выбора `.ico`.
+- `src/Foldora.App/MainWindow.xaml` - минимальный WPF editor phase 3 для title, entries, add/remove, выбора `.ico` и preview.
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI plumbing и установка `DataContext`.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
-- `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor phase 2.
-- `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню.
+- `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor phase 3.
+- `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню с icon status и preview.
 - `src/Foldora.App/ViewModels/RelayCommand.cs` - простая синхронная WPF-команда.
 - `src/Foldora.App/ViewModels/AsyncRelayCommand.cs` - простая асинхронная WPF-команда.
 - `src/Foldora.App/Services/IIconFilePicker.cs` - abstraction выбора `.ico` для WPF.
 - `src/Foldora.App/Services/IconFilePickerResult.cs` - результат выбора `.ico`.
 - `src/Foldora.App/Services/WindowsIconFilePicker.cs` - WPF file picker для `.ico`.
-- `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project.
+- `src/Foldora.App/Services/IIconPreviewService.cs` - abstraction загрузки `.ico` preview для WPF.
+- `src/Foldora.App/Services/IconPreviewResult.cs` - structured result загрузки preview.
+- `src/Foldora.App/Services/WpfIconPreviewService.cs` - WPF decoder preview из `.ico` без генерации файлов.
+- `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project на `net10.0-windows`.
+- `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.
+- `tests/Foldora.Tests/App/WpfIconPreviewServiceTests.cs` - тесты WPF preview service.
 - `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser, включая reset confirmation.
 - `tests/Foldora.Tests/Core/FoldoraDataPathsTests.cs` - тесты AppData paths.
 - `tests/Foldora.Tests/Core/DesktopIniServiceTests.cs` - тесты desktop.ini.
-- `tests/Foldora.Tests/Fixtures/IcoTestFile.cs` - helper минимального ICO fixture.
+- `tests/Foldora.Tests/Fixtures/IcoTestFile.cs` - helper ICO fixture для structural validation и WPF preview.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryTests.cs` - тесты defaults menu entry.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryActionServiceTests.cs` - тесты apply/create по entry id.
 - `tests/Foldora.Tests/Menu/FolderMenuDraftEditorTests.cs` - тесты staged-save draft editor logic, add/remove и pending icon import.

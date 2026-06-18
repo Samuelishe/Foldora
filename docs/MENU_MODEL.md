@@ -88,6 +88,8 @@ WPF editor не должен применять изменения сразу:
 
 Phase 2 WPF editor использует draft-состояние для title, entries, add/remove и pending icon source. Выбранный `.ico` хранится как pending source path и не становится постоянным `IconPath` до `Save`. Save импортирует pending icons в `%AppData%\Foldora\icons\<entry-id>.ico`, сохраняет `settings.json` и не перестраивает registry menu.
 
+Phase 3 WPF editor показывает preview напрямую из pending source path или saved `IconPath`. Preview не меняет модель entries, не пишет `PreviewPath` и не создаёт файлы в `%AppData%\Foldora\previews`.
+
 Удаление entry в WPF phase 2 не удаляет импортированный `.ico`; orphan icon cleanup является отдельной будущей задачей.
 
 Если registry rebuild в будущем упадёт: `Настройки сохранены, но меню Проводника не обновлено.` Не делать сложный rollback settings из-за registry failure.

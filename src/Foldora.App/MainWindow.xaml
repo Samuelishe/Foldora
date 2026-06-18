@@ -54,8 +54,28 @@
                       CanUserDeleteRows="False"
                       HeadersVisibility="Column"
                       GridLinesVisibility="Horizontal"
-                      SelectionMode="Single">
+                      SelectionMode="Single"
+                      RowHeight="62">
                 <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Preview"
+                                            Width="72">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border Width="52"
+                                        Height="52"
+                                        BorderBrush="#CCCCCC"
+                                        BorderThickness="1"
+                                        Background="#FAFAFA"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                    <Image Source="{Binding IconPreview}"
+                                           Width="50"
+                                           Height="50"
+                                           Stretch="Uniform" />
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridCheckBoxColumn Header="Вкл."
                                             Width="56"
                                             Binding="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

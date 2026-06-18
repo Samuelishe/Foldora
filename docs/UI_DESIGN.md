@@ -1,6 +1,6 @@
 # UI Design
 
-WPF editor phase 2 содержит минимальный редактор пользовательских menu entries с add/remove и staged выбором `.ico`.
+WPF editor phase 3 содержит минимальный редактор пользовательских menu entries с add/remove, staged выбором `.ico` и прямым preview.
 
 Целевой WPF MVP описан подробно в `UX_FLOW.md`. Этот документ фиксирует короткие UI-правила, которые должны соблюдаться при реализации.
 
@@ -19,7 +19,7 @@ WPF editor phase 2 содержит минимальный редактор по
 - Для `DefaultFolderName` при ручном вводе желательно блокировать invalid Windows filename chars; при paste допустимо заменить/удалить их и показать предупреждение. Validator всё равно обязан проверить данные при сохранении.
 - Для preview в WPF MVP можно показывать `.ico` напрямую. Генерация файлов в `%AppData%\Foldora\previews\` остаётся future-задачей.
 
-## Реализовано в phase 2
+## Реализовано в phase 3
 
 - Загрузка settings из `%AppData%\Foldora\settings.json`.
 - Показ и редактирование `CreateFolderMenu.Title`.
@@ -29,13 +29,14 @@ WPF editor phase 2 содержит минимальный редактор по
 - Удаление draft entry.
 - Выбор `.ico` через file picker.
 - Staged import выбранных `.ico` только при `Сохранить`.
+- Preview `.ico` около 50x50 для saved и pending icon path.
 - `Сохранить` с validation перед записью settings.
 - `Отменить изменения` с возвратом draft к сохранённому состоянию.
 - Status area и список ошибок без `MessageBox` как основного механизма.
 
-## Не реализовано в phase 2
+## Не реализовано в phase 3
 
-- Preview иконок.
+- Preview file generation/cache в `%AppData%\Foldora\previews`.
 - Registry rebuild после save.
 - Кнопки `Включить меню Проводника`, `Отключить меню Проводника`, `Сбросить меню`.
 - Drag-and-drop.

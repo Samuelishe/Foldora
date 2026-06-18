@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows.Media;
+using Foldora.App.Services;
 using Foldora.Core.Menu;
 
 namespace Foldora.App.ViewModels;
@@ -11,22 +13,26 @@ namespace Foldora.App.ViewModels;
 public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
 {
     private readonly FolderMenuDraftEntry draftEntry;
+    private readonly IIconPreviewService iconPreviewService;
     private readonly Action changed;
     private readonly Func<FolderMenuEntryViewModel, Task> chooseIconAsync;
     private readonly Action<FolderMenuEntryViewModel> remove;
 
     public FolderMenuEntryViewModel(
         FolderMenuDraftEntry draftEntry,
+        IIconPreviewService iconPreviewService,
         Action changed,
         Func<FolderMenuEntryViewModel, Task> chooseIconAsync,
         Action<FolderMenuEntryViewModel> remove)
     {
         this.draftEntry = draftEntry ?? throw new ArgumentNullException(nameof(draftEntry));
+        this.iconPreviewService = iconPreviewService ?? throw new ArgumentNullException(nameof(iconPreviewService));
         this.changed = changed ?? throw new ArgumentNullException(nameof(changed));
         this.chooseIconAsync = chooseIconAsync ?? throw new ArgumentNullException(nameof(chooseIconAsync));
         this.remove = remove ?? throw new ArgumentNullException(nameof(remove));
         ChooseIconCommand = new AsyncRelayCommand(() => this.chooseIconAsync(this));
         RemoveCommand = new RelayCommand(() => this.remove(this));
+        RefreshIconPreview();
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -39,6 +45,11 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
         {
             if (!string.IsNullOrWhiteSpace(draftEntry.PendingIconSourcePath))
             {
+                if (!string.IsNullOrWhiteSpace(IconPreviewError))
+                {
+                    return $"preview не загружен: {Path.GetFileName(draftEntry.PendingIconSourcePath)}";
+                }
+
                 return $"будет обновлена: {Path.GetFileName(draftEntry.PendingIconSourcePath)}";
             }
 
@@ -47,13 +58,24 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
                 return "нет";
             }
 
-            return File.Exists(draftEntry.IconPath)
+            if (!File.Exists(draftEntry.IconPath))
+            {
+                return "не найдена";
+            }
+
+            return string.IsNullOrWhiteSpace(IconPreviewError)
                 ? $"есть: {Path.GetFileName(draftEntry.IconPath)}"
-                : "не найдена";
+                : "preview не загружен";
         }
     }
 
     public string IconPath => draftEntry.IconPath;
+
+    public ImageSource? IconPreview { get; private set; }
+
+    public bool HasIconPreview => IconPreview is not null;
+
+    public string? IconPreviewError { get; private set; }
 
     public AsyncRelayCommand ChooseIconCommand { get; }
 
@@ -93,8 +115,26 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
 
     public void RefreshIconState()
     {
+        RefreshIconPreview();
         OnPropertyChanged(nameof(IconState));
         OnPropertyChanged(nameof(IconPath));
+    }
+
+    private void RefreshIconPreview()
+    {
+        var preview = iconPreviewService.LoadPreview(GetPreviewIconPath());
+        IconPreview = preview.Image;
+        IconPreviewError = preview.ErrorMessage;
+        OnPropertyChanged(nameof(IconPreview));
+        OnPropertyChanged(nameof(HasIconPreview));
+        OnPropertyChanged(nameof(IconPreviewError));
+    }
+
+    private string? GetPreviewIconPath()
+    {
+        return string.IsNullOrWhiteSpace(draftEntry.PendingIconSourcePath)
+            ? draftEntry.IconPath
+            : draftEntry.PendingIconSourcePath;
     }
 
     public bool IsEnabled

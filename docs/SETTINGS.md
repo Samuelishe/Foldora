@@ -63,6 +63,8 @@ WPF editor phase 2 сохраняет draft в `settings.json` только по
 
 Выбранные в WPF `.ico` до save хранятся только как draft pending source path и не попадают в `settings.json`. Во время save они импортируются в `%AppData%\Foldora\icons\<entry-id>.ico`, после чего постоянный `IconPath` указывает только на AppData-копию.
 
+WPF phase 3 preview не меняет JSON format: `PreviewPath` не заполняется, preview-файлы не создаются, `%AppData%\Foldora\previews\` остаётся зарезервированным future layout.
+
 `CreateFolderMenu.Title` является видимым top-level именем legacy Explorer menu. Если title пустой/whitespace при построении registry plan, используется fallback `Создать папку`. Technical registry key остаётся `Foldora` и не зависит от title.
 
 `unregister-menu` меняет только `ExplorerIntegrationEnabled = false` после удаления Foldora-owned registry roots; `CreateFolderMenu.Entries` и title сохраняются.
