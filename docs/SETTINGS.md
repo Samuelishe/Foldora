@@ -67,6 +67,7 @@ WPF startup не должен синхронно читать `settings.json` в
 `DisplayName` и `GroupName` нельзя использовать как имя файла, registry key или stable id.
 Дубликаты `DisplayName` разрешены и сохраняются как пользовательский выбор.
 Одинаковые `GroupName` разрешены и объединяют entries в одно submenu. Старые settings без `groupName` загружаются как root-level entries.
+WPF grouped sections являются presentation layer; пустые группы не сохраняются в JSON как отдельные сущности.
 
 Если старый entry не содержит `DefaultFolderName`, при загрузке используется fallback `Новая папка`.
 

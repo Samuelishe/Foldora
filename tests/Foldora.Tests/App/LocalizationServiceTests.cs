@@ -38,5 +38,9 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Group:", english.Resources.EntryGroupName);
         Assert.Equal("Оставьте пустым, чтобы пункт был в корне меню.", russian.Resources.EntryGroupHelp);
         Assert.Equal("Leave empty to place the entry in the root menu.", english.Resources.EntryGroupHelp);
+        Assert.Equal("+ Добавить группу", russian.Resources.AddGroup);
+        Assert.Equal("+ Add group", english.Resources.AddGroup);
+        Assert.Equal("Без группы", russian.Resources.RootGroupTitle);
+        Assert.Equal("No group", english.Resources.RootGroupTitle);
     }
 }

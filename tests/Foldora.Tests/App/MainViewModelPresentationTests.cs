@@ -81,6 +81,78 @@ public sealed class MainViewModelPresentationTests
     }
 
     [Fact]
+    public async Task EntryGroups_ExposeRootAndNamedSections()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var rootEntry = CreateEntry("entry-music", "Музыка");
+            var groupedEntry = CreateEntry("entry-blue", "Синяя");
+            groupedEntry.GroupName = "Цветные";
+            await SaveSettingsAsync(paths, rootEntry, groupedEntry);
+
+            var viewModel = await CreateViewModelAsync(paths);
+
+            Assert.Equal(2, viewModel.EntryGroups.Count);
+            Assert.Equal("Без группы", viewModel.EntryGroups[0].Title);
+            Assert.Single(viewModel.EntryGroups[0].Entries);
+            Assert.Equal("Цветные", viewModel.EntryGroups[1].Title);
+            Assert.Single(viewModel.EntryGroups[1].Entries);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task AddGroupCommand_CreatesDraftEntryInNewGroup()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var viewModel = await CreateViewModelAsync(new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora")));
+
+            viewModel.AddGroupCommand.Execute(null);
+
+            Assert.True(viewModel.HasEntries);
+            Assert.Single(viewModel.Entries);
+            Assert.Equal("Группа 1", viewModel.Entries[0].GroupName);
+            Assert.Equal("Группа 1", viewModel.EntryGroups[0].Title);
+            Assert.True(viewModel.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ChangingGroupName_RebuildsEntryGroups()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, CreateEntry("entry-music", "Музыка"));
+
+            var viewModel = await CreateViewModelAsync(paths);
+            viewModel.Entries[0].GroupName = "Музыка";
+
+            Assert.Single(viewModel.EntryGroups);
+            Assert.Equal("Музыка", viewModel.EntryGroups[0].Title);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task ShowTechnicalDetails_CanBeToggled()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");

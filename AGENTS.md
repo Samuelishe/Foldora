@@ -17,6 +17,7 @@
   - `docs/SHELL_INTEGRATION.md`;
   - `docs/DESKTOP_INI.md`;
   - `docs/SMOKE_TEST.md`;
+  - `docs/RESOURCE_POLICY.md`;
   - `docs/PACKS.md`;
   - `docs/MENU_MODEL.md`;
   - `docs/CLI.md`;

@@ -17,6 +17,10 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string MenuTitle => Get();
     public string MenuEntries => Get();
     public string AddEntry => Get();
+    public string AddGroup => Get();
+    public string RootGroupTitle => Get();
+    public string AddEntryToGroupFormat => Get();
+    public string NewGroupNameBase => Get();
     public string EmptyTitle => Get();
     public string EmptyDescription => Get();
     public string EntryDisplayName => Get();

@@ -77,6 +77,7 @@
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
 - `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands и presentation state для card/list UI.
 - `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню с icon status и preview.
+- `src/Foldora.App/ViewModels/FolderMenuEntryGroupViewModel.cs` - presentation-only секция WPF для визуальной группировки entries по `GroupName`.
 - `src/Foldora.App/ViewModels/SettingsViewModel.cs` - ViewModel настроек языка приложения.
 - `src/Foldora.App/ViewModels/LocalizationResources.cs` - bindable набор локализованных строк для WPF.
 - `src/Foldora.App/ViewModels/RelayCommand.cs` - простая синхронная WPF-команда.
@@ -145,6 +146,7 @@
 - `docs/SHELL_INTEGRATION.md` - shell integration.
 - `docs/DESKTOP_INI.md` - механизм desktop.ini.
 - `docs/SMOKE_TEST.md` - ручной smoke-test checklist для Windows 11 MVP.
+- `docs/RESOURCE_POLICY.md` - правила лицензирования, атрибуции и добавления внешних ресурсов.
 - `docs/PACKS.md` - pack manifest.
 - `docs/MENU_MODEL.md` - модель пользовательского меню, validation, staged-save, nested menu и registry safety.
 - `docs/CLI.md` - CLI.

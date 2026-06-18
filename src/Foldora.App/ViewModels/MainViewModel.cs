@@ -30,6 +30,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private readonly AsyncRelayCommand resetMenuCommand;
     private readonly RelayCommand reloadCommand;
     private readonly RelayCommand addEntryCommand;
+    private readonly RelayCommand addGroupCommand;
     private string title = "Создать папку";
     private string statusMessage = "Загрузка настроек...";
     private bool explorerIntegrationEnabled;
@@ -60,11 +61,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
         resetMenuCommand = new AsyncRelayCommand(ResetMenuAsync, () => IsResetConfirmed);
         reloadCommand = new RelayCommand(ReloadDraft, () => HasUnsavedChanges);
         addEntryCommand = new RelayCommand(AddEntry);
+        addGroupCommand = new RelayCommand(AddGroup);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public ObservableCollection<FolderMenuEntryViewModel> Entries { get; } = [];
+
+    public ObservableCollection<FolderMenuEntryGroupViewModel> EntryGroups { get; } = [];
 
     public ObservableCollection<string> Errors { get; } = [];
 
@@ -89,6 +93,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public RelayCommand ReloadCommand => reloadCommand;
 
     public RelayCommand AddEntryCommand => addEntryCommand;
+
+    public RelayCommand AddGroupCommand => addGroupCommand;
 
     public string Title
     {
@@ -180,6 +186,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
     }
 
     public bool HasEntries => Entries.Count > 0;
+
+    public bool HasEntryGroups => EntryGroups.Count > 0;
 
     public bool HasErrors => Errors.Count > 0;
 
@@ -324,6 +332,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
         localizationService.SetLanguage(result.Language);
         OnPropertyChanged(nameof(L));
+        RebuildEntryGroups();
         StatusMessage = "Настройки сохранены. Некоторые изменения языка могут применяться после перезапуска.";
     }
 
@@ -355,10 +364,22 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     private void AddEntry()
     {
+        AddEntryToGroup(string.Empty);
+    }
+
+    private void AddGroup()
+    {
+        AddEntryToGroup(GetNextGroupName());
+    }
+
+    private void AddEntryToGroup(string groupName)
+    {
         var entry = draftEditor.AddEntry();
+        entry.GroupName = groupName;
         Entries.Add(CreateEntryViewModel(entry));
         Errors.Clear();
         OperationDetails.Clear();
+        RebuildEntryGroups();
         NotifyEntryStateChanged();
         NotifyErrorAndDetailsStateChanged();
         StatusMessage = "Добавлен draft-пункт. Выберите .ico перед сохранением.";
@@ -406,6 +427,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         Entries.Remove(entry);
         Errors.Clear();
         OperationDetails.Clear();
+        RebuildEntryGroups();
         NotifyEntryStateChanged();
         NotifyErrorAndDetailsStateChanged();
         StatusMessage = "Пункт удалён из draft. Файлы и настройки изменятся только после сохранения.";
@@ -423,12 +445,73 @@ public sealed class MainViewModel : INotifyPropertyChanged
             Entries.Add(CreateEntryViewModel(entry));
         }
 
+        RebuildEntryGroups();
         NotifyEntryStateChanged();
     }
 
     private FolderMenuEntryViewModel CreateEntryViewModel(FolderMenuDraftEntry entry)
     {
-        return new FolderMenuEntryViewModel(entry, iconPreviewService, RefreshDirtyState, ChooseIconAsync, RemoveEntry);
+        return new FolderMenuEntryViewModel(entry, iconPreviewService, RefreshDirtyState, OnEntryGroupChanged, ChooseIconAsync, RemoveEntry);
+    }
+
+    private void OnEntryGroupChanged()
+    {
+        RebuildEntryGroups();
+        RefreshDirtyState();
+    }
+
+    private void RebuildEntryGroups()
+    {
+        EntryGroups.Clear();
+
+        var rootEntries = Entries
+            .Where(entry => string.IsNullOrWhiteSpace(entry.GroupName))
+            .ToList();
+        if (rootEntries.Count > 0)
+        {
+            EntryGroups.Add(new FolderMenuEntryGroupViewModel(
+                string.Empty,
+                L.RootGroupTitle,
+                rootEntries,
+                L.AddEntry,
+                AddEntryToGroup));
+        }
+
+        foreach (var group in Entries
+                     .Where(entry => !string.IsNullOrWhiteSpace(entry.GroupName))
+                     .GroupBy(entry => entry.GroupName.Trim(), StringComparer.Ordinal)
+                     .OrderBy(group => Entries.IndexOf(group.First()))
+                     .ThenBy(group => group.Key, StringComparer.Ordinal))
+        {
+            EntryGroups.Add(new FolderMenuEntryGroupViewModel(
+                group.Key,
+                group.Key,
+                group,
+                string.Format(L.AddEntryToGroupFormat, group.Key),
+                AddEntryToGroup));
+        }
+
+        OnPropertyChanged(nameof(EntryGroups));
+        OnPropertyChanged(nameof(HasEntryGroups));
+    }
+
+    private string GetNextGroupName()
+    {
+        var existingNames = Entries
+            .Select(entry => entry.GroupName.Trim())
+            .Where(groupName => !string.IsNullOrWhiteSpace(groupName))
+            .ToHashSet(StringComparer.Ordinal);
+
+        for (var index = 1; index < 1000; index++)
+        {
+            var candidate = $"{L.NewGroupNameBase} {index}";
+            if (!existingNames.Contains(candidate))
+            {
+                return candidate;
+            }
+        }
+
+        return $"{L.NewGroupNameBase} {Guid.NewGuid():N}";
     }
 
     private void RefreshDirtyState()
@@ -439,6 +522,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private void NotifyEntryStateChanged()
     {
         OnPropertyChanged(nameof(HasEntries));
+        OnPropertyChanged(nameof(HasEntryGroups));
     }
 
     private void NotifyErrorAndDetailsStateChanged()

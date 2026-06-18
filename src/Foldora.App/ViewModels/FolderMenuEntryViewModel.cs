@@ -15,6 +15,7 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
     private readonly FolderMenuDraftEntry draftEntry;
     private readonly IIconPreviewService iconPreviewService;
     private readonly Action changed;
+    private readonly Action groupChanged;
     private readonly Func<FolderMenuEntryViewModel, Task> chooseIconAsync;
     private readonly Action<FolderMenuEntryViewModel> remove;
 
@@ -22,12 +23,14 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
         FolderMenuDraftEntry draftEntry,
         IIconPreviewService iconPreviewService,
         Action changed,
+        Action groupChanged,
         Func<FolderMenuEntryViewModel, Task> chooseIconAsync,
         Action<FolderMenuEntryViewModel> remove)
     {
         this.draftEntry = draftEntry ?? throw new ArgumentNullException(nameof(draftEntry));
         this.iconPreviewService = iconPreviewService ?? throw new ArgumentNullException(nameof(iconPreviewService));
         this.changed = changed ?? throw new ArgumentNullException(nameof(changed));
+        this.groupChanged = groupChanged ?? throw new ArgumentNullException(nameof(groupChanged));
         this.chooseIconAsync = chooseIconAsync ?? throw new ArgumentNullException(nameof(chooseIconAsync));
         this.remove = remove ?? throw new ArgumentNullException(nameof(remove));
         ChooseIconCommand = new AsyncRelayCommand(() => this.chooseIconAsync(this));
@@ -125,7 +128,7 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
 
             draftEntry.GroupName = value;
             OnPropertyChanged();
-            changed();
+            groupChanged();
         }
     }
 

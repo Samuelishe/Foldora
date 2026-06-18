@@ -54,6 +54,22 @@ Selecting an entry creates a folder and applies its icon through `desktop.ini`.
 - WPF.
 - xUnit tests.
 
+## Minimum Requirements
+
+To build from source:
+
+- Windows 11.
+- .NET SDK 10.x.
+- PowerShell, Terminal, Rider, Visual Studio Code or another development shell/editor.
+
+To run a published build later:
+
+- Windows 11.
+- .NET 10 runtime / Windows Desktop Runtime, unless the app is published self-contained.
+- Explorer legacy context menu support.
+
+Foldora uses HKCU registry keys only for Explorer integration and does not require administrator rights.
+
 ## Data Location
 
 Foldora stores user data under:
@@ -62,6 +78,8 @@ Foldora stores user data under:
 %AppData%\Foldora\
 %AppData%\Foldora\settings.json
 %AppData%\Foldora\icons\
+%AppData%\Foldora\previews\
+%AppData%\Foldora\packs\
 ```
 
 Imported icons are copied into the `icons` directory. The original source icon file is not used as the permanent menu icon path.
@@ -104,6 +122,18 @@ foldora unregister-menu
 - No user-facing diagnostics if `Foldora.MenuHost.exe` fails when invoked by Explorer.
 - Full runtime localization of all status/error strings is not complete yet.
 - No Explorer restart or icon cache reset flow.
+
+## Safety Disclaimer
+
+Foldora is experimental early MVP software, provided as-is and without warranty. It modifies user-level HKCU registry keys only under Foldora-owned paths and creates/edits `desktop.ini` inside folders selected or created by the user. Test on non-critical folders first.
+
+## AI Assistance Note
+
+Parts of Foldora were developed with assistance from OpenAI Codex / AI tooling. Product decisions, testing and commits are reviewed by the maintainer.
+
+## Third-Party Resources
+
+No third-party visual assets are currently bundled, except where explicitly listed here or in a future third-party notices file. Resource rules are documented in [docs/RESOURCE_POLICY.md](docs/RESOURCE_POLICY.md).
 
 ## Documentation
 

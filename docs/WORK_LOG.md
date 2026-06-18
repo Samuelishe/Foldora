@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-06-18 - WPF UX cleanup and resource policy
+
+- Settings gear в custom title bar заменён с emoji/font-dependent glyph на self-authored XAML vector icon; внешние ассеты не добавлялись.
+- WPF editor теперь показывает entries сгруппированными секциями `Без группы` и `<GroupName>` поверх существующей flat-модели `FolderMenuEntry.GroupName`.
+- Добавлена кнопка `+ Добавить группу`; она создаёт обычный draft entry с новым `GroupName`, а не persistent empty group entity.
+- Поле `Группа` остаётся в карточке как простой способ переместить entry между секциями; full tree и drag-and-drop не реализованы.
+- Root `README.md` усилен минимальными требованиями, AppData layout, safety disclaimer, AI/Codex note и third-party resources note.
+- Добавлен `docs/RESOURCE_POLICY.md` с правилами добавления и атрибуции внешних ресурсов.
+
 ## 2026-06-18 - MVP stabilization documentation
 
 - Добавлен `docs/SMOKE_TEST.md` как ручной Windows 11 checklist для build/test, WPF startup, entry editing, Explorer integration, folder creation, save-triggered rebuild, unregister/reset и startup logs.

@@ -6,6 +6,8 @@ WPF shell/settings foundation переводит окно на custom title bar 
 
 Startup bugfix сохраняет custom title bar и settings gear. Окно создаётся вручную в `App.OnStartup` после установки обработчиков startup errors; UI/domain logic по-прежнему остаётся вне code-behind. Если startup падает до показа окна, пользователь видит простой error dialog, а подробности пишутся в `%AppData%\Foldora\Logs\startup-error.log`.
 
+WPF UX cleanup после one-level grouping заменяет emoji/font-dependent settings glyph на self-authored XAML vector gear. Внешние icon packs не используются.
+
 Целевой WPF MVP описан подробно в `UX_FLOW.md`. Этот документ фиксирует короткие UI-правила, которые должны соблюдаться при реализации.
 
 Правила:
@@ -17,6 +19,8 @@ Startup bugfix сохраняет custom title bar и settings gear. Окно с
 - Главный экран MVP должен быть редактором пользовательского меню, а не landing page.
 - Минимальный редактор должен иметь title меню, список entries, user-facing поля `Название в меню` и `Имя создаваемой папки`, выбор `.ico`, preview около 50x50, checkbox `Показывать в меню`, `Сохранить`, `Отменить изменения`, `Включить меню Проводника`, `Отключить меню Проводника`, `Сбросить меню`.
 - Для one-level grouping карточка entry имеет поле `Группа`; пустое значение означает пункт в корне меню.
+- Entries визуально группируются по `GroupName`: пустая группа показывается как `Без группы`, непустые значения показываются отдельными секциями. Пустые группы не являются persistent model object; текущая модель остаётся entry-based.
+- `+ Добавить группу` создаёт обычный draft entry с новым `GroupName`, а не отдельную persisted group entity.
 - Основной entry UI должен быть карточным/list-style, а не технической таблицей.
 - `EntryId` не показывать в основном пользовательском flow.
 - Technical registry plan details скрывать по умолчанию за раскрываемым блоком.
@@ -57,6 +61,7 @@ Startup bugfix сохраняет custom title bar и settings gear. Окно с
 - Технические labels `DisplayName`, `DefaultFolderName`, `EntryId` убраны из основного UI.
 - Карточка entry показывает preview, `Название в меню`, `Имя создаваемой папки`, `Показывать в меню`, icon status и действия `Выбрать .ico`/`Удалить`.
 - После grouping MVP карточка также показывает поле `Группа` с подсказкой, что пустое значение оставляет entry в root menu.
+- После WPF grouping UX cleanup карточки показываются внутри section headers `Без группы` или `<GroupName>`. Поле `Группа` остаётся способом переместить entry между секциями без drag-and-drop.
 - Пустой список entries показывает empty state и кнопку `+ Добавить пункт`.
 - `Интеграция с Проводником` содержит только normal controls: dry-run/register/unregister.
 - Reset вынесен в отдельную `Опасная зона` с подтверждением.

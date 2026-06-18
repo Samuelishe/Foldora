@@ -7,6 +7,7 @@ Foldora currently has a working MVP loop:
 - WPF editor with custom window chrome.
 - Settings gear and persisted language setting `ru`/`en`.
 - Minimal localization foundation for main WPF labels/buttons.
+- Grouped WPF presentation sections for root-level and one-level grouped entries.
 - User menu entries with:
   - `DisplayName`;
   - `DefaultFolderName`;
@@ -39,6 +40,7 @@ Foldora currently has a working MVP loop:
   - folder: `ReadOnly`;
   - `desktop.ini`: `Hidden`.
 - Startup diagnostics in `%AppData%\Foldora\Logs\startup-error.log`.
+- Resource policy for future icons/fonts/assets.
 
 ## Next Stage
 
