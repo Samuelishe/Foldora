@@ -53,6 +53,7 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 - `IsEnabled` - возможность скрыть пункт без удаления.
 
 `DisplayName` нельзя использовать как имя файла, registry key или stable id.
+Дубликаты `DisplayName` разрешены и сохраняются как пользовательский выбор.
 
 Если старый entry не содержит `DefaultFolderName`, при загрузке используется fallback `Новая папка`.
 
@@ -75,3 +76,5 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 ```
 
 Команда не удаляет `%AppData%\Foldora`, `packs` и импортированные `.ico`.
+
+`%AppData%\Foldora\previews\` зарезервирован на будущее. WPF MVP может показывать `.ico` напрямую и не обязан генерировать preview-файлы.

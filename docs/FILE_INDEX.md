@@ -86,6 +86,8 @@
 - `tests/Foldora.Tests/Validation/IconFileValidatorTests.cs` - тесты structural ICO validation.
 - `docs/README.md` - карта документации.
 - `docs/PROJECT_STATE.md` - состояние проекта.
+- `docs/PRODUCT_VISION.md` - продуктовая концепция, главный MVP-объект и safety-философия.
+- `docs/UX_FLOW.md` - будущий WPF UX flow, staged-save, input behavior, preview и cleanup controls.
 - `docs/ROADMAP.md` - roadmap.
 - `docs/WORK_LOG.md` - журнал изменений.
 - `docs/ARCHITECTURE.md` - архитектура.

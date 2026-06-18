@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-06-18 - Documentation consolidation
+
+- Добавлен `docs/PRODUCT_VISION.md` с продуктовой концепцией, главным MVP-объектом `FolderMenuEntry`, ролью packs и принципом freedom with safety.
+- Добавлен `docs/UX_FLOW.md` с целевым WPF MVP, staged-save flow, input behavior для `DefaultFolderName`, preview policy и cleanup controls.
+- `AGENTS.md`, `docs/README.md` и `docs/FILE_INDEX.md` обновлены, чтобы новые документы были обязательной частью будущих сессий.
+- Roadmap/future notes дополнены WPF MVP, nested menu model, preview generation, orphan icon cleanup и installer/publish path вопросом.
+- Requirements дополнены локальной Windows/PowerShell/tooling средой и требованием .NET SDK 10.x.
+- Shell/menu/settings/UI/packs документы синхронизированы с текущей продуктовой моделью и safety-правилами.
+
 ## 2026-06-18 - Simplified Explorer menu shape and menu reset
 
 - Registry plan builder больше не создаёт промежуточный ключ `create-folder`.

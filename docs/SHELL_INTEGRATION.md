@@ -74,7 +74,7 @@ Placeholder policy на текущем этапе:
 - `Directory` -> `%1`.
 - `DirectoryBackground` -> `%V`.
 
-Это documented placeholder policy для тестов plan builder. Реальная корректность `%1`, `%V`, `%L` и других Explorer placeholders требует ручной проверки на Windows 11 перед включением registry writer.
+Это documented placeholder policy для тестов plan builder. Manual verification на Windows 11 требуется всякий раз, когда эта policy меняется.
 
 ## Registry Writer
 
@@ -161,14 +161,18 @@ foldora menu reset --yes
 
 Будущие registry safety rules:
 
-- Foldora пишет только в HKCU.
-- Foldora пишет только в свои ключи.
-- Foldora удаляет только свои ключи.
-- Foldora не трогает чужие shell entries.
-- Foldora не пишет в HKLM.
-- Foldora не требует admin.
-- Перед registry writer нужен testable registry plan builder.
-- Plan builder должен гарантировать, что все keys находятся только под Foldora-owned paths.
+- HKCU only.
+- Foldora-owned roots only.
+- No HKLM.
+- No admin required.
+- No cleaning whole `Directory\shell`.
+- No touching other programs.
+- `DisplayName` never used as registry key.
+- Registry keys for entries are technical and based on sort/index/id.
+- Writer applies only validated plan.
+- Tests must use fake/in-memory registry.
+- Real registry access only through `WindowsRegistryAccess`.
+- `unregister-menu` must remain idempotent.
 
 Будущие owned paths:
 

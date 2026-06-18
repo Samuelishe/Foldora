@@ -5,7 +5,10 @@
 - Отвечать пользователю на русском языке.
 - Комментарии и XML-doc писать на русском языке.
 - Перед работой читать:
+  - `docs/README.md`;
   - `docs/PROJECT_STATE.md`;
+  - `docs/PRODUCT_VISION.md`;
+  - `docs/UX_FLOW.md`;
   - `docs/ROADMAP.md`;
   - `docs/WORK_LOG.md`;
   - `docs/ARCHITECTURE.md`;
@@ -21,6 +24,8 @@
 - После значимых изменений обновлять `docs/PROJECT_STATE.md`.
 - После значимых изменений добавлять запись в `docs/WORK_LOG.md`.
 - При добавлении, удалении или переносе файлов обновлять `docs/FILE_INDEX.md`.
+- При изменении продуктовой концепции обновлять `docs/PRODUCT_VISION.md`.
+- При изменении UX flow или будущего WPF-поведения обновлять `docs/UX_FLOW.md`.
 - При изменении архитектуры обновлять `docs/ARCHITECTURE.md`.
 - При изменении настроек обновлять `docs/SETTINGS.md`.
 - При изменении shell integration обновлять `docs/SHELL_INTEGRATION.md`.
