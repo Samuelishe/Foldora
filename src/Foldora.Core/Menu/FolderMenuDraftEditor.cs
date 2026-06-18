@@ -39,6 +39,8 @@ public sealed class FolderMenuDraftEditor
 
     public bool ExplorerIntegrationEnabled => savedSettings.ExplorerIntegrationEnabled;
 
+    public string Language => savedSettings.Language;
+
     public async Task LoadAsync(CancellationToken cancellationToken = default)
     {
         savedSettings = await settingsStorage.LoadAsync(cancellationToken);

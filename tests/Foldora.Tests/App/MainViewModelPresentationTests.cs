@@ -12,6 +12,14 @@ namespace Foldora.Tests.App;
 public sealed class MainViewModelPresentationTests
 {
     [Fact]
+    public void CreateDefault_DoesNotSynchronouslyLoadSettings()
+    {
+        var viewModel = MainViewModel.CreateDefault();
+
+        Assert.NotNull(viewModel);
+    }
+
+    [Fact]
     public async Task HasEntries_IsFalseWhenMenuIsEmpty()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");

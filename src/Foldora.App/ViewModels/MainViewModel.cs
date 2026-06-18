@@ -207,8 +207,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         var paths = FoldoraDataPaths.CreateDefault();
         var storage = new FoldoraSettingsStorage(paths);
         var draftEditor = new FolderMenuDraftEditor(storage, paths);
-        var settings = storage.LoadAsync().GetAwaiter().GetResult();
-        var localizationService = new InMemoryLocalizationService(settings.Language);
+        var localizationService = new InMemoryLocalizationService();
         var registrationService = new ExplorerMenuRegistrationService(
             storage,
             new ExplorerMenuRegistryPlanBuilder(),
@@ -230,6 +229,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public async Task LoadAsync(CancellationToken cancellationToken = default)
     {
         await draftEditor.LoadAsync(cancellationToken);
+        localizationService.SetLanguage(draftEditor.Language);
+        OnPropertyChanged(nameof(L));
         LoadDraftIntoViewModels();
         Errors.Clear();
         OperationDetails.Clear();

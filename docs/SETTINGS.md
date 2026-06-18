@@ -36,6 +36,8 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 - unsupported values нормализуются в `ru`;
 - settings UI сохраняет язык в тот же `settings.json`.
 
+WPF startup не должен синхронно читать `settings.json` в конструкторском path главного окна. `MainViewModel.CreateDefault()` создаёт localization service с fallback `ru`, а сохранённый `Language` применяется после async `LoadAsync`. Если чтение settings всё же падает на startup path, ошибка не глотается молча: диагностический файл пишется в `%AppData%\Foldora\Logs\startup-error.log`.
+
 При первом обращении `FoldoraSettingsStorage` создаёт root, `icons`, `previews`, `packs` и `settings.json`, если они отсутствуют. Пустой список entries после первого запуска является нормальным состоянием: Foldora не добавляет demo entries автоматически.
 
 Минимальный JSON по смыслу:

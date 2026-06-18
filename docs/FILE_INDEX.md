@@ -68,7 +68,7 @@
 - `src/Foldora.MenuHost/MenuHostCommandRunner.cs` - запуск существующего Core action service из MenuHost.
 - `src/Foldora.App/Foldora.App.csproj` - WPF settings app.
 - `src/Foldora.App/App.xaml` - WPF application entry.
-- `src/Foldora.App/App.xaml.cs` - WPF app code-behind.
+- `src/Foldora.App/App.xaml.cs` - WPF app startup plumbing и обработка startup exceptions.
 - `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, empty state, Explorer integration controls, dangerous zone и technical details expander.
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI/window plumbing, custom title bar controls и установка `DataContext`.
 - `src/Foldora.App/SettingsWindow.xaml` - WPF окно настроек приложения с выбором языка.
@@ -96,6 +96,7 @@
 - `src/Foldora.App/Services/LanguageOption.cs` - option model для выбора языка в settings UI.
 - `src/Foldora.App/Services/ILocalizationService.cs` - abstraction локализации WPF.
 - `src/Foldora.App/Services/InMemoryLocalizationService.cs` - минимальная in-memory локализация RU/EN для основных WPF labels.
+- `src/Foldora.App/Services/StartupDiagnosticsService.cs` - минимальная запись startup exceptions в `%AppData%\Foldora\Logs\startup-error.log`.
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project на `net10.0-windows`.
 - `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.
 - `tests/Foldora.Tests/App/ExplorerIntegrationControllerTests.cs` - тесты WPF Explorer integration controller с fake registry.
@@ -103,6 +104,7 @@
 - `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor.
 - `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.
 - `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты минимальной локализации RU/EN.
+- `tests/Foldora.Tests/App/StartupDiagnosticsServiceTests.cs` - тесты controlled startup diagnostic log.
 - `tests/Foldora.Tests/App/WpfIconPreviewServiceTests.cs` - тесты WPF preview service.
 - `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser, включая reset confirmation и diagnostics command.
 - `tests/Foldora.Tests/Cli/DesktopIniPolicyDiagnosticsRunnerTests.cs` - тесты diagnostic runner для `desktop.ini` attribute policies без Explorer/registry.

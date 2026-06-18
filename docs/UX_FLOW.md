@@ -4,6 +4,8 @@
 
 Window shell foundation: главное окно использует custom title bar с названием приложения, settings gear и window controls. Settings gear открывает настройки языка; изменение языка сохраняется отдельно от draft entries и не пишет registry.
 
+Startup errors не должны приводить к silent exit/no-window состоянию. При startup exception Foldora пишет `%AppData%\Foldora\Logs\startup-error.log` и показывает простой startup error dialog. Обычная загрузка settings остаётся async после создания `MainWindow`, чтобы не блокировать WPF dispatcher до появления окна.
+
 ## WPF MVP Editor
 
 Минимальный редактор пользовательского меню должен содержать:

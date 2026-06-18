@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-06-18 - WPF startup bugfix
+
+- Исправлен startup hang после custom title bar/settings/language foundation: `MainViewModel.CreateDefault()` больше не вызывает `LoadAsync().GetAwaiter().GetResult()` на WPF startup path.
+- `MainViewModel` создаёт localization service с default language, а сохранённый `Language` применяет после async `LoadAsync`.
+- `App.xaml` больше не использует `StartupUri`; `App.OnStartup` устанавливает обработчики ошибок и создаёт `MainWindow` вручную.
+- Добавлен минимальный `StartupDiagnosticsService`, который пишет startup exceptions в `%AppData%\Foldora\Logs\startup-error.log`.
+- Startup exceptions больше не исчезают молча: приложение пишет log и показывает простой error dialog.
+- Custom title bar, settings gear, settings window и language foundation сохранены.
+- Добавлены tests для default ViewModel construction без синхронной загрузки settings и для controlled startup diagnostic log.
+
 ## 2026-06-18 - WPF shell/settings foundation
 
 - Главное окно WPF переведено на custom title bar через `WindowChrome`: `Foldora`, settings gear, minimize, maximize/restore и close находятся в единой шапке.

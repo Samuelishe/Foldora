@@ -4,6 +4,8 @@ WPF editor после UX cleanup phase 1 содержит user-facing редак
 
 WPF shell/settings foundation переводит окно на custom title bar через `WindowChrome`. Видимый стандартный Windows title bar не используется; в шапке находятся название `Foldora`, кнопка настроек с gear glyph и window controls minimize/maximize/close. Resize должен сохраняться, а maximize должен respect Windows work area/taskbar.
 
+Startup bugfix сохраняет custom title bar и settings gear. Окно создаётся вручную в `App.OnStartup` после установки обработчиков startup errors; UI/domain logic по-прежнему остаётся вне code-behind. Если startup падает до показа окна, пользователь видит простой error dialog, а подробности пишутся в `%AppData%\Foldora\Logs\startup-error.log`.
+
 Целевой WPF MVP описан подробно в `UX_FLOW.md`. Этот документ фиксирует короткие UI-правила, которые должны соблюдаться при реализации.
 
 Правила:
