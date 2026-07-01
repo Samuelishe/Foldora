@@ -96,10 +96,10 @@
 - `src/Foldora.App/Assets/Foldora.ico` - generated multi-size Windows app icon used by `Foldora.App.exe` and WPF windows.
 - `src/Foldora.App/Resources/DesignTokens.xaml` - semantic colors/brushes, spacing, radius and size tokens for WPF design system, включая visual direction v2 cool page background, blue/cyan/violet accent gradients, softer surfaces/borders and status/danger surface tokens.
 - `src/Foldora.App/Resources/Typography.xaml` - reusable WPF typography styles and app font family, включая help step readability, path text and status chip text styles.
-- `src/Foldora.App/Resources/Controls.xaml` - reusable WPF control, card/container/status styles, включая non-clipping button template/geometry, rounded TextBox template, page header, status chip variants, empty state icon container, path row, wrapping Settings tabs, Settings expander, help step and footer bar styles.
+- `src/Foldora.App/Resources/Controls.xaml` - reusable WPF control, card/container/status styles, включая non-clipping button template/geometry with foreground forwarding, rounded TextBox template, page header, status chip variants, empty state icon container, path row, wrapping Settings tabs, Settings expander, help step and footer bar styles.
 - `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, shared app icon, visual direction v2 page header/status chips/self-authored XAML empty-state mark/footer, conditional status banner, save/discard и компактным Explorer menu status; Settings открываются через title-bar gear.
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI/window plumbing, custom title bar controls и установка `DataContext`.
-- `src/Foldora.App/SettingsWindow.xaml` - WPF окно настроек приложения с shared app icon, polished category tabs, Application/language compact section, Explorer status/actions, Installation path rows, Help/About and isolated Danger zone.
+- `src/Foldora.App/SettingsWindow.xaml` - WPF окно настроек приложения с shared app icon, polished category tabs, practical 940/920 sizing, Application/language compact section, short Explorer status/actions, Installation path rows, Help/About and isolated Danger zone.
 - `src/Foldora.App/SettingsWindow.xaml.cs` - минимальный plumbing окна настроек.
 - `src/Foldora.App/HelpWindow.xaml` - WPF окно краткой Help/About справки с shared app icon, visual direction v2 header/section/step-row rhythm, scrollable content and fixed close footer.
 - `src/Foldora.App/HelpWindow.xaml.cs` - минимальный plumbing окна справки.
@@ -138,40 +138,40 @@
 - `src/Foldora.App/Services/ValidationMessageLocalizer.cs` - catalog-backed рендер validation issues по `Validation.<code>` keys.
 - `src/Foldora.App/Services/IPathActionService.cs` - abstraction Open/Copy actions для installation/user-data/MenuHost paths в SettingsWindow.
 - `src/Foldora.App/Services/WindowsPathActionService.cs` - Windows implementation path actions через Explorer/Clipboard для WPF settings UI.
-- `src/Foldora.App/Localization/ru.json` - Russian complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/en.json` - English complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/zh-Hans.json` - Simplified Chinese complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/de.json` - German complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/es.json` - Spanish complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/fr.json` - French complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/ja.json` - Japanese complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/pt-BR.json` - Brazilian Portuguese complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/ko.json` - Korean complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/uk.json` - Ukrainian complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/pl.json` - Polish complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/tr.json` - Turkish complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/ro.json` - Romanian complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/cs.json` - Czech complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/hu.json` - Hungarian complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/bg.json` - Bulgarian complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/it.json` - Italian complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/nl.json` - Dutch complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/id.json` - Indonesian complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/vi.json` - Vietnamese complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/hi.json` - Hindi complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/th.json` - Thai complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/zh-Hant.json` - Traditional Chinese complete localization catalog для WPF UI/status/defaults.
-- `src/Foldora.App/Localization/pt-PT.json` - European Portuguese complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/ru.json` - Russian complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/en.json` - English complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/zh-Hans.json` - Simplified Chinese complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/de.json` - German complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/es.json` - Spanish complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/fr.json` - French complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/ja.json` - Japanese complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/pt-BR.json` - Brazilian Portuguese complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/ko.json` - Korean complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/uk.json` - Ukrainian complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/pl.json` - Polish complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/tr.json` - Turkish complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/ro.json` - Romanian complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/cs.json` - Czech complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/hu.json` - Hungarian complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/bg.json` - Bulgarian complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/it.json` - Italian complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/nl.json` - Dutch complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/id.json` - Indonesian complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/vi.json` - Vietnamese complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/hi.json` - Hindi complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/th.json` - Thai complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/zh-Hant.json` - Traditional Chinese complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/pt-PT.json` - European Portuguese complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
 - `src/Foldora.App/Services/StartupDiagnosticsService.cs` - минимальная запись startup exceptions в `%AppData%\Foldora\Logs\startup-error.log`.
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project на `net10.0-windows`.
 - `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.
 - `tests/Foldora.Tests/App/ExplorerIntegrationControllerTests.cs` - тесты WPF Explorer integration controller с fake registry.
 - `tests/Foldora.Tests/App/ExplorerCommandHostPathResolverTests.cs` - тесты WPF command-host resolver для publish sibling, missing-host failure, Debug fallback и registry command path.
-- `tests/Foldora.Tests/App/DesignResourceTests.cs` - lightweight tests for WPF design resource dictionary wiring, app icon wiring/sizes, core style keys, button layout robustness, non-clipping Settings tab headers, stretched Settings selected-content host/tab bodies, Settings path/action layout contracts and visual direction v2 style/presentation contracts.
+- `tests/Foldora.Tests/App/DesignResourceTests.cs` - lightweight tests for WPF design resource dictionary wiring, app icon wiring/sizes, core style keys, button layout robustness/foreground forwarding, non-clipping Settings tab headers, stretched Settings selected-content host/tab bodies, Settings path/action/sizing contracts and visual direction v2 style/presentation contracts.
 - `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
 - `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections и compact/edit entry behavior.
 - `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.
-- `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты enabled catalog completeness, fallback, Settings tab labels, compact path action labels and known localization keys.
+- `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты enabled catalog completeness, fallback, Settings tab labels, compact Explorer/path action labels and known localization keys.
 - `tests/Foldora.Tests/App/SettingsLanguageInitializerTests.cs` - тесты first-run language detection, unsupported culture fallback и persistence policy.
 - `tests/Foldora.Tests/App/ValidationMessageLocalizerTests.cs` - тесты App-level локализации Core validation issues.
 - `tests/Foldora.Tests/App/StartupDiagnosticsServiceTests.cs` - тесты controlled startup diagnostic log.

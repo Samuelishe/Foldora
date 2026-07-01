@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-07-02 - Settings responsive/action polish
+
+- Widened SettingsWindow to a practical fixed/resizable desktop size (`Width=940`, `MinWidth=920`) while keeping `SizeToContent=Manual`.
+- Kept dynamic WPF content sizing out of scope because tab-driven auto-size would make the modal SettingsWindow jump and conflict with the fixed footer plus tab-local scrolling model.
+- Shortened Settings Explorer action labels across all enabled catalogs: `Enable` / `Disable`, `Включить` / `Выключить`, and matching short labels for the other enabled locales.
+- Shortened the Settings Help/About tab label to short Help/Справка-style labels while leaving the Help/About section and HelpWindow content intact.
+- Fixed primary button contrast by forwarding `Foreground` through the shared button template and keeping `OnAccentBrush` in normal/hover/pressed primary states.
+- Added/updated design and localization tests for Settings sizing, short labels, primary button foreground and Explorer action tooltip coverage.
+- Application tab content/layout, ViewModel state, settings JSON, registry/MenuHost/install/shell behavior, app icon, README hero and external assets were not changed.
+
 ## 2026-07-02 - Visual Design Direction v2
 
 - Applied a controlled product-grade WPF visual polish pass to MainWindow, SettingsWindow, HelpWindow and shared design resources without changing business behavior.

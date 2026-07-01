@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{Binding L.Settings}"
         Icon="Assets/Foldora.ico"
-        Width="840"
+        Width="940"
         Height="600"
-        MinWidth="840"
+        MinWidth="920"
         MinHeight="500"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
@@ -138,11 +138,21 @@
                             <Button Content="{Binding L.RegisterExplorer}"
                                     Command="{Binding RegisterExplorerCommand}"
                                     Style="{StaticResource InlineActionButtonStyle}"
-                                    Margin="{DynamicResource ButtonInlineMargin}" />
+                                    Margin="{DynamicResource ButtonInlineMargin}">
+                                <Button.ToolTip>
+                                    <TextBlock Text="{Binding L.ExplorerMenuHelpTooltip}"
+                                               Style="{StaticResource HelpTooltipTextStyle}" />
+                                </Button.ToolTip>
+                            </Button>
                             <Button Content="{Binding L.UnregisterExplorer}"
                                     Command="{Binding UnregisterExplorerCommand}"
                                     Style="{StaticResource InlineActionButtonStyle}"
-                                    Margin="{DynamicResource ButtonInlineMargin}" />
+                                    Margin="{DynamicResource ButtonInlineMargin}">
+                                <Button.ToolTip>
+                                    <TextBlock Text="{Binding L.ExplorerMenuHelpTooltip}"
+                                               Style="{StaticResource HelpTooltipTextStyle}" />
+                                </Button.ToolTip>
+                            </Button>
                         </WrapPanel>
 
                         <ItemsControl ItemsSource="{Binding Errors}"

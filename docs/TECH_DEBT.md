@@ -51,7 +51,7 @@
 - Observed behavior: Some MainWindow and SettingsWindow buttons look tight; text sits too close to button edges.
 - Expected/desired behavior: Buttons should have consistent padding, min-width and min-height that survive long localized labels.
 - Known cause or hypothesis: Current reusable button styles are functional but not yet tuned through a localization-heavy visual polish pass.
-- Current workaround: Shared action buttons now have larger padding and min-height, the base button template applies padding/alignment, dense Settings rows use a compact inline action style with non-tiny horizontal padding, Installation path buttons use short `Open`/`Copy` labels, SettingsWindow action rows wrap or use star/auto layout, MainWindow/SettingsWindow have minimum widths that prevent the known broken narrow layouts, and v2 button colors/states are centralized in `Controls.xaml`.
+- Current workaround: Shared action buttons now have larger padding and min-height, the base button template applies padding/alignment/foreground forwarding, dense Settings rows use a compact inline action style with non-tiny horizontal padding, Installation path buttons use short `Open`/`Copy` labels, Settings Explorer actions use short contextual Enable/Disable labels, SettingsWindow action rows wrap or use star/auto layout, MainWindow/SettingsWindow have minimum widths that prevent the known broken narrow layouts, and v2 button colors/states are centralized in `Controls.xaml`.
 - Next investigation step: Continue long-label visual checks after product-grade polish, especially SettingsWindow actions in long locales and non-Latin font fallback.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
@@ -145,7 +145,7 @@
 - Expected/desired behavior: Settings categories should be compact, navigable and scalable without making reset/danger controls visible as default content.
 - Known cause or hypothesis: Settings grew incrementally from a small language dialog into a multi-section system window.
 - Current workaround: Not needed; SettingsWindow now uses category tabs, keeps footer actions fixed and isolates Danger zone in its own tab.
-- Next investigation step: Manual RU/EN and long-locale checks for tab header fit, path row wrapping and Explorer technical details overflow. Button clipping found after the first tabbed pass was addressed by the Settings layout robustness pass; tab header clipping found afterwards was addressed by using content-sized wrapping tab headers. Runtime tab-body centering found after the header fix was addressed by separating tab header centering from `TabItem` selected-content alignment.
+- Next investigation step: Manual RU/EN and long-locale checks for tab header fit, path row wrapping and Explorer technical details overflow. Button clipping found after the first tabbed pass was addressed by the Settings layout robustness pass; tab header clipping found afterwards was addressed by using content-sized wrapping tab headers. Runtime tab-body centering found after the header fix was addressed by separating tab header centering from `TabItem` selected-content alignment. Settings responsive/action polish later widened the practical window size and shortened contextual Explorer actions; dynamic `SizeToContent` remains intentionally unused to avoid jumpy modal tab switching.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UI_DESIGN.md`

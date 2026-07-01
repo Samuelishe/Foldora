@@ -25,13 +25,14 @@ Design system foundation добавляет централизованные WPF
 - Настройки и операции вызываются через сервисы Core/Shell.
 - MainWindow должен оставаться focused menu editor: title, groups, entries, icons, save/discard and editor status/errors.
 - SettingsWindow содержит system/admin/support actions: language/application settings, Help/About, Explorer integration, installation/path information and danger reset.
-- SettingsWindow system actions must use user-facing wording: `Preview changes` for dry-run registry preview, explicit `Foldora Explorer menu: On/Off` style status, and short tooltips for technical concepts.
+- SettingsWindow system actions must use user-facing wording: `Preview changes` for dry-run registry preview, explicit `Foldora Explorer menu: On/Off` style status, and short contextual action labels such as `Enable` / `Disable` when the tab/section already says Explorer menu. Tooltips/help text carry the full Explorer legacy-menu explanation.
 - Installation/path rows should be actionable: visible path, compact `Open` and `Copy` actions, with failures shown as localized status messages and tooltips explaining folder/file-location behavior.
 - Small help/info affordances may use self-authored XAML/text styling. If an affordance is only a hover/focus hint, it must look like a passive info glyph, not a broken clickable button. If it looks like a button, it needs real click behavior. Do not add external icon assets for this.
 - Long technical help tooltips must wrap within a reasonable width instead of rendering as a single line across the screen.
 - Longer instructions belong in the Settings Help/About window, not in crowded inline tooltips or on MainWindow.
 - Main UI text must be user-facing, not debug-state text. Не показывать raw booleans вроде `True/False` как пользовательский статус.
 - Buttons must account for localization and long labels: shared action buttons use consistent min-height, padding and min-width, and the base button template must apply `Padding`, `HorizontalContentAlignment` and `VerticalContentAlignment` instead of visually clipping content. Dense Settings rows use a separate compact inline action style so `Preview changes`, enable/disable and path Open/Copy actions do not inherit overly wide normal action geometry, while still keeping visible horizontal breathing room. Further per-locale polish remains future work.
+- Primary buttons on accent/gradient backgrounds must explicitly use the light `OnAccentBrush` foreground in normal, hover and pressed states. The base button template must forward `Foreground` to content so localized button text remains readable.
 - Settings tab headers and selected tab content must keep separate alignment contracts: tab headers may center their header text inside each header chrome, but selected tab content must stretch to the tab body so forms/cards can start at the left/top property-panel inset.
 - Settings content should keep proper scroll gutter and section spacing; scrollbar не должен визуально прилипать к тексту.
 - App/window/exe icon foundation uses the self-authored folded blue/cyan Foldora app icon from `src/Foldora.App/Assets`; the current mark uses a broad light-cyan folded plane rather than a thin diagonal stroke. README hero/mockup and broader branding remain future branding/assets work, not ad hoc UI code additions.
@@ -147,6 +148,16 @@ Visual Design Direction v2 keeps the same WPF information architecture and stage
 - SettingsWindow keeps category tabs and left/top tab-body alignment, while tabs, path rows, technical details and footer are visually more deliberate;
 - HelpWindow keeps the same localized content, but shares the v2 header/section/step/footer rhythm;
 - no localization catalogs, ViewModel state, settings JSON, registry/MenuHost/install behavior, app icon or README hero assets were changed.
+
+## Settings Responsive / Action Polish
+
+The Settings responsive/action polish pass keeps Visual Design Direction v2 and does not redesign the tab bar or Application tab:
+
+- SettingsWindow uses a practical fixed/resizable starting size instead of dynamic `SizeToContent`: current width is `940`, minimum width is `920`, and `SizeToContent` remains `Manual`.
+- Dynamic sizing by active tab is intentionally not implemented. WPF `SizeToContent=Height` or `WidthAndHeight` would make the modal window jump between tabs and fight the fixed footer plus tab-local scrolling model.
+- Explorer menu action labels are contextual and short: `Preview changes`, `Enable`, `Disable` in English and `Предпросмотр изменений`, `Включить`, `Выключить` in Russian. The tab/section and help tooltip provide the full Explorer menu context.
+- The Settings Help/About tab label is shortened to `Help` / `Справка`; the content heading and HelpWindow can still use fuller Help/About wording.
+- Application tab content remains intentionally unchanged; do not add filler controls to occupy blank space.
 
 ## Layout Correctness
 

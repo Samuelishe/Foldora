@@ -46,12 +46,14 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Installation", english.Resources.InstallationSection);
         Assert.Equal("Manage in Settings", english.Resources.ManageInSettings);
         Assert.Equal("Preview changes", english.Resources.PreviewChanges);
+        Assert.Equal("Enable", english.Resources.RegisterExplorer);
+        Assert.Equal("Disable", english.Resources.UnregisterExplorer);
         Assert.Equal("Foldora Explorer menu: On", english.Resources.ExplorerMenuStatusOn);
         Assert.Equal("Foldora Explorer menu: Off", english.Resources.ExplorerMenuStatusOff);
         Assert.Equal("Application", english.Resources.SettingsTabApplication);
         Assert.Equal("Explorer menu", english.Resources.SettingsTabExplorerMenu);
         Assert.Equal("Installation", english.Resources.SettingsTabInstallation);
-        Assert.Equal("Help / About", english.Resources.SettingsTabHelpAbout);
+        Assert.Equal("Help", english.Resources.SettingsTabHelpAbout);
         Assert.Equal("Danger zone", english.Resources.SettingsTabDangerZone);
         Assert.Equal("Open", english.Resources.OpenFolder);
         Assert.Equal("Open", english.Resources.OpenLocation);
@@ -79,8 +81,10 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Приложение", service.Resources.SettingsTabApplication);
         Assert.Equal("Меню Проводника", service.Resources.SettingsTabExplorerMenu);
         Assert.Equal("Установка", service.Resources.SettingsTabInstallation);
-        Assert.Equal("Справка / О программе", service.Resources.SettingsTabHelpAbout);
+        Assert.Equal("Справка", service.Resources.SettingsTabHelpAbout);
         Assert.Equal("Опасная зона", service.Resources.SettingsTabDangerZone);
+        Assert.Equal("Включить", service.Resources.RegisterExplorer);
+        Assert.Equal("Выключить", service.Resources.UnregisterExplorer);
         Assert.Equal("Открыть", service.Resources.OpenLocation);
         Assert.Equal("Открывает папку, где находится файл.", service.Resources.OpenLocationTooltip);
     }

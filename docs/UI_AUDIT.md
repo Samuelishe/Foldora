@@ -101,6 +101,13 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Suggested direction: tab body roots should stretch to the available width, while actual forms/cards stay left/top aligned; constrained cards such as Danger zone should keep readable width but not center themselves.
 - Status: Addressed after runtime follow-up. The first inner-content alignment change was not enough because `SettingsTabItemStyle` still centered selected tab content through `HorizontalContentAlignment`/`VerticalContentAlignment`. The tab item style now stretches selected content and centers only the header presenter inside the template. Danger zone keeps a constrained card width.
 
+### UIA-0014 Settings Responsive / Action Polish
+
+- Observed: after Visual Design Direction v2, SettingsWindow still felt tight in the RU Explorer menu tab, long enable/disable labels consumed unnecessary action-row width, the Help/About tab label was longer than needed, and primary gradient button text needed a stronger foreground contract.
+- Impact: the Settings layout looked less robust than the rest of the v2 polish even though the underlying behavior worked.
+- Suggested direction: widen SettingsWindow within a practical desktop range, shorten contextual Explorer action labels, keep full meaning in help/tooltip text, ensure primary button foreground is explicitly light, and avoid dynamic window resizing if it makes tab switching jumpy.
+- Status: Addressed. SettingsWindow now opens wider with a higher practical minimum width, Explorer actions use short localized Enable/Disable labels, the Help/About tab label is shortened to Help/Справка-style labels, primary buttons explicitly forward and keep the light foreground on accent backgrounds, and dynamic `SizeToContent` was intentionally not used because Settings has fixed footer plus tab-local scrolling.
+
 ## Near-Term UI Cleanup
 
 Small safe improvements for a future code pass:
@@ -120,6 +127,7 @@ Small safe improvements for a future code pass:
 - Settings layout robustness pass is addressed: SettingsWindow no longer allows the known too-narrow state that clipped action labels, and action/path rows have a shared sizing contract.
 - Settings tab header clipping fix is addressed: tab header clipping was separate from button clipping, and Settings tabs now wrap as content-sized headers.
 - Settings tab body centering is addressed: the shared selected-content path now stretches, so tab content starts from the left/top inset while keeping readable constrained cards where useful.
+- Settings responsive/action polish is addressed: the window uses a wider practical size, Explorer action labels are shorter, Help tab label is shorter, and primary button contrast is protected in the shared template/style.
 
 ## Later Visual Polish
 

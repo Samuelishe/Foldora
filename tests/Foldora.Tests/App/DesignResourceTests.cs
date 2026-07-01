@@ -206,6 +206,24 @@ public sealed class DesignResourceTests
         Assert.Equal("{TemplateBinding Padding}", buttonChrome.Attribute("Padding")?.Value);
         Assert.Equal("{TemplateBinding HorizontalContentAlignment}", contentPresenter.Attribute("HorizontalAlignment")?.Value);
         Assert.Equal("{TemplateBinding VerticalContentAlignment}", contentPresenter.Attribute("VerticalAlignment")?.Value);
+        Assert.Equal("{TemplateBinding Foreground}", contentPresenter.Attribute("TextElement.Foreground")?.Value);
+    }
+
+    [Fact]
+    public void PrimaryButtonStyle_UsesLightForegroundOnAccentBackgrounds()
+    {
+        var controls = LoadXml("src", "Foldora.App", "Resources", "Controls.xaml");
+        var primaryButtonStyle = FindStyle(controls, "PrimaryButtonStyle");
+
+        Assert.Equal("{DynamicResource OnAccentBrush}", GetSetterValue(primaryButtonStyle, "Foreground"));
+
+        var foregroundSetters = primaryButtonStyle.Descendants()
+            .Where(element => element.Name.LocalName == "Setter" && element.Attribute("Property")?.Value == "Foreground")
+            .Select(element => element.Attribute("Value")?.Value)
+            .ToArray();
+
+        Assert.Contains("{DynamicResource OnAccentBrush}", foregroundSetters);
+        Assert.Contains("{DynamicResource TextDisabledBrush}", foregroundSetters);
     }
 
     [Fact]
@@ -295,7 +313,8 @@ public sealed class DesignResourceTests
 
         Assert.Equal("CanResize", root.Attribute("ResizeMode")?.Value);
         Assert.Equal("Manual", root.Attribute("SizeToContent")?.Value);
-        Assert.Equal("840", root.Attribute("MinWidth")?.Value);
+        Assert.Equal("940", root.Attribute("Width")?.Value);
+        Assert.Equal("920", root.Attribute("MinWidth")?.Value);
 
         var tabControl = settingsWindow.Descendants()
             .SingleOrDefault(element => element.Name.LocalName == "TabControl" && element.Attribute("Grid.Row")?.Value == "1");
@@ -348,6 +367,12 @@ public sealed class DesignResourceTests
             Assert.Null(button.Attribute("Width"));
             Assert.Null(button.Attribute("MaxWidth"));
             Assert.Equal("WrapPanel", button.Parent?.Name.LocalName);
+
+            if (command is "RegisterExplorerCommand" or "UnregisterExplorerCommand")
+            {
+                Assert.Contains(button.Descendants(), element =>
+                    element.Name.LocalName == "TextBlock" && element.Attribute("Text")?.Value == "{Binding L.ExplorerMenuHelpTooltip}");
+            }
         }
     }
 
