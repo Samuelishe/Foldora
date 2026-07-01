@@ -51,7 +51,7 @@
 - Observed behavior: Some MainWindow and SettingsWindow buttons look tight; text sits too close to button edges.
 - Expected/desired behavior: Buttons should have consistent padding, min-width and min-height that survive long localized labels.
 - Known cause or hypothesis: Current reusable button styles are functional but not yet tuned through a localization-heavy visual polish pass.
-- Current workaround: Shared action buttons now have larger padding and min-height, dense Settings rows use a compact inline action style with non-tiny horizontal padding, and MainWindow/SettingsWindow have minimum widths that prevent the known broken narrow layouts.
+- Current workaround: Shared action buttons now have larger padding and min-height, dense Settings rows use a compact inline action style with non-tiny horizontal padding, Installation path buttons use short `Open`/`Copy` labels, and MainWindow/SettingsWindow have minimum widths that prevent the known broken narrow layouts.
 - Next investigation step: Continue long-label visual checks during product-grade polish, especially SettingsWindow actions in long locales.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
@@ -130,6 +130,26 @@
   - `docs/UX_FLOW.md`
   - `docs/SETTINGS.md`
   - `src/Foldora.App/HelpWindow.xaml`
+- Date added: 2026-07-01
+
+### TD-UI-0008 SettingsWindow Long Document Layout
+
+- ID: `TD-UI-0008`
+- Title: SettingsWindow long document layout
+- Status: Fixed
+- Severity: Low
+- Area: WPF / Settings UI / UX
+- Observed behavior: SettingsWindow stacked Application, Explorer menu, Installation, Help/About and Danger zone as one long scroll document after visual polish v1.
+- Expected/desired behavior: Settings categories should be compact, navigable and scalable without making reset/danger controls visible as default content.
+- Known cause or hypothesis: Settings grew incrementally from a small language dialog into a multi-section system window.
+- Current workaround: Not needed; SettingsWindow now uses category tabs, keeps footer actions fixed and isolates Danger zone in its own tab.
+- Next investigation step: Manual RU/EN and long-locale checks for tab header fit, path row wrapping and Explorer technical details overflow.
+- Links to docs/tests/code:
+  - `docs/UI_AUDIT.md`
+  - `docs/UI_DESIGN.md`
+  - `docs/SETTINGS.md`
+  - `src/Foldora.App/SettingsWindow.xaml`
+  - `src/Foldora.App/Resources/Controls.xaml`
 - Date added: 2026-07-01
 
 ### TD-0004 Remaining Localization Debt

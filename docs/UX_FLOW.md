@@ -276,15 +276,13 @@ Settings UI является полноценным окном настроек 
 ```text
 Настройки
 
-Application
+[Application] [Explorer menu] [Installation] [Help/About] [Danger zone]
+
+Application tab
   Язык приложения:
   [Български / 简体中文 / 繁體中文 / Čeština / Nederlands / English / Français / Deutsch / हिन्दी / Magyar / Bahasa Indonesia / Italiano / 日本語 / 한국어 / Polski / Português (Brasil) / Português (Portugal) / Română / Русский / Español / ไทย / Türkçe / Українська / Tiếng Việt]
 
-Help / About
-  Short instructions
-  Open Help/About window
-
-Explorer menu
+Explorer menu tab
   Foldora Explorer menu: On/Off
   Preview changes
   Enable Explorer menu
@@ -292,16 +290,20 @@ Explorer menu
   Passive ? glyphs with wrapped tooltip/help text explaining HKCU preview and legacy Explorer menu
   Technical details
 
-Installation
+Installation tab
   Installed app path
     Open / Copy
   User data path
     Open / Copy
   Current command host
-    Open location / Copy
+    Open / Copy
   MenuHost is not a service note
 
-Danger zone
+Help/About tab
+  Short instructions
+  Open Help/About window
+
+Danger zone tab
   Reset menu confirmation
   Reset menu
 
@@ -310,7 +312,9 @@ Danger zone
 
 `Language` сохраняется в `%AppData%\Foldora\settings.json`. Complete/enabled values: `bg`, `cs`, `de`, `en`, `es`, `fr`, `hi`, `hu`, `id`, `it`, `ja`, `ko`, `nl`, `pl`, `pt-BR`, `pt-PT`, `ro`, `ru`, `th`, `tr`, `uk`, `vi`, `zh-Hans`, `zh-Hant`. При первом WPF запуске язык выбирается из system UI culture только для complete/enabled locale; unsupported language -> `en`; затем выбор сохраняется и не определяется повторно на каждом старте. exact `pt-BR` maps to `pt-BR`, exact `pt-PT` maps to `pt-PT`, and bare/other `pt-*` remains `pt-BR` for backward-compatible MVP behavior. Labels/status/defaults WPF идут через App localization catalogs. Смена языка обновляет untouched/default menu title, но не переводит custom menu title, entries, folder names или group names. Новые entries после смены языка используют текущий UI language. UI честно предупреждает, что некоторые изменения языка могут применяться после перезапуска.
 
-Settings window должен оставаться пригодным для будущих секций настроек. Окно resizable; содержимое настроек находится в scrollable центральной области, а footer actions `Сохранить`/`Закрыть` закреплены снизу и не прокручиваются. `Сохранить` относится к language/settings save. Explorer menu actions и reset выполняются immediately через отдельные кнопки и не являются staged changes. Проверка открытия modal settings window выполняется вручную; автоматические UIAutomation-клики не используются как критерий acceptance для custom-chrome/modal WPF.
+Settings window должен оставаться пригодным для будущих секций настроек. Окно resizable; содержимое настроек разделено на category tabs, а footer actions `Сохранить`/`Закрыть` закреплены снизу и не прокручиваются. Vertical scroll допустим внутри конкретной вкладки, если её содержимое не помещается, но SettingsWindow не должен снова превращаться в одну длинную scroll-простыню. `Сохранить` относится к language/settings save. Explorer menu actions и reset выполняются immediately через отдельные кнопки и не являются staged changes. Проверка открытия modal settings window выполняется вручную; автоматические UIAutomation-клики не используются как критерий acceptance для custom-chrome/modal WPF.
+
+Installation path rows use short visible `Open` / `Copy` labels. For command-host path, `Open` still opens the containing folder; tooltip text explains this without making the visible button label long.
 
 Help/About window является короткой встроенной справкой, а не полноценным help center. Оно открывается из SettingsWindow, использует resizable WPF Window, scrollable content and fixed close footer, и объясняет: что делает Foldora, базовые шаги создания entry, выбор `.ico`, где появляется legacy Explorer menu, что `Foldora.MenuHost.exe` не является сервисом/background helper, где лежат installed binaries/user data, как работает uninstall and why user data/icons are kept by default.
 
@@ -331,6 +335,7 @@ Documentation-first audit is tracked in `docs/UI_AUDIT.md`. Known follow-up item
 - button/window sizing regression - addressed: Settings inline buttons have more horizontal padding and MainWindow/SettingsWindow minimum widths prevent known broken narrow layouts;
 - Help/About foundation - addressed: SettingsWindow now opens a small localized Help/About window for longer instructions;
 - visual polish pass v1 - addressed for current MVP windows and shared WPF resources;
+- SettingsWindow tabbed layout cleanup - addressed: settings categories are tabs, danger reset is isolated, and path row actions use short Open/Copy labels;
 - defer branding/app icon/window icon/README hero work to a dedicated assets pass;
 - treat further visual polish as feedback-driven, especially for long labels and non-Latin font fallback.
 

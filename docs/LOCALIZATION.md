@@ -103,7 +103,9 @@ UI labels are visible interface text such as `Save`, `Discard changes`, `Choose 
 
 Settings/Explorer cleanup adds localized section/action labels for Application, Explorer menu, Installation, path labels, MenuHost note, immediate Explorer-action note and dirty-draft guidance. The legacy `ManageInSettings` key remains in complete catalogs for compatibility but is no longer shown on MainWindow after the small UX correctness cleanup.
 
-Settings clarity strings are also catalog-backed: explicit Foldora Explorer menu status, `Preview changes` dry-run wording, help/tooltips, Help/About window content and path Open/Copy status messages must be present in every complete catalog.
+Settings clarity strings are also catalog-backed: explicit Foldora Explorer menu status, `Preview changes` dry-run wording, Settings tab labels, help/tooltips, Help/About window content and path Open/Copy status messages must be present in every complete catalog.
+
+SettingsWindow tab labels use dedicated keys (`SettingsTabApplication`, `SettingsTabExplorerMenu`, `SettingsTabInstallation`, `SettingsTabHelpAbout`, `SettingsTabDangerZone`) so the tabbed layout can reuse category wording without hardcoding XAML strings. Path actions use short visible labels (`Open`/`Copy`, `Открыть`/`Копировать`) and tooltip keys for extra detail such as opening the containing folder for the command host path.
 
 Runtime/status messages are visible state messages such as settings loaded, settings saved, Explorer integration enabled/disabled and draft entry added. They must come from the localization layer.
 
@@ -312,6 +314,7 @@ To add a complete language:
 - Startup fatal error dialog is hardcoded Russian.
 - Technical plan/details text in Explorer integration is not fully localized.
 - Help/About foundation is catalog-backed, but long-form help copy for non-primary locales still needs translation/content review before treating it as product-grade help text.
+- Settings tab labels and path action tooltips are catalog-complete; non-primary locale wording may still need human review during future translation polish.
 - `InMemoryLocalizationService` is now catalog-backed but still has its early MVP name.
 
 ## Future work

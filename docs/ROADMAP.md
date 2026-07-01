@@ -101,16 +101,19 @@ UI/UX audit baseline, correctness cleanup and visual polish:
 6. Visual polish pass v1:
    - addressed for the current MVP windows: calmer surfaces, spacing, hierarchy, empty state, status chips, Settings path rows, Help step rows and shared WPF resource styles.
    - further polish should be driven by manual feedback and long-locale checks rather than a broad redesign.
-7. Branding/assets pass:
+7. SettingsWindow tabbed layout cleanup:
+   - addressed after manual visual check: the long settings document was replaced with Application, Explorer menu, Installation, Help/About and Danger zone tabs.
+   - Installation path actions now use short `Open`/`Copy` visible labels; Danger zone is isolated from the default Application tab.
+8. Branding/assets pass:
    - app icon;
    - exe/window icon;
    - README hero/mockup after the UI looks ready for public presentation.
-8. Later layout/localization polish:
+9. Later layout/localization polish:
    - handle feedback from long labels and non-Latin scripts across enabled locales.
 
 Per-user install smoke and release polish before full installer work:
 
-- Manually smoke the SettingsWindow Explorer menu flow after the cleanup: dirty draft block, enable/disable, technical details and reset reload back into MainWindow.
+- Manually smoke the SettingsWindow tabbed flow after the cleanup: Application language save, Explorer dirty draft block, enable/disable, technical details, Installation path Open/Copy and Danger reset reload back into MainWindow.
 - Manually verify installed app enables Explorer integration with registry commands pointing to `%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe`.
 - Manually verify published MenuHost desktop-background create near the cursor/menu selection area.
 - If placement fails, inspect `%AppData%\Foldora\Logs\menuhost-placement.log` and use the latest JSONL entry for the next debugging step.

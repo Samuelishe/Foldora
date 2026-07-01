@@ -46,14 +46,17 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 - settings UI показывает только complete supported locales;
 - settings UI показывает native display names, но сортирует список по стабильному English/common sort order, а не по порядку добавления локалей.
 
-`SettingsWindow` также содержит системные секции, которые не являются staged language save:
+`SettingsWindow` использует category tabs вместо одной длинной settings-страницы. Вкладки:
 
+- `Application`: language dropdown and restart note.
 - `Explorer menu`: explicit Foldora Explorer menu status, `Preview changes` dry-run, enable/disable Explorer legacy menu, passive help glyphs with wrapped tooltips and technical details. Эти действия применяются сразу через `ExplorerIntegrationController`.
-- `Installation`: installed app/base path, `%AppData%\Foldora` user data path, current command host path, compact Open/Copy actions and note that `Foldora.MenuHost.exe` is not a service/background helper.
+- `Installation`: installed app/base path, `%AppData%\Foldora` user data path, current command host path, compact `Open`/`Copy` actions and note that `Foldora.MenuHost.exe` is not a service/background helper. Command-host `Open` opens the containing folder and explains that through tooltip text.
 - `Help / About`: краткая user-facing справка по workflow, `.ico`, Explorer menu, MenuHost, data paths, uninstall and license/resource policy.
-- `Danger zone`: reset menu с checkbox-подтверждением.
+- `Danger zone`: reset menu с checkbox-подтверждением. Эта вкладка изолирует destructive reset от default settings view.
 
 `Сохранить` в footer SettingsWindow относится к language/settings save. Explorer integration actions and reset execute immediately. `Preview changes` / `Предпросмотр изменений` и `Включить меню Проводника` сохраняют прежнюю dirty draft policy: если в главном редакторе есть unsaved menu changes, operation блокируется сообщением о необходимости сохранить или отменить изменения. `Отключить меню Проводника` остаётся разрешённым при unsaved draft changes. Reset после успешного выполнения сообщает главному окну перезагрузить draft после закрытия SettingsWindow, чтобы entries/title/status не оставались stale.
+
+Selected Settings tab is presentation-only WPF UI state. It is not persisted to `settings.json`.
 
 После сохранения `Language` Foldora не определяет язык системы повторно на каждом старте. Ручной выбор в Settings имеет приоритет над системным языком. Future regional candidates (`be`, `kk`, `uz-Latn`, `az`, `hy`, `ka`, `lt`, `lv`, `et`, `sk`, `sl`, `hr`, `sr`) не выбираются автоматически, пока они не станут complete/enabled.
 

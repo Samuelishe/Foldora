@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Xml.Linq;
 
 namespace Foldora.Tests.App;
@@ -57,6 +56,8 @@ public sealed class DesignResourceTests
         Assert.Contains("FooterBarStyle", keys);
         Assert.Contains("PathRowContainerStyle", keys);
         Assert.Contains("HelpStepContainerStyle", keys);
+        Assert.Contains("SettingsTabControlStyle", keys);
+        Assert.Contains("SettingsTabItemStyle", keys);
         Assert.Contains("StatusBannerStyle", keys);
         Assert.Contains("HelpIconButtonStyle", keys);
         Assert.Contains("HelpInfoGlyphStyle", keys);
@@ -126,7 +127,7 @@ public sealed class DesignResourceTests
     }
 
     [Fact]
-    public void SettingsWindow_IsResizableAndKeepsScrollableContentWithFixedFooter()
+    public void SettingsWindow_IsResizableAndUsesTabbedCategoriesWithFixedFooter()
     {
         var settingsWindow = LoadXml("src", "Foldora.App", "SettingsWindow.xaml");
         var root = settingsWindow.Root ?? throw new InvalidOperationException("SettingsWindow root was not found.");
@@ -135,21 +136,27 @@ public sealed class DesignResourceTests
         Assert.Equal("Manual", root.Attribute("SizeToContent")?.Value);
         Assert.Equal("720", root.Attribute("MinWidth")?.Value);
 
-        var scrollViewer = settingsWindow.Descendants()
-            .SingleOrDefault(element => element.Name.LocalName == "ScrollViewer");
-        Assert.NotNull(scrollViewer);
-        Assert.Equal("1", scrollViewer!.Attribute("Grid.Row")?.Value);
-        Assert.Equal("Auto", scrollViewer.Attribute("VerticalScrollBarVisibility")?.Value);
-        Assert.Equal("Disabled", scrollViewer.Attribute("HorizontalScrollBarVisibility")?.Value);
+        var tabControl = settingsWindow.Descendants()
+            .SingleOrDefault(element => element.Name.LocalName == "TabControl" && element.Attribute("Grid.Row")?.Value == "1");
+        Assert.NotNull(tabControl);
+        Assert.Equal("{StaticResource SettingsTabControlStyle}", tabControl!.Attribute("Style")?.Value);
+        Assert.Equal("{StaticResource SettingsTabItemStyle}", tabControl.Attribute("ItemContainerStyle")?.Value);
 
-        var scrollContent = scrollViewer.Elements()
-            .SingleOrDefault(element => element.Name.LocalName == "StackPanel");
-        Assert.NotNull(scrollContent);
-        var scrollContentMargin = ParseThickness(scrollContent!.Attribute("Margin")?.Value);
-        Assert.Equal(0, scrollContentMargin.Left);
-        Assert.Equal(0, scrollContentMargin.Top);
-        Assert.True(scrollContentMargin.Right >= 12);
-        Assert.Equal(0, scrollContentMargin.Bottom);
+        var tabHeaders = tabControl.Elements()
+            .Where(element => element.Name.LocalName == "TabItem")
+            .Select(element => element.Attribute("Header")?.Value ?? string.Empty)
+            .ToArray();
+
+        Assert.Equal(
+            [
+                "{Binding L.SettingsTabApplication}",
+                "{Binding L.SettingsTabExplorerMenu}",
+                "{Binding L.SettingsTabInstallation}",
+                "{Binding L.SettingsTabHelpAbout}",
+                "{Binding L.SettingsTabDangerZone}"
+            ],
+            tabHeaders);
+        Assert.DoesNotContain(settingsWindow.Descendants().Where(element => element.Name.LocalName == "ScrollViewer"), element => element.Attribute("Grid.Row")?.Value == "1");
 
         var footer = settingsWindow.Descendants()
             .Where(element => element.Name.LocalName == "StackPanel")
@@ -196,11 +203,17 @@ public sealed class DesignResourceTests
         Assert.Contains("InlineActionButtonStyle", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("StatusPillStyle", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("PathRowContainerStyle", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("SettingsTabApplication", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("SettingsTabDangerZone", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("OpenInstalledAppPathCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("CopyCommandHostPathCommand", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("OpenFolderTooltip", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("OpenLocationTooltip", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("CopyPathTooltip", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("DryRunCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("RegisterExplorerCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("ResetMenuCommand", settingsWindowText, StringComparison.Ordinal);
+        Assert.DoesNotContain("Content=\"{Binding L.OpenLocation}\"", settingsWindowText, StringComparison.Ordinal);
         Assert.DoesNotContain("Style=\"{StaticResource HelpIconButtonStyle}\"", settingsWindowText, StringComparison.Ordinal);
         Assert.DoesNotContain("Проверить план", settingsWindowText, StringComparison.Ordinal);
         Assert.DoesNotContain("Check plan", settingsWindowText, StringComparison.OrdinalIgnoreCase);
@@ -262,20 +275,6 @@ public sealed class DesignResourceTests
             .Where(element => element.Name.LocalName == "Setter")
             .Single(element => element.Attribute("Property")?.Value == property)
             .Attribute("Value")?.Value;
-    }
-
-    private static (double Left, double Top, double Right, double Bottom) ParseThickness(string? value)
-    {
-        Assert.False(string.IsNullOrWhiteSpace(value));
-
-        var parts = value!.Split(',', StringSplitOptions.TrimEntries);
-        Assert.Equal(4, parts.Length);
-
-        return (
-            double.Parse(parts[0], CultureInfo.InvariantCulture),
-            double.Parse(parts[1], CultureInfo.InvariantCulture),
-            double.Parse(parts[2], CultureInfo.InvariantCulture),
-            double.Parse(parts[3], CultureInfo.InvariantCulture));
     }
 
     private static string GetRepositoryRoot()

@@ -72,6 +72,13 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Suggested direction: keep windows resizable, but set reasonable `MinWidth` values so core editor/settings rows do not collapse into broken narrow states.
 - Status: Addressed for current MVP. SettingsWindow minimum width is raised for its system/action rows, and MainWindow minimum width is raised for the editor layout.
 
+### UIA-0010 SettingsWindow Long Document Layout
+
+- Observed: after visual polish v1, SettingsWindow still felt too spacious and scroll-heavy because Application, Explorer menu, Installation, Help/About and Danger zone were stacked as one long vertical document.
+- Impact: common settings required unnecessary scrolling, the window used space inefficiently, and the model would scale poorly as more settings categories are added.
+- Suggested direction: replace the single settings document with compact categories/tabs, keep footer actions fixed and isolate dangerous reset away from the default view.
+- Status: Addressed. SettingsWindow now uses category tabs; each tab owns its compact content, vertical scroll exists only inside tab content when needed, and Danger zone is isolated in its own tab.
+
 ## Near-Term UI Cleanup
 
 Small safe improvements for a future code pass:
@@ -86,6 +93,7 @@ Small safe improvements for a future code pass:
 - Settings inline action/path buttons use compact geometry instead of the normal wide action button style, with enough horizontal padding for labels.
 - MainWindow and SettingsWindow now have higher minimum widths to prevent known broken narrow layouts.
 - Visual polish pass v1 is addressed for the current MVP windows: MainWindow, SettingsWindow, HelpWindow and shared resource styles have calmer spacing, surfaces, status and empty/path/help presentation.
+- SettingsWindow tabbed layout cleanup is addressed: the previous long vertical settings document was replaced by category tabs, and Installation path actions use short `Open`/`Copy` labels.
 
 ## Later Visual Polish
 
@@ -93,6 +101,7 @@ Future product-grade polish can include:
 
 - user-feedback-driven refinements to entry cards and group containers;
 - additional localization-sensitive layout tweaks after manual reports;
+- Settings tab spacing/content tuning after manual RU/EN and long-locale checks;
 - more polished status/banner variants if real workflows need them;
 - README hero/mockup only after the UI is visually ready for public presentation.
 - deeper Help/About content polish: screenshots, richer instructions, and full translation review for long help text across all enabled locales.

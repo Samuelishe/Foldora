@@ -62,6 +62,11 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string Reload => Get();
     public string Save => Get();
     public string Settings => Get();
+    public string SettingsTabApplication => Get();
+    public string SettingsTabExplorerMenu => Get();
+    public string SettingsTabInstallation => Get();
+    public string SettingsTabHelpAbout => Get();
+    public string SettingsTabDangerZone => Get();
     public string ApplicationSection => Get();
     public string ExplorerMenuSection => Get();
     public string InstallationSection => Get();
@@ -75,6 +80,9 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string OpenFolder => Get();
     public string OpenLocation => Get();
     public string CopyPath => Get();
+    public string OpenFolderTooltip => Get();
+    public string OpenLocationTooltip => Get();
+    public string CopyPathTooltip => Get();
     public string PathCopiedFormat => Get();
     public string PathOpenFailedFormat => Get();
     public string PathCopyFailedFormat => Get();

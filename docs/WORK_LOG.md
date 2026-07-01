@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-07-01 - SettingsWindow tabbed layout cleanup
+
+- Replaced the long single-scroll SettingsWindow document with category tabs: Application, Explorer menu, Installation, Help/About and Danger zone.
+- Kept Settings footer actions fixed and left selected tab as WPF UI-only state; nothing is persisted to settings JSON.
+- Made Installation path rows more compact by using short visible `Open` / `Copy` actions; command-host open keeps the same behavior and explains opening the containing folder through tooltip text.
+- Added reusable Settings tab styles/tokens and localized tab/tooltip keys across all enabled catalogs.
+- Updated design/localization tests and docs for the tabbed Settings layout.
+- Registry, MenuHost, install/uninstall scripts, shell behavior, Core menu model, CLI localization, app icon, README hero and external assets were not changed.
+
 ## 2026-07-01 - Visual polish pass v1
 
 - Refined the current WPF surfaces without changing behavior: MainWindow now uses a calmer page header, compact status chip, clearer menu editor sections, polished empty state and a framed save/discard footer.
@@ -33,7 +42,7 @@
 - Reworded Explorer menu status in Settings/MainWindow from generic status text to explicit `Foldora Explorer menu: On/Off` style strings.
 - Renamed the visible Settings dry-run action to `Preview changes` / `Предпросмотр изменений`; internal command naming and shell behavior remain unchanged.
 - Added small self-authored `?` help buttons/tooltips for Explorer menu meaning, registry preview and installation paths; no external assets were added.
-- Added App-layer path actions for installed app path, user data path and current command host: Open/Open location and Copy.
+- Added App-layer path actions for installed app path, user data path and current command host: compact Open and Copy actions.
 - Added `IPathActionService` / `WindowsPathActionService` so path open/copy is testable and stays out of WPF code-behind/Core.
 - Documented future Help/About/Instructions window as separate UX debt.
 

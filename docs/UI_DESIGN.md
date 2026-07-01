@@ -26,7 +26,7 @@ Design system foundation добавляет централизованные WPF
 - MainWindow должен оставаться focused menu editor: title, groups, entries, icons, save/discard and editor status/errors.
 - SettingsWindow содержит system/admin/support actions: language/application settings, Help/About, Explorer integration, installation/path information and danger reset.
 - SettingsWindow system actions must use user-facing wording: `Preview changes` for dry-run registry preview, explicit `Foldora Explorer menu: On/Off` style status, and short tooltips for technical concepts.
-- Installation/path rows should be actionable: visible path, `Open`/`Open location`, and `Copy`, with failures shown as localized status messages.
+- Installation/path rows should be actionable: visible path, compact `Open` and `Copy` actions, with failures shown as localized status messages and tooltips explaining folder/file-location behavior.
 - Small help/info affordances may use self-authored XAML/text styling. If an affordance is only a hover/focus hint, it must look like a passive info glyph, not a broken clickable button. If it looks like a button, it needs real click behavior. Do not add external icon assets for this.
 - Long technical help tooltips must wrap within a reasonable width instead of rendering as a single line across the screen.
 - Longer instructions belong in the Settings Help/About window, not in crowded inline tooltips or on MainWindow.
@@ -103,6 +103,7 @@ Control and container styles:
 - `IconButtonStyle` / `DangerIconButtonStyle` for compact chrome/local actions;
 - `HelpInfoGlyphStyle` and `HelpTooltipTextStyle` for passive help glyphs and wrapped help text;
 - `TextBoxStyle`, `CheckBoxStyle`, `ComboBoxStyle`;
+- `SettingsTabControlStyle` and `SettingsTabItemStyle` for category navigation inside SettingsWindow;
 - `CardContainerStyle`, `GroupContainerStyle`, `SectionContainerStyle`;
 - `PageHeaderContainerStyle` for calm page/window content headers;
 - `StatusPillStyle` for compact user-facing state such as Explorer menu and saved/unsaved state;
@@ -143,10 +144,13 @@ MainWindow and SettingsWindow should remain resizable, but not below the practic
 Settings window является resizable и подготовлен к будущему росту настроек. Layout:
 
 - header/title в верхней `Auto`-строке;
-- settings content в единственном `ScrollViewer` со `VerticalScrollBarVisibility=Auto`;
+- settings content в `TabControl` with Application, Explorer menu, Installation, Help/About and Danger zone categories;
+- tab content may use an internal `ScrollViewer` when a category needs overflow, but the window should not behave like one long settings document;
 - footer actions в нижней fixed `Auto`-строке.
 
 Footer buttons `Сохранить`/`Закрыть` не прокручиваются вместе с содержимым и остаются доступными при уменьшении окна. Открытие modal settings window проверяется вручную пользователем; UIAutomation не является acceptance criterion для modal/custom-chrome WPF dialog.
+
+Danger zone belongs in its own tab so reset is not visible as primary content when Settings opens. Installation path rows use short visible `Open`/`Copy` labels; tooltips can explain whether the action opens a folder directly or opens the containing folder for an executable path.
 
 ## Compact Entry Cards
 

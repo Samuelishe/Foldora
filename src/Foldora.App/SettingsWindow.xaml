@@ -2,10 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{Binding L.Settings}"
-        Width="720"
-        Height="680"
+        Width="760"
+        Height="600"
         MinWidth="720"
-        MinHeight="460"
+        MinHeight="500"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
         SizeToContent="Manual"
@@ -28,56 +28,39 @@
                        Style="{StaticResource PageTitleTextStyle}" />
         </Border>
 
-        <ScrollViewer Grid.Row="1"
-                      VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Disabled"
-                      Margin="0,0,0,16">
-            <StackPanel Margin="0,0,18,0">
-                <Border Style="{StaticResource SectionContainerStyle}">
-                    <StackPanel>
-                        <TextBlock Text="{Binding L.ApplicationSection}"
-                                   Style="{StaticResource SectionTitleStyle}"
-                                   Margin="0,0,0,10" />
-                        <TextBlock Text="{Binding L.SettingsLanguageLabel}"
-                                   Style="{StaticResource FieldLabelStyle}"
-                                   Margin="0,0,0,8" />
-                        <ComboBox ItemsSource="{Binding AvailableLanguages}"
-                                  SelectedValue="{Binding SelectedLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  SelectedValuePath="Code"
-                                  DisplayMemberPath="DisplayName"
-                                  MinWidth="180"
-                                  MaxWidth="280"
-                                  HorizontalAlignment="Left" />
-                        <TextBlock Text="{Binding L.SettingsLanguageRestartNote}"
-                                   Style="{StaticResource SecondaryBodyTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Margin="0,10,0,0" />
-                        <TextBlock Text="{Binding StatusMessage}"
-                                   Style="{StaticResource StatusTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Foreground="{DynamicResource SuccessBrush}"
-                                   Visibility="{Binding HasStatusMessage, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                   Margin="0,10,0,0" />
-                    </StackPanel>
-                </Border>
+        <TabControl Grid.Row="1"
+                    Style="{StaticResource SettingsTabControlStyle}"
+                    ItemContainerStyle="{StaticResource SettingsTabItemStyle}"
+                    Margin="0,0,0,16">
+            <TabItem Header="{Binding L.SettingsTabApplication}">
+                <StackPanel>
+                    <TextBlock Text="{Binding L.SettingsLanguageLabel}"
+                               Style="{StaticResource FieldLabelStyle}"
+                               Margin="0,0,0,8" />
+                    <ComboBox ItemsSource="{Binding AvailableLanguages}"
+                              SelectedValue="{Binding SelectedLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedValuePath="Code"
+                              DisplayMemberPath="DisplayName"
+                              MinWidth="180"
+                              MaxWidth="280"
+                              HorizontalAlignment="Left" />
+                    <TextBlock Text="{Binding L.SettingsLanguageRestartNote}"
+                               Style="{StaticResource SecondaryBodyTextStyle}"
+                               TextWrapping="Wrap"
+                               Margin="0,10,0,0" />
+                    <TextBlock Text="{Binding StatusMessage}"
+                               Style="{StaticResource StatusTextStyle}"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource SuccessBrush}"
+                               Visibility="{Binding HasStatusMessage, Converter={StaticResource BooleanToVisibilityConverter}}"
+                               Margin="0,10,0,0" />
+                </StackPanel>
+            </TabItem>
 
-                <Border Style="{StaticResource SectionContainerStyle}">
-                    <StackPanel>
-                        <TextBlock Text="{Binding L.HelpAboutSection}"
-                                   Style="{StaticResource SectionTitleStyle}" />
-                        <TextBlock Text="{Binding L.HelpAboutSummary}"
-                                   Style="{StaticResource SecondaryBodyTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Margin="0,0,0,12" />
-                        <Button Content="{Binding L.OpenHelpAbout}"
-                                Command="{Binding OpenHelpCommand}"
-                                Style="{StaticResource InlineActionButtonStyle}"
-                                HorizontalAlignment="Left" />
-                    </StackPanel>
-                </Border>
-
-                <Border Style="{StaticResource SectionContainerStyle}">
-                    <StackPanel>
+            <TabItem Header="{Binding L.SettingsTabExplorerMenu}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="0,0,12,0">
                         <StackPanel Orientation="Horizontal"
                                     Margin="0,0,0,8">
                             <TextBlock Text="{Binding L.ExplorerMenuSection}"
@@ -167,10 +150,13 @@
                             </ItemsControl>
                         </Expander>
                     </StackPanel>
-                </Border>
+                </ScrollViewer>
+            </TabItem>
 
-                <Border Style="{StaticResource SectionContainerStyle}">
-                    <StackPanel>
+            <TabItem Header="{Binding L.SettingsTabInstallation}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="0,0,12,0">
                         <StackPanel Orientation="Horizontal"
                                     Margin="0,0,0,10">
                             <TextBlock Text="{Binding L.InstallationSection}"
@@ -214,10 +200,20 @@
                                     <Button Content="{Binding L.OpenFolder}"
                                             Command="{Binding OpenInstalledAppPathCommand}"
                                             Style="{StaticResource InlineActionButtonStyle}"
-                                            Margin="0,0,8,0" />
+                                            Margin="0,0,8,0">
+                                        <Button.ToolTip>
+                                            <TextBlock Text="{Binding L.OpenFolderTooltip}"
+                                                       Style="{StaticResource HelpTooltipTextStyle}" />
+                                        </Button.ToolTip>
+                                    </Button>
                                     <Button Content="{Binding L.CopyPath}"
                                             Command="{Binding CopyInstalledAppPathCommand}"
-                                            Style="{StaticResource InlineActionButtonStyle}" />
+                                            Style="{StaticResource InlineActionButtonStyle}">
+                                        <Button.ToolTip>
+                                            <TextBlock Text="{Binding L.CopyPathTooltip}"
+                                                       Style="{StaticResource HelpTooltipTextStyle}" />
+                                        </Button.ToolTip>
+                                    </Button>
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -249,10 +245,20 @@
                                     <Button Content="{Binding L.OpenFolder}"
                                             Command="{Binding OpenUserDataPathCommand}"
                                             Style="{StaticResource InlineActionButtonStyle}"
-                                            Margin="0,0,8,0" />
+                                            Margin="0,0,8,0">
+                                        <Button.ToolTip>
+                                            <TextBlock Text="{Binding L.OpenFolderTooltip}"
+                                                       Style="{StaticResource HelpTooltipTextStyle}" />
+                                        </Button.ToolTip>
+                                    </Button>
                                     <Button Content="{Binding L.CopyPath}"
                                             Command="{Binding CopyUserDataPathCommand}"
-                                            Style="{StaticResource InlineActionButtonStyle}" />
+                                            Style="{StaticResource InlineActionButtonStyle}">
+                                        <Button.ToolTip>
+                                            <TextBlock Text="{Binding L.CopyPathTooltip}"
+                                                       Style="{StaticResource HelpTooltipTextStyle}" />
+                                        </Button.ToolTip>
+                                    </Button>
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -281,13 +287,23 @@
                                 <StackPanel Grid.Row="1"
                                             Grid.Column="1"
                                             Orientation="Horizontal">
-                                    <Button Content="{Binding L.OpenLocation}"
+                                    <Button Content="{Binding L.OpenFolder}"
                                             Command="{Binding OpenCommandHostPathCommand}"
                                             Style="{StaticResource InlineActionButtonStyle}"
-                                            Margin="0,0,8,0" />
+                                            Margin="0,0,8,0">
+                                        <Button.ToolTip>
+                                            <TextBlock Text="{Binding L.OpenLocationTooltip}"
+                                                       Style="{StaticResource HelpTooltipTextStyle}" />
+                                        </Button.ToolTip>
+                                    </Button>
                                     <Button Content="{Binding L.CopyPath}"
                                             Command="{Binding CopyCommandHostPathCommand}"
-                                            Style="{StaticResource InlineActionButtonStyle}" />
+                                            Style="{StaticResource InlineActionButtonStyle}">
+                                        <Button.ToolTip>
+                                            <TextBlock Text="{Binding L.CopyPathTooltip}"
+                                                       Style="{StaticResource HelpTooltipTextStyle}" />
+                                        </Button.ToolTip>
+                                    </Button>
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -300,9 +316,27 @@
                                    Style="{StaticResource SecondaryBodyTextStyle}"
                                    TextWrapping="Wrap" />
                     </StackPanel>
-                </Border>
+                </ScrollViewer>
+            </TabItem>
 
-                <Border Style="{StaticResource DangerBannerStyle}">
+            <TabItem Header="{Binding L.SettingsTabHelpAbout}">
+                <StackPanel>
+                    <TextBlock Text="{Binding L.HelpAboutSection}"
+                               Style="{StaticResource SectionTitleStyle}" />
+                    <TextBlock Text="{Binding L.HelpAboutSummary}"
+                               Style="{StaticResource SecondaryBodyTextStyle}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,12" />
+                    <Button Content="{Binding L.OpenHelpAbout}"
+                            Command="{Binding OpenHelpCommand}"
+                            Style="{StaticResource InlineActionButtonStyle}"
+                            HorizontalAlignment="Left" />
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="{Binding L.SettingsTabDangerZone}">
+                <Border Style="{StaticResource DangerBannerStyle}"
+                        Margin="0">
                     <StackPanel>
                         <TextBlock Text="{Binding L.DangerZone}"
                                    Style="{StaticResource SectionTitleStyle}"
@@ -325,8 +359,8 @@
                                 HorizontalAlignment="Left" />
                     </StackPanel>
                 </Border>
-            </StackPanel>
-        </ScrollViewer>
+            </TabItem>
+        </TabControl>
 
         <StackPanel Grid.Row="2"
                     Orientation="Horizontal"

@@ -48,9 +48,17 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Preview changes", english.Resources.PreviewChanges);
         Assert.Equal("Foldora Explorer menu: On", english.Resources.ExplorerMenuStatusOn);
         Assert.Equal("Foldora Explorer menu: Off", english.Resources.ExplorerMenuStatusOff);
+        Assert.Equal("Application", english.Resources.SettingsTabApplication);
+        Assert.Equal("Explorer menu", english.Resources.SettingsTabExplorerMenu);
+        Assert.Equal("Installation", english.Resources.SettingsTabInstallation);
+        Assert.Equal("Help / About", english.Resources.SettingsTabHelpAbout);
+        Assert.Equal("Danger zone", english.Resources.SettingsTabDangerZone);
         Assert.Equal("Open", english.Resources.OpenFolder);
-        Assert.Equal("Open location", english.Resources.OpenLocation);
+        Assert.Equal("Open", english.Resources.OpenLocation);
         Assert.Equal("Copy", english.Resources.CopyPath);
+        Assert.Equal("Opens this folder.", english.Resources.OpenFolderTooltip);
+        Assert.Equal("Opens the folder that contains this file.", english.Resources.OpenLocationTooltip);
+        Assert.Equal("Copies this path.", english.Resources.CopyPathTooltip);
         Assert.Equal("Help / About", english.Resources.HelpAboutSection);
         Assert.Equal("Help and About", english.Resources.OpenHelpAbout);
         Assert.Equal("Help / About Foldora", english.Resources.HelpWindowTitle);
@@ -68,6 +76,13 @@ public sealed class LocalizationServiceTests
         var service = new InMemoryLocalizationService("ru");
 
         Assert.Equal("Настройки", service.Resources.Settings);
+        Assert.Equal("Приложение", service.Resources.SettingsTabApplication);
+        Assert.Equal("Меню Проводника", service.Resources.SettingsTabExplorerMenu);
+        Assert.Equal("Установка", service.Resources.SettingsTabInstallation);
+        Assert.Equal("Справка / О программе", service.Resources.SettingsTabHelpAbout);
+        Assert.Equal("Опасная зона", service.Resources.SettingsTabDangerZone);
+        Assert.Equal("Открыть", service.Resources.OpenLocation);
+        Assert.Equal("Открывает папку, где находится файл.", service.Resources.OpenLocationTooltip);
     }
 
     [Fact]
