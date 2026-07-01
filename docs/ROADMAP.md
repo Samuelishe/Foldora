@@ -7,7 +7,7 @@ Foldora currently has a working MVP loop:
 - WPF editor with custom window chrome.
 - Compact/edit entry cards for menu entries.
 - Settings gear and persisted language setting `ru`/`en`.
-- Localization foundation for WPF labels/status/defaults using embedded `ru`/`en` catalogs.
+- Localization foundation for WPF labels/status/defaults and localized default menu title mode using embedded `ru`/`en` catalogs.
 - Grouped WPF presentation sections for root-level and one-level grouped entries.
 - User menu entries with:
   - `DisplayName`;
@@ -93,7 +93,7 @@ Per-user install smoke and release polish before full installer work:
 - No orphan icon cleanup for imported `.ico`.
 - No user-facing diagnostics for `Foldora.MenuHost.exe` failures launched from Explorer.
 - First-created desktop folder default-icon timing is currently not reproduced; tracked as `TD-0002` monitor item.
-- Full localization is not complete: Core compatibility defaults, CLI defaults/diagnostics, validation messages and startup fatal dialog remain tracked debt.
+- Full localization is not complete: CLI defaults/diagnostics, validation messages and startup fatal dialog remain tracked debt.
 - Planned complete locale batch after catalog hardening: `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`; incomplete locales must not be exposed in Settings UI.
 - No Explorer restart or icon cache reset flow.
 

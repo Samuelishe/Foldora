@@ -19,6 +19,7 @@ public sealed class FolderMenuDraftEditorTests
             await editor.LoadAsync();
 
             Assert.Equal("Создать папку", editor.Title);
+            Assert.False(editor.TitleIsCustom);
             Assert.Empty(editor.Entries);
             Assert.False(editor.HasUnsavedChanges);
         }
@@ -42,6 +43,7 @@ public sealed class FolderMenuDraftEditorTests
             await editor.LoadAsync();
 
             Assert.Equal("Мои папки", editor.Title);
+            Assert.True(editor.TitleIsCustom);
             var entry = Assert.Single(editor.Entries);
             Assert.Equal("entry-skull", entry.Id);
             Assert.Equal("Череп", entry.DisplayName);
@@ -102,12 +104,39 @@ public sealed class FolderMenuDraftEditorTests
 
             Assert.True(result.Saved);
             Assert.Equal("Мои папки", saved.CreateFolderMenu.Title);
+            Assert.True(saved.CreateFolderMenu.TitleIsCustom);
             Assert.Equal("Скелет", saved.CreateFolderMenu.Entries[0].DisplayName);
             Assert.Equal("Скелет", saved.CreateFolderMenu.Entries[0].DefaultFolderName);
             Assert.Equal("Готические", saved.CreateFolderMenu.Entries[0].GroupName);
             Assert.False(saved.CreateFolderMenu.Entries[0].IsEnabled);
             Assert.True(saved.ExplorerIntegrationEnabled);
             Assert.False(editor.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task SetCustomTitle_MarksDefaultTextAsCustom()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(paths, false, "Create folder");
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            editor.SetCustomTitle("Создать папку");
+            var result = await editor.SaveAsync();
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.True(result.Saved);
+            Assert.Equal("Создать папку", saved.CreateFolderMenu.Title);
+            Assert.True(saved.CreateFolderMenu.TitleIsCustom);
         }
         finally
         {

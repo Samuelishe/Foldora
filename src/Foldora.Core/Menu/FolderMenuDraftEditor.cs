@@ -32,6 +32,8 @@ public sealed class FolderMenuDraftEditor
 
     public string Title { get; set; } = FolderMenuSettings.CreateDefault().Title;
 
+    public bool TitleIsCustom { get; private set; }
+
     public List<FolderMenuDraftEntry> Entries { get; } = [];
 
     public bool HasUnsavedChanges => Entries.Any(entry => !string.IsNullOrWhiteSpace(entry.PendingIconSourcePath))
@@ -50,6 +52,23 @@ public sealed class FolderMenuDraftEditor
     public void Reload()
     {
         ResetDraftFromSaved();
+    }
+
+    public void SetCustomTitle(string title)
+    {
+        Title = title;
+        TitleIsCustom = true;
+    }
+
+    public void SetDefaultTitle(string title)
+    {
+        Title = title;
+        TitleIsCustom = false;
+    }
+
+    public void SetLanguage(string language)
+    {
+        savedSettings = savedSettings with { Language = FoldoraLanguage.NormalizeOrDefault(language) };
     }
 
     public FolderMenuDraftEntry AddEntry()
@@ -146,6 +165,7 @@ public sealed class FolderMenuDraftEditor
     private void ResetDraftFromSaved()
     {
         Title = savedSettings.CreateFolderMenu.Title;
+        TitleIsCustom = savedSettings.CreateFolderMenu.TitleIsCustom;
         Entries.Clear();
         Entries.AddRange(savedSettings.CreateFolderMenu.Entries
             .OrderBy(entry => entry.SortOrder)
@@ -173,6 +193,7 @@ public sealed class FolderMenuDraftEditor
         return new FolderMenuSettings
         {
             Title = Title,
+            TitleIsCustom = TitleIsCustom,
             Entries = Entries.Select(entry => entry.ToEntry(iconPathSelector(entry))).ToList()
         };
     }
@@ -220,6 +241,7 @@ public sealed class FolderMenuDraftEditor
 
         return left.ExplorerIntegrationEnabled == right.ExplorerIntegrationEnabled
                && string.Equals(leftMenu.Title, rightMenu.Title, StringComparison.Ordinal)
+               && leftMenu.TitleIsCustom == rightMenu.TitleIsCustom
                && EntriesEqual(SortEntries(leftMenu.Entries), SortEntries(rightMenu.Entries));
     }
 

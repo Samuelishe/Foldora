@@ -18,6 +18,7 @@
 - `src/Foldora.Core/Storage/FoldoraDataPaths.cs` - AppData paths.
 - `src/Foldora.Core/Menu/FolderMenuEntry.cs` - пользовательский пункт будущего submenu, включая optional one-level `GroupName`.
 - `src/Foldora.Core/Menu/FolderMenuSettings.cs` - настройки меню создания папки.
+- `src/Foldora.Core/Menu/FolderMenuDefaultTitles.cs` - compatibility helper для known localized default menu titles и default-title inference.
 - `src/Foldora.Core/Menu/FolderMenuNameGenerator.cs` - генератор fallback-имён `Вид N`.
 - `src/Foldora.Core/Menu/IconImportResult.cs` - результат импорта иконки.
 - `src/Foldora.Core/Menu/IconImportService.cs` - импорт `.ico` в AppData, включая staged WPF import для существующего entry id.

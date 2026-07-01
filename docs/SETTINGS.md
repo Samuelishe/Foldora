@@ -59,6 +59,7 @@ WPF startup не должен синхронно читать `settings.json` в
   "language": "ru",
   "createFolderMenu": {
     "title": "Создать папку",
+    "titleIsCustom": false,
     "entries": []
   }
 }
@@ -102,7 +103,11 @@ WPF phase 4 меняет `ExplorerIntegrationEnabled` только через я
 
 После save-triggered rebuild current register-service policy сохраняется: если enabled entries нет, Foldora-owned registry roots удаляются и `ExplorerIntegrationEnabled` становится `false`. Если registry rebuild падает после успешного settings save, settings не откатываются; UI показывает warning/error.
 
-`CreateFolderMenu.Title` является видимым top-level именем legacy Explorer menu. Если title пустой/whitespace при построении registry plan, используется fallback `Создать папку`. Technical registry key остаётся `Foldora` и не зависит от title.
+`CreateFolderMenu.Title` является видимым top-level именем legacy Explorer menu. `CreateFolderMenu.TitleIsCustom` отделяет user-edited title от localized default-title mode.
+
+Если `TitleIsCustom = false`, title считается продуктовым default и соответствует текущему `Language`: `Создать папку` для `ru`, `Create folder` для `en`. Если `TitleIsCustom = true`, Foldora сохраняет текст как пользовательский и не переводит его при смене языка, даже если текст совпадает с known default.
+
+Старые settings без `titleIsCustom` нормализуются осторожно: пустой title и known defaults `Создать папку`/`Create folder` считаются default-title mode, любой другой title считается custom. Если title пустой/whitespace при построении registry plan, всё ещё используется compatibility fallback `Создать папку`. Technical registry key остаётся `Foldora` и не зависит от title.
 
 `unregister-menu` меняет только `ExplorerIntegrationEnabled = false` после удаления Foldora-owned registry roots; `CreateFolderMenu.Entries` и title сохраняются.
 
@@ -113,6 +118,7 @@ WPF phase 4 меняет `ExplorerIntegrationEnabled` только через я
   "explorerIntegrationEnabled": false,
   "createFolderMenu": {
     "title": "Создать папку",
+    "titleIsCustom": false,
     "entries": []
   }
 }

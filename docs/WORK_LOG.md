@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-07-01 - Localized menu title default and custom-title tracking
+
+- Added `FolderMenuSettings.TitleIsCustom` to distinguish user-edited menu titles from localized product defaults.
+- Added compatibility inference for old settings: empty/missing title and known defaults `Создать папку`/`Create folder` are default-title mode; other titles are custom.
+- English UI now shows default menu title `Create folder`; Russian UI keeps `Создать папку`.
+- Manual title edits mark the title custom, so future language changes do not rewrite it.
+- WPF reset restores localized default-title mode; CLI/Shell reset keeps the compatibility default path.
+- Added tests for old settings migration, language-switch behavior, custom title preservation, reset behavior and registry plan effective title.
+
 ## 2026-07-01 - Localization foundation cleanup
 
 - Added `docs/LOCALIZATION.md` as the source of truth for locale policy, string categories, saved user data behavior, fallback rules, audit commands and planned locales.

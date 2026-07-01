@@ -46,7 +46,7 @@ Design system foundation добавляет централизованные WPF
 - Settings gear находится в title/header area и открывает настройки приложения.
 - Language setting выбирается в settings UI. Default language: `ru`; complete/enabled values: `ru`, `en`.
 - Labels/buttons/status defaults подключены к App localization foundation. Новые user-facing строки в XAML/ViewModels должны идти через localization keys; incomplete planned locales не показываются.
-- Смена языка не переводит saved menu title, entries или group names; новые entry defaults используют текущий UI language.
+- Смена языка обновляет untouched/default menu title, но не переводит custom menu title, entries или group names; новые entry defaults используют текущий UI language.
 
 ## Design System Foundation
 

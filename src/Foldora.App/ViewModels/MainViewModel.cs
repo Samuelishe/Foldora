@@ -109,7 +109,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             }
 
             title = value;
-            draftEditor.Title = value;
+            draftEditor.SetCustomTitle(value);
             OnPropertyChanged();
             RefreshDirtyState();
         }
@@ -248,6 +248,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         await draftEditor.LoadAsync(cancellationToken);
         localizationService.SetLanguage(draftEditor.Language);
         OnPropertyChanged(nameof(L));
+        RefreshLocalizedDefaultTitle();
         RefreshLocalizedEntryState();
         OnPropertyChanged(nameof(ExplorerIntegrationStatusText));
         OnPropertyChanged(nameof(ExplorerIntegrationStatusLabel));
@@ -346,7 +347,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
 
         localizationService.SetLanguage(result.Language);
+        draftEditor.SetLanguage(result.Language);
         OnPropertyChanged(nameof(L));
+        RefreshLocalizedDefaultTitle();
         RefreshLocalizedEntryState();
         RebuildEntryGroups();
         StatusMessage = L.LanguageSavedRestartNotice;
@@ -457,6 +460,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     private void LoadDraftIntoViewModels()
     {
+        if (!draftEditor.TitleIsCustom)
+        {
+            draftEditor.SetDefaultTitle(L.CreateFolderMenuTitle);
+        }
+
         title = draftEditor.Title;
         OnPropertyChanged(nameof(Title));
 
@@ -592,6 +600,19 @@ public sealed class MainViewModel : INotifyPropertyChanged
         {
             entry.RefreshLocalizedState();
         }
+    }
+
+    private void RefreshLocalizedDefaultTitle()
+    {
+        if (draftEditor.TitleIsCustom)
+        {
+            return;
+        }
+
+        draftEditor.SetDefaultTitle(L.CreateFolderMenuTitle);
+        title = draftEditor.Title;
+        OnPropertyChanged(nameof(Title));
+        RefreshDirtyState();
     }
 
     private void DeleteGroup(string groupName)

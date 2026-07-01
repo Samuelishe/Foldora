@@ -85,10 +85,19 @@ public sealed class ExplorerMenuRegistrationService
             plans);
     }
 
-    public async Task<ExplorerMenuRegistrationResult> ResetMenuAsync(CancellationToken cancellationToken = default)
+    public Task<ExplorerMenuRegistrationResult> ResetMenuAsync(CancellationToken cancellationToken = default)
     {
+        return ResetMenuAsync(FolderMenuSettings.CreateDefault(), cancellationToken);
+    }
+
+    public async Task<ExplorerMenuRegistrationResult> ResetMenuAsync(
+        FolderMenuSettings defaultMenuSettings,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(defaultMenuSettings);
+
         var settings = await settingsStorage.LoadAsync(cancellationToken);
-        var plans = BuildDeletePlans(FolderMenuSettings.CreateDefault().Title);
+        var plans = BuildDeletePlans(defaultMenuSettings.Title);
 
         foreach (var plan in plans)
         {
@@ -98,7 +107,7 @@ public sealed class ExplorerMenuRegistrationService
         var updatedSettings = settings with
         {
             ExplorerIntegrationEnabled = false,
-            CreateFolderMenu = FolderMenuSettings.CreateDefault()
+            CreateFolderMenu = defaultMenuSettings
         };
         await SaveSettingsAfterRegistrySuccessAsync(updatedSettings, cancellationToken);
 

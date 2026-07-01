@@ -171,7 +171,7 @@ public sealed class ExplorerIntegrationControllerTests
         try
         {
             var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
-            await SaveSettingsAsync(paths, explorerIntegrationEnabled: true, CreateEntry("entry-skull", "Череп"));
+            await SaveSettingsAsync(paths, "en", explorerIntegrationEnabled: true, CreateEntry("entry-skull", "Череп"));
             var registry = new FakeRegistryAccess();
             registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryRoot);
             registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryBackgroundRoot);
@@ -260,6 +260,35 @@ public sealed class ExplorerIntegrationControllerTests
             Assert.True(File.Exists(paths.SettingsFile));
             Assert.True(File.Exists(iconPath));
             Assert.True(Directory.Exists(paths.PacksDirectory));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task Reset_UsesCurrentLocalizedDefaultTitle()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraAppIntegration-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "en", explorerIntegrationEnabled: true, CreateEntry("entry-skull", "Череп"));
+            var localization = new InMemoryLocalizationService("en");
+            var (controller, _) = await CreateControllerAndEditorAsync(
+                paths,
+                new FakeRegistryAccess(),
+                await CreateFakeHostAsync(root.FullName),
+                localization);
+
+            var result = await controller.ResetMenuAsync();
+            var settings = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.True(result.Success);
+            Assert.Equal("Create folder", settings.CreateFolderMenu.Title);
+            Assert.False(settings.CreateFolderMenu.TitleIsCustom);
         }
         finally
         {
@@ -366,7 +395,8 @@ public sealed class ExplorerIntegrationControllerTests
     private static async Task<(ExplorerIntegrationController Controller, FolderMenuDraftEditor Editor)> CreateControllerAndEditorAsync(
         FoldoraDataPaths paths,
         FakeRegistryAccess registry,
-        string cliPath)
+        string cliPath,
+        ILocalizationService? localizationService = null)
     {
         var storage = new FoldoraSettingsStorage(paths);
         var editor = new FolderMenuDraftEditor(storage, paths);
@@ -377,7 +407,7 @@ public sealed class ExplorerIntegrationControllerTests
             new ExplorerMenuRegistryPlanBuilder(),
             new ExplorerMenuRegistryWriter(registry));
 
-        return (new ExplorerIntegrationController(editor, service, new FixedHostPathResolver(cliPath)), editor);
+        return (new ExplorerIntegrationController(editor, service, new FixedHostPathResolver(cliPath), localizationService), editor);
     }
 
     private static async Task SaveSettingsAsync(
@@ -385,7 +415,21 @@ public sealed class ExplorerIntegrationControllerTests
         bool explorerIntegrationEnabled,
         params FolderMenuEntry[] entries)
     {
-        var settings = new FoldoraSettings { ExplorerIntegrationEnabled = explorerIntegrationEnabled };
+        await SaveSettingsAsync(paths, FoldoraLanguage.Russian, explorerIntegrationEnabled, entries);
+    }
+
+    private static async Task SaveSettingsAsync(
+        FoldoraDataPaths paths,
+        string language,
+        bool explorerIntegrationEnabled,
+        params FolderMenuEntry[] entries)
+    {
+        var settings = new FoldoraSettings
+        {
+            Language = language,
+            ExplorerIntegrationEnabled = explorerIntegrationEnabled,
+            CreateFolderMenu = FolderMenuSettings.CreateDefault(language)
+        };
         foreach (var entry in entries)
         {
             settings.CreateFolderMenu.Entries.Add(entry);

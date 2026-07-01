@@ -370,7 +370,7 @@ public sealed class MainViewModelPresentationTests
                 CreateEntry("entry-view-1", "Вид 1", "Новая папка"));
             var viewModel = await CreateViewModelAsync(paths);
 
-            Assert.Equal("Создать папку", viewModel.Title);
+            Assert.Equal("Create folder", viewModel.Title);
             Assert.Equal("Вид 1", viewModel.Entries[0].DisplayName);
             Assert.Equal("Новая папка", viewModel.Entries[0].DefaultFolderName);
 
@@ -378,6 +378,115 @@ public sealed class MainViewModelPresentationTests
 
             Assert.Equal("View 1", viewModel.Entries[1].DisplayName);
             Assert.Equal("New folder", viewModel.Entries[1].DefaultFolderName);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task CustomTitle_IsNotTranslatedWhenUiLanguageIsEnglish()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(
+                paths,
+                "en",
+                "Мои папки",
+                titleIsCustom: true,
+                CreateEntry("entry-view-1", "Вид 1", "Новая папка"));
+
+            var viewModel = await CreateViewModelAsync(paths);
+
+            Assert.Equal("Мои папки", viewModel.Title);
+            Assert.Equal("Вид 1", viewModel.Entries[0].DisplayName);
+            Assert.Equal("Новая папка", viewModel.Entries[0].DefaultFolderName);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task LanguageSwitch_UpdatesDefaultTitleButNotCustomTitle()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var defaultTitleViewModel = await CreateViewModelAsync(
+                paths,
+                new RecordingSettingsDialogService("en"));
+
+            await defaultTitleViewModel.OpenSettingsAsync();
+
+            Assert.Equal("Create folder", defaultTitleViewModel.Title);
+
+            var customPaths = new FoldoraDataPaths(Path.Combine(root.FullName, "FoldoraCustom"));
+            await SaveSettingsAsync(customPaths, "ru", "Мои папки", titleIsCustom: true);
+            var customTitleViewModel = await CreateViewModelAsync(
+                customPaths,
+                new RecordingSettingsDialogService("en"));
+
+            await customTitleViewModel.OpenSettingsAsync();
+
+            Assert.Equal("Мои папки", customTitleViewModel.Title);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task SaveAfterLanguageSwitch_PreservesNewLanguageAndLocalizedDefaultTitle()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var viewModel = await CreateViewModelAsync(
+                paths,
+                new RecordingSettingsDialogService("en"));
+
+            await viewModel.OpenSettingsAsync();
+            await viewModel.SaveDraftAsync();
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.Equal("en", saved.Language);
+            Assert.Equal("Create folder", saved.CreateFolderMenu.Title);
+            Assert.False(saved.CreateFolderMenu.TitleIsCustom);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task EditingMenuTitle_MarksTitleAsCustom()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "en");
+            var viewModel = await CreateViewModelAsync(paths);
+
+            viewModel.Title = "Создать папку";
+            await viewModel.SaveDraftAsync();
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.Equal("Создать папку", saved.CreateFolderMenu.Title);
+            Assert.True(saved.CreateFolderMenu.TitleIsCustom);
         }
         finally
         {
@@ -569,6 +678,7 @@ public sealed class MainViewModelPresentationTests
     {
         var storage = new FoldoraSettingsStorage(paths);
         var draftEditor = new FolderMenuDraftEditor(storage, paths);
+        var localizationService = new InMemoryLocalizationService();
         var registrationService = new ExplorerMenuRegistrationService(
             storage,
             new ExplorerMenuRegistryPlanBuilder(),
@@ -580,8 +690,10 @@ public sealed class MainViewModelPresentationTests
             new ExplorerIntegrationController(
                 draftEditor,
                 registrationService,
-                new FixedHostPathResolver(Path.Combine(paths.RootDirectory, "Foldora.MenuHost.exe"))),
-            settingsDialogService);
+                new FixedHostPathResolver(Path.Combine(paths.RootDirectory, "Foldora.MenuHost.exe")),
+                localizationService),
+            settingsDialogService,
+            localizationService);
 
         await viewModel.LoadAsync();
         return viewModel;
@@ -594,7 +706,25 @@ public sealed class MainViewModelPresentationTests
 
     private static async Task SaveSettingsAsync(FoldoraDataPaths paths, string language, params FolderMenuEntry[] entries)
     {
-        var settings = new FoldoraSettings { Language = language };
+        await SaveSettingsAsync(paths, language, FolderMenuDefaultTitles.GetForLanguage(language), titleIsCustom: false, entries);
+    }
+
+    private static async Task SaveSettingsAsync(
+        FoldoraDataPaths paths,
+        string language,
+        string title,
+        bool titleIsCustom,
+        params FolderMenuEntry[] entries)
+    {
+        var settings = new FoldoraSettings
+        {
+            Language = language,
+            CreateFolderMenu = new FolderMenuSettings
+            {
+                Title = title,
+                TitleIsCustom = titleIsCustom
+            }
+        };
         foreach (var entry in entries)
         {
             settings.CreateFolderMenu.Entries.Add(entry);
@@ -653,12 +783,19 @@ public sealed class MainViewModelPresentationTests
 
     private sealed class RecordingSettingsDialogService : ISettingsDialogService
     {
+        private readonly string language;
+
+        public RecordingSettingsDialogService(string language = "ru")
+        {
+            this.language = language;
+        }
+
         public bool WasCalled { get; private set; }
 
         public Task<SettingsDialogResult> ShowSettingsAsync()
         {
             WasCalled = true;
-            return Task.FromResult(new SettingsDialogResult(false, "ru"));
+            return Task.FromResult(new SettingsDialogResult(true, language));
         }
     }
 }

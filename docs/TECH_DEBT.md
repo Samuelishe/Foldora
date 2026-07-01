@@ -11,10 +11,10 @@
 - Status: Open
 - Severity: Medium
 - Area: WPF / CLI / Core / Docs
-- Observed behavior: WPF labels/status/defaults now use embedded `ru`/`en` catalogs for the main editor flow, but some user-facing strings still live outside the localization layer.
+- Observed behavior: WPF labels/status/defaults and default menu title mode now use embedded `ru`/`en` catalogs for the main editor flow, but some user-facing strings still live outside the localization layer.
 - Expected/desired behavior: UI, runtime/status, validation and diagnostic messages should be localized consistently, while saved user data remains unchanged when language changes.
 - Known cause or hypothesis: Early MVP started with Russian hardcoded defaults in Core and diagnostic CLI output. Moving all validation/CLI text requires a broader invariant-code mapping and a CLI localization policy.
-- Current workaround: WPF passes localized defaults for new draft entries. Existing Core fallbacks remain compatibility/CLI paths and are documented in `docs/LOCALIZATION.md`.
+- Current workaround: WPF passes localized defaults for new draft entries and tracks default/custom menu title separately. Existing Core fallbacks remain compatibility/CLI paths and are documented in `docs/LOCALIZATION.md`.
 - Next investigation step: Localize validation rendering at the App boundary, decide CLI localization policy, and replace the startup fatal dialog literals.
 - Links to docs/tests/code:
   - `docs/LOCALIZATION.md`

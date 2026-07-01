@@ -17,7 +17,7 @@ Foldora не запрещает пользователю делать стран
 
 `DisplayName`, `DefaultFolderName` и `GroupName` не смешиваются. `DisplayName` и `GroupName` нельзя использовать как id, имя файла или registry key. Дубликаты `DisplayName` и одинаковые `GroupName` разрешены.
 
-Localization rule: saved menu title, entry display names, folder names and group names are user data and are not auto-translated when application language changes. WPF creates new draft entries with localized App-level defaults (`Вид N`/`Новая папка` for `ru`, `View N`/`New folder` for `en`). Core fallback defaults remain for compatibility/CLI safety and are not the preferred UI localization path.
+Localization rule: custom saved menu title, entry display names, folder names and group names are user data and are not auto-translated when application language changes. Menu title also has a default-title mode tracked by `TitleIsCustom = false`; in that mode the title follows the current complete locale (`Создать папку` for `ru`, `Create folder` for `en`). WPF creates new draft entries with localized App-level defaults (`Вид N`/`Новая папка` for `ru`, `View N`/`New folder` for `en`). Core fallback defaults remain for compatibility/CLI safety and are not the preferred UI localization path.
 
 Пример разрешённого пользовательского выбора:
 
@@ -46,7 +46,7 @@ Entry должен быть enabled, иметь непустой `IconPath`, а 
   <DisplayName entry 2>
 ```
 
-Если `CreateFolderMenu.Title` пустой или состоит только из пробелов, используется fallback `Создать папку`. Технический registry root при этом остаётся `Foldora`, чтобы safety validator мог разрешать только Foldora-owned paths:
+Если `CreateFolderMenu.Title` пустой или состоит только из пробелов, используется compatibility fallback `Создать папку`. В normal settings flow default-title mode сохраняет effective localized title, поэтому English default registry menu должен получать `Create folder`. Технический registry root при этом остаётся `Foldora`, чтобы safety validator мог разрешать только Foldora-owned paths:
 
 ```text
 HKCU\Software\Classes\Directory\shell\Foldora

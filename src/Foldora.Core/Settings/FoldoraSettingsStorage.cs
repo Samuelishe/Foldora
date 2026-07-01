@@ -61,18 +61,43 @@ public sealed class FoldoraSettingsStorage
             FileAccess.Write,
             FileShare.None);
 
-        await JsonSerializer.SerializeAsync(stream, settings, JsonOptions, cancellationToken);
+        await JsonSerializer.SerializeAsync(stream, Normalize(settings), JsonOptions, cancellationToken);
         await stream.WriteAsync("\n"u8.ToArray(), cancellationToken);
     }
 
     private static FoldoraSettings Normalize(FoldoraSettings settings)
     {
-        foreach (var entry in settings.CreateFolderMenu.Entries)
+        var language = FoldoraLanguage.NormalizeOrDefault(settings.Language);
+        var menu = NormalizeMenu(settings.CreateFolderMenu, language);
+
+        return settings with
+        {
+            Language = language,
+            CreateFolderMenu = menu
+        };
+    }
+
+    private static FolderMenuSettings NormalizeMenu(FolderMenuSettings menu, string language)
+    {
+        var title = FolderMenuDefaultTitles.Normalize(menu.Title);
+        var titleIsCustom = menu.TitleIsCustom || !FolderMenuDefaultTitles.IsKnownDefault(title);
+        if (string.IsNullOrEmpty(title))
+        {
+            title = FolderMenuDefaultTitles.GetForLanguage(language);
+            titleIsCustom = false;
+        }
+
+        foreach (var entry in menu.Entries)
         {
             entry.DefaultFolderName = FolderNameValidator.NormalizeOrDefault(entry.DefaultFolderName);
             entry.GroupName = GroupNameValidator.Normalize(entry.GroupName);
         }
 
-        return settings with { Language = FoldoraLanguage.NormalizeOrDefault(settings.Language) };
+        return new FolderMenuSettings
+        {
+            Title = titleIsCustom ? title : FolderMenuDefaultTitles.GetForLanguage(language),
+            TitleIsCustom = titleIsCustom,
+            Entries = menu.Entries
+        };
     }
 }

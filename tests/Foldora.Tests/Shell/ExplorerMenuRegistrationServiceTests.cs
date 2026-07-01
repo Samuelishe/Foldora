@@ -63,6 +63,31 @@ public sealed class ExplorerMenuRegistrationServiceTests
     }
 
     [Fact]
+    public async Task Register_UsesEffectiveLocalizedDefaultTitle()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraRegister-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "en", explorerIntegrationEnabled: false, CreateEntry("entry-skull", "Череп"));
+            var cliPath = await CreateFakeCliAsync(root.FullName);
+            var registry = new FakeRegistryAccess();
+
+            var result = await CreateService(paths, registry).RegisterAsync(cliPath, dryRun: true);
+
+            Assert.Contains(
+                result.Plans.SelectMany(plan => plan.ValueOperations),
+                operation => operation.ValueName == "MUIVerb"
+                             && operation.ValueData == "Create folder");
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task Register_WithEmptyEntriesDeletesOwnedKeysAndDisablesIntegration()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraRegister-");
@@ -162,6 +187,30 @@ public sealed class ExplorerMenuRegistrationServiceTests
     }
 
     [Fact]
+    public async Task ResetMenu_CanRestoreLocalizedDefaultTitle()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraReset-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "en", explorerIntegrationEnabled: true, CreateEntry("entry-skull", "Череп"));
+            var registry = new FakeRegistryAccess();
+
+            await CreateService(paths, registry).ResetMenuAsync(FolderMenuSettings.CreateDefault(FoldoraLanguage.English));
+            var settings = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.Equal("Create folder", settings.CreateFolderMenu.Title);
+            Assert.False(settings.CreateFolderMenu.TitleIsCustom);
+            Assert.Empty(settings.CreateFolderMenu.Entries);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task Register_RejectsMissingCliPath()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraRegister-");
@@ -194,7 +243,21 @@ public sealed class ExplorerMenuRegistrationServiceTests
         bool explorerIntegrationEnabled,
         params FolderMenuEntry[] entries)
     {
-        var settings = new FoldoraSettings { ExplorerIntegrationEnabled = explorerIntegrationEnabled };
+        await SaveSettingsAsync(paths, FoldoraLanguage.Russian, explorerIntegrationEnabled, entries);
+    }
+
+    private static async Task SaveSettingsAsync(
+        FoldoraDataPaths paths,
+        string language,
+        bool explorerIntegrationEnabled,
+        params FolderMenuEntry[] entries)
+    {
+        var settings = new FoldoraSettings
+        {
+            Language = language,
+            ExplorerIntegrationEnabled = explorerIntegrationEnabled,
+            CreateFolderMenu = FolderMenuSettings.CreateDefault(language)
+        };
         foreach (var entry in entries)
         {
             settings.CreateFolderMenu.Entries.Add(entry);

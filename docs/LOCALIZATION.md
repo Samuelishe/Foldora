@@ -64,7 +64,7 @@ New object defaults are localized values used when the user creates a new object
 - new entry display name prefix: `Вид` / `View`
 - new folder default name: `Новая папка` / `New folder`
 
-Existing user data is saved data such as menu title, entry display names, folder names and custom group names. Existing user data is not auto-translated when the application language changes.
+Existing user data is saved data such as custom menu title, entry display names, folder names and custom group names. Existing user data is not auto-translated when the application language changes.
 
 ## Core boundary
 
@@ -92,9 +92,19 @@ New UI text requires:
 
 Changing application language changes UI labels, status messages and defaults for objects created after the change.
 
-Changing application language does not rewrite saved menu title, entry display names, default folder names or group names.
+Changing application language does not rewrite custom saved menu title, entry display names, default folder names or group names.
 
-Menu title is user data after it is saved. A future first-run setup may choose a locale-aware initial title, but must not corrupt existing settings.
+Menu title is user-editable, but it has a default-title mode. If the title has not been customized, it follows the current complete locale: `Создать папку` for `ru`, `Create folder` for `en`.
+
+`FolderMenuSettings.TitleIsCustom` tracks whether the user explicitly edited the title. If `TitleIsCustom = true`, language changes do not rewrite the title even if it equals a known default string.
+
+Migration/inference for old settings without `titleIsCustom`:
+
+- null/empty/missing title: default-title mode;
+- title equal to any known complete-locale default (`Создать папку` or `Create folder`): default-title mode;
+- any other title: custom title.
+
+Edge case: an old pre-flag settings file with title exactly `Создать папку` or `Create folder` is treated as untouched default, even if the user had intentionally typed that same value before the flag existed. After this migration, explicitly editing the title marks it custom and preserves it across language changes.
 
 ## New entry defaults
 
@@ -109,7 +119,9 @@ CLI currently keeps Core fallback/default behavior and is tracked as localizatio
 
 ## Menu title default policy
 
-The current persisted default menu title in Core remains `Создать папку` for compatibility. App-level locale-aware first-run title behavior is future work because changing it carelessly could rewrite user data.
+Default menu title is localized for complete enabled locales. WPF displays and saves the current localized default while `TitleIsCustom = false`. Menu reset restores default-title mode. Registry/menu plan uses the saved effective title.
+
+Core/Shell contain only a small compatibility list of known default titles (`Создать папку`, `Create folder`) so storage/registry flows can infer old settings and avoid depending on `Foldora.App`.
 
 ## Validation localization policy
 
@@ -149,7 +161,7 @@ Current audit result:
 
 - localization catalogs intentionally contain localized strings;
 - tests intentionally contain Russian sample user data;
-- Core/Shell still contain compatibility defaults `Создать папку`, `Вид`, `Новая папка`;
+- Core/Shell still contain compatibility defaults `Создать папку`, `Create folder`, `Вид`, `Новая папка`;
 - CLI diagnostic output has Russian manual instructions;
 - startup fatal error dialog still uses hardcoded Russian;
 - validation messages are not fully App-localized yet.
@@ -167,11 +179,10 @@ To add a complete language:
 
 ## Current known gaps
 
-- Core/Shell compatibility fallbacks are still Russian.
+- Core/Shell compatibility fallbacks remain for entry/folder defaults and startup/CLI debt; menu title default now has explicit `ru`/`en` default-title tracking.
 - CLI default text and diagnostic messages are not fully localized.
 - Validation messages are not fully localized.
 - Startup fatal error dialog is hardcoded Russian.
-- First-run menu title is not locale-aware.
 - Technical plan/details text in Explorer integration is not fully localized.
 - `InMemoryLocalizationService` is now catalog-backed but still has its early MVP name.
 
@@ -179,7 +190,7 @@ To add a complete language:
 
 - Full validation message localization.
 - CLI localization strategy.
-- First-run locale-aware menu title without rewriting existing user data.
+- Broader first-run locale strategy beyond persisted `Language`.
 - Pluralization rules.
 - RTL support after dedicated layout testing.
 - Complete translation pass for planned locales.

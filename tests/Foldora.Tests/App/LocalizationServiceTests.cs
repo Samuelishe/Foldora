@@ -22,6 +22,7 @@ public sealed class LocalizationServiceTests
 
         Assert.Equal("View", english.Resources.DefaultEntryDisplayNamePrefix);
         Assert.Equal("New folder", english.Resources.DefaultFolderName);
+        Assert.Equal("Create folder", english.Resources.CreateFolderMenuTitle);
         Assert.Equal("none", english.Resources.IconNone);
         Assert.Equal("Settings loaded.", english.Resources.SettingsLoaded);
         Assert.Equal("Draft entry added. Choose an .ico before saving.", english.Resources.DraftEntryAddedChooseIcon);

@@ -145,7 +145,9 @@ public sealed class ExplorerIntegrationController
     {
         try
         {
-            var result = await registrationService.ResetMenuAsync(cancellationToken);
+            var result = await registrationService.ResetMenuAsync(
+                FolderMenuSettings.CreateDefault(localizationService.CurrentLanguage),
+                cancellationToken);
             await draftEditor.LoadAsync(cancellationToken);
 
             return new ExplorerIntegrationOperationResult(
