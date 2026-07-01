@@ -22,20 +22,22 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0"
-                    Margin="0,0,0,16">
+        <Border Grid.Row="0"
+                Style="{StaticResource PageHeaderContainerStyle}">
+            <StackPanel>
             <TextBlock Text="{Binding L.HelpWindowTitle}"
                        Style="{StaticResource PageTitleTextStyle}" />
             <TextBlock Text="{Binding L.HelpAboutSummary}"
                        Style="{StaticResource SecondaryBodyTextStyle}"
                        TextWrapping="Wrap"
                        Margin="0,4,0,0" />
-        </StackPanel>
+            </StackPanel>
+        </Border>
 
         <ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled">
-            <StackPanel Margin="0,0,14,0">
+            <StackPanel Margin="0,0,18,0">
                 <Border Style="{StaticResource SectionContainerStyle}">
                     <StackPanel>
                         <TextBlock Text="{Binding L.HelpWhatFoldoraDoesTitle}"
@@ -50,29 +52,31 @@
                     <StackPanel>
                         <TextBlock Text="{Binding L.HelpHowToUseTitle}"
                                    Style="{StaticResource SectionTitleStyle}" />
-                        <TextBlock Text="{Binding L.HelpUseStepAddEntry}"
-                                   Style="{StaticResource BodyTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Margin="0,0,0,6" />
-                        <TextBlock Text="{Binding L.HelpUseStepChooseIcon}"
-                                   Style="{StaticResource BodyTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Margin="0,0,0,6" />
-                        <TextBlock Text="{Binding L.HelpUseStepSetNames}"
-                                   Style="{StaticResource BodyTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Margin="0,0,0,6" />
-                        <TextBlock Text="{Binding L.HelpUseStepSave}"
-                                   Style="{StaticResource BodyTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Margin="0,0,0,6" />
-                        <TextBlock Text="{Binding L.HelpUseStepEnableExplorer}"
-                                   Style="{StaticResource BodyTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Margin="0,0,0,6" />
-                        <TextBlock Text="{Binding L.HelpUseStepUseExplorer}"
-                                   Style="{StaticResource BodyTextStyle}"
-                                   TextWrapping="Wrap" />
+                        <Border Style="{StaticResource HelpStepContainerStyle}">
+                            <TextBlock Text="{Binding L.HelpUseStepAddEntry}"
+                                       Style="{StaticResource HelpStepTextStyle}" />
+                        </Border>
+                        <Border Style="{StaticResource HelpStepContainerStyle}">
+                            <TextBlock Text="{Binding L.HelpUseStepChooseIcon}"
+                                       Style="{StaticResource HelpStepTextStyle}" />
+                        </Border>
+                        <Border Style="{StaticResource HelpStepContainerStyle}">
+                            <TextBlock Text="{Binding L.HelpUseStepSetNames}"
+                                       Style="{StaticResource HelpStepTextStyle}" />
+                        </Border>
+                        <Border Style="{StaticResource HelpStepContainerStyle}">
+                            <TextBlock Text="{Binding L.HelpUseStepSave}"
+                                       Style="{StaticResource HelpStepTextStyle}" />
+                        </Border>
+                        <Border Style="{StaticResource HelpStepContainerStyle}">
+                            <TextBlock Text="{Binding L.HelpUseStepEnableExplorer}"
+                                       Style="{StaticResource HelpStepTextStyle}" />
+                        </Border>
+                        <Border Style="{StaticResource HelpStepContainerStyle}"
+                                Margin="0">
+                            <TextBlock Text="{Binding L.HelpUseStepUseExplorer}"
+                                       Style="{StaticResource HelpStepTextStyle}" />
+                        </Border>
                     </StackPanel>
                 </Border>
 
@@ -155,7 +159,8 @@
                     Margin="0,16,0,0">
             <Button Content="{Binding L.Close}"
                     Click="OnCloseClick"
-                    Style="{StaticResource SecondaryButtonStyle}" />
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    MinWidth="96" />
         </StackPanel>
     </Grid>
 </Window>

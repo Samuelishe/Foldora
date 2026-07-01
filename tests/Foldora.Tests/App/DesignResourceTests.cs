@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace Foldora.Tests.App;
@@ -29,7 +30,9 @@ public sealed class DesignResourceTests
         Assert.Contains("SurfaceBrush", keys);
         Assert.Contains("TextPrimaryBrush", keys);
         Assert.Contains("AccentBrush", keys);
+        Assert.Contains("AccentSoftBrush", keys);
         Assert.Contains("DangerBrush", keys);
+        Assert.Contains("DangerBorderBrush", keys);
         Assert.Contains("FocusBrush", keys);
     }
 
@@ -48,6 +51,12 @@ public sealed class DesignResourceTests
         Assert.Contains("CheckBoxStyle", keys);
         Assert.Contains("CardContainerStyle", keys);
         Assert.Contains("GroupContainerStyle", keys);
+        Assert.Contains("PageHeaderContainerStyle", keys);
+        Assert.Contains("EmptyStateContainerStyle", keys);
+        Assert.Contains("StatusPillStyle", keys);
+        Assert.Contains("FooterBarStyle", keys);
+        Assert.Contains("PathRowContainerStyle", keys);
+        Assert.Contains("HelpStepContainerStyle", keys);
         Assert.Contains("StatusBannerStyle", keys);
         Assert.Contains("HelpIconButtonStyle", keys);
         Assert.Contains("HelpInfoGlyphStyle", keys);
@@ -98,6 +107,15 @@ public sealed class DesignResourceTests
     }
 
     [Fact]
+    public void Typography_DefinesHelpStepTextStyle()
+    {
+        var typography = LoadXml("src", "Foldora.App", "Resources", "Typography.xaml");
+        var keys = GetResourceKeys(typography);
+
+        Assert.Contains("HelpStepTextStyle", keys);
+    }
+
+    [Fact]
     public void HelpTooltipTextStyle_WrapsLongHelpText()
     {
         var controls = LoadXml("src", "Foldora.App", "Resources", "Controls.xaml");
@@ -127,7 +145,11 @@ public sealed class DesignResourceTests
         var scrollContent = scrollViewer.Elements()
             .SingleOrDefault(element => element.Name.LocalName == "StackPanel");
         Assert.NotNull(scrollContent);
-        Assert.Equal("0,0,14,0", scrollContent!.Attribute("Margin")?.Value);
+        var scrollContentMargin = ParseThickness(scrollContent!.Attribute("Margin")?.Value);
+        Assert.Equal(0, scrollContentMargin.Left);
+        Assert.Equal(0, scrollContentMargin.Top);
+        Assert.True(scrollContentMargin.Right >= 12);
+        Assert.Equal(0, scrollContentMargin.Bottom);
 
         var footer = settingsWindow.Descendants()
             .Where(element => element.Name.LocalName == "StackPanel")
@@ -172,6 +194,8 @@ public sealed class DesignResourceTests
         Assert.Contains("HelpInfoGlyphStyle", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("HelpTooltipTextStyle", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("InlineActionButtonStyle", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("StatusPillStyle", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("PathRowContainerStyle", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("OpenInstalledAppPathCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("CopyCommandHostPathCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("DryRunCommand", settingsWindowText, StringComparison.Ordinal);
@@ -198,6 +222,8 @@ public sealed class DesignResourceTests
         Assert.Contains("HelpUseStepEnableExplorer", helpWindowText, StringComparison.Ordinal);
         Assert.Contains("HelpMenuHostBody", helpWindowText, StringComparison.Ordinal);
         Assert.Contains("HelpUninstallUserDataWarning", helpWindowText, StringComparison.Ordinal);
+        Assert.Contains("PageHeaderContainerStyle", helpWindowText, StringComparison.Ordinal);
+        Assert.Contains("HelpStepContainerStyle", helpWindowText, StringComparison.Ordinal);
         Assert.DoesNotContain("Foldora lets you create", helpWindowText, StringComparison.Ordinal);
 
         var scrollViewer = helpWindow.Descendants()
@@ -236,6 +262,20 @@ public sealed class DesignResourceTests
             .Where(element => element.Name.LocalName == "Setter")
             .Single(element => element.Attribute("Property")?.Value == property)
             .Attribute("Value")?.Value;
+    }
+
+    private static (double Left, double Top, double Right, double Bottom) ParseThickness(string? value)
+    {
+        Assert.False(string.IsNullOrWhiteSpace(value));
+
+        var parts = value!.Split(',', StringSplitOptions.TrimEntries);
+        Assert.Equal(4, parts.Length);
+
+        return (
+            double.Parse(parts[0], CultureInfo.InvariantCulture),
+            double.Parse(parts[1], CultureInfo.InvariantCulture),
+            double.Parse(parts[2], CultureInfo.InvariantCulture),
+            double.Parse(parts[3], CultureInfo.InvariantCulture));
     }
 
     private static string GetRepositoryRoot()

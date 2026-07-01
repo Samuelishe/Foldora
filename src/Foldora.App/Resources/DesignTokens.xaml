@@ -13,10 +13,13 @@
     <Color x:Key="AccentColor">#2563EB</Color>
     <Color x:Key="AccentHoverColor">#1D4ED8</Color>
     <Color x:Key="AccentPressedColor">#1E40AF</Color>
+    <Color x:Key="AccentSoftColor">#EFF6FF</Color>
+    <Color x:Key="AccentSoftBorderColor">#BFDBFE</Color>
     <Color x:Key="OnAccentColor">#FFFFFF</Color>
     <Color x:Key="DangerColor">#B42318</Color>
     <Color x:Key="DangerHoverColor">#971B12</Color>
     <Color x:Key="DangerBackgroundColor">#FFF4F2</Color>
+    <Color x:Key="DangerBorderColor">#F5C2BC</Color>
     <Color x:Key="SuccessColor">#16794C</Color>
     <Color x:Key="SuccessBackgroundColor">#ECFDF3</Color>
     <Color x:Key="WarningColor">#A15C07</Color>
@@ -36,10 +39,13 @@
     <SolidColorBrush x:Key="AccentBrush" Color="{DynamicResource AccentColor}" />
     <SolidColorBrush x:Key="AccentHoverBrush" Color="{DynamicResource AccentHoverColor}" />
     <SolidColorBrush x:Key="AccentPressedBrush" Color="{DynamicResource AccentPressedColor}" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="{DynamicResource AccentSoftColor}" />
+    <SolidColorBrush x:Key="AccentSoftBorderBrush" Color="{DynamicResource AccentSoftBorderColor}" />
     <SolidColorBrush x:Key="OnAccentBrush" Color="{DynamicResource OnAccentColor}" />
     <SolidColorBrush x:Key="DangerBrush" Color="{DynamicResource DangerColor}" />
     <SolidColorBrush x:Key="DangerHoverBrush" Color="{DynamicResource DangerHoverColor}" />
     <SolidColorBrush x:Key="DangerBackgroundBrush" Color="{DynamicResource DangerBackgroundColor}" />
+    <SolidColorBrush x:Key="DangerBorderBrush" Color="{DynamicResource DangerBorderColor}" />
     <SolidColorBrush x:Key="SuccessBrush" Color="{DynamicResource SuccessColor}" />
     <SolidColorBrush x:Key="SuccessBackgroundBrush" Color="{DynamicResource SuccessBackgroundColor}" />
     <SolidColorBrush x:Key="WarningBrush" Color="{DynamicResource WarningColor}" />
@@ -51,13 +57,18 @@
     <sys:Double x:Key="Spacing8">8</sys:Double>
     <sys:Double x:Key="Spacing12">12</sys:Double>
     <sys:Double x:Key="Spacing16">16</sys:Double>
+    <sys:Double x:Key="Spacing20">20</sys:Double>
     <sys:Double x:Key="Spacing24">24</sys:Double>
     <sys:Double x:Key="Spacing32">32</sys:Double>
 
     <Thickness x:Key="PagePadding">22</Thickness>
-    <Thickness x:Key="SectionSpacing">0,0,0,20</Thickness>
+    <Thickness x:Key="SectionSpacing">0,0,0,16</Thickness>
     <Thickness x:Key="CardPadding">14</Thickness>
     <Thickness x:Key="PanelPadding">18</Thickness>
+    <Thickness x:Key="PageHeaderPadding">20,18</Thickness>
+    <Thickness x:Key="EmptyStatePadding">22</Thickness>
+    <Thickness x:Key="StatusPillPadding">10,4</Thickness>
+    <Thickness x:Key="PathRowPadding">12</Thickness>
     <Thickness x:Key="FieldBottomMargin">0,0,0,8</Thickness>
     <Thickness x:Key="ButtonInlineMargin">0,0,8,8</Thickness>
 

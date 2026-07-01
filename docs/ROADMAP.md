@@ -75,7 +75,7 @@ Foldora.MenuHost.exe
 
 ## Next Stage
 
-UI/UX audit baseline and small correctness cleanup before visual release polish:
+UI/UX audit baseline, correctness cleanup and visual polish:
 
 1. UI/UX audit baseline:
    - `docs/UI_AUDIT.md` tracks confirmed design debt from manual inspection.
@@ -98,8 +98,9 @@ UI/UX audit baseline and small correctness cleanup before visual release polish:
    - Settings includes a small Help/About entry point;
    - Help/About explains basic workflow, `.ico` selection, Explorer menu location, MenuHost role, data paths, uninstall behavior and license notes;
    - this is not a full help center or screenshot-based documentation system.
-6. Visual polish pass:
-   - refine surfaces, spacing, hierarchy, empty states, status presentation, cards and Settings sections.
+6. Visual polish pass v1:
+   - addressed for the current MVP windows: calmer surfaces, spacing, hierarchy, empty state, status chips, Settings path rows, Help step rows and shared WPF resource styles.
+   - further polish should be driven by manual feedback and long-locale checks rather than a broad redesign.
 7. Branding/assets pass:
    - app icon;
    - exe/window icon;
@@ -113,6 +114,7 @@ Per-user install smoke and release polish before full installer work:
 - Manually verify installed app enables Explorer integration with registry commands pointing to `%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe`.
 - Manually verify published MenuHost desktop-background create near the cursor/menu selection area.
 - If placement fails, inspect `%AppData%\Foldora\Logs\menuhost-placement.log` and use the latest JSONL entry for the next debugging step.
+- Manually spot-check the polished MainWindow/SettingsWindow/HelpWindow in RU/EN first, then German/Portuguese/Ukrainian long labels and Hindi/Thai/CJK font fallback as feedback-driven layout checks.
 - Define manual smoke coverage for auto-arrange icons, align-to-grid, multi-monitor, DPI scaling and Explorer restart.
 - Keep MSI/MSIX/winget/code signing as later work after the per-user layout is proven.
 

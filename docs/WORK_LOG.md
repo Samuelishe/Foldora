@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-07-01 - Visual polish pass v1
+
+- Refined the current WPF surfaces without changing behavior: MainWindow now uses a calmer page header, compact status chip, clearer menu editor sections, polished empty state and a framed save/discard footer.
+- SettingsWindow sections now share the same visual rhythm, Explorer menu status is presented as a compact chip, installation/path rows use reusable row containers, and the danger zone keeps a softer warning boundary.
+- HelpWindow now uses the Foldora page header treatment, section rhythm and readable boxed step rows while keeping the existing localized help content.
+- Added reusable WPF styles/tokens for page headers, status chips, empty states, path rows, help steps, footer bars and softer danger/accent surfaces.
+- Updated lightweight design resource tests for the new style keys and XAML usage.
+- No registry, MenuHost, install/uninstall, settings JSON, Core menu model, localization catalogs, app icon, window icon or README hero behavior changed.
+- App icon, branding assets and README hero remain a future branding pass; further visual polish should be feedback-driven, with RU/EN remaining the primary manually verified locales and other enabled catalogs covered by catalog completeness plus spot/smoke checks.
+
 ## 2026-07-01 - Help/About/Instructions window foundation
 
 - Added a small Settings entry point for Help/About instead of adding another MainWindow title-bar/action entry.

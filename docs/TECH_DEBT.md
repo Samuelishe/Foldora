@@ -81,14 +81,14 @@
 
 - ID: `TD-UI-0005`
 - Title: Product-grade visual polish gap
-- Status: Open
+- Status: Fixed for visual polish v1 / Monitor
 - Severity: Medium
 - Area: WPF / UX / Visual Design
 - Observed behavior: The app is functional and cleaner after Settings cleanup, but still looks like a careful prototype rather than a polished product UI.
 - Expected/desired behavior: Clearer hierarchy, spacing, surfaces, empty states, status presentation, cards and settings sections before public hero/mockup work.
 - Known cause or hypothesis: MVP work prioritized functional shell integration, safety and localization over visual polish.
-- Current workaround: UI is usable for manual MVP testing.
-- Next investigation step: Dedicated visual polish pass after small UX correctness cleanup.
+- Current workaround: Not needed for the current MVP windows; visual polish v1 refined MainWindow, SettingsWindow, HelpWindow and shared WPF resources with calmer headers, sections, status chips, empty state, path rows, help step rows and footer presentation.
+- Next investigation step: Monitor manual feedback and long-locale layout issues. App icon, branding assets and README hero remain a separate branding pass, not part of this debt item.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UI_DESIGN.md`
@@ -117,14 +117,14 @@
 
 - ID: `TD-UI-0007`
 - Title: Help, about and instructions window
-- Status: Partially fixed / polish remains
+- Status: Partially fixed / content polish remains
 - Severity: Low
 - Area: WPF / UX / Docs
 - Observed behavior: Settings now has targeted tooltips and a small Help/About window explaining the basic workflow, Explorer menu behavior, `Foldora.MenuHost.exe`, data paths, uninstall and license notes.
 - Expected/desired behavior: Future polish should improve help copy, add screenshots only after UI visual polish, and review long help translations across all enabled locales.
 - Known cause or hypothesis: MVP prioritized functional editor and shell integration before broader onboarding/help content.
-- Current workaround: Use the Settings Help/About window, wrapped tooltips, README and docs.
-- Next investigation step: Translation/content review and possible richer Help/About content after the UI is visually stable.
+- Current workaround: Use the Settings Help/About window, wrapped tooltips, README and docs. Visual polish v1 improved the HelpWindow header, section rhythm and step list readability.
+- Next investigation step: Translation/content review and possible richer Help/About content or screenshots after branding/public-presentation work.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UX_FLOW.md`
@@ -144,7 +144,8 @@
 - Known cause or hypothesis: Early MVP started with Russian hardcoded defaults in Core and diagnostic CLI output. WPF validation now maps Core invariant issue codes/parameters to localized catalog strings; CLI output and startup fatal dialog still need a policy.
 - Current workaround: WPF passes localized defaults for new draft entries, tracks default/custom menu title separately, and persists first-run language detection before loading draft state. Existing Core fallbacks remain compatibility/CLI paths and are documented in `docs/LOCALIZATION.md`.
 - Manual check note: Ukrainian, Japanese and German WPF UI were spot-checked after locale expansion with no blocking layout issue. RU/EN remain primary verified locales; other enabled locales are catalog-complete and test-covered, with translation/layout polish left for feedback-driven future work.
-- Next investigation step: Decide CLI localization policy, replace startup fatal dialog literals, review remaining technical plan/details strings, and consider external translator review for enabled catalogs before a stable public release.
+- Visual polish note: visual polish v1 did not add localization keys or manually verify every enabled locale. RU/EN remain primary manually verified; the wider locale set remains catalog-complete and smoke/spot-check based.
+- Next investigation step: Decide CLI localization policy, replace startup fatal dialog literals, review remaining technical plan/details strings, spot-check long UI labels after visual polish, and consider external translator review for enabled catalogs before a stable public release.
 - Links to docs/tests/code:
   - `docs/LOCALIZATION.md`
   - `src/Foldora.App/Localization/*.json`

@@ -314,6 +314,8 @@ Settings window должен оставаться пригодным для бу
 
 Help/About window является короткой встроенной справкой, а не полноценным help center. Оно открывается из SettingsWindow, использует resizable WPF Window, scrollable content and fixed close footer, и объясняет: что делает Foldora, базовые шаги создания entry, выбор `.ico`, где появляется legacy Explorer menu, что `Foldora.MenuHost.exe` не является сервисом/background helper, где лежат installed binaries/user data, как работает uninstall and why user data/icons are kept by default.
 
+Visual polish v1 сохраняет этот UX flow без новых функций: MainWindow получает более спокойный editor header/status/empty/footer rhythm, SettingsWindow получает ровные секции/path rows/danger presentation, HelpWindow получает shared header/section rhythm и читаемые step rows. Это не меняет staged-save, immediate Settings actions, shell integration behavior или settings JSON.
+
 Manual locale spot-check после catalog expansion: Ukrainian, Japanese and German UI were manually checked without blocking layout issues. RU/EN остаются primary verified locales; остальные enabled locales catalog-complete and test-covered, а translation/layout polish принимается как future feedback work.
 
 ## UI Audit Follow-Up
@@ -328,6 +330,8 @@ Documentation-first audit is tracked in `docs/UI_AUDIT.md`. Known follow-up item
 - Settings help/layout regression - addressed: passive non-button `?` glyphs, wrapped long tooltips and compact inline action buttons for Settings rows;
 - button/window sizing regression - addressed: Settings inline buttons have more horizontal padding and MainWindow/SettingsWindow minimum widths prevent known broken narrow layouts;
 - Help/About foundation - addressed: SettingsWindow now opens a small localized Help/About window for longer instructions;
-- defer product-grade visual polish and branding/app icon work to dedicated passes.
+- visual polish pass v1 - addressed for current MVP windows and shared WPF resources;
+- defer branding/app icon/window icon/README hero work to a dedicated assets pass;
+- treat further visual polish as feedback-driven, especially for long labels and non-Latin font fallback.
 
 This audit does not change the staged-save model, Explorer integration behavior, registry safety or SettingsWindow immediate-action semantics.

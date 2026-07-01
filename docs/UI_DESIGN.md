@@ -104,10 +104,26 @@ Control and container styles:
 - `HelpInfoGlyphStyle` and `HelpTooltipTextStyle` for passive help glyphs and wrapped help text;
 - `TextBoxStyle`, `CheckBoxStyle`, `ComboBoxStyle`;
 - `CardContainerStyle`, `GroupContainerStyle`, `SectionContainerStyle`;
+- `PageHeaderContainerStyle` for calm page/window content headers;
+- `StatusPillStyle` for compact user-facing state such as Explorer menu and saved/unsaved state;
+- `EmptyStateContainerStyle` for first-run/no-entry states;
+- `PathRowContainerStyle` for installation/user-data/MenuHost path rows;
+- `HelpStepContainerStyle` and `HelpStepTextStyle` for short Help/About step rows;
+- `FooterBarStyle` for fixed action/status footer areas;
 - `StatusBannerStyle`, `DangerBannerStyle`;
 - `PreviewBoxStyle`.
 
 Disabled states must be visibly different from enabled states. Hover/pressed/focus states are part of reusable control styles, not one-off window markup.
+
+## Visual Polish v1
+
+Visual polish v1 is a controlled refinement of the existing MVP windows, not a redesign. It keeps the same information architecture and behavior:
+
+- MainWindow remains the menu editor and now uses a page header surface, compact Explorer status chip, framed menu settings/menu entries sections, a calmer empty state, group/card hierarchy and a footer bar for saved/unsaved plus save/discard actions.
+- SettingsWindow keeps Application, Help/About, Explorer menu, Installation and Danger zone sections, with shared section rhythm, passive help glyphs, compact inline buttons, path row containers and a softer danger banner.
+- HelpWindow uses the same header/section rhythm as SettingsWindow and renders the basic workflow steps as readable boxed rows while keeping the localized content unchanged.
+- App icon, window/exe icon, README hero/mockup and external visual assets remain out of scope for this pass and require a separate branding/resource-policy review.
+- RU/EN remain primary manually verified locales; other enabled locales are catalog-complete and should continue to be checked through smoke/spot checks and user feedback for long-label/font-fallback issues.
 
 ## Layout Correctness
 

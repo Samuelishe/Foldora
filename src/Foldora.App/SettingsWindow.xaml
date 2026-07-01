@@ -22,16 +22,17 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Text="{Binding L.Settings}"
-                   Style="{StaticResource SectionTitleStyle}"
-                   Margin="0,0,0,18" />
+        <Border Grid.Row="0"
+                Style="{StaticResource PageHeaderContainerStyle}">
+            <TextBlock Text="{Binding L.Settings}"
+                       Style="{StaticResource PageTitleTextStyle}" />
+        </Border>
 
         <ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled"
                       Margin="0,0,0,16">
-            <StackPanel Margin="0,0,14,0">
+            <StackPanel Margin="0,0,18,0">
                 <Border Style="{StaticResource SectionContainerStyle}">
                     <StackPanel>
                         <TextBlock Text="{Binding L.ApplicationSection}"
@@ -92,10 +93,12 @@
                                 </TextBlock.ToolTip>
                             </TextBlock>
                         </StackPanel>
-                        <TextBlock Text="{Binding ExplorerIntegrationStatusLabel}"
-                                   Style="{StaticResource SecondaryBodyTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Margin="0,0,0,8" />
+                        <Border Style="{StaticResource StatusPillStyle}"
+                                Margin="0,0,0,10">
+                            <TextBlock Text="{Binding ExplorerIntegrationStatusLabel}"
+                                       Style="{StaticResource CaptionTextStyle}"
+                                       TextWrapping="Wrap" />
+                        </Border>
                         <TextBlock Text="{Binding L.ExplorerActionsApplyImmediately}"
                                    Style="{StaticResource SecondaryBodyTextStyle}"
                                    TextWrapping="Wrap"
@@ -184,104 +187,110 @@
                             </TextBlock>
                         </StackPanel>
 
-                        <Grid Margin="0,0,0,12">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="0"
-                                       Grid.ColumnSpan="2"
-                                       Text="{Binding L.InstalledAppPath}"
-                                       Style="{StaticResource FieldLabelStyle}" />
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="0"
-                                       Text="{Binding InstalledAppPath}"
-                                       ToolTip="{Binding InstalledAppPath}"
-                                       Style="{StaticResource SecondaryBodyTextStyle}"
-                                       TextWrapping="Wrap"
-                                       Margin="0,0,12,0" />
-                            <StackPanel Grid.Row="1"
-                                        Grid.Column="1"
-                                        Orientation="Horizontal">
-                                <Button Content="{Binding L.OpenFolder}"
-                                        Command="{Binding OpenInstalledAppPathCommand}"
-                                        Style="{StaticResource InlineActionButtonStyle}"
-                                        Margin="0,0,8,0" />
-                                <Button Content="{Binding L.CopyPath}"
-                                        Command="{Binding CopyInstalledAppPathCommand}"
-                                        Style="{StaticResource InlineActionButtonStyle}" />
-                            </StackPanel>
-                        </Grid>
+                        <Border Style="{StaticResource PathRowContainerStyle}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Grid.ColumnSpan="2"
+                                           Text="{Binding L.InstalledAppPath}"
+                                           Style="{StaticResource FieldLabelStyle}" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Text="{Binding InstalledAppPath}"
+                                           ToolTip="{Binding InstalledAppPath}"
+                                           Style="{StaticResource SecondaryBodyTextStyle}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,12,0" />
+                                <StackPanel Grid.Row="1"
+                                            Grid.Column="1"
+                                            Orientation="Horizontal">
+                                    <Button Content="{Binding L.OpenFolder}"
+                                            Command="{Binding OpenInstalledAppPathCommand}"
+                                            Style="{StaticResource InlineActionButtonStyle}"
+                                            Margin="0,0,8,0" />
+                                    <Button Content="{Binding L.CopyPath}"
+                                            Command="{Binding CopyInstalledAppPathCommand}"
+                                            Style="{StaticResource InlineActionButtonStyle}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
 
-                        <Grid Margin="0,0,0,12">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="0"
-                                       Grid.ColumnSpan="2"
-                                       Text="{Binding L.UserDataPath}"
-                                       Style="{StaticResource FieldLabelStyle}" />
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="0"
-                                       Text="{Binding UserDataPath}"
-                                       ToolTip="{Binding UserDataPath}"
-                                       Style="{StaticResource SecondaryBodyTextStyle}"
-                                       TextWrapping="Wrap"
-                                       Margin="0,0,12,0" />
-                            <StackPanel Grid.Row="1"
-                                        Grid.Column="1"
-                                        Orientation="Horizontal">
-                                <Button Content="{Binding L.OpenFolder}"
-                                        Command="{Binding OpenUserDataPathCommand}"
-                                        Style="{StaticResource InlineActionButtonStyle}"
-                                        Margin="0,0,8,0" />
-                                <Button Content="{Binding L.CopyPath}"
-                                        Command="{Binding CopyUserDataPathCommand}"
-                                        Style="{StaticResource InlineActionButtonStyle}" />
-                            </StackPanel>
-                        </Grid>
+                        <Border Style="{StaticResource PathRowContainerStyle}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Grid.ColumnSpan="2"
+                                           Text="{Binding L.UserDataPath}"
+                                           Style="{StaticResource FieldLabelStyle}" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Text="{Binding UserDataPath}"
+                                           ToolTip="{Binding UserDataPath}"
+                                           Style="{StaticResource SecondaryBodyTextStyle}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,12,0" />
+                                <StackPanel Grid.Row="1"
+                                            Grid.Column="1"
+                                            Orientation="Horizontal">
+                                    <Button Content="{Binding L.OpenFolder}"
+                                            Command="{Binding OpenUserDataPathCommand}"
+                                            Style="{StaticResource InlineActionButtonStyle}"
+                                            Margin="0,0,8,0" />
+                                    <Button Content="{Binding L.CopyPath}"
+                                            Command="{Binding CopyUserDataPathCommand}"
+                                            Style="{StaticResource InlineActionButtonStyle}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
 
-                        <Grid Margin="0,0,0,12">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="0"
-                                       Grid.ColumnSpan="2"
-                                       Text="{Binding L.CurrentCommandHost}"
-                                       Style="{StaticResource FieldLabelStyle}" />
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="0"
-                                       Text="{Binding CurrentCommandHostPath}"
-                                       ToolTip="{Binding CurrentCommandHostPath}"
-                                       Style="{StaticResource SecondaryBodyTextStyle}"
-                                       TextWrapping="Wrap"
-                                       Margin="0,0,12,0" />
-                            <StackPanel Grid.Row="1"
-                                        Grid.Column="1"
-                                        Orientation="Horizontal">
-                                <Button Content="{Binding L.OpenLocation}"
-                                        Command="{Binding OpenCommandHostPathCommand}"
-                                        Style="{StaticResource InlineActionButtonStyle}"
-                                        Margin="0,0,8,0" />
-                                <Button Content="{Binding L.CopyPath}"
-                                        Command="{Binding CopyCommandHostPathCommand}"
-                                        Style="{StaticResource InlineActionButtonStyle}" />
-                            </StackPanel>
-                        </Grid>
+                        <Border Style="{StaticResource PathRowContainerStyle}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Grid.ColumnSpan="2"
+                                           Text="{Binding L.CurrentCommandHost}"
+                                           Style="{StaticResource FieldLabelStyle}" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Text="{Binding CurrentCommandHostPath}"
+                                           ToolTip="{Binding CurrentCommandHostPath}"
+                                           Style="{StaticResource SecondaryBodyTextStyle}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,12,0" />
+                                <StackPanel Grid.Row="1"
+                                            Grid.Column="1"
+                                            Orientation="Horizontal">
+                                    <Button Content="{Binding L.OpenLocation}"
+                                            Command="{Binding OpenCommandHostPathCommand}"
+                                            Style="{StaticResource InlineActionButtonStyle}"
+                                            Margin="0,0,8,0" />
+                                    <Button Content="{Binding L.CopyPath}"
+                                            Command="{Binding CopyCommandHostPathCommand}"
+                                            Style="{StaticResource InlineActionButtonStyle}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
 
                         <TextBlock Text="{Binding L.MenuHostServiceNote}"
                                    Style="{StaticResource SecondaryBodyTextStyle}"
@@ -321,7 +330,8 @@
 
         <StackPanel Grid.Row="2"
                     Orientation="Horizontal"
-                    HorizontalAlignment="Right">
+                    HorizontalAlignment="Right"
+                    Margin="0,2,0,0">
             <Button Content="{Binding L.Save}"
                     Command="{Binding SaveCommand}"
                     Style="{StaticResource PrimaryButtonStyle}"

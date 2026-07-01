@@ -4,7 +4,7 @@
 
 ## Current Status
 
-WPF UI уже функционален: есть staged menu editor, compact/edit cards, grouping, локализация, SettingsWindow и перенос Explorer integration из главного окна. Текущий интерфейс стал чище после Settings cleanup, но по ручной проверке всё ещё выглядит как аккуратный прототип, а не как product-grade UI.
+WPF UI уже функционален: есть staged menu editor, compact/edit cards, grouping, локализация, SettingsWindow и перенос Explorer integration из главного окна. Visual polish pass v1 улучшил текущие окна без redesign: более спокойные header/status surfaces, ровнее section rhythm, polished empty state, path rows and Help step rows. Это не полный branding/public-presentation pass.
 
 Этот документ фиксирует найденные UX/design issues, чтобы они не остались только в чате. Это не план немедленного redesign и не обещание реализации без отдельного этапа.
 
@@ -43,6 +43,7 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Observed: приложение уже функциональное и стало лучше, но визуально всё ещё воспринимается как прототип.
 - Impact: GitHub/public presentation и пользовательское доверие будут слабее, чем функциональная готовность MVP.
 - Suggested direction: отдельный visual polish pass: hierarchy, spacing, surfaces, section rhythm, empty states, status presentation, entry cards and Settings sections.
+- Status: Addressed for visual polish v1. MainWindow, SettingsWindow, HelpWindow and shared WPF resources now have calmer surface/card hierarchy, status chips, improved empty/path/help rows and footer/header rhythm. Further refinements should be user-feedback-driven rather than broad redesign.
 
 ### UIA-0006 Missing Application / Build / Window Icon
 
@@ -84,18 +85,17 @@ Small safe improvements for a future code pass:
 - help/info affordances must not look like broken buttons: passive glyphs now use wrapped tooltips, and longer instructions live in the Settings Help/About window.
 - Settings inline action/path buttons use compact geometry instead of the normal wide action button style, with enough horizontal padding for labels.
 - MainWindow and SettingsWindow now have higher minimum widths to prevent known broken narrow layouts.
+- Visual polish pass v1 is addressed for the current MVP windows: MainWindow, SettingsWindow, HelpWindow and shared resource styles have calmer spacing, surfaces, status and empty/path/help presentation.
 
 ## Later Visual Polish
 
 Future product-grade polish can include:
 
-- refined entry cards and group containers;
-- clearer Settings sections and section hierarchy;
-- stronger empty states;
-- more polished status banners/chips;
-- calmer spacing rhythm and surface hierarchy;
+- user-feedback-driven refinements to entry cards and group containers;
+- additional localization-sensitive layout tweaks after manual reports;
+- more polished status/banner variants if real workflows need them;
 - README hero/mockup only after the UI is visually ready for public presentation.
-- deeper Help/About polish: screenshots, richer instructions, and full translation review for long help text across all enabled locales.
+- deeper Help/About content polish: screenshots, richer instructions, and full translation review for long help text across all enabled locales.
 
 ## Branding / Assets Pass
 
@@ -121,6 +121,8 @@ Known layout risks:
 - status text wrapping inside narrow windows.
 
 Manual spot-check already covered Ukrainian, Japanese and German with no blocking layout issues. RU/EN remain primary verified. Other enabled locales are catalog-complete and test-covered, but visual polish may need user/community feedback.
+
+Visual polish v1 did not manually verify every enabled locale. RU/EN remain the primary manually verified languages; the wider locale set remains catalog-complete and smoke/spot-check based, with German/Portuguese/Ukrainian long labels and Hindi/Thai/CJK font fallback still worth manual checks during future polish.
 
 ## Out Of Scope For This Audit
 
