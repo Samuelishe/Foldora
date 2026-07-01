@@ -107,8 +107,8 @@ UI/UX audit baseline, correctness cleanup and visual polish:
    - Installation path actions now use short `Open`/`Copy` visible labels; Danger zone is isolated from the default Application tab.
 8. Branding/assets pass:
    - app/window/exe icon foundation addressed with a self-authored folded blue/cyan Foldora icon using a broad light-cyan folded plane;
-   - root README now has a product-oriented landing flow with a hero/screenshot placeholder;
-   - actual README hero image, screenshots and mockup assets remain future work after more manual visual confidence.
+   - root README now has a product-oriented landing flow with a maintainer-created hero/mockup image;
+   - further screenshots/mockup refreshes remain future work after more manual visual confidence.
 9. Visual Design Direction v2:
    - addressed for the current WPF windows: icon-inspired light palette, stronger shared surfaces, status chip variants, polished Settings tabs/path rows, gradient primary action, calmer danger treatment, self-authored XAML empty-state mark and cleaner status/footer behavior.
    - no app icon, README hero, ViewModel state, settings JSON, registry/MenuHost/install/shell behavior or localization catalog changes were included.

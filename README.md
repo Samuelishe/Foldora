@@ -4,9 +4,9 @@ Custom folder creation menu for Windows Explorer.
 
 Foldora lets you build your own "Create folder" menu in File Explorer: choose an `.ico`, name the menu item, set the created folder name, and create styled folders directly from the context menu.
 
-<!-- Future hero image: app editor + Explorer context menu + created folders -->
-
-> Hero image and screenshots will be added later.
+<p align="center">
+  <img src="docs/assets/readme/foldora-readme-hero.png" alt="Foldora app showing a custom folder menu, File Explorer context menu integration, and created custom folders">
+</p>
 
 ## Highlights
 
@@ -62,10 +62,6 @@ Create folder
 ```
 
 Selecting an entry creates a folder and applies its icon through `desktop.ini`.
-
-## Screenshots
-
-Screenshots and a README hero mockup are planned after the current UI polish pass.
 
 ## Current Capabilities
 
@@ -265,7 +261,7 @@ Unless otherwise noted, original Foldora source code, documentation and self-aut
 
 ## Third-Party Resources
 
-No third-party visual assets are currently bundled. The Foldora app icon is a self-authored folded blue/cyan folder mark with a broad light-cyan folded plane under 0BSD. Third-party materials, if added later, are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Resource rules are documented in [docs/RESOURCE_POLICY.md](docs/RESOURCE_POLICY.md).
+No third-party runtime visual assets are currently bundled. The Foldora app icon is a self-authored folded blue/cyan folder mark with a broad light-cyan folded plane under 0BSD. The README hero is a maintainer-created presentation mockup/screenshot asset; any third-party trademarks or logos visible inside that mockup remain property of their respective owners and are not provided as reusable Foldora assets. Third-party materials, if added later, are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Resource rules are documented in [docs/RESOURCE_POLICY.md](docs/RESOURCE_POLICY.md).
 
 Free download availability is not enough to include an asset in this repository. Every bundled third-party resource must have an explicit license that allows Foldora's actual use, redistribution and attribution model.
 

@@ -2,9 +2,9 @@
 
 - `Foldora.sln` - solution.
 - `.gitignore` - исключения для .NET/WPF и локальных файлов.
-- `README.md` - публичный GitHub README: product landing top, hero/screenshot placeholder, highlights, quick start, текущие возможности, ограничения, build/run и базовые CLI-примеры.
+- `README.md` - публичный GitHub README: product landing top with README hero image, highlights, quick start, текущие возможности, ограничения, build/run и базовые CLI-примеры.
 - `LICENSE` - Zero-Clause BSD License (0BSD) для оригинального кода, документации и self-authored ресурсов Foldora, если не указано иное.
-- `THIRD_PARTY_NOTICES.md` - notices для bundled third-party materials; сейчас фиксирует отсутствие сторонних visual assets и test-only NuGet dependency license metadata.
+- `THIRD_PARTY_NOTICES.md` - notices для bundled third-party materials; сейчас фиксирует отсутствие сторонних runtime visual assets, README mockup/trademark note и test-only NuGet dependency license metadata.
 - `AGENTS.md` - правила для будущих агентных сессий.
 - `scripts/publish-dev.ps1` - dev/manual publish helper: публикует `Foldora.App.exe`, `Foldora.Cli.exe` и `Foldora.MenuHost.exe` в `artifacts/publish/Foldora`.
 - `scripts/install-user.ps1` - per-user install helper: обновляет dev publish output и копирует Foldora binaries в `%LocalAppData%\Programs\Foldora` без auto-register/auto-run.
@@ -94,6 +94,7 @@
 - `src/Foldora.App/App.xaml.cs` - WPF app startup plumbing и обработка startup exceptions.
 - `src/Foldora.App/Assets/FoldoraIcon.svg` - self-authored source vector for the folded blue/cyan Foldora app icon with a broad light-cyan folded plane.
 - `src/Foldora.App/Assets/Foldora.ico` - generated multi-size Windows app icon used by `Foldora.App.exe` and WPF windows.
+- `docs/assets/readme/foldora-readme-hero.png` - README hero/mockup image for GitHub presentation.
 - `src/Foldora.App/Resources/DesignTokens.xaml` - semantic colors/brushes, spacing, radius and size tokens for WPF design system, включая visual direction v2 cool page background, blue/cyan/violet accent gradients, softer surfaces/borders and status/danger surface tokens.
 - `src/Foldora.App/Resources/Typography.xaml` - reusable WPF typography styles and app font family, включая help step readability, path text and status chip text styles.
 - `src/Foldora.App/Resources/Controls.xaml` - reusable WPF control, card/container/status styles, включая non-clipping button template/geometry with foreground forwarding, rounded TextBox template, page header, status chip variants, empty state icon container, path row, wrapping Settings tabs, Settings expander, help step and footer bar styles.

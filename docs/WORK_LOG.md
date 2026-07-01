@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-02 - README hero image
+
+- Added the maintainer-provided README hero/mockup image to the public GitHub README.
+- Renamed `docs/assets/readme/foldora-readme-hero.png.png` to canonical `docs/assets/readme/foldora-readme-hero.png`.
+- Replaced the visible README hero/screenshot placeholder with a centered GitHub-friendly image block after the product pitch.
+- Updated resource policy and third-party notices to clarify that the README hero is a documentation/presentation mockup, not a runtime app asset or reusable third-party icon pack.
+- No production code, WPF UI, app icon, project files, install scripts, registry/MenuHost behavior or external downloads changed.
+
 ## 2026-07-02 - Settings responsive/action polish
 
 - Widened SettingsWindow to a practical fixed/resizable desktop size (`Width=940`, `MinWidth=920`) while keeping `SizeToContent=Manual`.

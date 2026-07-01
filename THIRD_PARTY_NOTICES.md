@@ -6,9 +6,11 @@ Third-party components and assets remain under their respective licenses. Foldor
 
 ## Bundled Visual Assets
 
-No third-party visual assets are currently bundled in this repository.
+No third-party runtime visual assets are currently bundled in this repository.
 
 Current WPF UI icons, vector shapes and the Foldora app icon are self-authored project assets unless a future notice states otherwise.
+
+The README hero image at `docs/assets/readme/foldora-readme-hero.png` is a maintainer-created documentation/presentation mockup screenshot. Third-party trademarks or logos visible inside that mockup remain property of their respective owners; the image is not a third-party icon pack and does not add reusable third-party runtime assets to Foldora App.
 
 ## NuGet and .NET Dependencies
 

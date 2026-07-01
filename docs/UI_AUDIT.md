@@ -50,7 +50,7 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Observed: нет нормальной app/build/window icon; exe/window/settings icon выглядит недоделанной.
 - Impact: продуктовая идентичность не сформирована; installed/published app выглядит незавершённой.
 - Suggested direction: отдельный branding/assets pass: app icon, exe icon, window icon, README visual assets. Любые bundled assets должны соблюдать `docs/RESOURCE_POLICY.md` и обновлять notices/license docs.
-- Status: Addressed for app/window/exe icon foundation, then replaced/refined after visual review. Foldora now has a self-authored folded blue/cyan folder mark with a broad light-cyan folded plane wired into the WPF windows and `Foldora.App.exe`. README hero/mockup and broader branding remain future work.
+- Status: Addressed for app/window/exe icon foundation, then replaced/refined after visual review. Foldora now has a self-authored folded blue/cyan folder mark with a broad light-cyan folded plane wired into the WPF windows and `Foldora.App.exe`. The root README now includes a maintainer-created hero/mockup image; broader branding remains future work.
 
 ### UIA-0007 Settings Clarity And Help
 
@@ -137,7 +137,7 @@ Future product-grade polish can include:
 - additional localization-sensitive layout tweaks after manual reports;
 - Settings tab spacing/content tuning after manual RU/EN and long-locale checks;
 - further status/banner tuning if real workflows need more severity-specific presentation than the current shared chip/banner variants;
-- README hero/mockup only after the UI is visually ready for public presentation. The root README now has landing-page structure and placeholders, but no screenshot/hero assets are bundled yet.
+- README hero/mockup is addressed for the current public README through `docs/assets/readme/foldora-readme-hero.png`. Future screenshot refreshes should be deliberate and keep the resource/trademark policy current.
 - deeper Help/About content polish: screenshots, richer instructions, and full translation review for long help text across all enabled locales.
 
 ## Branding / Assets Pass
@@ -146,7 +146,7 @@ Future branding work:
 
 - further app icon refinement if manual feedback finds small-size readability issues;
 - Settings/window icon consistency;
-- README hero image or mockup built from improved screenshots; current README work only added product copy and placeholders;
+- future README hero refreshes or additional screenshots after more UI/manual verification;
 - explicit resource/license review for every bundled visual asset.
 
 Do not add unknown-license icons, fonts, images or generated third-party-looking assets. Follow `docs/RESOURCE_POLICY.md` and update `THIRD_PARTY_NOTICES.md` if any external resource is bundled.

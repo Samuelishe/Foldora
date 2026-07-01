@@ -66,8 +66,10 @@ When a resource is added, update in the same change:
 
 ## Current State
 
-No third-party visual assets are currently bundled, except where explicitly listed in the root `THIRD_PARTY_NOTICES.md`.
+No third-party runtime visual assets are currently bundled, except where explicitly listed in the root `THIRD_PARTY_NOTICES.md`.
 
 The Foldora app icon under `src/Foldora.App/Assets/` is a self-authored folded blue/cyan folder mark with a broad light-cyan folded plane. `FoldoraIcon.svg` is the source vector and `Foldora.ico` is the generated Windows application icon; both follow the repository's default 0BSD licensing for self-authored Foldora materials.
+
+The README hero image under `docs/assets/readme/foldora-readme-hero.png` is a maintainer-created documentation/presentation mockup screenshot. It is not a runtime Foldora App asset and is not an icon pack. Third-party trademarks or logos that appear inside the mockup remain property of their respective owners and are shown only as contextual examples inside the screenshot/mockup.
 
 For small UI icons, prefer self-authored XAML/vector shapes or documented system UI fonts before adding external icon packs.
