@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-07-01 - Desktop icon placement research spike
+
+- Проведён research spike текущего legacy desktop background flow: registry command получает target path через `%V`, но не получает original right-click coordinates или desktop icon-view coordinates.
+- Зафиксировано, что `GetCursorPos` не является надёжным production fix без отдельного доказательства: после выбора submenu текущая позиция курсора может быть позицией menu item, а не исходной точкой на desktop.
+- Добавлен `docs/research/DESKTOP_ICON_PLACEMENT.md` с current command path, API candidates, рисками и MVP-safe future design sketch.
+- `TD-0001` повышен до high-priority research и разделён по смыслу на legacy coordinate gap и возможное post-create positioning через Shell view APIs.
+- `TD-0002` переведён в `Cannot reproduce / Monitor`: текущая ручная проверка больше не воспроизводит first-created default icon.
+- Production-код не менялся: Shell COM positioning, `GetCursorPos`, ListView messages, sleeps и `SHChangeNotify` не добавлялись без отдельного implementation spike.
+
 ## 2026-07-01 - Technical debt foundation and desktop behavior investigation
 
 - Добавлен `docs/TECH_DEBT.md` с active debt format и двумя пунктами: `TD-0001` desktop icon placement is controlled by Explorer и `TD-0002` first created desktop folder may initially show default icon.

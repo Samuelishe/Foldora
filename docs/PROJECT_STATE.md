@@ -12,7 +12,7 @@ Stabilization pass 2026-07-01: README/LICENSE/THIRD_PARTY_NOTICES/resource-polic
 
 Desktop.ini production default: `ReadOnlyFolderHiddenDesktopIni`, то есть folder `ReadOnly`, `desktop.ini` `Hidden`. Ручная проверка подтвердила `attrib` result `R/H`, сохранение custom icon после Explorer refresh/reopen и отсутствие System-related deletion warnings для новых Foldora folders. Repair/normalize command в MVP не реализован.
 
-Technical debt foundation: `docs/TECH_DEBT.md` фиксирует active debt и accepted limitations. `TD-0001` принят как limitation текущей legacy context menu integration: desktop icon placement controls Explorer, Foldora не получает cursor/icon-view coordinates через `%V`. `TD-0002` открыт как investigation: первая папка, созданная с Desktop background menu, может сначала показаться с default icon до Explorer refresh/retry. Сейчас create/apply path не делает Shell refresh notification; random sleep, COM shell extension и desktop positioning hacks не добавляются без отдельного исследования.
+Technical debt foundation: `docs/TECH_DEBT.md` фиксирует active debt и accepted limitations. `TD-0001` повышен до high-priority research: текущая legacy context menu integration создаёт папку в правильной Desktop directory, но не получает original right-click cursor/icon-view coordinates через `%V`, а post-create desktop icon positioning требует отдельного Shell COM/design spike. Подробный research snapshot находится в `docs/research/DESKTOP_ICON_PLACEMENT.md`. `TD-0002` переведён в `Cannot reproduce / Monitor`: текущая ручная проверка больше не воспроизводит first-created default icon, новые папки сразу показывают custom icon. Сейчас create/apply path не делает Shell refresh notification; random sleep, COM shell extension, desktop positioning hacks и `GetCursorPos`-based production behavior не добавляются без отдельного исследования.
 
 Publish/dev layout foundation: `scripts/publish-dev.ps1` создаёт framework-dependent Release layout в `artifacts/publish/Foldora` и кладёт рядом стабильные executable paths:
 
@@ -24,7 +24,7 @@ Foldora.MenuHost.exe
 
 Script не регистрирует Explorer menu и не запускает приложение. При запуске WPF из publish-папки command-host resolver ищет sibling `Foldora.MenuHost.exe`; если host отсутствует, Explorer integration возвращает user-facing failure, а не регистрирует неправильный путь. CLI `register-menu --host-path` остаётся явным способом указать published `Foldora.MenuHost.exe`. `artifacts/` не входит в git.
 
-Следующий практический этап: ручная publish smoke-проверка и release packaging documentation без installer/MSIX. Registry menu в publish/manual проверке должен указывать на `artifacts/publish/Foldora/Foldora.MenuHost.exe`, а не на Debug build output и не на console `Foldora.Cli.exe`.
+Следующий практический этап: принять решение по desktop icon placement implementation spike до installer/release polish. Registry menu в publish/manual проверке должен по-прежнему указывать на `artifacts/publish/Foldora/Foldora.MenuHost.exe`, а не на Debug build output и не на console `Foldora.Cli.exe`.
 
 Открытые вопросы:
 

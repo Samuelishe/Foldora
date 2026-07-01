@@ -98,13 +98,20 @@ Placeholder policy на текущем этапе:
 
 Legacy registry context menu передаёт Foldora target directory path (`%1` или `%V`), но не передаёт cursor coordinates или координаты desktop icon-view. Поэтому при создании папки из desktop background menu Foldora создаёт папку в правильной target directory, но позицию нового значка на рабочем столе выбирает Explorer.
 
-Создание папки именно под курсором не поддерживается текущей MVP-интеграцией. Для такого поведения нужен отдельный advanced shell integration path, например `IExplorerCommand`, COM shell extension, работа с Explorer view positioning или другой глубокий shell layer. Это future/non-MVP и не должно решаться registry/placeholder hacks.
+Создание папки именно под курсором не поддерживается текущей MVP-интеграцией. `GetCursorPos` сам по себе не является надёжным production fix: когда `Foldora.MenuHost.exe` стартует после выбора submenu item, текущий cursor position может относиться к пункту меню, а не к исходному right-click на desktop background.
 
-Этот пункт зафиксирован как accepted limitation `TD-0001` в `TECH_DEBT.md`. Его нельзя смешивать с отдельным desktop.ini/icon refresh debt: если папка появилась не под курсором, это ожидаемое ограничение legacy integration, а не ошибка `desktop.ini`.
+Для такого поведения нужен отдельный advanced shell integration path. Candidate routes:
+
+- post-create desktop view positioning через Shell COM, например `IFolderView`/`IFolderView2` и `SelectAndPositionItems`;
+- future `IExplorerCommand`/modern shell research, если потребуется более богатый invocation context;
+- Shell refresh notification через `SHChangeNotify` только для icon/visibility refresh, не для placement;
+- desktop ListView messages только как unsupported research path, не как первый production design.
+
+Этот пункт зафиксирован как high-priority research `TD-0001` в `TECH_DEBT.md`, а подробности собраны в `docs/research/DESKTOP_ICON_PLACEMENT.md`. Его нельзя смешивать с отдельным desktop.ini/icon refresh debt: если папка появилась не под курсором, это ожидаемое ограничение legacy integration, а не ошибка `desktop.ini`.
 
 ## Desktop Icon Refresh Debt
 
-Отдельное наблюдение после manual publish smoke: первая папка, созданная из desktop background menu после регистрации/system start, может сначала появиться с дефолтной иконкой, а повторная/следующая папка уже показывает custom icon корректно.
+Отдельное наблюдение после manual publish smoke: первая папка, созданная из desktop background menu после регистрации/system start, могла сначала появиться с дефолтной иконкой, а повторная/следующая папка уже показывала custom icon корректно. В текущей ручной проверке это не воспроизводится: новые папки сразу создаются с правильными иконками.
 
 Текущий production path:
 
@@ -119,7 +126,7 @@ Explorer legacy command
       -> set folder ReadOnly
 ```
 
-Сейчас после create/apply нет отдельного Shell refresh notification. Гипотеза: Explorer desktop view может увидеть новую папку до того, как `desktop.ini` и атрибуты полностью применены, либо desktop icon cache не обновляется сразу. Это зафиксировано как open investigation `TD-0002` в `TECH_DEBT.md`.
+Сейчас после create/apply нет отдельного Shell refresh notification. Гипотеза: Explorer desktop view может увидеть новую папку до того, как `desktop.ini` и атрибуты полностью применены, либо desktop icon cache не обновляется сразу. Это зафиксировано как `Cannot reproduce / Monitor` в `TD-0002`; код не меняется без свежей reproduction matrix.
 
 Не делать в этом шаге: random sleep, Explorer patching, COM shell extension или WinAPI-heavy rewrite. Возможный будущий маленький fix должен быть изолированным и тестируемым Shell notification abstraction, если investigation подтвердит необходимость.
 

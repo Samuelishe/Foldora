@@ -4,20 +4,23 @@
 
 ## Active Debt
 
-### TD-0001 Desktop Icon Placement Is Controlled By Explorer
+### TD-0001 Desktop Icon Placement From Legacy Menu
 
 - ID: `TD-0001`
-- Title: Desktop icon placement is controlled by Explorer
-- Status: Accepted limitation / Research later
-- Severity: Medium
+- Title: Desktop icon placement from legacy menu
+- Status: High-priority research
+- Severity: High
 - Area: Shell
 - Observed behavior: Foldora legacy menu can be invoked from desktop background, but the created folder icon is placed by Explorer in a free desktop icon-view slot, not under the cursor position where the menu was opened.
-- Expected/desired behavior: If technically feasible in a future integration model, creating from desktop background could place the new folder near the invocation point.
-- Known cause or hypothesis: Current HKCU legacy context menu commands receive target directory path through Explorer placeholders such as `%V`, but they do not receive cursor coordinates or desktop icon-view coordinates.
+- Expected/desired behavior: If technically feasible in a future integration model, creating from desktop background should place the new folder near the invocation point.
+- Known cause or hypothesis:
+  - `TD-0001A`: current HKCU legacy context menu commands receive target directory path through Explorer placeholders such as `%V`, but they do not receive original right-click cursor coordinates or desktop icon-view coordinates.
+  - `TD-0001B`: post-create desktop icon positioning may be technically possible through Shell view APIs, but it needs a separate design and manual Windows 11 verification matrix.
 - Current workaround: User can move the created desktop icon manually after creation.
-- Next investigation step: Research modern shell integration, COM, `IExplorerCommand`, desktop view APIs or another explicit advanced shell path in a separate stage.
+- Next investigation step: Decide whether to run an implementation spike for an isolated Shell positioning service. The spike must prove coordinate source reliability, desktop view lookup, auto-arrange behavior, DPI/multi-monitor behavior and failure/no-op semantics before production use.
 - Links to docs/tests/code:
   - `docs/SHELL_INTEGRATION.md`
+  - `docs/research/DESKTOP_ICON_PLACEMENT.md`
   - `docs/SMOKE_TEST.md`
   - `src/Foldora.Shell/RegistryPlan/ExplorerMenuShellTargetPlaceholder.cs`
   - `src/Foldora.Shell/RegistryPlan/ExplorerMenuCommandBuilder.cs`
@@ -28,15 +31,16 @@
 
 - ID: `TD-0002`
 - Title: First created desktop folder may initially show default icon
-- Status: Open / Investigating
-- Severity: Medium
+- Status: Cannot reproduce / Monitor
+- Severity: Low
 - Area: Desktop.ini
-- Observed behavior: On Windows 11 desktop, the first folder created from the published Foldora legacy menu after registration/system start may initially appear with the default folder icon. A retry or subsequent created folder can show the custom icon correctly.
+- Observed behavior: Earlier manual Windows 11 publish testing saw the first folder created from the published Foldora legacy menu after registration/system start initially appear with the default folder icon. A retry or subsequent created folder could show the custom icon correctly. Current manual checks no longer reproduce this: new folders appear with the selected custom icon immediately.
 - Expected/desired behavior: A newly created folder should show the selected custom icon consistently after Foldora writes `desktop.ini` and applies the deletion-friendly attributes.
 - Known cause or hypothesis: Explorer desktop view may observe the folder before Foldora finishes writing `desktop.ini`, setting `IconResource`, and applying folder/`desktop.ini` attributes; alternatively Explorer icon cache or desktop view notification timing may be insufficient.
-- Current workaround: Refresh Explorer/Desktop, reopen the folder view, or create again; later creations can pick up the custom icon correctly.
+- Current workaround: If it reappears, refresh Explorer/Desktop or reopen the folder view. Do not add sleeps or refresh code without a fresh reproduction.
 - Next investigation step:
-  - Confirm exact reproduction conditions after publish registration.
+  - Monitor future publish/manual smoke runs.
+  - If reproduced again, confirm exact reproduction conditions after publish registration.
   - Compare behavior in normal folder directory vs Desktop background.
   - Inspect operation timing around `Directory.CreateDirectory`, `desktop.ini` write and attribute application.
   - Consider a small testable Shell refresh notification abstraction after create/apply if evidence supports it.

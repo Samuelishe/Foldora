@@ -64,17 +64,19 @@ Foldora.MenuHost.exe
 
 ## Next Stage
 
-Prepare the MVP for repeatable manual release verification:
+Desktop placement research before installer/release polish:
 
-- Verify Explorer registry commands point to `artifacts/publish/Foldora/Foldora.MenuHost.exe`, not Debug build output and not console `Foldora.Cli.exe`.
-- Document manual release packaging steps.
-- Keep installer/MSIX as a later step unless the publish layout reveals a hard requirement.
+- Decide whether to run an implementation spike for post-create desktop icon positioning.
+- Prototype Shell COM desktop view lookup and item positioning only in an isolated Shell layer.
+- Prove or reject reliable coordinate capture for the original desktop invocation point.
+- Define manual smoke coverage for auto-arrange icons, align-to-grid, multi-monitor, DPI scaling and Explorer restart.
+- Keep installer/MSIX as a later step until this UX-critical limitation has an explicit decision.
 
 ## Known MVP Limitations
 
 - Modern Windows 11 compact context menu is not implemented.
 - Legacy menu may appear under `Show more options`.
-- Foldora does not control desktop icon placement under the mouse cursor; Explorer chooses the icon position.
+- Foldora does not control desktop icon placement under the mouse cursor; Explorer chooses the icon position. This is tracked as high-priority research `TD-0001`.
 - No installer/MSIX yet.
 - No production Program Files layout or code signing yet.
 - No pack import/export yet.
@@ -84,7 +86,7 @@ Prepare the MVP for repeatable manual release verification:
 - No group icons.
 - No orphan icon cleanup for imported `.ico`.
 - No user-facing diagnostics for `Foldora.MenuHost.exe` failures launched from Explorer.
-- First-created desktop folder can require Explorer refresh/retry before custom icon appears; tracked as `TD-0002`.
+- First-created desktop folder default-icon timing is currently not reproduced; tracked as `TD-0002` monitor item.
 - Full runtime localization of all status/error/detail strings is not complete.
 - No Explorer restart or icon cache reset flow.
 
@@ -92,8 +94,9 @@ Prepare the MVP for repeatable manual release verification:
 
 - Installer/MSIX after stable publish layout.
 - Modern Windows 11 context menu research.
-- COM/IExplorerCommand research for advanced shell integration.
-- Optional Shell refresh notification investigation for desktop.ini apply/create timing, only if `TD-0002` is reproduced and scoped.
+- Shell COM desktop icon placement spike, if accepted after `docs/research/DESKTOP_ICON_PLACEMENT.md`.
+- Modern `IExplorerCommand` research for advanced shell integration.
+- Optional Shell refresh notification investigation for desktop.ini apply/create timing, only if `TD-0002` is reproduced again and scoped.
 - Full tree menu runtime/storage beyond current one-level groups.
 - Drag-and-drop ordering.
 - Group icons.

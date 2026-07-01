@@ -155,6 +155,7 @@
 - `docs/DESKTOP_INI.md` - механизм desktop.ini.
 - `docs/SMOKE_TEST.md` - ручной smoke-test checklist для Windows 11 MVP.
 - `docs/TECH_DEBT.md` - active technical debt, accepted limitations and investigation items.
+- `docs/research/DESKTOP_ICON_PLACEMENT.md` - research spike по legacy desktop coordinates, post-create icon positioning и candidate Windows Shell APIs.
 - `docs/RESOURCE_POLICY.md` - правила лицензирования, атрибуции и добавления внешних ресурсов.
 - `docs/PACKS.md` - pack manifest.
 - `docs/MENU_MODEL.md` - модель пользовательского меню, validation, staged-save, nested menu и registry safety.
