@@ -14,9 +14,10 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{DynamicResource RadiusSmall}"
-                            SnapsToDevicePixels="True">
-                        <ContentPresenter HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"
+                            SnapsToDevicePixels="True"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           RecognizesAccessKey="True" />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -34,10 +35,10 @@
 
     <Style x:Key="ActionButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
         <Setter Property="MinHeight" Value="36" />
-        <Setter Property="Padding" Value="18,7" />
+        <Setter Property="Padding" Value="20,7" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="MinWidth" Value="128" />
     </Style>
 
     <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
@@ -134,9 +135,9 @@
     </Style>
 
     <Style x:Key="InlineActionButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
-        <Setter Property="MinHeight" Value="34" />
-        <Setter Property="MinWidth" Value="88" />
-        <Setter Property="Padding" Value="16,6" />
+        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="MinWidth" Value="104" />
+        <Setter Property="Padding" Value="20,6" />
     </Style>
 
     <Style x:Key="HelpInfoGlyphStyle" TargetType="TextBlock">
@@ -231,6 +232,8 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabControl">
@@ -246,7 +249,9 @@
                                 Padding="{DynamicResource SettingsTabContentPadding}"
                                 KeyboardNavigation.TabIndex="2">
                             <ContentPresenter x:Name="PART_SelectedContentHost"
-                                              ContentSource="SelectedContent" />
+                                              ContentSource="SelectedContent"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                         </Border>
                     </DockPanel>
                 </ControlTemplate>

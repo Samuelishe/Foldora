@@ -51,8 +51,8 @@
 - Observed behavior: Some MainWindow and SettingsWindow buttons look tight; text sits too close to button edges.
 - Expected/desired behavior: Buttons should have consistent padding, min-width and min-height that survive long localized labels.
 - Known cause or hypothesis: Current reusable button styles are functional but not yet tuned through a localization-heavy visual polish pass.
-- Current workaround: Shared action buttons now have larger padding and min-height, dense Settings rows use a compact inline action style with non-tiny horizontal padding, Installation path buttons use short `Open`/`Copy` labels, and MainWindow/SettingsWindow have minimum widths that prevent the known broken narrow layouts.
-- Next investigation step: Continue long-label visual checks during product-grade polish, especially SettingsWindow actions in long locales.
+- Current workaround: Shared action buttons now have larger padding and min-height, the base button template applies padding/alignment, dense Settings rows use a compact inline action style with non-tiny horizontal padding, Installation path buttons use short `Open`/`Copy` labels, SettingsWindow action rows wrap or use star/auto layout, and MainWindow/SettingsWindow have minimum widths that prevent the known broken narrow layouts.
+- Next investigation step: Continue long-label visual checks during product-grade polish, especially SettingsWindow actions in long locales and non-Latin font fallback.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UI_DESIGN.md`
@@ -143,7 +143,7 @@
 - Expected/desired behavior: Settings categories should be compact, navigable and scalable without making reset/danger controls visible as default content.
 - Known cause or hypothesis: Settings grew incrementally from a small language dialog into a multi-section system window.
 - Current workaround: Not needed; SettingsWindow now uses category tabs, keeps footer actions fixed and isolates Danger zone in its own tab.
-- Next investigation step: Manual RU/EN and long-locale checks for tab header fit, path row wrapping and Explorer technical details overflow.
+- Next investigation step: Manual RU/EN and long-locale checks for tab header fit, path row wrapping and Explorer technical details overflow. Button clipping found after the first tabbed pass was addressed by the Settings layout robustness pass.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UI_DESIGN.md`

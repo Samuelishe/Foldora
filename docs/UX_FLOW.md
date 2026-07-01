@@ -314,6 +314,8 @@ Danger zone tab
 
 Settings window должен оставаться пригодным для будущих секций настроек. Окно resizable; содержимое настроек разделено на category tabs, а footer actions `Сохранить`/`Закрыть` закреплены снизу и не прокручиваются. Vertical scroll допустим внутри конкретной вкладки, если её содержимое не помещается, но SettingsWindow не должен снова превращаться в одну длинную scroll-простыню. `Сохранить` относится к language/settings save. Explorer menu actions и reset выполняются immediately через отдельные кнопки и не являются staged changes. Проверка открытия modal settings window выполняется вручную; автоматические UIAutomation-клики не используются как критерий acceptance для custom-chrome/modal WPF.
 
+SettingsWindow имеет практический minimum width для вкладок и RU/EN action labels. Если action labels становятся длиннее в других локалях, кнопки должны измеряться по содержимому и переноситься через wrapping action row, а не clip-иться. Installation path rows держат path text в `*` content column, а Open/Copy actions в `Auto` column; длинный path может wrap/trim через tooltip, но кнопки не должны вытесняться.
+
 Installation path rows use short visible `Open` / `Copy` labels. For command-host path, `Open` still opens the containing folder; tooltip text explains this without making the visible button label long.
 
 Help/About window является короткой встроенной справкой, а не полноценным help center. Оно открывается из SettingsWindow, использует resizable WPF Window, scrollable content and fixed close footer, и объясняет: что делает Foldora, базовые шаги создания entry, выбор `.ico`, где появляется legacy Explorer menu, что `Foldora.MenuHost.exe` не является сервисом/background helper, где лежат installed binaries/user data, как работает uninstall and why user data/icons are kept by default.
@@ -336,6 +338,7 @@ Documentation-first audit is tracked in `docs/UI_AUDIT.md`. Known follow-up item
 - Help/About foundation - addressed: SettingsWindow now opens a small localized Help/About window for longer instructions;
 - visual polish pass v1 - addressed for current MVP windows and shared WPF resources;
 - SettingsWindow tabbed layout cleanup - addressed: settings categories are tabs, danger reset is isolated, and path row actions use short Open/Copy labels;
+- Settings layout robustness pass - addressed: shared button template applies padding/alignment, Settings minimum width protects normal tab/action layout, and Explorer/path actions no longer rely on fixed small widths;
 - defer branding/app icon/window icon/README hero work to a dedicated assets pass;
 - treat further visual polish as feedback-driven, especially for long labels and non-Latin font fallback.
 

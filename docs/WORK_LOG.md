@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-07-01 - Settings layout robustness pass
+
+- Fixed the shared WPF button template so button `Padding` and content alignment are actually applied by the control template.
+- Increased normal and inline action button geometry slightly without adding fixed widths, so long localized labels measure to their content instead of clipping.
+- Raised SettingsWindow minimum/default width to protect tab headers and Explorer/path action rows from broken narrow layouts while keeping the window resizable.
+- Kept Explorer actions in a wrapping row and Installation path rows as star-sized path content plus auto-sized action buttons.
+- Added design resource/XAML tests for the button template contract, Settings minimum width, wrapping Explorer actions and path row layout.
+- No ViewModel behavior, localization catalogs, settings JSON, registry, MenuHost, install/uninstall scripts, shell behavior, external assets or app icon work changed.
+
 ## 2026-07-01 - SettingsWindow tabbed layout cleanup
 
 - Replaced the long single-scroll SettingsWindow document with category tabs: Application, Explorer menu, Installation, Help/About and Danger zone.

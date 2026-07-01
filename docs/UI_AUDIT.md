@@ -29,7 +29,7 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Observed: в MainWindow и SettingsWindow некоторые кнопки выглядят тесно, текст находится слишком близко к краям.
 - Impact: UI ощущается менее аккуратным, а длинные локализованные labels повышают риск визуального сжатия/обрезки.
 - Suggested direction: сделать button geometry pass: consistent horizontal padding, min-width, min-height, wrapping/trimming rules and localized-label checks.
-- Status: Partially addressed / monitor. Shared `ActionButtonStyle` uses larger horizontal padding and min-height; Settings inline actions now use a separate compact style with larger horizontal padding than the first compact pass. Further per-locale visual polish remains future work.
+- Status: Addressed for current Settings/Main layouts. Shared button template now applies padding/alignment, action/inline action buttons have non-clipping min-size/padding without fixed widths, and Settings action rows use wrapping or star/auto layout. Further per-locale visual polish remains future feedback-driven work.
 
 ### UIA-0004 SettingsWindow Scrollbar / Content Gutter
 
@@ -79,13 +79,20 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Suggested direction: replace the single settings document with compact categories/tabs, keep footer actions fixed and isolate dangerous reset away from the default view.
 - Status: Addressed. SettingsWindow now uses category tabs; each tab owns its compact content, vertical scroll exists only inside tab content when needed, and Danger zone is isolated in its own tab.
 
+### UIA-0011 Settings Button Clipping And Resize Robustness
+
+- Observed: after the tabbed Settings cleanup, long RU labels such as `Предпросмотр изменений`, `Включить меню Проводника` and `Отключить меню Проводника` could still look clipped or cramped, especially when the window was narrowed.
+- Impact: the UI looked broken at allowed sizes even though the underlying commands worked.
+- Suggested direction: make button sizing a shared style/template contract, keep action rows wrapping or auto-sized, and prevent SettingsWindow from resizing below its practical content minimum.
+- Status: Addressed. The shared button template applies padding/content alignment, inline actions measure by content, SettingsWindow minimum width was raised, Explorer actions remain in a `WrapPanel`, and path rows use star path text plus auto action buttons.
+
 ## Near-Term UI Cleanup
 
 Small safe improvements for a future code pass:
 
 - remove or redesign `Manage in Settings` on MainWindow - addressed;
 - replace boolean unsaved changes text with user-facing saved/unsaved status - addressed;
-- button padding/min-width/min-height pass across MainWindow and SettingsWindow - initial pass addressed;
+- button padding/min-width/min-height pass across MainWindow and SettingsWindow - addressed for current MVP; shared button template now applies padding and Settings action rows have robustness tests;
 - SettingsWindow scrollbar gutter and content padding pass - addressed;
 - check SettingsWindow sections with long labels in German, Portuguese, Ukrainian and other longer locales.
 - keep Settings wording understandable: Explorer menu status, preview/dry-run action and path actions are now clarified.
@@ -94,6 +101,7 @@ Small safe improvements for a future code pass:
 - MainWindow and SettingsWindow now have higher minimum widths to prevent known broken narrow layouts.
 - Visual polish pass v1 is addressed for the current MVP windows: MainWindow, SettingsWindow, HelpWindow and shared resource styles have calmer spacing, surfaces, status and empty/path/help presentation.
 - SettingsWindow tabbed layout cleanup is addressed: the previous long vertical settings document was replaced by category tabs, and Installation path actions use short `Open`/`Copy` labels.
+- Settings layout robustness pass is addressed: SettingsWindow no longer allows the known too-narrow state that clipped action labels, and action/path rows have a shared sizing contract.
 
 ## Later Visual Polish
 

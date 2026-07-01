@@ -91,8 +91,27 @@ public sealed class DesignResourceTests
         var actionButtonStyle = FindStyle(controls, "ActionButtonStyle");
 
         Assert.Equal("36", GetSetterValue(actionButtonStyle, "MinHeight"));
-        Assert.Equal("18,7", GetSetterValue(actionButtonStyle, "Padding"));
-        Assert.Equal("120", GetSetterValue(actionButtonStyle, "MinWidth"));
+        Assert.Equal("20,7", GetSetterValue(actionButtonStyle, "Padding"));
+        Assert.Equal("128", GetSetterValue(actionButtonStyle, "MinWidth"));
+        Assert.Equal("Center", GetSetterValue(actionButtonStyle, "HorizontalContentAlignment"));
+        Assert.Equal("Center", GetSetterValue(actionButtonStyle, "VerticalContentAlignment"));
+    }
+
+    [Fact]
+    public void BaseButtonStyle_TemplateAppliesPaddingAndContentAlignment()
+    {
+        var controls = LoadXml("src", "Foldora.App", "Resources", "Controls.xaml");
+        var baseButtonStyle = FindStyle(controls, "BaseButtonStyle");
+        XName xName = XName.Get("Name", "http://schemas.microsoft.com/winfx/2006/xaml");
+
+        var buttonChrome = baseButtonStyle.Descendants()
+            .Single(element => element.Name.LocalName == "Border" && element.Attribute(xName)?.Value == "ButtonChrome");
+        var contentPresenter = buttonChrome.Elements()
+            .Single(element => element.Name.LocalName == "ContentPresenter");
+
+        Assert.Equal("{TemplateBinding Padding}", buttonChrome.Attribute("Padding")?.Value);
+        Assert.Equal("{TemplateBinding HorizontalContentAlignment}", contentPresenter.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("{TemplateBinding VerticalContentAlignment}", contentPresenter.Attribute("VerticalAlignment")?.Value);
     }
 
     [Fact]
@@ -102,9 +121,9 @@ public sealed class DesignResourceTests
         var inlineButtonStyle = FindStyle(controls, "InlineActionButtonStyle");
 
         Assert.Equal("{StaticResource SecondaryButtonStyle}", inlineButtonStyle.Attribute("BasedOn")?.Value);
-        Assert.Equal("34", GetSetterValue(inlineButtonStyle, "MinHeight"));
-        Assert.Equal("16,6", GetSetterValue(inlineButtonStyle, "Padding"));
-        Assert.Equal("88", GetSetterValue(inlineButtonStyle, "MinWidth"));
+        Assert.Equal("36", GetSetterValue(inlineButtonStyle, "MinHeight"));
+        Assert.Equal("20,6", GetSetterValue(inlineButtonStyle, "Padding"));
+        Assert.Equal("104", GetSetterValue(inlineButtonStyle, "MinWidth"));
     }
 
     [Fact]
@@ -134,7 +153,7 @@ public sealed class DesignResourceTests
 
         Assert.Equal("CanResize", root.Attribute("ResizeMode")?.Value);
         Assert.Equal("Manual", root.Attribute("SizeToContent")?.Value);
-        Assert.Equal("720", root.Attribute("MinWidth")?.Value);
+        Assert.Equal("840", root.Attribute("MinWidth")?.Value);
 
         var tabControl = settingsWindow.Descendants()
             .SingleOrDefault(element => element.Name.LocalName == "TabControl" && element.Attribute("Grid.Row")?.Value == "1");
@@ -163,6 +182,67 @@ public sealed class DesignResourceTests
             .SingleOrDefault(element => element.Attribute("Grid.Row")?.Value == "2");
 
         Assert.NotNull(footer);
+    }
+
+    [Fact]
+    public void SettingsWindow_ExplorerActionsUseWrappingRowWithoutFixedButtonWidths()
+    {
+        var settingsWindow = LoadXml("src", "Foldora.App", "SettingsWindow.xaml");
+
+        var actionCommands = new[]
+        {
+            "DryRunCommand",
+            "RegisterExplorerCommand",
+            "UnregisterExplorerCommand"
+        };
+
+        foreach (var command in actionCommands)
+        {
+            var button = settingsWindow.Descendants()
+                .Single(element => element.Name.LocalName == "Button" && element.Attribute("Command")?.Value == $"{{Binding {command}}}");
+
+            Assert.Equal("{StaticResource InlineActionButtonStyle}", button.Attribute("Style")?.Value);
+            Assert.Null(button.Attribute("Width"));
+            Assert.Null(button.Attribute("MaxWidth"));
+            Assert.Equal("WrapPanel", button.Parent?.Name.LocalName);
+        }
+    }
+
+    [Fact]
+    public void SettingsWindow_PathRowsKeepStarContentAndAutoActions()
+    {
+        var settingsWindow = LoadXml("src", "Foldora.App", "SettingsWindow.xaml");
+
+        var pathCommands = new[]
+        {
+            "OpenInstalledAppPathCommand",
+            "CopyInstalledAppPathCommand",
+            "OpenUserDataPathCommand",
+            "CopyUserDataPathCommand",
+            "OpenCommandHostPathCommand",
+            "CopyCommandHostPathCommand"
+        };
+
+        foreach (var command in pathCommands)
+        {
+            var button = settingsWindow.Descendants()
+                .Single(element => element.Name.LocalName == "Button" && element.Attribute("Command")?.Value == $"{{Binding {command}}}");
+
+            Assert.Equal("{StaticResource InlineActionButtonStyle}", button.Attribute("Style")?.Value);
+            Assert.Null(button.Attribute("Width"));
+            Assert.Null(button.Attribute("MaxWidth"));
+
+            var actions = button.Ancestors().First(element => element.Name.LocalName == "StackPanel");
+            Assert.Equal("1", actions.Attribute("Grid.Column")?.Value);
+            Assert.Equal("Horizontal", actions.Attribute("Orientation")?.Value);
+
+            var grid = actions.Ancestors().First(element => element.Name.LocalName == "Grid");
+            var columnWidths = grid.Descendants()
+                .Where(element => element.Name.LocalName == "ColumnDefinition")
+                .Select(element => element.Attribute("Width")?.Value ?? string.Empty)
+                .ToArray();
+            Assert.Equal(["*", "Auto"], columnWidths);
+        }
     }
 
     [Fact]
