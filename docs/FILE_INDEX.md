@@ -71,6 +71,11 @@
 - `src/Foldora.Cli/DesktopIconPositionDiagnosticsRunner.cs` - runner manual diagnostic command для prototype reposition existing desktop item.
 - `src/Foldora.Cli/Program.cs` - CLI help/dispatch и вызов Core/Shell-сервисов.
 - `src/Foldora.MenuHost/Foldora.MenuHost.csproj` - no-console Windows host для Explorer menu commands.
+- `src/Foldora.MenuHost/AssemblyInfo.cs` - assembly attributes, включая доступ internal MenuHost test seam для `Foldora.Tests`.
+- `src/Foldora.MenuHost/CursorPosition.cs` - cursor screen position abstraction и Windows `GetCursorPos` provider для best-effort desktop placement.
+- `src/Foldora.MenuHost/DesktopPlacementCoordinator.cs` - non-fatal coordinator best-effort positioning created Desktop folder icons.
+- `src/Foldora.MenuHost/DesktopTargetDetector.cs` - определение current user Desktop target directory для MenuHost placement flow.
+- `src/Foldora.MenuHost/MenuHostFolderActionService.cs` - injectable adapter вокруг Core `FolderMenuEntryActionService` для MenuHost tests.
 - `src/Foldora.MenuHost/Program.cs` - entry point MenuHost без console output.
 - `src/Foldora.MenuHost/MenuHostCommand.cs` - модель команды MenuHost.
 - `src/Foldora.MenuHost/MenuHostCommandParser.cs` - минимальный parser MenuHost для `create`/`apply` по entry id.

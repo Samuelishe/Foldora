@@ -13,7 +13,7 @@ Foldora разделена на шесть проектов:
 
 - `Foldora.App` -> `Foldora.Core`, `Foldora.Shell`.
 - `Foldora.Cli` -> `Foldora.Core`, `Foldora.Shell`.
-- `Foldora.MenuHost` -> `Foldora.Core`.
+- `Foldora.MenuHost` -> `Foldora.Core`, `Foldora.Shell`.
 - `Foldora.Shell` -> `Foldora.Core`.
 - `Foldora.Tests` -> `Foldora.Core`, `Foldora.Shell`, `Foldora.Cli`, `Foldora.App`, `Foldora.MenuHost`.
 - `Foldora.Core` не зависит от других проектов Foldora.
@@ -31,9 +31,9 @@ Validation/model слой находится в `Foldora.Core`, а не в CLI/W
 `Foldora.Shell` содержит shell-specific planning/integration logic. `ExplorerMenuRegistryPlanBuilder` строит testable plan HKCU операций под Foldora-owned roots, но не пишет в реестр. Видимый legacy menu root берётся из `CreateFolderMenu.Title`, при этом technical registry root остаётся `Foldora` для safety boundary. One-level grouping строится из flat entries через `FolderMenuEntry.GroupName`: group keys технические (`group-NNN`), а пользовательский group title пишется только в `MUIVerb`. Entry registry keys получают `Icon` value только из существующего imported `IconPath`; это shell menu icon, не WPF preview.
 `ExplorerMenuRegistryWriter` применяет только validated plan через `IRegistryAccess`. `WindowsRegistryAccess` - единственное место, где используется `Microsoft.Win32.Registry`; тесты используют fake/in-memory registry access.
 
-`Foldora.Shell.Desktop` содержит isolated diagnostic/prototype API для desktop icon positioning. `IDesktopIconPositioningService` и `WindowsDesktopIconPositioningService` не вызываются из production Explorer menu path и не меняют Core create/apply behavior. Текущий потребитель - только CLI diagnostic command `diagnostics desktop-icon-position`.
+`Foldora.Shell.Desktop` содержит isolated API для desktop icon positioning. `IDesktopIconPositioningService` и `WindowsDesktopIconPositioningService` используются CLI diagnostic command `diagnostics desktop-icon-position` и best-effort `Foldora.MenuHost` desktop create flow. Core create/apply behavior при этом не меняется.
 
-`Foldora.MenuHost` является Windows-subsystem executable (`WinExe`) без UI и console output. Explorer legacy menu должен запускать `Foldora.MenuHost.exe`, чтобы не мигало console window. MenuHost возвращает non-zero exit code при ошибках; user-facing diagnostics для context menu failures остаются future work.
+`Foldora.MenuHost` является Windows-subsystem executable (`WinExe`) без UI и console output. Explorer legacy menu должен запускать `Foldora.MenuHost.exe`, чтобы не мигало console window. Для `create` MenuHost захватывает текущую cursor screen position до Core action, вызывает `FolderMenuEntryActionService.CreateAsync`, а затем только для current user Desktop directory пытается best-effort reposition созданный desktop item. Positioning failure non-fatal и не превращает успешное создание папки в failure. MenuHost возвращает non-zero exit code при ошибках create/apply; user-facing diagnostics для context menu failures остаются future work.
 
 Cleanup flow разделён на две операции. `unregister-menu` удаляет только Foldora-owned registry roots и ставит `ExplorerIntegrationEnabled = false`, не удаляя entries/settings. `menu reset --yes` удаляет те же owned roots, очищает `CreateFolderMenu.Entries`, возвращает title к `Создать папку` и сохраняет settings; AppData root, `settings.json`, packs и импортированные `.ico` не удаляются.
 

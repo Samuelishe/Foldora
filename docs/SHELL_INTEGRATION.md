@@ -96,9 +96,11 @@ Placeholder policy на текущем этапе:
 
 ## Desktop Placement Limitation
 
-Legacy registry context menu передаёт Foldora target directory path (`%1` или `%V`), но не передаёт cursor coordinates или координаты desktop icon-view. Поэтому при создании папки из desktop background menu Foldora создаёт папку в правильной target directory, но позицию нового значка на рабочем столе выбирает Explorer.
+Legacy registry context menu передаёт Foldora target directory path (`%1` или `%V`), но не передаёт original right-click coordinates или координаты desktop icon-view. Поэтому точное создание папки в исходной точке клика недоступно текущей registry command shape.
 
-Создание папки именно под курсором не поддерживается текущей MVP-интеграцией. `GetCursorPos` сам по себе не является надёжным production fix: когда `Foldora.MenuHost.exe` стартует после выбора submenu item, текущий cursor position может относиться к пункту меню, а не к исходному right-click на desktop background.
+Создание папки именно в исходной right-click point не поддерживается текущей MVP-интеграцией. `GetCursorPos` сам по себе не является точным источником original click: когда `Foldora.MenuHost.exe` стартует после выбора submenu item, текущий cursor position может относиться к пункту меню, а не к исходному right-click на desktop background.
+
+При этом manual diagnostic prototype подтвердил, что уже существующий desktop item можно переместить программно. Поэтому production MenuHost create flow теперь делает best-effort placement: захватывает текущую screen cursor position максимально рано, создаёт папку прежним Core flow и, если target directory равна user Desktop directory, пытается reposition созданный desktop item near captured cursor/menu selection point. Если positioning не удалось, папка остаётся созданной, а MenuHost возвращает success.
 
 Для такого поведения нужен отдельный advanced shell integration path. Candidate routes:
 
@@ -113,7 +115,7 @@ Legacy registry context menu передаёт Foldora target directory path (`%1
 foldora diagnostics desktop-icon-position --name "<desktop item name>" --x <int> --y <int> [--coordinate-space screen|view]
 ```
 
-Она пытается reposition уже существующий desktop item и не подключена к production Explorer menu flow. Registry command shape, `%V`, `Foldora.MenuHost.exe create` и Core create/apply behavior не меняются.
+Она пытается reposition уже существующий desktop item и сохранена для ручной диагностики. Registry command shape, `%V` и Core create/apply behavior не меняются.
 
 Этот пункт зафиксирован как high-priority research `TD-0001` в `TECH_DEBT.md`, а подробности собраны в `docs/research/DESKTOP_ICON_PLACEMENT.md`. Его нельзя смешивать с отдельным desktop.ini/icon refresh debt: если папка появилась не под курсором, это ожидаемое ограничение legacy integration, а не ошибка `desktop.ini`.
 

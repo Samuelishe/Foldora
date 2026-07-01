@@ -106,9 +106,25 @@ Scope:
 
 Implementation note: the prototype is isolated in `Foldora.Shell.Desktop` behind `IDesktopIconPositioningService`. It uses Explorer desktop folder view APIs where available and returns controlled failure if the desktop view, item or positioning operation cannot be resolved.
 
+## Manual Prototype Result
+
+Manual Windows 11 checks confirmed that `diagnostics desktop-icon-position` can move existing desktop icons using both screen and view coordinates. When the target grid area is occupied, Explorer can shift neighboring icons according to desktop grid/layout behavior; this was accepted as usable for MVP best-effort placement.
+
+## Best-Effort Integration
+
+`Foldora.MenuHost` now uses the positioning service only after successful desktop-background `create`:
+
+1. Parse `create --target "%V" --entry-id "<entry-id>"`.
+2. Capture current cursor screen position as early as possible in the create branch.
+3. Call existing Core `FolderMenuEntryActionService.CreateAsync`.
+4. If the target directory equals `Environment.SpecialFolder.DesktopDirectory`, attempt to move the created desktop item by folder name using `DesktopIconCoordinateSpace.Screen`.
+5. Treat positioning failure as non-fatal: folder creation success remains exit code `0`.
+
+This is approximate. Legacy registry commands still do not pass the original right-click point. The captured cursor can be the menu/submenu selection point, keyboard navigation can produce different behavior, and Explorer can snap or shift icons according to grid/auto-arrange settings.
+
 ## Recommendation
 
-Do not promise "create under cursor" in the current MVP. The next practical step, if the UX priority is high enough, is an explicit implementation spike for Shell COM desktop view positioning. If that spike cannot prove reliable coordinate capture and safe no-op behavior, keep the limitation documented honestly.
+Do not promise exact "create under original right-click point" in the current MVP. Keep best-effort placement enabled for desktop create flow, verify it manually in publish smoke, and only pursue heavier shell integration if the approximation is not good enough.
 
 ## Sources
 

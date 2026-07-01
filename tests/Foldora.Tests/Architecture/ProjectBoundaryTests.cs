@@ -16,6 +16,17 @@ public sealed class ProjectBoundaryTests
         Assert.DoesNotContain("WindowsBase", projectText, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    public void CoreProject_DoesNotReferenceShellDesktopPositioning()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var projectFile = Path.Combine(repositoryRoot, "src", "Foldora.Core", "Foldora.Core.csproj");
+
+        var projectText = File.ReadAllText(projectFile);
+
+        Assert.DoesNotContain("Foldora.Shell", projectText, StringComparison.OrdinalIgnoreCase);
+    }
+
     private static string FindRepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);

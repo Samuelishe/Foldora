@@ -1,6 +1,7 @@
 using Foldora.Core.Menu;
 using Foldora.Core.Settings;
 using Foldora.Core.Storage;
+using Foldora.Shell.Desktop;
 
 namespace Foldora.MenuHost;
 
@@ -11,7 +12,14 @@ public static class MenuHostCommandRunner
 {
     public static async Task<int> RunAsync(string[] args, CancellationToken cancellationToken = default)
     {
-        return await RunAsync(args, CreateActionService(), cancellationToken);
+        return await RunAsync(
+            args,
+            new MenuHostFolderActionService(CreateActionService()),
+            new WindowsCursorPositionProvider(),
+            new DesktopPlacementCoordinator(
+                new DesktopTargetDetector(),
+                new WindowsDesktopIconPositioningService()),
+            cancellationToken);
     }
 
     public static async Task<int> RunAsync(
@@ -19,8 +27,27 @@ public static class MenuHostCommandRunner
         FolderMenuEntryActionService actionService,
         CancellationToken cancellationToken = default)
     {
+        return await RunAsync(
+            args,
+            new MenuHostFolderActionService(actionService),
+            new NullCursorPositionProvider(),
+            new DesktopPlacementCoordinator(
+                new DesktopTargetDetector(() => string.Empty),
+                new NoOpDesktopIconPositioningService()),
+            cancellationToken);
+    }
+
+    internal static async Task<int> RunAsync(
+        string[] args,
+        IMenuHostFolderActionService actionService,
+        ICursorPositionProvider cursorPositionProvider,
+        DesktopPlacementCoordinator desktopPlacementCoordinator,
+        CancellationToken cancellationToken = default)
+    {
         ArgumentNullException.ThrowIfNull(args);
         ArgumentNullException.ThrowIfNull(actionService);
+        ArgumentNullException.ThrowIfNull(cursorPositionProvider);
+        ArgumentNullException.ThrowIfNull(desktopPlacementCoordinator);
 
         try
         {
@@ -32,7 +59,12 @@ public static class MenuHostCommandRunner
             switch (command.Kind)
             {
                 case MenuHostCommandKind.Create:
-                    await actionService.CreateAsync(command.TargetPath!, command.EntryId!, cancellationToken);
+                    var cursorPosition = cursorPositionProvider.TryGetCursorPosition();
+                    var createdFolderPath = await actionService.CreateAsync(command.TargetPath!, command.EntryId!, cancellationToken);
+                    desktopPlacementCoordinator.TryPlaceCreatedFolder(
+                        command.TargetPath!,
+                        createdFolderPath,
+                        cursorPosition);
                     return 0;
 
                 case MenuHostCommandKind.Apply:
@@ -47,6 +79,26 @@ public static class MenuHostCommandRunner
         catch (Exception exception) when (IsExpectedFailure(exception))
         {
             return 1;
+        }
+    }
+
+    private sealed class NullCursorPositionProvider : ICursorPositionProvider
+    {
+        public CursorPosition? TryGetCursorPosition()
+        {
+            return null;
+        }
+    }
+
+    private sealed class NoOpDesktopIconPositioningService : IDesktopIconPositioningService
+    {
+        public DesktopIconPositioningResult TryPositionByName(
+            string itemName,
+            int x,
+            int y,
+            DesktopIconCoordinateSpace coordinateSpace)
+        {
+            return DesktopIconPositioningResult.Failed("Desktop placement is disabled for this runner overload.");
         }
     }
 

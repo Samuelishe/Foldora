@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - Best-effort desktop placement integration
+
+- Diagnostic desktop icon positioning manually confirmed on Windows 11: existing desktop icons move with both screen and view coordinates; Explorer grid displacement is accepted for MVP.
+- `Foldora.MenuHost` now captures current cursor screen position at the start of `create`, calls the existing Core create flow, and best-effort repositions the created folder icon only when the target directory is the current user's Desktop directory.
+- Placement failure is non-fatal: successful folder creation remains a successful MenuHost command.
+- Core remains independent from Shell desktop positioning; registry command shape and `%V` placeholder policy did not change.
+- Added unit tests for capture-before-create ordering, desktop-only positioning, non-fatal positioning failure, create-failure no-positioning, created folder name propagation and screen coordinate usage.
+
 ## 2026-07-01 - Desktop icon positioning prototype spike
 
 - Добавлен isolated Shell diagnostic/prototype layer `Foldora.Shell.Desktop`: `IDesktopIconPositioningService`, result model, coordinate-space enum и Windows implementation для попытки reposition existing desktop item.

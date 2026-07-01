@@ -8,21 +8,23 @@
 
 - ID: `TD-0001`
 - Title: Desktop icon placement from legacy menu
-- Status: High-priority research
+- Status: Partially mitigated / Monitor
 - Severity: High
 - Area: Shell
 - Observed behavior: Foldora legacy menu can be invoked from desktop background, but the created folder icon is placed by Explorer in a free desktop icon-view slot, not under the cursor position where the menu was opened.
 - Expected/desired behavior: If technically feasible in a future integration model, creating from desktop background should place the new folder near the invocation point.
 - Known cause or hypothesis:
   - `TD-0001A`: current HKCU legacy context menu commands receive target directory path through Explorer placeholders such as `%V`, but they do not receive original right-click cursor coordinates or desktop icon-view coordinates.
-  - `TD-0001B`: post-create desktop icon positioning may be technically possible through Shell view APIs, but it needs a separate design and manual Windows 11 verification matrix.
-- Current workaround: User can move the created desktop icon manually after creation.
-- Next investigation step: Run manual feasibility checks with `foldora diagnostics desktop-icon-position --name "<desktop item name>" --x <int> --y <int> [--coordinate-space screen|view]`. The spike must still prove coordinate source reliability, desktop view lookup, auto-arrange behavior, DPI/multi-monitor behavior and failure/no-op semantics before production use.
+  - `TD-0001B`: post-create desktop icon positioning is feasible; manual diagnostic checks confirmed that both screen and view coordinates can move existing desktop icons, with Explorer grid displacement accepted as acceptable.
+- Current workaround/mitigation: `Foldora.MenuHost` now captures current cursor screen position before `create`, creates the folder through Core, and best-effort repositions the created desktop item if the target directory is the current user's Desktop directory. User can still move the icon manually if Explorer snaps/shifts it or positioning fails.
+- Next investigation step: Manual publish smoke for best-effort placement under Explorer legacy menu. Exact original right-click placement still requires a separate coordinate source or heavier shell integration.
 - Links to docs/tests/code:
   - `docs/SHELL_INTEGRATION.md`
   - `docs/research/DESKTOP_ICON_PLACEMENT.md`
   - `docs/SMOKE_TEST.md`
   - `src/Foldora.Shell/Desktop/WindowsDesktopIconPositioningService.cs`
+  - `src/Foldora.MenuHost/DesktopPlacementCoordinator.cs`
+  - `src/Foldora.MenuHost/CursorPosition.cs`
   - `src/Foldora.Cli/DesktopIconPositionDiagnosticsRunner.cs`
   - `src/Foldora.Shell/RegistryPlan/ExplorerMenuShellTargetPlaceholder.cs`
   - `src/Foldora.Shell/RegistryPlan/ExplorerMenuCommandBuilder.cs`

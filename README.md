@@ -47,6 +47,7 @@ Selecting an entry creates a folder and applies its icon through `desktop.ini`.
 - No-console `Foldora.MenuHost.exe` for Explorer menu commands.
 - Small icons in the legacy Explorer menu.
 - Folder creation with a custom icon through `desktop.ini`.
+- Best-effort desktop icon placement for folders created from the desktop background legacy menu.
 - Deletion-friendly folder icon attributes: folder `ReadOnly`, `desktop.ini` `Hidden`.
 - Unregister flow that disables Explorer integration without deleting entries.
 - Reset flow that clears the user menu and disables Explorer integration.
@@ -145,7 +146,7 @@ If you enable Explorer integration from `artifacts/publish/Foldora/Foldora.App.e
 
 - Modern Windows 11 context menu integration is not implemented.
 - The current Explorer integration uses the legacy context menu, so the menu may appear under `Show more options`.
-- Creating a desktop folder exactly under the mouse cursor is not supported in the current legacy-menu MVP; Explorer chooses the new desktop icon position.
+- Exact original right-click desktop placement is not available from the current legacy-menu MVP. Foldora does a best-effort move of newly created desktop folder icons near the cursor/menu selection position, and Explorer may snap or shift icons according to its grid/layout rules.
 - No installer/MSIX yet.
 - Manual/dev publish is available under `artifacts/publish/Foldora`, but there is no production installer, Program Files layout, code signing, or MSIX package yet.
 - No icon pack import/export yet.

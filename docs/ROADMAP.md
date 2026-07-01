@@ -33,6 +33,7 @@ Foldora currently has a working MVP loop:
 ```
 
 - No-console `Foldora.MenuHost.exe` for Explorer menu commands.
+- Best-effort desktop icon placement for MenuHost desktop-background create flow.
 - Dev/manual publish layout in `artifacts/publish/Foldora`.
 - Small menu icons through registry `Icon`.
 - `register-menu`, `register-menu --dry-run`, `register-menu --host-path`, `unregister-menu`.
@@ -64,11 +65,9 @@ Foldora.MenuHost.exe
 
 ## Next Stage
 
-Desktop placement research before installer/release polish:
+Best-effort desktop placement verification before installer/release polish:
 
-- Decide whether to run an implementation spike for post-create desktop icon positioning.
-- Manually verify the isolated `diagnostics desktop-icon-position` prototype against real Windows 11 Desktop behavior.
-- Prove or reject reliable coordinate capture for the original desktop invocation point.
+- Manually verify published MenuHost desktop-background create near the cursor/menu selection area.
 - Define manual smoke coverage for auto-arrange icons, align-to-grid, multi-monitor, DPI scaling and Explorer restart.
 - Keep installer/MSIX as a later step until this UX-critical limitation has an explicit decision.
 
@@ -76,7 +75,7 @@ Desktop placement research before installer/release polish:
 
 - Modern Windows 11 compact context menu is not implemented.
 - Legacy menu may appear under `Show more options`.
-- Foldora does not control desktop icon placement under the mouse cursor; Explorer chooses the icon position. This is tracked as high-priority research `TD-0001`.
+- Exact original right-click desktop placement is not available from the legacy command; Foldora uses best-effort positioning near the captured cursor/menu selection point and Explorer may snap/shift icons. This is tracked as `TD-0001`.
 - No installer/MSIX yet.
 - No production Program Files layout or code signing yet.
 - No pack import/export yet.
@@ -94,8 +93,7 @@ Desktop placement research before installer/release polish:
 
 - Installer/MSIX after stable publish layout.
 - Modern Windows 11 context menu research.
-- Shell COM desktop icon placement spike, if accepted after `docs/research/DESKTOP_ICON_PLACEMENT.md`.
-- Production integration of desktop icon placement only if diagnostic prototype proves reliable movement and a separate coordinate source is designed.
+- Exact original right-click coordinate source research, if best-effort placement is not enough.
 - Modern `IExplorerCommand` research for advanced shell integration.
 - Optional Shell refresh notification investigation for desktop.ini apply/create timing, only if `TD-0002` is reproduced again and scoped.
 - Full tree menu runtime/storage beyond current one-level groups.
