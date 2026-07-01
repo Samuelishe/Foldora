@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-07-01 - Runtime Settings tab content centering fix
+
+- Rechecked the ineffective Settings tab content alignment fix after the fresh Release binary still showed Application, Help/About and Danger zone as centered islands.
+- Found the shared runtime parent: `SettingsTabItemStyle` used `HorizontalContentAlignment` / `VerticalContentAlignment` to center tab headers, but WPF also uses those properties in the selected tab content path.
+- Changed `SettingsTabItemStyle` so selected tab content stretches, while the header `ContentPresenter` remains explicitly centered inside the tab item template.
+- Kept the wrapping content-sized tab header host and unchanged localized tab labels.
+- Updated design resource tests to cover the shared selected-content host/template path instead of only inner tab body attributes.
+- No ViewModel state, localization catalogs, settings JSON, registry/MenuHost/install behavior, shell behavior, app icon, README hero or external assets changed.
+
 ## 2026-07-01 - Settings tab content alignment follow-up
 
 - Kept the fixed wrapping Settings tab headers and unchanged localized tab labels.

@@ -32,6 +32,7 @@ Design system foundation добавляет централизованные WPF
 - Longer instructions belong in the Settings Help/About window, not in crowded inline tooltips or on MainWindow.
 - Main UI text must be user-facing, not debug-state text. Не показывать raw booleans вроде `True/False` как пользовательский статус.
 - Buttons must account for localization and long labels: shared action buttons use consistent min-height, padding and min-width, and the base button template must apply `Padding`, `HorizontalContentAlignment` and `VerticalContentAlignment` instead of visually clipping content. Dense Settings rows use a separate compact inline action style so `Preview changes`, enable/disable and path Open/Copy actions do not inherit overly wide normal action geometry, while still keeping visible horizontal breathing room. Further per-locale polish remains future work.
+- Settings tab headers and selected tab content must keep separate alignment contracts: tab headers may center their header text inside each header chrome, but selected tab content must stretch to the tab body so forms/cards can start at the left/top property-panel inset.
 - Settings content should keep proper scroll gutter and section spacing; scrollbar не должен визуально прилипать к тексту.
 - App icon, exe/window icon and README hero/mockup are future branding/assets work, not ad hoc UI code additions.
 - Интерфейс MVP должен быть простым: список стилей, состояние integration, кнопки register/unregister и базовые настройки.

@@ -143,7 +143,7 @@
 - Expected/desired behavior: Settings categories should be compact, navigable and scalable without making reset/danger controls visible as default content.
 - Known cause or hypothesis: Settings grew incrementally from a small language dialog into a multi-section system window.
 - Current workaround: Not needed; SettingsWindow now uses category tabs, keeps footer actions fixed and isolates Danger zone in its own tab.
-- Next investigation step: Manual RU/EN and long-locale checks for tab header fit, path row wrapping and Explorer technical details overflow. Button clipping found after the first tabbed pass was addressed by the Settings layout robustness pass; tab header clipping found afterwards was addressed by using content-sized wrapping tab headers.
+- Next investigation step: Manual RU/EN and long-locale checks for tab header fit, path row wrapping and Explorer technical details overflow. Button clipping found after the first tabbed pass was addressed by the Settings layout robustness pass; tab header clipping found afterwards was addressed by using content-sized wrapping tab headers. Runtime tab-body centering found after the header fix was addressed by separating tab header centering from `TabItem` selected-content alignment.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UI_DESIGN.md`

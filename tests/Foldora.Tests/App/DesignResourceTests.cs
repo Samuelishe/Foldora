@@ -131,6 +131,7 @@ public sealed class DesignResourceTests
     {
         var controls = LoadXml("src", "Foldora.App", "Resources", "Controls.xaml");
         var settingsTabControlStyle = FindStyle(controls, "SettingsTabControlStyle");
+        XName xName = XName.Get("Name", "http://schemas.microsoft.com/winfx/2006/xaml");
 
         var headerHost = settingsTabControlStyle.Descendants()
             .Single(element => element.Attribute("IsItemsHost")?.Value == "True");
@@ -140,18 +141,24 @@ public sealed class DesignResourceTests
         Assert.Null(headerHost.Attribute("Width"));
         Assert.Null(headerHost.Attribute("MaxWidth"));
         Assert.Null(headerHost.Attribute("ClipToBounds"));
+
+        var selectedContentHost = settingsTabControlStyle.Descendants()
+            .Single(element => element.Attribute(xName)?.Value == "PART_SelectedContentHost");
+
+        Assert.Equal("{TemplateBinding HorizontalContentAlignment}", selectedContentHost.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("{TemplateBinding VerticalContentAlignment}", selectedContentHost.Attribute("VerticalAlignment")?.Value);
     }
 
     [Fact]
-    public void SettingsTabItemStyle_UsesContentSizedNonClippingHeaders()
+    public void SettingsTabItemStyle_StretchesSelectedContentAndUsesContentSizedHeaders()
     {
         var controls = LoadXml("src", "Foldora.App", "Resources", "Controls.xaml");
         var settingsTabItemStyle = FindStyle(controls, "SettingsTabItemStyle");
 
         Assert.Equal("{DynamicResource SettingsTabHeaderPadding}", GetSetterValue(settingsTabItemStyle, "Padding"));
         Assert.Equal("32", GetSetterValue(settingsTabItemStyle, "MinHeight"));
-        Assert.Equal("Center", GetSetterValue(settingsTabItemStyle, "HorizontalContentAlignment"));
-        Assert.Equal("Center", GetSetterValue(settingsTabItemStyle, "VerticalContentAlignment"));
+        Assert.Equal("Stretch", GetSetterValue(settingsTabItemStyle, "HorizontalContentAlignment"));
+        Assert.Equal("Stretch", GetSetterValue(settingsTabItemStyle, "VerticalContentAlignment"));
         Assert.Null(GetOptionalSetterValue(settingsTabItemStyle, "Width"));
         Assert.Null(GetOptionalSetterValue(settingsTabItemStyle, "MaxWidth"));
         Assert.Null(GetOptionalSetterValue(settingsTabItemStyle, "TextTrimming"));
@@ -159,8 +166,8 @@ public sealed class DesignResourceTests
 
         var contentPresenter = settingsTabItemStyle.Descendants()
             .Single(element => element.Name.LocalName == "ContentPresenter" && element.Attribute("ContentSource")?.Value == "Header");
-        Assert.Equal("{TemplateBinding HorizontalContentAlignment}", contentPresenter.Attribute("HorizontalAlignment")?.Value);
-        Assert.Equal("{TemplateBinding VerticalContentAlignment}", contentPresenter.Attribute("VerticalAlignment")?.Value);
+        Assert.Equal("Center", contentPresenter.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("Center", contentPresenter.Attribute("VerticalAlignment")?.Value);
         Assert.Null(contentPresenter.Attribute("Width"));
         Assert.Null(contentPresenter.Attribute("MaxWidth"));
     }
