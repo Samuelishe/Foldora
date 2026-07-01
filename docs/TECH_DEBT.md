@@ -16,14 +16,15 @@
 - Known cause or hypothesis:
   - `TD-0001A`: current HKCU legacy context menu commands receive target directory path through Explorer placeholders such as `%V`, but they do not receive original right-click cursor coordinates or desktop icon-view coordinates.
   - `TD-0001B`: post-create desktop icon positioning is feasible; manual diagnostic checks confirmed that both screen and view coordinates can move existing desktop icons, with Explorer grid displacement accepted as acceptable.
-- Current workaround/mitigation: `Foldora.MenuHost` now captures current cursor screen position before `create`, creates the folder through Core, and best-effort repositions the created desktop item if the target directory is the current user's Desktop directory. User can still move the icon manually if Explorer snaps/shifts it or positioning fails.
-- Next investigation step: Manual publish smoke for best-effort placement under Explorer legacy menu. Exact original right-click placement still requires a separate coordinate source or heavier shell integration.
+- Current workaround/mitigation: `Foldora.MenuHost` now captures current cursor screen position before `create`, creates the folder through Core, and best-effort repositions the created desktop item if the target directory is the current user's Desktop directory. Placement writes local JSONL diagnostics to `%AppData%\Foldora\Logs\menuhost-placement.log` and retries boundedly only when Explorer reports that the desktop item is not found yet. User can still move the icon manually if Explorer snaps/shifts it or positioning fails.
+- Next investigation step: Manual publish smoke for best-effort placement under Explorer legacy menu. If placement still fails, inspect the latest `menuhost-placement.log` entry. Exact original right-click placement still requires a separate coordinate source or heavier shell integration.
 - Links to docs/tests/code:
   - `docs/SHELL_INTEGRATION.md`
   - `docs/research/DESKTOP_ICON_PLACEMENT.md`
   - `docs/SMOKE_TEST.md`
   - `src/Foldora.Shell/Desktop/WindowsDesktopIconPositioningService.cs`
   - `src/Foldora.MenuHost/DesktopPlacementCoordinator.cs`
+  - `src/Foldora.MenuHost/MenuHostPlacementLogWriter.cs`
   - `src/Foldora.MenuHost/CursorPosition.cs`
   - `src/Foldora.Cli/DesktopIconPositionDiagnosticsRunner.cs`
   - `src/Foldora.Shell/RegistryPlan/ExplorerMenuShellTargetPlaceholder.cs`

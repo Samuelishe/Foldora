@@ -19,6 +19,7 @@ public static class MenuHostCommandRunner
             new DesktopPlacementCoordinator(
                 new DesktopTargetDetector(),
                 new WindowsDesktopIconPositioningService()),
+            new MenuHostPlacementLogWriter(),
             cancellationToken);
     }
 
@@ -34,6 +35,7 @@ public static class MenuHostCommandRunner
             new DesktopPlacementCoordinator(
                 new DesktopTargetDetector(() => string.Empty),
                 new NoOpDesktopIconPositioningService()),
+            new NoOpMenuHostPlacementLogWriter(),
             cancellationToken);
     }
 
@@ -42,12 +44,14 @@ public static class MenuHostCommandRunner
         IMenuHostFolderActionService actionService,
         ICursorPositionProvider cursorPositionProvider,
         DesktopPlacementCoordinator desktopPlacementCoordinator,
+        IMenuHostPlacementLogWriter placementLogWriter,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(args);
         ArgumentNullException.ThrowIfNull(actionService);
         ArgumentNullException.ThrowIfNull(cursorPositionProvider);
         ArgumentNullException.ThrowIfNull(desktopPlacementCoordinator);
+        ArgumentNullException.ThrowIfNull(placementLogWriter);
 
         try
         {
@@ -59,13 +63,13 @@ public static class MenuHostCommandRunner
             switch (command.Kind)
             {
                 case MenuHostCommandKind.Create:
-                    var cursorPosition = cursorPositionProvider.TryGetCursorPosition();
-                    var createdFolderPath = await actionService.CreateAsync(command.TargetPath!, command.EntryId!, cancellationToken);
-                    desktopPlacementCoordinator.TryPlaceCreatedFolder(
-                        command.TargetPath!,
-                        createdFolderPath,
-                        cursorPosition);
-                    return 0;
+                    return await RunCreateAsync(
+                        command,
+                        actionService,
+                        cursorPositionProvider,
+                        desktopPlacementCoordinator,
+                        placementLogWriter,
+                        cancellationToken);
 
                 case MenuHostCommandKind.Apply:
                     await actionService.ApplyAsync(command.FolderPath!, command.EntryId!, cancellationToken);
@@ -79,6 +83,66 @@ public static class MenuHostCommandRunner
         catch (Exception exception) when (IsExpectedFailure(exception))
         {
             return 1;
+        }
+    }
+
+    private static async Task<int> RunCreateAsync(
+        MenuHostCommand command,
+        IMenuHostFolderActionService actionService,
+        ICursorPositionProvider cursorPositionProvider,
+        DesktopPlacementCoordinator desktopPlacementCoordinator,
+        IMenuHostPlacementLogWriter placementLogWriter,
+        CancellationToken cancellationToken)
+    {
+        var logEntry = new MenuHostPlacementLogEntry
+        {
+            CommandKind = "create",
+            TargetPath = command.TargetPath,
+            EntryId = command.EntryId
+        };
+
+        try
+        {
+            var cursorPosition = cursorPositionProvider.TryGetCursorPosition();
+            logEntry.CursorCaptured = cursorPosition is not null;
+            logEntry.CursorX = cursorPosition?.X;
+            logEntry.CursorY = cursorPosition?.Y;
+
+            var createdFolderPath = await actionService.CreateAsync(
+                command.TargetPath!,
+                command.EntryId!,
+                cancellationToken);
+            logEntry.CreatedFolderPath = createdFolderPath;
+
+            var placementResult = await desktopPlacementCoordinator.TryPlaceCreatedFolderAsync(
+                command.TargetPath!,
+                createdFolderPath,
+                cursorPosition,
+                cancellationToken);
+
+            logEntry.ApplyPlacementResult(placementResult);
+            logEntry.FinalExitCode = 0;
+            return 0;
+        }
+        catch (Exception exception) when (IsExpectedFailure(exception))
+        {
+            logEntry.ExceptionType = exception.GetType().FullName;
+            logEntry.ExceptionMessage = exception.Message;
+            logEntry.FinalPositioningResult = "skipped";
+            logEntry.FinalPositioningMessage = "Create failed before placement.";
+            logEntry.FinalExitCode = 1;
+            return 1;
+        }
+        finally
+        {
+            try
+            {
+                placementLogWriter.Append(logEntry);
+            }
+            catch
+            {
+                // Explorer create/apply results must not depend on diagnostic logging.
+            }
         }
     }
 
@@ -99,6 +163,13 @@ public static class MenuHostCommandRunner
             DesktopIconCoordinateSpace coordinateSpace)
         {
             return DesktopIconPositioningResult.Failed("Desktop placement is disabled for this runner overload.");
+        }
+    }
+
+    private sealed class NoOpMenuHostPlacementLogWriter : IMenuHostPlacementLogWriter
+    {
+        public void Append(MenuHostPlacementLogEntry entry)
+        {
         }
     }
 

@@ -48,7 +48,9 @@ artifacts/publish/Foldora/Foldora.MenuHost.exe
 4. Нажать `Включить меню Проводника`.
 5. Проверить, что registry command указывает на `artifacts/publish/Foldora/Foldora.MenuHost.exe`, а не на Debug output.
 6. Проверить Explorer legacy menu через `Show more options`, если пункт не виден в compact menu.
-7. Перед удалением publish-папки выполнить `artifacts/publish/Foldora/Foldora.Cli.exe unregister-menu`.
+7. Создать папку через Desktop background context menu.
+8. Проверить `%AppData%\Foldora\Logs\menuhost-placement.log`; последняя запись должна соответствовать create-команде.
+9. Перед удалением publish-папки выполнить `artifacts/publish/Foldora/Foldora.Cli.exe unregister-menu`.
 
 ## 2. WPF Startup
 
@@ -162,6 +164,7 @@ desktop.ini attrib: H
 - при desktop background create папка появляется near cursor/menu selection area, а не в левом свободном desktop slot;
 - exact original right-click point не гарантируется: legacy menu не передаёт эти координаты, Explorer может snap/shift icons по grid/auto-arrange rules;
 - при занятой соседней grid cell проверить, что Explorer может сдвинуть существующий icon; это допустимое поведение MVP.
+- если desktop placement не сработал, открыть `%AppData%\Foldora\Logs\menuhost-placement.log` и приложить latest JSONL entry к следующему investigation step.
 
 ## 6. Save-triggered Rebuild
 
@@ -211,5 +214,6 @@ foldora menu reset --yes
 - Desktop placement является best-effort: Foldora пытается передвинуть созданный desktop folder near captured cursor/menu selection point, но exact original right-click point недоступна через legacy `%V`.
 - Первая папка на Desktop может сначала появиться с default icon из-за возможного Explorer refresh/icon cache timing issue; это отдельный `TD-0002`, не placement limitation.
 - Registry menu в publish/manual проверке должен указывать на `artifacts/publish/Foldora/Foldora.MenuHost.exe`.
+- MenuHost desktop placement diagnostics находятся в `%AppData%\Foldora\Logs\menuhost-placement.log`.
 - Если publish-папку нужно удалить, сначала выполнить `unregister-menu`, чтобы Explorer menu не ссылался на удалённый host.
 - User-facing diagnostics для failures внутри `Foldora.MenuHost` из Explorer menu пока future work.

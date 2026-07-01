@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - MenuHost desktop placement diagnostics and bounded retry
+
+- Added append-only JSONL diagnostic logging for MenuHost desktop placement at `%AppData%\Foldora\Logs\menuhost-placement.log`.
+- Each create command logs target, entry id, created folder path/name, desktop detection details, cursor capture, positioning attempts, final result/message, exception details and final exit code.
+- Added bounded retry in `DesktopPlacementCoordinator` only when positioning returns `Desktop item was not found: <name>`, covering the race where Explorer desktop view has not seen the newly-created item yet.
+- Retry remains desktop-only, cursor-required and non-fatal; no retry for non-desktop targets, missing cursor, COM rejection, invalid args or other failures.
+- Added tests for logging, skipped states, item-not-found retry success/exhaustion, non-retried failures, create failure logging and log writer failure safety.
+
 ## 2026-07-01 - Best-effort desktop placement integration
 
 - Diagnostic desktop icon positioning manually confirmed on Windows 11: existing desktop icons move with both screen and view coordinates; Explorer grid displacement is accepted for MVP.

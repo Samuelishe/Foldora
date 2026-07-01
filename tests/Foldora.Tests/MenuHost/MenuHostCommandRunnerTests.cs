@@ -124,7 +124,8 @@ public sealed class MenuHostCommandRunnerTests
             ["create", "--target", @"C:\Users\User\Desktop", "--entry-id", "entry-skull"],
             actionService,
             cursorProvider,
-            coordinator);
+            coordinator,
+            new FakeMenuHostPlacementLogWriter());
 
         Assert.Equal(0, exitCode);
         Assert.Equal(["cursor", "create"], calls);
@@ -143,7 +144,8 @@ public sealed class MenuHostCommandRunnerTests
             ["create", "--target", @"C:\Users\User\Desktop\", "--entry-id", "entry-skull"],
             actionService,
             cursorProvider,
-            coordinator);
+            coordinator,
+            new FakeMenuHostPlacementLogWriter());
 
         Assert.Equal(0, exitCode);
         Assert.Single(positioningService.Calls);
@@ -167,7 +169,8 @@ public sealed class MenuHostCommandRunnerTests
             ["create", "--target", @"C:\Temp", "--entry-id", "entry-skull"],
             actionService,
             cursorProvider,
-            coordinator);
+            coordinator,
+            new FakeMenuHostPlacementLogWriter());
 
         Assert.Equal(0, exitCode);
         Assert.Empty(positioningService.Calls);
@@ -187,7 +190,8 @@ public sealed class MenuHostCommandRunnerTests
             ["create", "--target", @"C:\Users\User\Desktop", "--entry-id", "entry-skull"],
             actionService,
             cursorProvider,
-            coordinator);
+            coordinator,
+            new FakeMenuHostPlacementLogWriter());
 
         Assert.Equal(0, exitCode);
         Assert.Single(positioningService.Calls);
@@ -206,7 +210,8 @@ public sealed class MenuHostCommandRunnerTests
             ["create", "--target", @"C:\Users\User\Desktop", "--entry-id", "entry-skull"],
             actionService,
             cursorProvider,
-            coordinator);
+            coordinator,
+            new FakeMenuHostPlacementLogWriter());
 
         Assert.Equal(0, exitCode);
         Assert.Equal(1, positioningService.CallCount);
@@ -225,10 +230,220 @@ public sealed class MenuHostCommandRunnerTests
             ["create", "--target", @"C:\Users\User\Desktop", "--entry-id", "entry-skull"],
             actionService,
             cursorProvider,
-            coordinator);
+            coordinator,
+            new FakeMenuHostPlacementLogWriter());
 
         Assert.Equal(1, exitCode);
         Assert.Empty(positioningService.Calls);
+    }
+
+    [Fact]
+    public async Task RunCreate_LogsPlacementDiagnosticRecord()
+    {
+        var actionService = new FakeMenuHostFolderActionService(
+            (_, _, _) => Task.FromResult(@"C:\Users\User\Desktop\Череп"));
+        var cursorProvider = new FakeCursorPositionProvider(new CursorPosition(320, 240));
+        var positioningService = new FakeDesktopIconPositioningService();
+        var coordinator = CreateCoordinator(@"C:\Users\User\Desktop", positioningService);
+        var logWriter = new FakeMenuHostPlacementLogWriter();
+
+        var exitCode = await MenuHostCommandRunner.RunAsync(
+            ["create", "--target", @"C:\Users\User\Desktop", "--entry-id", "entry-skull"],
+            actionService,
+            cursorProvider,
+            coordinator,
+            logWriter);
+
+        Assert.Equal(0, exitCode);
+        var entry = Assert.Single(logWriter.Entries);
+        Assert.Equal("create", entry.CommandKind);
+        Assert.Equal(@"C:\Users\User\Desktop", entry.TargetPath);
+        Assert.Equal("entry-skull", entry.EntryId);
+        Assert.Equal(@"C:\Users\User\Desktop\Череп", entry.CreatedFolderPath);
+        Assert.Equal("Череп", entry.CreatedFolderName);
+        Assert.True(entry.IsDesktopTarget);
+        Assert.True(entry.CursorCaptured);
+        Assert.Equal(320, entry.CursorX);
+        Assert.Equal(240, entry.CursorY);
+        Assert.Equal(nameof(DesktopIconCoordinateSpace.Screen), entry.CoordinateSpaceUsed);
+        Assert.True(entry.PositioningAttempted);
+        Assert.Equal(1, entry.AttemptCount);
+        Assert.Equal("success", entry.FinalPositioningResult);
+        Assert.Equal(0, entry.FinalExitCode);
+    }
+
+    [Fact]
+    public async Task RunCreate_LogsSkippedPlacementForNonDesktopTarget()
+    {
+        var actionService = new FakeMenuHostFolderActionService(
+            (_, _, _) => Task.FromResult(@"C:\Temp\Череп"));
+        var cursorProvider = new FakeCursorPositionProvider(new CursorPosition(320, 240));
+        var positioningService = new FakeDesktopIconPositioningService();
+        var coordinator = CreateCoordinator(@"C:\Users\User\Desktop", positioningService);
+        var logWriter = new FakeMenuHostPlacementLogWriter();
+
+        var exitCode = await MenuHostCommandRunner.RunAsync(
+            ["create", "--target", @"C:\Temp", "--entry-id", "entry-skull"],
+            actionService,
+            cursorProvider,
+            coordinator,
+            logWriter);
+
+        Assert.Equal(0, exitCode);
+        var entry = Assert.Single(logWriter.Entries);
+        Assert.False(entry.IsDesktopTarget);
+        Assert.False(entry.PositioningAttempted);
+        Assert.Equal("skipped", entry.FinalPositioningResult);
+        Assert.Equal("Target is not Desktop.", entry.FinalPositioningMessage);
+    }
+
+    [Fact]
+    public async Task RunCreate_LogsSkippedPlacementWhenCursorIsMissing()
+    {
+        var actionService = new FakeMenuHostFolderActionService(
+            (_, _, _) => Task.FromResult(@"C:\Users\User\Desktop\Череп"));
+        var cursorProvider = new FakeCursorPositionProvider(null);
+        var positioningService = new FakeDesktopIconPositioningService();
+        var coordinator = CreateCoordinator(@"C:\Users\User\Desktop", positioningService);
+        var logWriter = new FakeMenuHostPlacementLogWriter();
+
+        var exitCode = await MenuHostCommandRunner.RunAsync(
+            ["create", "--target", @"C:\Users\User\Desktop", "--entry-id", "entry-skull"],
+            actionService,
+            cursorProvider,
+            coordinator,
+            logWriter);
+
+        Assert.Equal(0, exitCode);
+        var entry = Assert.Single(logWriter.Entries);
+        Assert.False(entry.CursorCaptured);
+        Assert.False(entry.PositioningAttempted);
+        Assert.Equal("Cursor position was not captured.", entry.FinalPositioningMessage);
+        Assert.Empty(positioningService.Calls);
+    }
+
+    [Fact]
+    public async Task RunCreate_RetriesWhenDesktopItemIsNotFoundAndStopsAfterSuccess()
+    {
+        var actionService = new FakeMenuHostFolderActionService(
+            (_, _, _) => Task.FromResult(@"C:\Users\User\Desktop\Череп"));
+        var cursorProvider = new FakeCursorPositionProvider(new CursorPosition(320, 240));
+        var positioningService = new SequencedDesktopIconPositioningService(
+            DesktopIconPositioningResult.Failed("Desktop item was not found: Череп"),
+            DesktopIconPositioningResult.Failed("Desktop item was not found: Череп"),
+            DesktopIconPositioningResult.Succeeded("Moved."));
+        var delay = new FakePlacementRetryDelay();
+        var coordinator = CreateCoordinator(@"C:\Users\User\Desktop", positioningService, delay, maxAttempts: 5);
+        var logWriter = new FakeMenuHostPlacementLogWriter();
+
+        var exitCode = await MenuHostCommandRunner.RunAsync(
+            ["create", "--target", @"C:\Users\User\Desktop", "--entry-id", "entry-skull"],
+            actionService,
+            cursorProvider,
+            coordinator,
+            logWriter);
+
+        Assert.Equal(0, exitCode);
+        Assert.Equal(3, positioningService.Calls.Count);
+        Assert.Equal(2, delay.DelayCount);
+        var entry = Assert.Single(logWriter.Entries);
+        Assert.Equal("success", entry.FinalPositioningResult);
+        Assert.Equal(3, entry.AttemptCount);
+    }
+
+    [Fact]
+    public async Task RunCreate_RetryStopsAfterMaxAttempts()
+    {
+        var actionService = new FakeMenuHostFolderActionService(
+            (_, _, _) => Task.FromResult(@"C:\Users\User\Desktop\Череп"));
+        var cursorProvider = new FakeCursorPositionProvider(new CursorPosition(320, 240));
+        var positioningService = new SequencedDesktopIconPositioningService(
+            DesktopIconPositioningResult.Failed("Desktop item was not found: Череп"));
+        var delay = new FakePlacementRetryDelay();
+        var coordinator = CreateCoordinator(@"C:\Users\User\Desktop", positioningService, delay, maxAttempts: 3);
+        var logWriter = new FakeMenuHostPlacementLogWriter();
+
+        var exitCode = await MenuHostCommandRunner.RunAsync(
+            ["create", "--target", @"C:\Users\User\Desktop", "--entry-id", "entry-skull"],
+            actionService,
+            cursorProvider,
+            coordinator,
+            logWriter);
+
+        Assert.Equal(0, exitCode);
+        Assert.Equal(3, positioningService.Calls.Count);
+        Assert.Equal(2, delay.DelayCount);
+        var entry = Assert.Single(logWriter.Entries);
+        Assert.Equal("failure", entry.FinalPositioningResult);
+        Assert.Equal(3, entry.AttemptCount);
+    }
+
+    [Fact]
+    public async Task RunCreate_DoesNotRetryNonItemNotFoundFailure()
+    {
+        var actionService = new FakeMenuHostFolderActionService(
+            (_, _, _) => Task.FromResult(@"C:\Users\User\Desktop\Череп"));
+        var cursorProvider = new FakeCursorPositionProvider(new CursorPosition(320, 240));
+        var positioningService = new SequencedDesktopIconPositioningService(
+            DesktopIconPositioningResult.Failed("Explorer rejected desktop icon positioning."));
+        var delay = new FakePlacementRetryDelay();
+        var coordinator = CreateCoordinator(@"C:\Users\User\Desktop", positioningService, delay, maxAttempts: 3);
+
+        var exitCode = await MenuHostCommandRunner.RunAsync(
+            ["create", "--target", @"C:\Users\User\Desktop", "--entry-id", "entry-skull"],
+            actionService,
+            cursorProvider,
+            coordinator,
+            new FakeMenuHostPlacementLogWriter());
+
+        Assert.Equal(0, exitCode);
+        Assert.Single(positioningService.Calls);
+        Assert.Equal(0, delay.DelayCount);
+    }
+
+    [Fact]
+    public async Task RunCreate_LogsCreateFailureAndDoesNotAttemptPositioning()
+    {
+        var actionService = new FakeMenuHostFolderActionService(
+            (_, _, _) => throw new InvalidOperationException("Create failed."));
+        var cursorProvider = new FakeCursorPositionProvider(new CursorPosition(320, 240));
+        var positioningService = new FakeDesktopIconPositioningService();
+        var coordinator = CreateCoordinator(@"C:\Users\User\Desktop", positioningService);
+        var logWriter = new FakeMenuHostPlacementLogWriter();
+
+        var exitCode = await MenuHostCommandRunner.RunAsync(
+            ["create", "--target", @"C:\Users\User\Desktop", "--entry-id", "entry-skull"],
+            actionService,
+            cursorProvider,
+            coordinator,
+            logWriter);
+
+        Assert.Equal(1, exitCode);
+        Assert.Empty(positioningService.Calls);
+        var entry = Assert.Single(logWriter.Entries);
+        Assert.Equal("skipped", entry.FinalPositioningResult);
+        Assert.Equal("Create failed before placement.", entry.FinalPositioningMessage);
+        Assert.Equal(1, entry.FinalExitCode);
+        Assert.Contains("InvalidOperationException", entry.ExceptionType);
+    }
+
+    [Fact]
+    public async Task RunCreate_LogWriterFailureDoesNotFailCreate()
+    {
+        var actionService = new FakeMenuHostFolderActionService(
+            (_, _, _) => Task.FromResult(@"C:\Users\User\Desktop\Череп"));
+        var cursorProvider = new FakeCursorPositionProvider(new CursorPosition(320, 240));
+        var positioningService = new FakeDesktopIconPositioningService();
+        var coordinator = CreateCoordinator(@"C:\Users\User\Desktop", positioningService);
+
+        var exitCode = await MenuHostCommandRunner.RunAsync(
+            ["create", "--target", @"C:\Users\User\Desktop", "--entry-id", "entry-skull"],
+            actionService,
+            cursorProvider,
+            coordinator,
+            new ThrowingMenuHostPlacementLogWriter());
+
+        Assert.Equal(0, exitCode);
     }
 
     private static async Task SaveSettingsAsync(FoldoraDataPaths paths, FolderMenuEntry entry)
@@ -240,11 +455,15 @@ public sealed class MenuHostCommandRunnerTests
 
     private static DesktopPlacementCoordinator CreateCoordinator(
         string desktopPath,
-        IDesktopIconPositioningService positioningService)
+        IDesktopIconPositioningService positioningService,
+        IPlacementRetryDelay? retryDelay = null,
+        int maxAttempts = 10)
     {
         return new DesktopPlacementCoordinator(
             new DesktopTargetDetector(() => desktopPath),
-            positioningService);
+            positioningService,
+            retryDelay ?? new FakePlacementRetryDelay(),
+            new DesktopPlacementRetryPolicy(maxAttempts, TimeSpan.Zero));
     }
 
     private static FolderMenuEntry CreateEntry(string id, string displayName, string iconPath)
@@ -379,6 +598,59 @@ public sealed class MenuHostCommandRunnerTests
         {
             CallCount++;
             throw new InvalidOperationException("Positioning failed.");
+        }
+    }
+
+    private sealed class SequencedDesktopIconPositioningService : IDesktopIconPositioningService
+    {
+        private readonly Queue<DesktopIconPositioningResult> results;
+
+        public SequencedDesktopIconPositioningService(params DesktopIconPositioningResult[] results)
+        {
+            this.results = new Queue<DesktopIconPositioningResult>(results);
+        }
+
+        public List<PositionCall> Calls { get; } = [];
+
+        public DesktopIconPositioningResult TryPositionByName(
+            string itemName,
+            int x,
+            int y,
+            DesktopIconCoordinateSpace coordinateSpace)
+        {
+            Calls.Add(new PositionCall(itemName, x, y, coordinateSpace));
+            return results.Count > 1
+                ? results.Dequeue()
+                : results.Peek();
+        }
+    }
+
+    private sealed class FakePlacementRetryDelay : IPlacementRetryDelay
+    {
+        public int DelayCount { get; private set; }
+
+        public Task DelayAsync(TimeSpan delay, CancellationToken cancellationToken = default)
+        {
+            DelayCount++;
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class FakeMenuHostPlacementLogWriter : IMenuHostPlacementLogWriter
+    {
+        public List<MenuHostPlacementLogEntry> Entries { get; } = [];
+
+        public void Append(MenuHostPlacementLogEntry entry)
+        {
+            Entries.Add(entry);
+        }
+    }
+
+    private sealed class ThrowingMenuHostPlacementLogWriter : IMenuHostPlacementLogWriter
+    {
+        public void Append(MenuHostPlacementLogEntry entry)
+        {
+            throw new IOException("Log write failed.");
         }
     }
 }

@@ -122,6 +122,26 @@ Manual Windows 11 checks confirmed that `diagnostics desktop-icon-position` can 
 
 This is approximate. Legacy registry commands still do not pass the original right-click point. The captured cursor can be the menu/submenu selection point, keyboard navigation can produce different behavior, and Explorer can snap or shift icons according to grid/auto-arrange settings.
 
+## MenuHost Placement Diagnostics And Retry
+
+Manual production testing showed that the standalone diagnostic command can move existing desktop items, while the Explorer/MenuHost create path still placed the new folder in Explorer's free grid slot. That points to timing or production-path visibility, not to the basic positioning capability.
+
+MenuHost now writes one JSONL record per `create` command to:
+
+```text
+%AppData%\Foldora\Logs\menuhost-placement.log
+```
+
+Each record includes command kind, target path, entry id, created folder path/name, desktop detection details, cursor capture state, coordinate space, attempt count, final positioning result/message, exception details if present and final exit code.
+
+MenuHost also uses bounded retry only for this specific race:
+
+```text
+Desktop item was not found: <name>
+```
+
+Retry is only active when the target is Desktop and cursor capture succeeded. It does not retry non-desktop targets, missing cursor, COM rejection, invalid arguments or other failures. The default policy is 10 attempts with a 125 ms delay between attempts. Failure remains non-fatal when folder creation succeeded.
+
 ## Recommendation
 
 Do not promise exact "create under original right-click point" in the current MVP. Keep best-effort placement enabled for desktop create flow, verify it manually in publish smoke, and only pursue heavier shell integration if the approximation is not good enough.

@@ -68,6 +68,7 @@ Foldora.MenuHost.exe
 Best-effort desktop placement verification before installer/release polish:
 
 - Manually verify published MenuHost desktop-background create near the cursor/menu selection area.
+- If placement fails, inspect `%AppData%\Foldora\Logs\menuhost-placement.log` and use the latest JSONL entry for the next debugging step.
 - Define manual smoke coverage for auto-arrange icons, align-to-grid, multi-monitor, DPI scaling and Explorer restart.
 - Keep installer/MSIX as a later step until this UX-critical limitation has an explicit decision.
 

@@ -74,8 +74,12 @@
 - `src/Foldora.MenuHost/AssemblyInfo.cs` - assembly attributes, включая доступ internal MenuHost test seam для `Foldora.Tests`.
 - `src/Foldora.MenuHost/CursorPosition.cs` - cursor screen position abstraction и Windows `GetCursorPos` provider для best-effort desktop placement.
 - `src/Foldora.MenuHost/DesktopPlacementCoordinator.cs` - non-fatal coordinator best-effort positioning created Desktop folder icons.
+- `src/Foldora.MenuHost/DesktopTargetDetectionResult.cs` - diagnostic result model для Desktop target detection.
 - `src/Foldora.MenuHost/DesktopTargetDetector.cs` - определение current user Desktop target directory для MenuHost placement flow.
 - `src/Foldora.MenuHost/MenuHostFolderActionService.cs` - injectable adapter вокруг Core `FolderMenuEntryActionService` для MenuHost tests.
+- `src/Foldora.MenuHost/MenuHostPlacementLogEntry.cs` - JSONL diagnostic record model для MenuHost placement attempts.
+- `src/Foldora.MenuHost/MenuHostPlacementLogWriter.cs` - append-only `%AppData%\Foldora\Logs\menuhost-placement.log` writer.
+- `src/Foldora.MenuHost/PlacementRetryDelay.cs` - injectable delay/retry policy для bounded desktop placement polling.
 - `src/Foldora.MenuHost/Program.cs` - entry point MenuHost без console output.
 - `src/Foldora.MenuHost/MenuHostCommand.cs` - модель команды MenuHost.
 - `src/Foldora.MenuHost/MenuHostCommandParser.cs` - минимальный parser MenuHost для `create`/`apply` по entry id.

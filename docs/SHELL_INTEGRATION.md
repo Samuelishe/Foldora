@@ -102,6 +102,16 @@ Legacy registry context menu передаёт Foldora target directory path (`%1
 
 При этом manual diagnostic prototype подтвердил, что уже существующий desktop item можно переместить программно. Поэтому production MenuHost create flow теперь делает best-effort placement: захватывает текущую screen cursor position максимально рано, создаёт папку прежним Core flow и, если target directory равна user Desktop directory, пытается reposition созданный desktop item near captured cursor/menu selection point. Если positioning не удалось, папка остаётся созданной, а MenuHost возвращает success.
 
+Для диагностики production path MenuHost пишет append-only JSONL log:
+
+```text
+%AppData%\Foldora\Logs\menuhost-placement.log
+```
+
+Каждая `create` command пишет одну запись с target, entry id, created folder path/name, normalized desktop detection, cursor state, positioning attempts, final positioning result/message, exception details и final exit code. Ошибка записи лога не должна ломать MenuHost.
+
+MenuHost делает bounded retry только если desktop target распознан, cursor captured и positioning вернул `Desktop item was not found: <name>`. Это покрывает race, когда filesystem folder уже создан, но Explorer desktop view ещё не видит item. Retry не выполняется для non-desktop target, missing cursor, COM rejected, invalid args и любых других failures.
+
 Для такого поведения нужен отдельный advanced shell integration path. Candidate routes:
 
 - post-create desktop view positioning через Shell COM, например `IFolderView`/`IFolderView2` и `SelectAndPositionItems`;
