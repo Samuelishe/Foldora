@@ -285,6 +285,50 @@ public sealed class DesignResourceTests
     }
 
     [Fact]
+    public void SettingsWindow_TabBodiesStretchAndContentStartsLeftTop()
+    {
+        var settingsWindow = LoadXml("src", "Foldora.App", "SettingsWindow.xaml");
+
+        var applicationRoot = FindTabContentRoot(settingsWindow, "{Binding L.SettingsTabApplication}");
+        Assert.Equal("Grid", applicationRoot.Name.LocalName);
+        Assert.Equal("Stretch", applicationRoot.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("Stretch", applicationRoot.Attribute("VerticalAlignment")?.Value);
+        var applicationContent = applicationRoot.Elements().Single(element => element.Name.LocalName == "StackPanel");
+        Assert.Equal("Left", applicationContent.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("Top", applicationContent.Attribute("VerticalAlignment")?.Value);
+        Assert.Equal("420", applicationContent.Attribute("MaxWidth")?.Value);
+
+        var explorerRoot = FindTabContentRoot(settingsWindow, "{Binding L.SettingsTabExplorerMenu}");
+        Assert.Equal("ScrollViewer", explorerRoot.Name.LocalName);
+        Assert.Equal("Stretch", explorerRoot.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("Stretch", explorerRoot.Attribute("VerticalAlignment")?.Value);
+
+        var installationRoot = FindTabContentRoot(settingsWindow, "{Binding L.SettingsTabInstallation}");
+        Assert.Equal("ScrollViewer", installationRoot.Name.LocalName);
+        Assert.Equal("Stretch", installationRoot.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("Stretch", installationRoot.Attribute("VerticalAlignment")?.Value);
+
+        var helpRoot = FindTabContentRoot(settingsWindow, "{Binding L.SettingsTabHelpAbout}");
+        Assert.Equal("Grid", helpRoot.Name.LocalName);
+        Assert.Equal("Stretch", helpRoot.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("Stretch", helpRoot.Attribute("VerticalAlignment")?.Value);
+        var helpContent = helpRoot.Elements().Single(element => element.Name.LocalName == "StackPanel");
+        Assert.Equal("Left", helpContent.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("Top", helpContent.Attribute("VerticalAlignment")?.Value);
+        Assert.Equal("560", helpContent.Attribute("MaxWidth")?.Value);
+
+        var dangerRoot = FindTabContentRoot(settingsWindow, "{Binding L.SettingsTabDangerZone}");
+        Assert.Equal("Grid", dangerRoot.Name.LocalName);
+        Assert.Equal("Stretch", dangerRoot.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("Stretch", dangerRoot.Attribute("VerticalAlignment")?.Value);
+        var dangerCard = dangerRoot.Elements().Single(element => element.Name.LocalName == "Border");
+        Assert.Equal("{StaticResource DangerBannerStyle}", dangerCard.Attribute("Style")?.Value);
+        Assert.Equal("Left", dangerCard.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("Top", dangerCard.Attribute("VerticalAlignment")?.Value);
+        Assert.Equal("560", dangerCard.Attribute("MaxWidth")?.Value);
+    }
+
+    [Fact]
     public void MainWindow_DefinesEditorFriendlyMinimumWidth()
     {
         var mainWindow = LoadXml("src", "Foldora.App", "MainWindow.xaml");
@@ -386,6 +430,14 @@ public sealed class DesignResourceTests
         XName keyName = XName.Get("Key", "http://schemas.microsoft.com/winfx/2006/xaml");
         return document.Descendants()
             .Single(element => element.Name.LocalName == "Style" && element.Attribute(keyName)?.Value == key);
+    }
+
+    private static XElement FindTabContentRoot(XDocument document, string header)
+    {
+        return document.Descendants()
+            .Single(element => element.Name.LocalName == "TabItem" && element.Attribute("Header")?.Value == header)
+            .Elements()
+            .Single();
     }
 
     private static string? GetSetterValue(XElement style, string property)

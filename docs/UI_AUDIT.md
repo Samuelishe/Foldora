@@ -93,6 +93,13 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Suggested direction: treat tab header layout separately from action button layout; tab headers should be content-sized, free of fixed small widths/trimming, and wrap cleanly if they need more than one row.
 - Status: Addressed. Settings tab headers now use a wrapping content-sized host instead of WPF `TabPanel` layout, and the tab item style has explicit content alignment with no fixed width/max width/trimming.
 
+### UIA-0013 Settings Tab Body Centered Islands
+
+- Observed: after fixing tab headers, Application and Danger zone content appeared horizontally centered inside the tab body, unlike the Explorer menu tab which started at the left content margin.
+- Impact: SettingsWindow looked like a floating centered form instead of a practical desktop settings/property page.
+- Suggested direction: tab body roots should stretch to the available width, while actual forms/cards stay left/top aligned; constrained cards such as Danger zone should keep readable width but not center themselves.
+- Status: Addressed. Settings tab content roots now stretch and Application, Help/About and Danger zone inner content is left/top aligned. Danger zone keeps a constrained card width.
+
 ## Near-Term UI Cleanup
 
 Small safe improvements for a future code pass:
@@ -110,6 +117,7 @@ Small safe improvements for a future code pass:
 - SettingsWindow tabbed layout cleanup is addressed: the previous long vertical settings document was replaced by category tabs, and Installation path actions use short `Open`/`Copy` labels.
 - Settings layout robustness pass is addressed: SettingsWindow no longer allows the known too-narrow state that clipped action labels, and action/path rows have a shared sizing contract.
 - Settings tab header clipping fix is addressed: tab header clipping was separate from button clipping, and Settings tabs now wrap as content-sized headers.
+- Settings tab body centering is addressed: tab content now starts from the left/top inset while keeping readable constrained cards where useful.
 
 ## Later Visual Polish
 

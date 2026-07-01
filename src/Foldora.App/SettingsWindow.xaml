@@ -33,34 +33,43 @@
                     ItemContainerStyle="{StaticResource SettingsTabItemStyle}"
                     Margin="0,0,0,16">
             <TabItem Header="{Binding L.SettingsTabApplication}">
-                <StackPanel>
-                    <TextBlock Text="{Binding L.SettingsLanguageLabel}"
-                               Style="{StaticResource FieldLabelStyle}"
-                               Margin="0,0,0,8" />
-                    <ComboBox ItemsSource="{Binding AvailableLanguages}"
-                              SelectedValue="{Binding SelectedLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              SelectedValuePath="Code"
-                              DisplayMemberPath="DisplayName"
-                              MinWidth="180"
-                              MaxWidth="280"
-                              HorizontalAlignment="Left" />
-                    <TextBlock Text="{Binding L.SettingsLanguageRestartNote}"
-                               Style="{StaticResource SecondaryBodyTextStyle}"
-                               TextWrapping="Wrap"
-                               Margin="0,10,0,0" />
-                    <TextBlock Text="{Binding StatusMessage}"
-                               Style="{StaticResource StatusTextStyle}"
-                               TextWrapping="Wrap"
-                               Foreground="{DynamicResource SuccessBrush}"
-                               Visibility="{Binding HasStatusMessage, Converter={StaticResource BooleanToVisibilityConverter}}"
-                               Margin="0,10,0,0" />
-                </StackPanel>
+                <Grid HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
+                    <StackPanel HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                MaxWidth="420">
+                        <TextBlock Text="{Binding L.SettingsLanguageLabel}"
+                                   Style="{StaticResource FieldLabelStyle}"
+                                   Margin="0,0,0,8" />
+                        <ComboBox ItemsSource="{Binding AvailableLanguages}"
+                                  SelectedValue="{Binding SelectedLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedValuePath="Code"
+                                  DisplayMemberPath="DisplayName"
+                                  MinWidth="180"
+                                  MaxWidth="280"
+                                  HorizontalAlignment="Left" />
+                        <TextBlock Text="{Binding L.SettingsLanguageRestartNote}"
+                                   Style="{StaticResource SecondaryBodyTextStyle}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,10,0,0" />
+                        <TextBlock Text="{Binding StatusMessage}"
+                                   Style="{StaticResource StatusTextStyle}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource SuccessBrush}"
+                                   Visibility="{Binding HasStatusMessage, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   Margin="0,10,0,0" />
+                    </StackPanel>
+                </Grid>
             </TabItem>
 
             <TabItem Header="{Binding L.SettingsTabExplorerMenu}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled">
-                    <StackPanel Margin="0,0,12,0">
+                              HorizontalScrollBarVisibility="Disabled"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch">
+                    <StackPanel HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                Margin="0,0,12,0">
                         <StackPanel Orientation="Horizontal"
                                     Margin="0,0,0,8">
                             <TextBlock Text="{Binding L.ExplorerMenuSection}"
@@ -155,8 +164,12 @@
 
             <TabItem Header="{Binding L.SettingsTabInstallation}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled">
-                    <StackPanel Margin="0,0,12,0">
+                              HorizontalScrollBarVisibility="Disabled"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch">
+                    <StackPanel HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                Margin="0,0,12,0">
                         <StackPanel Orientation="Horizontal"
                                     Margin="0,0,0,10">
                             <TextBlock Text="{Binding L.InstallationSection}"
@@ -320,45 +333,56 @@
             </TabItem>
 
             <TabItem Header="{Binding L.SettingsTabHelpAbout}">
-                <StackPanel>
-                    <TextBlock Text="{Binding L.HelpAboutSection}"
-                               Style="{StaticResource SectionTitleStyle}" />
-                    <TextBlock Text="{Binding L.HelpAboutSummary}"
-                               Style="{StaticResource SecondaryBodyTextStyle}"
-                               TextWrapping="Wrap"
-                               Margin="0,0,0,12" />
-                    <Button Content="{Binding L.OpenHelpAbout}"
-                            Command="{Binding OpenHelpCommand}"
-                            Style="{StaticResource InlineActionButtonStyle}"
-                            HorizontalAlignment="Left" />
-                </StackPanel>
-            </TabItem>
-
-            <TabItem Header="{Binding L.SettingsTabDangerZone}">
-                <Border Style="{StaticResource DangerBannerStyle}"
-                        Margin="0">
-                    <StackPanel>
-                        <TextBlock Text="{Binding L.DangerZone}"
-                                   Style="{StaticResource SectionTitleStyle}"
-                                   Foreground="{DynamicResource DangerBrush}"
-                                   Margin="0,0,0,8" />
-                        <TextBlock Text="{Binding L.ResetDescription}"
-                                   Style="{StaticResource BodyTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Margin="0,0,0,4" />
-                        <TextBlock Text="{Binding L.ResetIconNote}"
+                <Grid HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
+                    <StackPanel HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                MaxWidth="560">
+                        <TextBlock Text="{Binding L.HelpAboutSection}"
+                                   Style="{StaticResource SectionTitleStyle}" />
+                        <TextBlock Text="{Binding L.HelpAboutSummary}"
                                    Style="{StaticResource SecondaryBodyTextStyle}"
                                    TextWrapping="Wrap"
                                    Margin="0,0,0,12" />
-                        <CheckBox Content="{Binding L.ResetConfirm}"
-                                  IsChecked="{Binding IsResetConfirmed, Mode=TwoWay}"
-                                  Margin="0,0,0,10" />
-                        <Button Content="{Binding L.ResetMenu}"
-                                Command="{Binding ResetMenuCommand}"
-                                Style="{StaticResource DangerButtonStyle}"
+                        <Button Content="{Binding L.OpenHelpAbout}"
+                                Command="{Binding OpenHelpCommand}"
+                                Style="{StaticResource InlineActionButtonStyle}"
                                 HorizontalAlignment="Left" />
                     </StackPanel>
-                </Border>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="{Binding L.SettingsTabDangerZone}">
+                <Grid HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
+                    <Border Style="{StaticResource DangerBannerStyle}"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            MaxWidth="560"
+                            Margin="0">
+                        <StackPanel>
+                            <TextBlock Text="{Binding L.DangerZone}"
+                                       Style="{StaticResource SectionTitleStyle}"
+                                       Foreground="{DynamicResource DangerBrush}"
+                                       Margin="0,0,0,8" />
+                            <TextBlock Text="{Binding L.ResetDescription}"
+                                       Style="{StaticResource BodyTextStyle}"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,4" />
+                            <TextBlock Text="{Binding L.ResetIconNote}"
+                                       Style="{StaticResource SecondaryBodyTextStyle}"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,12" />
+                            <CheckBox Content="{Binding L.ResetConfirm}"
+                                      IsChecked="{Binding IsResetConfirmed, Mode=TwoWay}"
+                                      Margin="0,0,0,10" />
+                            <Button Content="{Binding L.ResetMenu}"
+                                    Command="{Binding ResetMenuCommand}"
+                                    Style="{StaticResource DangerButtonStyle}"
+                                    HorizontalAlignment="Left" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </TabItem>
         </TabControl>
 

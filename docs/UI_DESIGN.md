@@ -146,6 +146,7 @@ Settings window является resizable и подготовлен к буду
 - header/title в верхней `Auto`-строке;
 - settings content в `TabControl` with Application, Explorer menu, Installation, Help/About and Danger zone categories;
 - Settings tab headers must be content-sized and non-clipping. The header host may wrap tabs to a second row rather than squeeze localized labels; tab headers must not use fixed small widths, max widths or text trimming.
+- Settings tab bodies must not render as centered islands. Tab content roots stretch to the body, while forms/cards align to the left/top content margin. Constrained cards such as Danger zone may use `MaxWidth`, but must keep `HorizontalAlignment=Left`.
 - tab content may use an internal `ScrollViewer` when a category needs overflow, but the window should not behave like one long settings document;
 - Explorer action buttons live in a wrapping row; Installation path rows use star-sized path content plus auto-sized Open/Copy actions so long paths wrap without squeezing buttons;
 - footer actions в нижней fixed `Auto`-строке.

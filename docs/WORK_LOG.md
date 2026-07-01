@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - Settings tab content alignment follow-up
+
+- Kept the fixed wrapping Settings tab headers and unchanged localized tab labels.
+- Fixed accidental centered tab-body layout by making Settings tab content roots stretch and aligning inner forms/cards to the left/top content margin.
+- Kept the Danger zone warning card constrained for readability while aligning it to the left instead of centering it.
+- Added a design/XAML test for Settings tab body stretch and left/top content alignment.
+- No ViewModel state, localization catalogs, settings JSON, registry/MenuHost/install behavior, shell behavior, app icon, README hero or external assets changed.
+
 ## 2026-07-01 - Settings tab header clipping fix
 
 - Fixed a separate Settings tab header clipping issue found by manual screenshot after the button layout robustness pass.
