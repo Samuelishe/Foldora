@@ -84,6 +84,7 @@ Prepare the MVP for repeatable manual release verification:
 - No group icons.
 - No orphan icon cleanup for imported `.ico`.
 - No user-facing diagnostics for `Foldora.MenuHost.exe` failures launched from Explorer.
+- First-created desktop folder can require Explorer refresh/retry before custom icon appears; tracked as `TD-0002`.
 - Full runtime localization of all status/error/detail strings is not complete.
 - No Explorer restart or icon cache reset flow.
 
@@ -92,6 +93,7 @@ Prepare the MVP for repeatable manual release verification:
 - Installer/MSIX after stable publish layout.
 - Modern Windows 11 context menu research.
 - COM/IExplorerCommand research for advanced shell integration.
+- Optional Shell refresh notification investigation for desktop.ini apply/create timing, only if `TD-0002` is reproduced and scoped.
 - Full tree menu runtime/storage beyond current one-level groups.
 - Drag-and-drop ordering.
 - Group icons.

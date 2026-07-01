@@ -100,6 +100,29 @@ Legacy registry context menu передаёт Foldora target directory path (`%1
 
 Создание папки именно под курсором не поддерживается текущей MVP-интеграцией. Для такого поведения нужен отдельный advanced shell integration path, например `IExplorerCommand`, COM shell extension, работа с Explorer view positioning или другой глубокий shell layer. Это future/non-MVP и не должно решаться registry/placeholder hacks.
 
+Этот пункт зафиксирован как accepted limitation `TD-0001` в `TECH_DEBT.md`. Его нельзя смешивать с отдельным desktop.ini/icon refresh debt: если папка появилась не под курсором, это ожидаемое ограничение legacy integration, а не ошибка `desktop.ini`.
+
+## Desktop Icon Refresh Debt
+
+Отдельное наблюдение после manual publish smoke: первая папка, созданная из desktop background menu после регистрации/system start, может сначала появиться с дефолтной иконкой, а повторная/следующая папка уже показывает custom icon корректно.
+
+Текущий production path:
+
+```text
+Explorer legacy command
+  -> Foldora.MenuHost.exe create --target "%V" --entry-id "<entry-id>"
+  -> FolderMenuEntryActionService.CreateAsync
+  -> Directory.CreateDirectory
+  -> DesktopIniService.ApplyIconAsync
+      -> write desktop.ini
+      -> set desktop.ini Hidden
+      -> set folder ReadOnly
+```
+
+Сейчас после create/apply нет отдельного Shell refresh notification. Гипотеза: Explorer desktop view может увидеть новую папку до того, как `desktop.ini` и атрибуты полностью применены, либо desktop icon cache не обновляется сразу. Это зафиксировано как open investigation `TD-0002` в `TECH_DEBT.md`.
+
+Не делать в этом шаге: random sleep, Explorer patching, COM shell extension или WinAPI-heavy rewrite. Возможный будущий маленький fix должен быть изолированным и тестируемым Shell notification abstraction, если investigation подтвердит необходимость.
+
 ## Folder Icon Attribute Policy
 
 Explorer menu commands в итоге вызывают `DesktopIniService` через Core action services. Для новых папок используется default `DesktopIniAttributePolicy.ReadOnlyFolderHiddenDesktopIni`: folder получает `ReadOnly`, а `desktop.ini` получает только `Hidden`.
@@ -262,6 +285,11 @@ foldora menu reset --yes
 ```
 
 Small icons должны отображаться у root-level и grouped entries. Console window при выборе пункта не должен мигать, если registry command указывает на `Foldora.MenuHost.exe`.
+
+Для desktop background create дополнительно фиксировать отдельно:
+
+- где Explorer разместил новый значок;
+- показалась ли custom icon сразу или только после refresh/retry.
 
 Будущие registry safety rules:
 

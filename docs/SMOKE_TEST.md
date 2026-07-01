@@ -159,6 +159,7 @@ desktop.ini attrib: H
 
 - icon survives Explorer refresh/reopen;
 - удаление новой папки не показывает warning про системный `desktop.ini` или системную папку.
+- при desktop background create отдельно зафиксировать, появилась ли custom icon сразу или только после refresh/retry.
 
 ## 6. Save-triggered Rebuild
 
@@ -206,6 +207,7 @@ foldora menu reset --yes
 
 - Modern Windows 11 compact context menu не реализован; legacy menu может быть под `Show more options`.
 - Позицию нового значка на Desktop выбирает Explorer; Foldora не создаёт desktop folder строго под курсором.
+- Первая папка на Desktop может сначала появиться с default icon из-за возможного Explorer refresh/icon cache timing issue; это отдельный `TD-0002`, не placement limitation.
 - Registry menu в publish/manual проверке должен указывать на `artifacts/publish/Foldora/Foldora.MenuHost.exe`.
 - Если publish-папку нужно удалить, сначала выполнить `unregister-menu`, чтобы Explorer menu не ссылался на удалённый host.
 - User-facing diagnostics для failures внутри `Foldora.MenuHost` из Explorer menu пока future work.

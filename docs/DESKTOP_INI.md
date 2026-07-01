@@ -32,6 +32,22 @@ warning про системную папку исчез для новых пап
 
 Эти проверки включены в общий `SMOKE_TEST.md`. Для MVP нет automatic repair/normalize старых папок с прежними `System` attributes.
 
+## Desktop Refresh Timing Debt
+
+Для обычных папок и повторных desktop create custom icon может отображаться корректно, но manual publish smoke выявил отдельный desktop timing case: первая папка, созданная из desktop background legacy menu после регистрации/system start, иногда сначала появляется с дефолтной иконкой. Повторная/следующая папка может показать custom icon без дополнительных изменений в данных.
+
+Это не то же самое, что desktop placement limitation. Placement under cursor не поддерживается из-за legacy `%V` context menu. Default icon on first create является `desktop.ini`/Explorer refresh investigation item `TD-0002` в `TECH_DEBT.md`.
+
+Текущая гипотеза: Explorer desktop view может отрисовать новую папку до завершения `desktop.ini` write + attribute application или не обновить icon cache сразу после этих операций. Сейчас `DesktopIniService` не делает Shell refresh notification и не добавляет задержки.
+
+Потенциальное будущее исследование:
+
+- подтвердить воспроизведение на Desktop и сравнить с обычной директорией;
+- проверить порядок `Directory.CreateDirectory` -> `desktop.ini` write -> attributes;
+- рассмотреть небольшой Shell notification abstraction после create/apply;
+- не добавлять random sleep без доказательств;
+- не менять default policy `ReadOnlyFolderHiddenDesktopIni` без новой ручной проверки deletion UX.
+
 Старые папки, созданные прежней policy, могут иметь folder `System` и `desktop.ini` `Hidden + System`. Foldora не мигрирует и не чинит такие папки автоматически. Это нормально для текущего MVP: старые тестовые папки в текущем рабочем сценарии не нужны, а repair/normalize command не добавляется без реальной пользовательской потребности.
 
 ## Attribute Policies

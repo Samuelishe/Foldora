@@ -12,6 +12,8 @@ Stabilization pass 2026-07-01: README/LICENSE/THIRD_PARTY_NOTICES/resource-polic
 
 Desktop.ini production default: `ReadOnlyFolderHiddenDesktopIni`, то есть folder `ReadOnly`, `desktop.ini` `Hidden`. Ручная проверка подтвердила `attrib` result `R/H`, сохранение custom icon после Explorer refresh/reopen и отсутствие System-related deletion warnings для новых Foldora folders. Repair/normalize command в MVP не реализован.
 
+Technical debt foundation: `docs/TECH_DEBT.md` фиксирует active debt и accepted limitations. `TD-0001` принят как limitation текущей legacy context menu integration: desktop icon placement controls Explorer, Foldora не получает cursor/icon-view coordinates через `%V`. `TD-0002` открыт как investigation: первая папка, созданная с Desktop background menu, может сначала показаться с default icon до Explorer refresh/retry. Сейчас create/apply path не делает Shell refresh notification; random sleep, COM shell extension и desktop positioning hacks не добавляются без отдельного исследования.
+
 Publish/dev layout foundation: `scripts/publish-dev.ps1` создаёт framework-dependent Release layout в `artifacts/publish/Foldora` и кладёт рядом стабильные executable paths:
 
 ```text
@@ -29,6 +31,7 @@ Script не регистрирует Explorer menu и не запускает п
 - Финальное публичное имя продукта.
 - Точный UX для выбора custom style.
 - Возможен ли user-grade UX создания desktop folder под курсором без COM/modern shell integration.
+- Нужен ли небольшой Shell refresh notification abstraction после create/apply для `TD-0002`.
 - Фактическое поведение Explorer placeholders `%1` и `%V` на Windows 11 после повторной ручной проверки.
 - Preview generation/cache policy, если прямой WPF preview из `.ico` окажется недостаточным.
 - Full tree migration, drag-and-drop group ordering и group icons остаются future work; текущий MVP ограничен one-level `GroupName`.

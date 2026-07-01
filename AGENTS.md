@@ -17,6 +17,7 @@
   - `docs/SHELL_INTEGRATION.md`;
   - `docs/DESKTOP_INI.md`;
   - `docs/SMOKE_TEST.md`;
+  - `docs/TECH_DEBT.md`;
   - `docs/RESOURCE_POLICY.md`;
   - `docs/PACKS.md`;
   - `docs/MENU_MODEL.md`;
@@ -25,6 +26,7 @@
   - `docs/FILE_INDEX.md`.
 - После значимых изменений обновлять `docs/PROJECT_STATE.md`.
 - После значимых изменений добавлять запись в `docs/WORK_LOG.md`.
+- При фиксации известных долгов, accepted limitations или investigation items обновлять `docs/TECH_DEBT.md`.
 - При добавлении, удалении или переносе файлов обновлять `docs/FILE_INDEX.md`.
 - При изменении продуктовой концепции обновлять `docs/PRODUCT_VISION.md`.
 - При изменении UX flow или будущего WPF-поведения обновлять `docs/UX_FLOW.md`.

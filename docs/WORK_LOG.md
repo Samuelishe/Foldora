@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-07-01 - Technical debt foundation and desktop behavior investigation
+
+- Добавлен `docs/TECH_DEBT.md` с active debt format и двумя пунктами: `TD-0001` desktop icon placement is controlled by Explorer и `TD-0002` first created desktop folder may initially show default icon.
+- `TD-0001` зафиксирован как accepted limitation текущего legacy `%V`/desktop background flow: Foldora получает target directory, но не получает cursor/icon-view coordinates.
+- `TD-0002` зафиксирован как open investigation: вероятный Explorer desktop view/icon cache timing после `Directory.CreateDirectory` -> `desktop.ini` write -> attributes.
+- `AGENTS.md`, `docs/README.md` и `docs/FILE_INDEX.md` обновлены, чтобы technical debt документ был частью будущих сессий.
+- `docs/SHELL_INTEGRATION.md`, `docs/DESKTOP_INI.md`, `docs/SMOKE_TEST.md`, `docs/ROADMAP.md` и `docs/PROJECT_STATE.md` разделяют placement limitation и first-create icon refresh debt.
+- Production-код не менялся: текущий код не содержит Shell refresh notification, но добавлять `SHChangeNotify`/WinAPI abstraction без отдельной reproduction matrix и тестируемого дизайна преждевременно.
+
 ## 2026-07-01 - Dev publish layout foundation
 
 - Добавлен `scripts/publish-dev.ps1`: PowerShell 7 compatible script очищает только `artifacts/publish/Foldora`, публикует Release framework-dependent `Foldora.App`, `Foldora.Cli` и `Foldora.MenuHost` в одну папку и печатает next steps.
