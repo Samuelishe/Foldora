@@ -15,7 +15,7 @@
 - `src/Foldora.Core/Settings/FoldoraSettings.cs` - модель пользовательских настроек.
 - `src/Foldora.Core/Settings/FoldoraSettingsStorage.cs` - JSON storage настроек в AppData.
 - `src/Foldora.Core/Settings/FoldoraSettingsLoadResult.cs` - результат загрузки settings с metadata о persisted language.
-- `src/Foldora.Core/Settings/FoldoraLanguage.cs` - supported language values и fallback-нормализация `ru`/`en`.
+- `src/Foldora.Core/Settings/FoldoraLanguage.cs` - complete/enabled language values и fallback-нормализация locale tags.
 - `src/Foldora.Core/Storage/FoldoraDataPaths.cs` - AppData paths.
 - `src/Foldora.Core/Menu/FolderMenuEntry.cs` - пользовательский пункт будущего submenu, включая optional one-level `GroupName`.
 - `src/Foldora.Core/Menu/FolderMenuSettings.cs` - настройки меню создания папки.
@@ -131,6 +131,13 @@
 - `src/Foldora.App/Services/ValidationMessageLocalizer.cs` - catalog-backed рендер validation issues по `Validation.<code>` keys.
 - `src/Foldora.App/Localization/ru.json` - Russian complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Localization/en.json` - English complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/zh-Hans.json` - Simplified Chinese complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/de.json` - German complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/es.json` - Spanish complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/fr.json` - French complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/ja.json` - Japanese complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/pt-BR.json` - Brazilian Portuguese complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/ko.json` - Korean complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Services/StartupDiagnosticsService.cs` - минимальная запись startup exceptions в `%AppData%\Foldora\Logs\startup-error.log`.
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project на `net10.0-windows`.
 - `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.

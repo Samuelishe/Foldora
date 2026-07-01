@@ -6,8 +6,8 @@ Foldora currently has a working MVP loop:
 
 - WPF editor with custom window chrome.
 - Compact/edit entry cards for menu entries.
-- Settings gear and persisted language setting `ru`/`en`.
-- Localization foundation for WPF labels/status/defaults and localized default menu title mode using embedded `ru`/`en` catalogs.
+- Settings gear and persisted language setting for enabled locales `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`.
+- Localization foundation for WPF labels/status/defaults and localized default menu title mode using embedded complete catalogs.
 - First-run WPF language detection from `CultureInfo.CurrentUICulture`, with unsupported languages persisted as `en` and manual Settings choice preserved.
 - Localized WPF validation rendering from Core invariant issue codes/parameters.
 - Grouped WPF presentation sections for root-level and one-level grouped entries.
@@ -95,15 +95,15 @@ Per-user install smoke and release polish before full installer work:
 - No orphan icon cleanup for imported `.ico`.
 - No user-facing diagnostics for `Foldora.MenuHost.exe` failures launched from Explorer.
 - First-created desktop folder default-icon timing is currently not reproduced; tracked as `TD-0002` monitor item.
-- Full localization is not complete: CLI defaults/diagnostics/validation output and startup fatal dialog remain tracked debt.
-- Planned complete locale batch after catalog hardening: `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`; incomplete locales must not be exposed in Settings UI.
+- WPF catalog expansion is complete for `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`; CLI defaults/diagnostics/validation output and startup fatal dialog remain tracked debt.
+- Later locale candidates `it`, `pl`, `tr`, `uk` must not be exposed in Settings UI until complete catalogs and tests exist.
 - No Explorer restart or icon cache reset flow.
 
 ## Future
 
 - MSI/MSIX or winget after stable per-user install layout.
 - Modern Windows 11 context menu research.
-- Full localization pass for planned locales after `ru`/`en` catalog architecture is stable.
+- Later candidate locale catalogs (`it`, `pl`, `tr`, `uk`) after enabled catalog quality is reviewed.
 - Exact original right-click coordinate source research, if best-effort placement is not enough.
 - Modern `IExplorerCommand` research for advanced shell integration.
 - Optional Shell refresh notification investigation for desktop.ini apply/create timing, only if `TD-0002` is reproduced again and scoped.

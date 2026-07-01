@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - Locale catalog expansion
+
+- Added complete embedded WPF localization catalogs for `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR` and `ko` alongside existing `ru`/`en`.
+- Enabled the new locales in `FoldoraLanguage`, Settings UI options and first-run language detection after catalog key completeness checks.
+- Updated first-run mapping: supported culture families select their enabled locale, generic `pt`/`pt-*` maps to `pt-BR`, and unsupported cultures still persist `en`.
+- Extended localized default menu titles, entry display-name prefixes and default folder names for all enabled locales without translating existing saved user data.
+- Expanded localization tests to cover catalog key equality, non-empty enabled catalogs, Settings language exposure, detection mapping, persistence and per-locale new entry defaults.
+
 ## 2026-07-01 - First-run locale detection and persisted language selection
 
 - Added storage metadata for whether `language` exists in `settings.json` and whether the persisted value is supported.

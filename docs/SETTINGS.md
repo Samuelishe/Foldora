@@ -38,16 +38,16 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 
 `Language`:
 
-- supported values: `ru`, `en`;
+- supported values: `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`;
 - first-run WPF default: detected from `CultureInfo.CurrentUICulture` if system language is supported, otherwise `en`;
 - старые settings без `language` получают one-time WPF detection, после чего выбранный язык сохраняется;
 - unsupported persisted values нормализуются и сохраняются как `en`;
 - settings UI сохраняет язык в тот же `settings.json`;
 - settings UI показывает только complete supported locales.
 
-После сохранения `Language` Foldora не определяет язык системы повторно на каждом старте. Ручной выбор в Settings имеет приоритет над системным языком. Planned incomplete locales (`zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`) не выбираются автоматически, пока они не станут complete/enabled.
+После сохранения `Language` Foldora не определяет язык системы повторно на каждом старте. Ручной выбор в Settings имеет приоритет над системным языком. Later candidate locales (`it`, `pl`, `tr`, `uk`) не выбираются автоматически, пока они не станут complete/enabled.
 
-Планируемые incomplete locales не показываются в Settings UI. Смена `Language` меняет UI labels/status messages и defaults для новых entries, но не переписывает сохранённые пользовательские menu data. Например, уже сохранённый `Вид 1` остаётся `Вид 1` после переключения на English; новый entry в English UI создаётся как `View N` и `New folder`.
+Incomplete locales не показываются в Settings UI. Смена `Language` меняет UI labels/status messages и defaults для новых entries, но не переписывает сохранённые пользовательские menu data. Например, уже сохранённый `Вид 1` остаётся `Вид 1` после переключения на English; новый entry в English UI создаётся как `View N` и `New folder`.
 
 WPF startup не должен синхронно читать `settings.json` в конструкторском path главного окна. `MainViewModel.CreateDefault()` создаёт localization service без blocking load, а first-run language initializer и сохранённый `Language` применяются после async `LoadAsync`. Если чтение settings всё же падает на startup path, ошибка не глотается молча: диагностический файл пишется в `%AppData%\Foldora\Logs\startup-error.log`.
 
@@ -58,9 +58,9 @@ WPF startup не должен синхронно читать `settings.json` в
 ```json
 {
   "explorerIntegrationEnabled": false,
-  "language": "ru",
+  "language": "en",
   "createFolderMenu": {
-    "title": "Создать папку",
+    "title": "Create folder",
     "titleIsCustom": false,
     "entries": []
   }
@@ -107,9 +107,9 @@ WPF phase 4 меняет `ExplorerIntegrationEnabled` только через я
 
 `CreateFolderMenu.Title` является видимым top-level именем legacy Explorer menu. `CreateFolderMenu.TitleIsCustom` отделяет user-edited title от localized default-title mode.
 
-Если `TitleIsCustom = false`, title считается продуктовым default и соответствует текущему `Language`: `Создать папку` для `ru`, `Create folder` для `en`. Если `TitleIsCustom = true`, Foldora сохраняет текст как пользовательский и не переводит его при смене языка, даже если текст совпадает с known default.
+Если `TitleIsCustom = false`, title считается продуктовым default и соответствует текущему `Language` через enabled localization catalog. Если `TitleIsCustom = true`, Foldora сохраняет текст как пользовательский и не переводит его при смене языка, даже если текст совпадает с known default.
 
-Старые settings без `titleIsCustom` нормализуются осторожно: пустой title и known defaults `Создать папку`/`Create folder` считаются default-title mode, любой другой title считается custom. Если title пустой/whitespace при построении registry plan, всё ещё используется compatibility fallback `Создать папку`. Technical registry key остаётся `Foldora` и не зависит от title.
+Старые settings без `titleIsCustom` нормализуются осторожно: пустой title и known complete-locale defaults считаются default-title mode, любой другой title считается custom. Если title пустой/whitespace при построении registry plan, всё ещё используется compatibility fallback `Создать папку`. Technical registry key остаётся `Foldora` и не зависит от title.
 
 `unregister-menu` меняет только `ExplorerIntegrationEnabled = false` после удаления Foldora-owned registry roots; `CreateFolderMenu.Entries` и title сохраняются.
 

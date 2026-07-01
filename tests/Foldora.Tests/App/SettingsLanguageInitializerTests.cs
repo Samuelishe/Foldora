@@ -12,10 +12,27 @@ public sealed class SettingsLanguageInitializerTests
     [InlineData("ru-RU", "ru")]
     [InlineData("en", "en")]
     [InlineData("en-US", "en")]
-    [InlineData("de-DE", "en")]
-    [InlineData("ja-JP", "en")]
-    [InlineData("zh-Hans", "en")]
-    public void DetectStartupLanguage_SelectsOnlyCompleteLocales(string cultureName, string expected)
+    [InlineData("zh", "zh-Hans")]
+    [InlineData("zh-CN", "zh-Hans")]
+    [InlineData("zh-SG", "zh-Hans")]
+    [InlineData("zh-Hans", "zh-Hans")]
+    [InlineData("zh-Hans-CN", "zh-Hans")]
+    [InlineData("zh-TW", "en")]
+    [InlineData("de", "de")]
+    [InlineData("de-DE", "de")]
+    [InlineData("es", "es")]
+    [InlineData("es-MX", "es")]
+    [InlineData("fr", "fr")]
+    [InlineData("fr-FR", "fr")]
+    [InlineData("ja", "ja")]
+    [InlineData("ja-JP", "ja")]
+    [InlineData("pt", "pt-BR")]
+    [InlineData("pt-BR", "pt-BR")]
+    [InlineData("pt-PT", "pt-BR")]
+    [InlineData("ko", "ko")]
+    [InlineData("ko-KR", "ko")]
+    [InlineData("it-IT", "en")]
+    public void DetectStartupLanguage_SelectsEnabledCompleteLocales(string cultureName, string expected)
     {
         Assert.Equal(expected, SettingsLanguageInitializer.DetectStartupLanguage(cultureName));
     }
@@ -53,7 +70,7 @@ public sealed class SettingsLanguageInitializerTests
         {
             var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
             var storage = new FoldoraSettingsStorage(paths);
-            var initializer = new SettingsLanguageInitializer(storage, new FixedSystemLanguageProvider("de-DE"));
+            var initializer = new SettingsLanguageInitializer(storage, new FixedSystemLanguageProvider("it-IT"));
 
             await initializer.InitializeAsync();
 
@@ -69,6 +86,8 @@ public sealed class SettingsLanguageInitializerTests
     [Theory]
     [InlineData("en", "ru-RU", "en")]
     [InlineData("ru", "en-US", "ru")]
+    [InlineData("de", "ru-RU", "de")]
+    [InlineData("zh-Hans", "en-US", "zh-Hans")]
     public async Task InitializeAsync_PersistedSupportedLanguageWinsOverSystemLanguage(
         string savedLanguage,
         string systemLanguage,
@@ -96,7 +115,8 @@ public sealed class SettingsLanguageInitializerTests
 
     [Theory]
     [InlineData("ru-RU", "ru", "Создать папку")]
-    [InlineData("ja-JP", "en", "Create folder")]
+    [InlineData("ja-JP", "ja", "フォルダーを作成")]
+    [InlineData("it-IT", "en", "Create folder")]
     public async Task InitializeAsync_OldSettingsWithoutLanguage_DetectsAndPreservesMenuData(
         string systemLanguage,
         string expectedLanguage,
@@ -161,7 +181,7 @@ public sealed class SettingsLanguageInitializerTests
                 paths.SettingsFile,
                 """
                 {
-                  "language": "de",
+                  "language": "it",
                   "explorerIntegrationEnabled": false,
                   "createFolderMenu": {
                     "title": "Создать папку",

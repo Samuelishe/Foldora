@@ -171,7 +171,7 @@ public sealed class FoldoraSettingsStorageTests
                 paths.SettingsFile,
                 """
                 {
-                  "language": "de",
+                  "language": "it",
                   "explorerIntegrationEnabled": false,
                   "createFolderMenu": {
                     "title": "Создать папку",
@@ -235,7 +235,7 @@ public sealed class FoldoraSettingsStorageTests
                 paths.SettingsFile,
                 """
                 {
-                  "language": "de",
+                  "language": "it",
                   "explorerIntegrationEnabled": false,
                   "createFolderMenu": {
                     "title": "Создать папку",

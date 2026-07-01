@@ -11,6 +11,19 @@ namespace Foldora.App.ViewModels;
 /// </summary>
 public sealed class SettingsViewModel : INotifyPropertyChanged
 {
+    private static readonly IReadOnlyDictionary<string, string> NativeLanguageNames = new Dictionary<string, string>(StringComparer.Ordinal)
+    {
+        [FoldoraLanguage.Russian] = "Русский",
+        [FoldoraLanguage.English] = "English",
+        [FoldoraLanguage.SimplifiedChinese] = "简体中文",
+        [FoldoraLanguage.German] = "Deutsch",
+        [FoldoraLanguage.Spanish] = "Español",
+        [FoldoraLanguage.French] = "Français",
+        [FoldoraLanguage.Japanese] = "日本語",
+        [FoldoraLanguage.BrazilianPortuguese] = "Português (Brasil)",
+        [FoldoraLanguage.Korean] = "한국어"
+    };
+
     private readonly FoldoraSettingsStorage storage;
     private readonly ILocalizationService localizationService;
     private string selectedLanguage;
@@ -24,11 +37,9 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
         this.storage = storage ?? throw new ArgumentNullException(nameof(storage));
         this.localizationService = localizationService ?? new InMemoryLocalizationService(currentLanguage);
         selectedLanguage = FoldoraLanguage.NormalizeOrDefault(currentLanguage);
-        AvailableLanguages =
-        [
-            new LanguageOption(FoldoraLanguage.Russian, "Русский"),
-            new LanguageOption(FoldoraLanguage.English, "English")
-        ];
+        AvailableLanguages = new ObservableCollection<LanguageOption>(
+            FoldoraLanguage.SupportedLocales.Select(locale =>
+                new LanguageOption(locale, NativeLanguageNames[locale])));
         SaveCommand = new AsyncRelayCommand(SaveAsync);
     }
 

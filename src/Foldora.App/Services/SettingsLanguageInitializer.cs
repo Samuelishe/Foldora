@@ -43,18 +43,68 @@ public sealed class SettingsLanguageInitializer : ISettingsLanguageInitializer
             return FoldoraLanguage.English;
         }
 
-        if (cultureName.Equals(FoldoraLanguage.Russian, StringComparison.OrdinalIgnoreCase)
-            || cultureName.StartsWith(FoldoraLanguage.Russian + "-", StringComparison.OrdinalIgnoreCase))
+        var normalized = cultureName.Trim().Replace('_', '-');
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Russian))
         {
             return FoldoraLanguage.Russian;
         }
 
-        if (cultureName.Equals(FoldoraLanguage.English, StringComparison.OrdinalIgnoreCase)
-            || cultureName.StartsWith(FoldoraLanguage.English + "-", StringComparison.OrdinalIgnoreCase))
+        if (MatchesLanguage(normalized, FoldoraLanguage.English))
         {
             return FoldoraLanguage.English;
         }
 
+        if (IsSimplifiedChineseCulture(normalized))
+        {
+            return FoldoraLanguage.SimplifiedChinese;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.German))
+        {
+            return FoldoraLanguage.German;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Spanish))
+        {
+            return FoldoraLanguage.Spanish;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.French))
+        {
+            return FoldoraLanguage.French;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Japanese))
+        {
+            return FoldoraLanguage.Japanese;
+        }
+
+        if (MatchesLanguage(normalized, "pt"))
+        {
+            return FoldoraLanguage.BrazilianPortuguese;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Korean))
+        {
+            return FoldoraLanguage.Korean;
+        }
+
         return FoldoraLanguage.English;
+    }
+
+    private static bool MatchesLanguage(string cultureName, string language)
+    {
+        return cultureName.Equals(language, StringComparison.OrdinalIgnoreCase)
+               || cultureName.StartsWith(language + "-", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsSimplifiedChineseCulture(string cultureName)
+    {
+        return cultureName.Equals("zh", StringComparison.OrdinalIgnoreCase)
+               || cultureName.Equals("zh-CN", StringComparison.OrdinalIgnoreCase)
+               || cultureName.Equals("zh-SG", StringComparison.OrdinalIgnoreCase)
+               || cultureName.Equals(FoldoraLanguage.SimplifiedChinese, StringComparison.OrdinalIgnoreCase)
+               || cultureName.StartsWith(FoldoraLanguage.SimplifiedChinese + "-", StringComparison.OrdinalIgnoreCase);
     }
 }

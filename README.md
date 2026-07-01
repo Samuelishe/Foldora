@@ -48,7 +48,7 @@ Selecting an entry creates a folder and applies its icon through `desktop.ini`.
 - Small icons in the legacy Explorer menu.
 - Folder creation with a custom icon through `desktop.ini`.
 - Best-effort desktop icon placement for folders created from the desktop background legacy menu.
-- Russian and English WPF localization for the main editor flow; new entries use localized defaults for the current UI language.
+- WPF localization for Russian, English, Simplified Chinese, German, Spanish, French, Japanese, Brazilian Portuguese and Korean; new entries use localized defaults for the current UI language.
 - Deletion-friendly folder icon attributes: folder `ReadOnly`, `desktop.ini` `Hidden`.
 - Unregister flow that disables Explorer integration without deleting entries.
 - Reset flow that clears the user menu and disables Explorer integration.
@@ -106,7 +106,7 @@ Uninstall keeps `%AppData%\Foldora` by default because existing styled folders c
 
 ## Localization
 
-Complete enabled UI languages are Russian (`ru`) and English (`en`). On first WPF launch, Foldora chooses the system UI language only if it is complete and enabled; unsupported system languages fall back to English. The selected language is saved and is not re-detected on later launches. Changing the application language changes UI labels, status text, the untouched default menu title, and defaults for newly created entries. It does not rewrite a custom menu title, entry names, folder names, or group names.
+Complete enabled UI languages are Russian (`ru`), English (`en`), Simplified Chinese (`zh-Hans`), German (`de`), Spanish (`es`), French (`fr`), Japanese (`ja`), Brazilian Portuguese (`pt-BR`) and Korean (`ko`). On first WPF launch, Foldora chooses the system UI language only if it is complete and enabled; unsupported system languages fall back to English. The selected language is saved and is not re-detected on later launches. Changing the application language changes UI labels, status text, the untouched default menu title, and defaults for newly created entries. It does not rewrite a custom menu title, entry names, folder names, or group names.
 
 ## Development Run
 
@@ -223,7 +223,7 @@ If you enable Explorer integration from `artifacts/publish/Foldora/Foldora.App.e
 - No drag-and-drop ordering or group icons yet.
 - No orphan icon cleanup yet.
 - No user-facing diagnostics if `Foldora.MenuHost.exe` fails when invoked by Explorer.
-- Full localization is not complete yet: Core compatibility defaults, CLI diagnostics/validation output and startup fatal errors still need cleanup.
+- Localization debt remains for CLI diagnostics/validation output, startup fatal errors and external translation review; WPF catalogs are complete for the enabled locales.
 - No Explorer restart or icon cache reset flow.
 
 ## Safety Disclaimer

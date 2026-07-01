@@ -11,19 +11,54 @@ public static class FolderMenuDefaultTitles
 
     public const string English = "Create folder";
 
+    public const string SimplifiedChinese = "创建文件夹";
+
+    public const string German = "Ordner erstellen";
+
+    public const string Spanish = "Crear carpeta";
+
+    public const string French = "Créer un dossier";
+
+    public const string Japanese = "フォルダーを作成";
+
+    public const string BrazilianPortuguese = "Criar pasta";
+
+    public const string Korean = "폴더 만들기";
+
+    private static readonly string[] KnownDefaults =
+    [
+        Russian,
+        English,
+        SimplifiedChinese,
+        German,
+        Spanish,
+        French,
+        Japanese,
+        BrazilianPortuguese,
+        Korean
+    ];
+
     public static string GetForLanguage(string language)
     {
-        return FoldoraLanguage.NormalizeOrDefault(language) == FoldoraLanguage.English
-            ? English
-            : Russian;
+        return FoldoraLanguage.NormalizeOrDefault(language) switch
+        {
+            FoldoraLanguage.Russian => Russian,
+            FoldoraLanguage.SimplifiedChinese => SimplifiedChinese,
+            FoldoraLanguage.German => German,
+            FoldoraLanguage.Spanish => Spanish,
+            FoldoraLanguage.French => French,
+            FoldoraLanguage.Japanese => Japanese,
+            FoldoraLanguage.BrazilianPortuguese => BrazilianPortuguese,
+            FoldoraLanguage.Korean => Korean,
+            _ => English
+        };
     }
 
     public static bool IsKnownDefault(string? title)
     {
         var normalized = Normalize(title);
         return string.IsNullOrEmpty(normalized)
-               || string.Equals(normalized, Russian, StringComparison.Ordinal)
-               || string.Equals(normalized, English, StringComparison.Ordinal);
+               || KnownDefaults.Any(defaultTitle => string.Equals(normalized, defaultTitle, StringComparison.Ordinal));
     }
 
     public static string Normalize(string? title)

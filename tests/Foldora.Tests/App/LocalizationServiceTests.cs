@@ -1,18 +1,31 @@
 using Foldora.App.Services;
+using Foldora.Core.Settings;
 
 namespace Foldora.Tests.App;
 
 public sealed class LocalizationServiceTests
 {
     [Fact]
-    public void RussianAndEnglishCatalogsHaveSameKeys()
+    public void EnabledCatalogsHaveSameKeysAsEnglish()
     {
-        var russian = InMemoryLocalizationService.LoadCatalog("ru");
         var english = InMemoryLocalizationService.LoadCatalog("en");
+        var expectedKeys = english.Keys.Order(StringComparer.Ordinal).ToArray();
 
-        Assert.Equal(
-            russian.Keys.Order(StringComparer.Ordinal).ToArray(),
-            english.Keys.Order(StringComparer.Ordinal).ToArray());
+        foreach (var locale in FoldoraLanguage.SupportedLocales)
+        {
+            var catalog = InMemoryLocalizationService.LoadCatalog(locale);
+            Assert.Equal(expectedKeys, catalog.Keys.Order(StringComparer.Ordinal).ToArray());
+        }
+    }
+
+    [Fact]
+    public void EnabledCatalogsDoNotHaveEmptyValues()
+    {
+        foreach (var locale in FoldoraLanguage.SupportedLocales)
+        {
+            var catalog = InMemoryLocalizationService.LoadCatalog(locale);
+            Assert.DoesNotContain(catalog, pair => string.IsNullOrWhiteSpace(pair.Value));
+        }
     }
 
     [Fact]
@@ -57,10 +70,26 @@ public sealed class LocalizationServiceTests
     [Fact]
     public void UnsupportedLanguageFallsBackToEnglish()
     {
-        var service = new InMemoryLocalizationService("fr");
+        var service = new InMemoryLocalizationService("it");
 
         Assert.Equal("en", service.CurrentLanguage);
         Assert.Equal("Settings", service.Resources.Settings);
+    }
+
+    [Theory]
+    [MemberData(nameof(EnabledLocaleExpectations))]
+    public void EnabledLocalesExposeLocalizedDefaults(
+        string locale,
+        string expectedTitle,
+        string expectedEntryPrefix,
+        string expectedFolderName)
+    {
+        var service = new InMemoryLocalizationService(locale);
+
+        Assert.Equal(locale, service.CurrentLanguage);
+        Assert.Equal(expectedTitle, service.Resources.CreateFolderMenuTitle);
+        Assert.Equal(expectedEntryPrefix, service.Resources.DefaultEntryDisplayNamePrefix);
+        Assert.Equal(expectedFolderName, service.Resources.DefaultFolderName);
     }
 
     [Fact]
@@ -111,5 +140,21 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Edit", english.Resources.Edit);
         Assert.Equal("Done", english.Resources.Done);
         Assert.Equal("Folder name: ", english.Resources.FolderNameSummaryLabel);
+    }
+
+    public static TheoryData<string, string, string, string> EnabledLocaleExpectations()
+    {
+        return new TheoryData<string, string, string, string>
+        {
+            { FoldoraLanguage.Russian, "Создать папку", "Вид", "Новая папка" },
+            { FoldoraLanguage.English, "Create folder", "View", "New folder" },
+            { FoldoraLanguage.SimplifiedChinese, "创建文件夹", "视图", "新建文件夹" },
+            { FoldoraLanguage.German, "Ordner erstellen", "Ansicht", "Neuer Ordner" },
+            { FoldoraLanguage.Spanish, "Crear carpeta", "Vista", "Nueva carpeta" },
+            { FoldoraLanguage.French, "Créer un dossier", "Vue", "Nouveau dossier" },
+            { FoldoraLanguage.Japanese, "フォルダーを作成", "ビュー", "新しいフォルダー" },
+            { FoldoraLanguage.BrazilianPortuguese, "Criar pasta", "Visualização", "Nova pasta" },
+            { FoldoraLanguage.Korean, "폴더 만들기", "보기", "새 폴더" }
+        };
     }
 }

@@ -7,7 +7,7 @@ namespace Foldora.Tests.App;
 public sealed class SettingsViewModelTests
 {
     [Fact]
-    public void AvailableLanguages_ContainsRussianAndEnglish()
+    public void AvailableLanguages_ContainsEnabledCompleteLocales()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraSettingsVm-");
 
@@ -17,9 +17,9 @@ public sealed class SettingsViewModelTests
                 new FoldoraSettingsStorage(new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"))),
                 "ru");
 
-            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == "ru");
-            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == "en");
-            Assert.Equal(2, viewModel.AvailableLanguages.Count);
+            Assert.Equal(FoldoraLanguage.SupportedLocales, viewModel.AvailableLanguages.Select(language => language.Code).ToArray());
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.SimplifiedChinese && language.DisplayName == "简体中文");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.BrazilianPortuguese && language.DisplayName == "Português (Brasil)");
         }
         finally
         {
@@ -75,13 +75,59 @@ public sealed class SettingsViewModelTests
     }
 
     [Theory]
+    [MemberData(nameof(EnabledLocales))]
+    public async Task SaveAsync_PersistsEveryEnabledLanguage(string language)
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettingsVm-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var storage = new FoldoraSettingsStorage(paths);
+            var viewModel = new SettingsViewModel(storage, FoldoraLanguage.English)
+            {
+                SelectedLanguage = language
+            };
+
+            await viewModel.SaveAsync();
+
+            var settings = await storage.LoadAsync();
+            Assert.Equal(language, settings.Language);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Theory]
     [InlineData("ru", "ru")]
     [InlineData("RU", "ru")]
     [InlineData("en", "en")]
     [InlineData("EN", "en")]
-    [InlineData("zh-Hans", "en")]
-    public void FoldoraLanguage_NormalizesCompleteLocalesOnly(string input, string expected)
+    [InlineData("zh-Hans", "zh-Hans")]
+    [InlineData("ZH-HANS", "zh-Hans")]
+    [InlineData("de", "de")]
+    [InlineData("es", "es")]
+    [InlineData("fr", "fr")]
+    [InlineData("ja", "ja")]
+    [InlineData("pt-BR", "pt-BR")]
+    [InlineData("PT-br", "pt-BR")]
+    [InlineData("ko", "ko")]
+    [InlineData("it", "en")]
+    public void FoldoraLanguage_NormalizesCompleteLocales(string input, string expected)
     {
         Assert.Equal(expected, FoldoraLanguage.NormalizeOrDefault(input));
+    }
+
+    public static TheoryData<string> EnabledLocales()
+    {
+        var data = new TheoryData<string>();
+        foreach (var locale in FoldoraLanguage.SupportedLocales)
+        {
+            data.Add(locale);
+        }
+
+        return data;
     }
 }
