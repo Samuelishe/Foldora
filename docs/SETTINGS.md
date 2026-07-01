@@ -42,7 +42,10 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 - default: `ru`;
 - старые settings без `language` загружаются как `ru`;
 - unsupported values нормализуются в `ru`;
-- settings UI сохраняет язык в тот же `settings.json`.
+- settings UI сохраняет язык в тот же `settings.json`;
+- settings UI показывает только complete supported locales.
+
+Планируемые incomplete locales не показываются в Settings UI. Смена `Language` меняет UI labels/status messages и defaults для новых entries, но не переписывает сохранённые пользовательские menu data. Например, уже сохранённый `Вид 1` остаётся `Вид 1` после переключения на English; новый entry в English UI создаётся как `View N` и `New folder`.
 
 WPF startup не должен синхронно читать `settings.json` в конструкторском path главного окна. `MainViewModel.CreateDefault()` создаёт localization service с fallback `ru`, а сохранённый `Language` применяется после async `LoadAsync`. Если чтение settings всё же падает на startup path, ошибка не глотается молча: диагностический файл пишется в `%AppData%\Foldora\Logs\startup-error.log`.
 

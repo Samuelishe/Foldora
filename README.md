@@ -48,6 +48,7 @@ Selecting an entry creates a folder and applies its icon through `desktop.ini`.
 - Small icons in the legacy Explorer menu.
 - Folder creation with a custom icon through `desktop.ini`.
 - Best-effort desktop icon placement for folders created from the desktop background legacy menu.
+- Russian and English WPF localization for the main editor flow; new entries use localized defaults for the current UI language.
 - Deletion-friendly folder icon attributes: folder `ReadOnly`, `desktop.ini` `Hidden`.
 - Unregister flow that disables Explorer integration without deleting entries.
 - Reset flow that clears the user menu and disables Explorer integration.
@@ -102,6 +103,10 @@ Per-user installed binaries live separately under:
 ```
 
 Uninstall keeps `%AppData%\Foldora` by default because existing styled folders can reference imported icons from `%AppData%\Foldora\icons`.
+
+## Localization
+
+Complete enabled UI languages are Russian (`ru`) and English (`en`). Changing the application language changes UI labels, status text and defaults for newly created entries, but it does not rewrite saved menu titles, entry names, folder names or group names.
 
 ## Development Run
 
@@ -218,7 +223,7 @@ If you enable Explorer integration from `artifacts/publish/Foldora/Foldora.App.e
 - No drag-and-drop ordering or group icons yet.
 - No orphan icon cleanup yet.
 - No user-facing diagnostics if `Foldora.MenuHost.exe` fails when invoked by Explorer.
-- Full runtime localization of all status/error strings is not complete yet.
+- Full localization is not complete yet: Core compatibility defaults, CLI diagnostics, validation messages and startup fatal errors still need cleanup.
 - No Explorer restart or icon cache reset flow.
 
 ## Safety Disclaimer

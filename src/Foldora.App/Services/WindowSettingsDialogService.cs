@@ -10,16 +10,18 @@ namespace Foldora.App.Services;
 public sealed class WindowSettingsDialogService : ISettingsDialogService
 {
     private readonly FoldoraSettingsStorage storage;
+    private readonly ILocalizationService? localizationService;
 
-    public WindowSettingsDialogService(FoldoraSettingsStorage storage)
+    public WindowSettingsDialogService(FoldoraSettingsStorage storage, ILocalizationService? localizationService = null)
     {
         this.storage = storage ?? throw new ArgumentNullException(nameof(storage));
+        this.localizationService = localizationService;
     }
 
     public async Task<SettingsDialogResult> ShowSettingsAsync()
     {
         var currentSettings = await storage.LoadAsync();
-        var viewModel = new SettingsViewModel(storage, currentSettings.Language);
+        var viewModel = new SettingsViewModel(storage, currentSettings.Language, localizationService);
         var window = new SettingsWindow
         {
             DataContext = viewModel,

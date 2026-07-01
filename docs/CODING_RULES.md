@@ -21,3 +21,12 @@
 - Не добавлять сторонние ресурсы без явной лицензии.
 - Перед добавлением ресурса проверять право на redistribution, modification, commercial use, attribution requirements и необходимость bundled license text.
 - Новые bundled third-party resources должны одновременно обновлять `THIRD_PARTY_NOTICES.md`, `docs/FILE_INDEX.md` и license files, если они требуются.
+
+## Localization rules
+
+- Не добавлять новые user-facing string literals в ViewModels, XAML, App services или Shell/App presentation code вне localization layer.
+- Новый UI/status text должен иметь localization key, значения во всех complete catalogs и тестовое покрытие key completeness.
+- Core не должен зависеть от `Foldora.App` и не должен решать UI language; Core может возвращать invariant codes/params или compatibility fallback values.
+- Saved user data не переводится автоматически при смене языка.
+- New object defaults для WPF создаются в текущем UI language на App layer.
+- Incomplete planned locales не показываются в Settings UI без отдельного explicit experimental state.

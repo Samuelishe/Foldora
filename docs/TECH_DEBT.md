@@ -4,6 +4,29 @@
 
 ## Active Debt
 
+### TD-0004 Remaining Localization Debt
+
+- ID: `TD-0004`
+- Title: Remaining localization debt
+- Status: Open
+- Severity: Medium
+- Area: WPF / CLI / Core / Docs
+- Observed behavior: WPF labels/status/defaults now use embedded `ru`/`en` catalogs for the main editor flow, but some user-facing strings still live outside the localization layer.
+- Expected/desired behavior: UI, runtime/status, validation and diagnostic messages should be localized consistently, while saved user data remains unchanged when language changes.
+- Known cause or hypothesis: Early MVP started with Russian hardcoded defaults in Core and diagnostic CLI output. Moving all validation/CLI text requires a broader invariant-code mapping and a CLI localization policy.
+- Current workaround: WPF passes localized defaults for new draft entries. Existing Core fallbacks remain compatibility/CLI paths and are documented in `docs/LOCALIZATION.md`.
+- Next investigation step: Localize validation rendering at the App boundary, decide CLI localization policy, and replace the startup fatal dialog literals.
+- Links to docs/tests/code:
+  - `docs/LOCALIZATION.md`
+  - `src/Foldora.App/Localization/*.json`
+  - `src/Foldora.Core/Menu/FolderMenuSettings.cs`
+  - `src/Foldora.Core/Menu/FolderMenuNameGenerator.cs`
+  - `src/Foldora.Core/Validation/FolderNameValidator.cs`
+  - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanBuilder.cs`
+  - `src/Foldora.Cli/DesktopIniPolicyDiagnosticsRunner.cs`
+  - `src/Foldora.App/App.xaml.cs`
+- Date added: 2026-07-01
+
 ### TD-0001 Desktop Icon Placement From Legacy Menu
 
 - ID: `TD-0001`

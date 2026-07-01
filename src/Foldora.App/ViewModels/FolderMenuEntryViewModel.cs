@@ -20,6 +20,7 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
     private readonly Action<FolderMenuEntryViewModel> editRequested;
     private readonly Func<FolderMenuEntryViewModel, Task> chooseIconAsync;
     private readonly Action<FolderMenuEntryViewModel> remove;
+    private readonly Func<LocalizationResources> localizationResourcesProvider;
     private bool isEditing;
 
     public FolderMenuEntryViewModel(
@@ -29,7 +30,8 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
         Action groupChanged,
         Action<FolderMenuEntryViewModel> editRequested,
         Func<FolderMenuEntryViewModel, Task> chooseIconAsync,
-        Action<FolderMenuEntryViewModel> remove)
+        Action<FolderMenuEntryViewModel> remove,
+        Func<LocalizationResources> localizationResourcesProvider)
     {
         this.draftEntry = draftEntry ?? throw new ArgumentNullException(nameof(draftEntry));
         this.iconPreviewService = iconPreviewService ?? throw new ArgumentNullException(nameof(iconPreviewService));
@@ -38,6 +40,7 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
         this.editRequested = editRequested ?? throw new ArgumentNullException(nameof(editRequested));
         this.chooseIconAsync = chooseIconAsync ?? throw new ArgumentNullException(nameof(chooseIconAsync));
         this.remove = remove ?? throw new ArgumentNullException(nameof(remove));
+        this.localizationResourcesProvider = localizationResourcesProvider ?? throw new ArgumentNullException(nameof(localizationResourcesProvider));
         EditCommand = new RelayCommand(() => this.editRequested(this));
         FinishEditingCommand = new RelayCommand(FinishEditing);
         ChooseIconCommand = new AsyncRelayCommand(() => this.chooseIconAsync(this));
@@ -53,29 +56,30 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
     {
         get
         {
+            var l = localizationResourcesProvider();
             if (!string.IsNullOrWhiteSpace(draftEntry.PendingIconSourcePath))
             {
                 if (!string.IsNullOrWhiteSpace(IconPreviewError))
                 {
-                    return $"preview не загружен: {Path.GetFileName(draftEntry.PendingIconSourcePath)}";
+                    return string.Format(l.IconPreviewNotLoadedFormat, Path.GetFileName(draftEntry.PendingIconSourcePath));
                 }
 
-                return $"будет обновлена: {Path.GetFileName(draftEntry.PendingIconSourcePath)}";
+                return string.Format(l.IconWillBeUpdatedFormat, Path.GetFileName(draftEntry.PendingIconSourcePath));
             }
 
             if (string.IsNullOrWhiteSpace(draftEntry.IconPath))
             {
-                return "нет";
+                return l.IconNone;
             }
 
             if (!File.Exists(draftEntry.IconPath))
             {
-                return "не найдена";
+                return l.IconMissing;
             }
 
             return string.IsNullOrWhiteSpace(IconPreviewError)
-                ? $"есть: {Path.GetFileName(draftEntry.IconPath)}"
-                : "preview не загружен";
+                ? string.Format(l.IconExistsFormat, Path.GetFileName(draftEntry.IconPath))
+                : l.IconPreviewNotLoaded;
         }
     }
 
@@ -164,9 +168,16 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
         }
     }
 
-    public string CompactTitle => string.IsNullOrWhiteSpace(DisplayName) ? "(без названия)" : DisplayName;
+    public string CompactTitle => string.IsNullOrWhiteSpace(DisplayName) ? localizationResourcesProvider().UntitledEntry : DisplayName;
 
-    public string CompactFolderName => string.IsNullOrWhiteSpace(DefaultFolderName) ? "Новая папка" : DefaultFolderName;
+    public string CompactFolderName => string.IsNullOrWhiteSpace(DefaultFolderName) ? localizationResourcesProvider().DefaultFolderName : DefaultFolderName;
+
+    public void RefreshLocalizedState()
+    {
+        OnPropertyChanged(nameof(IconState));
+        OnPropertyChanged(nameof(CompactTitle));
+        OnPropertyChanged(nameof(CompactFolderName));
+    }
 
     public void RefreshIconState()
     {

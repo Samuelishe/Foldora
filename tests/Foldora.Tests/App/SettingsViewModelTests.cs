@@ -19,6 +19,7 @@ public sealed class SettingsViewModelTests
 
             Assert.Contains(viewModel.AvailableLanguages, language => language.Code == "ru");
             Assert.Contains(viewModel.AvailableLanguages, language => language.Code == "en");
+            Assert.Equal(2, viewModel.AvailableLanguages.Count);
         }
         finally
         {
@@ -71,5 +72,16 @@ public sealed class SettingsViewModelTests
         {
             root.Delete(recursive: true);
         }
+    }
+
+    [Theory]
+    [InlineData("ru", "ru")]
+    [InlineData("RU", "ru")]
+    [InlineData("en", "en")]
+    [InlineData("EN", "en")]
+    [InlineData("zh-Hans", "ru")]
+    public void FoldoraLanguage_NormalizesCompleteLocalesOnly(string input, string expected)
+    {
+        Assert.Equal(expected, FoldoraLanguage.NormalizeOrDefault(input));
     }
 }

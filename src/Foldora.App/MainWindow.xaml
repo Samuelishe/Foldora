@@ -465,7 +465,7 @@
                     <StackPanel Margin="{DynamicResource SectionSpacing}">
                         <TextBlock Text="{Binding L.ExplorerIntegration}"
                                    Style="{StaticResource SectionTitleStyle}" />
-                        <TextBlock Text="{Binding ExplorerIntegrationStatusText, StringFormat=Статус: {0}}"
+                        <TextBlock Text="{Binding ExplorerIntegrationStatusLabel}"
                                    Style="{StaticResource SecondaryBodyTextStyle}"
                                    Margin="0,0,0,10" />
                         <WrapPanel>
@@ -532,7 +532,7 @@
             <DockPanel Grid.Row="2"
                        Margin="0,16,0,14">
                 <TextBlock DockPanel.Dock="Left"
-                           Text="{Binding HasUnsavedChanges, StringFormat=Несохранённые изменения: {0}}"
+                           Text="{Binding UnsavedChangesText}"
                            Style="{StaticResource SecondaryBodyTextStyle}"
                            VerticalAlignment="Center"
                            />

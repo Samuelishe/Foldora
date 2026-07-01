@@ -54,11 +54,18 @@ public sealed class FolderMenuDraftEditor
 
     public FolderMenuDraftEntry AddEntry()
     {
+        return AddEntry(
+            FolderMenuNameGenerator.GetNextName(Entries.Select(entry => entry.ToEntry())),
+            FolderNameValidator.DefaultFolderName);
+    }
+
+    public FolderMenuDraftEntry AddEntry(string displayName, string defaultFolderName)
+    {
         var entry = new FolderMenuDraftEntry
         {
             Id = CreateEntryId(),
-            DisplayName = FolderMenuNameGenerator.GetNextName(Entries.Select(entry => entry.ToEntry())),
-            DefaultFolderName = FolderNameValidator.DefaultFolderName,
+            DisplayName = displayName,
+            DefaultFolderName = defaultFolderName,
             IsEnabled = true,
             SortOrder = Entries.Count == 0 ? 0 : Entries.Max(entry => entry.SortOrder) + 1
         };

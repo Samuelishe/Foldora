@@ -1,4 +1,5 @@
 using System.IO;
+using Foldora.App.ViewModels;
 using Foldora.Core.Menu;
 using Foldora.Shell.Registry;
 
@@ -12,15 +13,18 @@ public sealed class ExplorerIntegrationController
     private readonly FolderMenuDraftEditor draftEditor;
     private readonly ExplorerMenuRegistrationService registrationService;
     private readonly IExplorerCommandHostPathResolver commandHostPathResolver;
+    private readonly ILocalizationService localizationService;
 
     public ExplorerIntegrationController(
         FolderMenuDraftEditor draftEditor,
         ExplorerMenuRegistrationService registrationService,
-        IExplorerCommandHostPathResolver commandHostPathResolver)
+        IExplorerCommandHostPathResolver commandHostPathResolver,
+        ILocalizationService? localizationService = null)
     {
         this.draftEditor = draftEditor ?? throw new ArgumentNullException(nameof(draftEditor));
         this.registrationService = registrationService ?? throw new ArgumentNullException(nameof(registrationService));
         this.commandHostPathResolver = commandHostPathResolver ?? throw new ArgumentNullException(nameof(commandHostPathResolver));
+        this.localizationService = localizationService ?? new InMemoryLocalizationService();
     }
 
     public bool ExplorerIntegrationEnabled => draftEditor.ExplorerIntegrationEnabled;
@@ -41,7 +45,7 @@ public sealed class ExplorerIntegrationController
 
             return new ExplorerIntegrationOperationResult(
                 true,
-                "План проверен.",
+                L.PlanChecked,
                 result.ExplorerIntegrationEnabled,
                 BuildPlanSummary(result));
         }
@@ -68,8 +72,8 @@ public sealed class ExplorerIntegrationController
             await draftEditor.LoadAsync(cancellationToken);
 
             var message = result.ExplorerIntegrationEnabled
-                ? "Меню Проводника включено."
-                : "Нет включённых пунктов меню. Меню Проводника не создано.";
+                ? L.ExplorerMenuEnabled
+                : L.ExplorerNoEntriesNotCreated;
 
             return new ExplorerIntegrationOperationResult(
                 true,
@@ -95,8 +99,8 @@ public sealed class ExplorerIntegrationController
             await draftEditor.LoadAsync(cancellationToken);
 
             var message = result.ExplorerIntegrationEnabled
-                ? "Настройки сохранены. Меню Проводника обновлено."
-                : "Настройки сохранены. Включённых пунктов нет, меню Проводника отключено.";
+                ? L.SettingsSavedExplorerUpdated
+                : L.SettingsSavedNoEntriesExplorerDisabled;
 
             return new ExplorerIntegrationOperationResult(
                 true,
@@ -108,9 +112,9 @@ public sealed class ExplorerIntegrationController
         {
             return new ExplorerIntegrationOperationResult(
                 false,
-                "Настройки сохранены, но меню Проводника не обновлено.",
+                L.SettingsSavedExplorerNotUpdated,
                 draftEditor.ExplorerIntegrationEnabled,
-                [$"Ошибка Explorer integration: {exception.Message}"]);
+                [string.Format(L.ExplorerIntegrationErrorFormat, exception.Message)]);
         }
     }
 
@@ -127,7 +131,7 @@ public sealed class ExplorerIntegrationController
 
             return new ExplorerIntegrationOperationResult(
                 true,
-                "Меню Проводника отключено.",
+                L.ExplorerMenuDisabled,
                 result.ExplorerIntegrationEnabled,
                 BuildPlanSummary(result));
         }
@@ -146,7 +150,7 @@ public sealed class ExplorerIntegrationController
 
             return new ExplorerIntegrationOperationResult(
                 true,
-                "Список пунктов меню сброшен.",
+                L.MenuReset,
                 result.ExplorerIntegrationEnabled,
                 BuildPlanSummary(result));
         }
@@ -156,23 +160,23 @@ public sealed class ExplorerIntegrationController
         }
     }
 
-    private static ExplorerIntegrationOperationResult BlockedByUnsavedChanges(bool explorerIntegrationEnabled)
+    private ExplorerIntegrationOperationResult BlockedByUnsavedChanges(bool explorerIntegrationEnabled)
     {
         return new ExplorerIntegrationOperationResult(
             false,
-            "Сначала сохраните изменения.",
+            L.SaveUnsavedChangesFirst,
             explorerIntegrationEnabled);
     }
 
-    private static ExplorerIntegrationOperationResult Failed(Exception exception, bool explorerIntegrationEnabled)
+    private ExplorerIntegrationOperationResult Failed(Exception exception, bool explorerIntegrationEnabled)
     {
         return new ExplorerIntegrationOperationResult(
             false,
-            $"Ошибка Explorer integration: {exception.Message}",
+            string.Format(L.ExplorerIntegrationErrorFormat, exception.Message),
             explorerIntegrationEnabled);
     }
 
-    private static string[] BuildPlanSummary(ExplorerMenuRegistrationResult result)
+    private string[] BuildPlanSummary(ExplorerMenuRegistrationResult result)
     {
         var plans = result.Plans;
         var deleteCount = plans.Sum(plan => plan.DeleteOperations.Count);
@@ -205,11 +209,13 @@ public sealed class ExplorerIntegrationController
 
         if (createCount == 0 && setCount == 0)
         {
-            summary.Add("Нет включённых пунктов меню. Меню не будет создано.");
+            summary.Add(L.NoEnabledEntriesDetail);
         }
 
         return summary.ToArray();
     }
+
+    private LocalizationResources L => localizationService.Resources;
 
     private static bool IsUserFacingOperationException(Exception exception)
     {

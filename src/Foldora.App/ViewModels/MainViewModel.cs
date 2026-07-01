@@ -31,8 +31,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private readonly RelayCommand reloadCommand;
     private readonly RelayCommand addEntryCommand;
     private readonly RelayCommand addGroupCommand;
-    private string title = "Создать папку";
-    private string statusMessage = "Загрузка настроек...";
+    private string title = string.Empty;
+    private string statusMessage = string.Empty;
     private bool explorerIntegrationEnabled;
     private bool hasUnsavedChanges;
     private bool isResetConfirmed;
@@ -52,6 +52,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         this.explorerIntegrationController = explorerIntegrationController ?? throw new ArgumentNullException(nameof(explorerIntegrationController));
         this.settingsDialogService = settingsDialogService ?? new NoopSettingsDialogService();
         this.localizationService = localizationService ?? new InMemoryLocalizationService();
+        title = L.CreateFolderMenuTitle;
+        statusMessage = L.LoadingSettings;
 
         saveCommand = new AsyncRelayCommand(SaveDraftAsync, () => HasUnsavedChanges);
         openSettingsCommand = new AsyncRelayCommand(OpenSettingsAsync);
@@ -131,7 +133,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public bool HasStatusMessage => !string.IsNullOrWhiteSpace(StatusMessage);
 
-    public string ExplorerIntegrationStatusText => ExplorerIntegrationEnabled ? "Включена" : "Отключена";
+    public string ExplorerIntegrationStatusText => ExplorerIntegrationEnabled ? L.ExplorerEnabled : L.ExplorerDisabled;
+
+    public string ExplorerIntegrationStatusLabel => string.Format(L.StatusLabelFormat, ExplorerIntegrationStatusText);
+
+    public string UnsavedChangesText => string.Format(L.UnsavedChangesFormat, HasUnsavedChanges);
 
     public bool ExplorerIntegrationEnabled
     {
@@ -146,6 +152,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             explorerIntegrationEnabled = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(ExplorerIntegrationStatusText));
+            OnPropertyChanged(nameof(ExplorerIntegrationStatusLabel));
         }
     }
 
@@ -180,6 +187,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
             hasUnsavedChanges = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(UnsavedChangesText));
             saveCommand.RaiseCanExecuteChanged();
             reloadCommand.RaiseCanExecuteChanged();
         }
@@ -223,14 +231,15 @@ public sealed class MainViewModel : INotifyPropertyChanged
         var integrationController = new ExplorerIntegrationController(
             draftEditor,
             registrationService,
-            new ExplorerCommandHostPathResolver());
+            new ExplorerCommandHostPathResolver(),
+            localizationService);
 
         return new MainViewModel(
             draftEditor,
-            new WindowsIconFilePicker(),
+            new WindowsIconFilePicker(localizationService),
             new WpfIconPreviewService(),
             integrationController,
-            new WindowSettingsDialogService(storage),
+            new WindowSettingsDialogService(storage, localizationService),
             localizationService);
     }
 
@@ -239,13 +248,17 @@ public sealed class MainViewModel : INotifyPropertyChanged
         await draftEditor.LoadAsync(cancellationToken);
         localizationService.SetLanguage(draftEditor.Language);
         OnPropertyChanged(nameof(L));
+        RefreshLocalizedEntryState();
+        OnPropertyChanged(nameof(ExplorerIntegrationStatusText));
+        OnPropertyChanged(nameof(ExplorerIntegrationStatusLabel));
+        OnPropertyChanged(nameof(UnsavedChangesText));
         LoadDraftIntoViewModels();
         Errors.Clear();
         OperationDetails.Clear();
         NotifyErrorAndDetailsStateChanged();
         StatusMessage = Entries.Count == 0
-            ? "Пункты меню не настроены. Пустое меню является нормальным состоянием."
-            : "Настройки загружены.";
+            ? L.EmptyMenuStatus
+            : L.SettingsLoaded;
         ExplorerIntegrationEnabled = draftEditor.ExplorerIntegrationEnabled;
         RefreshDirtyState();
     }
@@ -266,7 +279,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             }
 
             NotifyErrorAndDetailsStateChanged();
-            StatusMessage = "Настройки не сохранены. Исправьте ошибки.";
+            StatusMessage = L.SettingsNotSavedFixErrors;
             RefreshDirtyState();
             return;
         }
@@ -282,7 +295,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             return;
         }
 
-        StatusMessage = "Настройки сохранены.";
+        StatusMessage = L.SettingsSaved;
         RefreshDirtyState();
     }
 
@@ -293,7 +306,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         Errors.Clear();
         OperationDetails.Clear();
         NotifyErrorAndDetailsStateChanged();
-        StatusMessage = "Несохранённые изменения отменены.";
+        StatusMessage = L.UnsavedChangesDiscarded;
         ExplorerIntegrationEnabled = draftEditor.ExplorerIntegrationEnabled;
         RefreshDirtyState();
     }
@@ -334,8 +347,12 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
         localizationService.SetLanguage(result.Language);
         OnPropertyChanged(nameof(L));
+        RefreshLocalizedEntryState();
         RebuildEntryGroups();
-        StatusMessage = "Настройки сохранены. Некоторые изменения языка могут применяться после перезапуска.";
+        StatusMessage = L.LanguageSavedRestartNotice;
+        OnPropertyChanged(nameof(ExplorerIntegrationStatusText));
+        OnPropertyChanged(nameof(ExplorerIntegrationStatusLabel));
+        OnPropertyChanged(nameof(UnsavedChangesText));
     }
 
     private void ApplyIntegrationResult(ExplorerIntegrationOperationResult result, bool reloadDraft)
@@ -376,7 +393,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     private void AddEntryToGroup(string groupName)
     {
-        var entry = draftEditor.AddEntry();
+        var entry = draftEditor.AddEntry(GetNextEntryDisplayName(), L.DefaultFolderName);
         entry.GroupName = groupName;
         var entryViewModel = CreateEntryViewModel(entry);
         Entries.Add(entryViewModel);
@@ -386,7 +403,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         RequestEntryEdit(entryViewModel);
         NotifyEntryStateChanged();
         NotifyErrorAndDetailsStateChanged();
-        StatusMessage = "Добавлен draft-пункт. Выберите .ico перед сохранением.";
+        StatusMessage = L.DraftEntryAddedChooseIcon;
         RefreshDirtyState();
     }
 
@@ -409,14 +426,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
             }
 
             NotifyErrorAndDetailsStateChanged();
-            StatusMessage = "Иконка не выбрана. Исправьте ошибку файла.";
+            StatusMessage = L.IconNotSelectedFixFile;
             return;
         }
 
         entry.RefreshIconState();
         OperationDetails.Clear();
         NotifyErrorAndDetailsStateChanged();
-        StatusMessage = "Иконка выбрана и будет импортирована при сохранении.";
+        StatusMessage = L.IconSelectedImportedOnSave;
         RefreshDirtyState();
         await Task.CompletedTask;
     }
@@ -434,7 +451,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         RebuildEntryGroups();
         NotifyEntryStateChanged();
         NotifyErrorAndDetailsStateChanged();
-        StatusMessage = "Пункт удалён из draft. Файлы и настройки изменятся только после сохранения.";
+        StatusMessage = L.EntryRemovedDraft;
         RefreshDirtyState();
     }
 
@@ -462,7 +479,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
             OnEntryGroupChanged,
             RequestEntryEdit,
             ChooseIconAsync,
-            RemoveEntry);
+            RemoveEntry,
+            () => L);
     }
 
     private void RequestEntryEdit(FolderMenuEntryViewModel entry)
@@ -549,6 +567,33 @@ public sealed class MainViewModel : INotifyPropertyChanged
         return $"{L.NewGroupNameBase} {Guid.NewGuid():N}";
     }
 
+    private string GetNextEntryDisplayName()
+    {
+        var existingNames = Entries
+            .Select(entry => entry.DisplayName)
+            .Where(displayName => !string.IsNullOrWhiteSpace(displayName))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        for (var index = 1; index < 1000; index++)
+        {
+            var candidate = $"{L.DefaultEntryDisplayNamePrefix} {index}";
+            if (!existingNames.Contains(candidate))
+            {
+                return candidate;
+            }
+        }
+
+        return $"{L.DefaultEntryDisplayNamePrefix} {Guid.NewGuid():N}";
+    }
+
+    private void RefreshLocalizedEntryState()
+    {
+        foreach (var entry in Entries)
+        {
+            entry.RefreshLocalizedState();
+        }
+    }
+
     private void DeleteGroup(string groupName)
     {
         if (string.IsNullOrWhiteSpace(groupName))
@@ -571,7 +616,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         RebuildEntryGroups();
         NotifyEntryStateChanged();
         NotifyErrorAndDetailsStateChanged();
-        StatusMessage = "Группа удалена из draft. Настройки изменятся только после сохранения.";
+        StatusMessage = L.GroupRemovedDraft;
         RefreshDirtyState();
     }
 

@@ -313,6 +313,79 @@ public sealed class MainViewModelPresentationTests
     }
 
     [Fact]
+    public async Task NewDraftEntry_UsesEnglishDefaultsWhenUiLanguageIsEnglish()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "en");
+            var viewModel = await CreateViewModelAsync(paths);
+
+            viewModel.AddEntryCommand.Execute(null);
+
+            Assert.Equal("View 1", viewModel.Entries[0].DisplayName);
+            Assert.Equal("New folder", viewModel.Entries[0].DefaultFolderName);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task NewDraftEntry_UsesRussianDefaultsWhenUiLanguageIsRussian()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "ru");
+            var viewModel = await CreateViewModelAsync(paths);
+
+            viewModel.AddEntryCommand.Execute(null);
+
+            Assert.Equal("Вид 1", viewModel.Entries[0].DisplayName);
+            Assert.Equal("Новая папка", viewModel.Entries[0].DefaultFolderName);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ExistingUserData_IsNotTranslatedWhenUiLanguageIsEnglish()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(
+                paths,
+                "en",
+                CreateEntry("entry-view-1", "Вид 1", "Новая папка"));
+            var viewModel = await CreateViewModelAsync(paths);
+
+            Assert.Equal("Создать папку", viewModel.Title);
+            Assert.Equal("Вид 1", viewModel.Entries[0].DisplayName);
+            Assert.Equal("Новая папка", viewModel.Entries[0].DefaultFolderName);
+
+            viewModel.AddEntryCommand.Execute(null);
+
+            Assert.Equal("View 1", viewModel.Entries[1].DisplayName);
+            Assert.Equal("New folder", viewModel.Entries[1].DefaultFolderName);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task EditAndFinishCommands_TogglePresentationEditStateWithoutSaving()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
@@ -516,7 +589,12 @@ public sealed class MainViewModelPresentationTests
 
     private static async Task SaveSettingsAsync(FoldoraDataPaths paths, params FolderMenuEntry[] entries)
     {
-        var settings = new FoldoraSettings();
+        await SaveSettingsAsync(paths, "ru", entries);
+    }
+
+    private static async Task SaveSettingsAsync(FoldoraDataPaths paths, string language, params FolderMenuEntry[] entries)
+    {
+        var settings = new FoldoraSettings { Language = language };
         foreach (var entry in entries)
         {
             settings.CreateFolderMenu.Entries.Add(entry);
@@ -527,11 +605,16 @@ public sealed class MainViewModelPresentationTests
 
     private static FolderMenuEntry CreateEntry(string id, string displayName)
     {
+        return CreateEntry(id, displayName, displayName);
+    }
+
+    private static FolderMenuEntry CreateEntry(string id, string displayName, string defaultFolderName)
+    {
         return new FolderMenuEntry
         {
             Id = id,
             DisplayName = displayName,
-            DefaultFolderName = displayName,
+            DefaultFolderName = defaultFolderName,
             IconPath = string.Empty,
             IsEnabled = true
         };

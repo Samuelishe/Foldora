@@ -17,6 +17,8 @@ Foldora не запрещает пользователю делать стран
 
 `DisplayName`, `DefaultFolderName` и `GroupName` не смешиваются. `DisplayName` и `GroupName` нельзя использовать как id, имя файла или registry key. Дубликаты `DisplayName` и одинаковые `GroupName` разрешены.
 
+Localization rule: saved menu title, entry display names, folder names and group names are user data and are not auto-translated when application language changes. WPF creates new draft entries with localized App-level defaults (`Вид N`/`Новая папка` for `ru`, `View N`/`New folder` for `en`). Core fallback defaults remain for compatibility/CLI safety and are not the preferred UI localization path.
+
 Пример разрешённого пользовательского выбора:
 
 ```text

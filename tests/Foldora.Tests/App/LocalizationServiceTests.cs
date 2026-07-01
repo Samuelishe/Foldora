@@ -5,6 +5,29 @@ namespace Foldora.Tests.App;
 public sealed class LocalizationServiceTests
 {
     [Fact]
+    public void RussianAndEnglishCatalogsHaveSameKeys()
+    {
+        var russian = InMemoryLocalizationService.LoadCatalog("ru");
+        var english = InMemoryLocalizationService.LoadCatalog("en");
+
+        Assert.Equal(
+            russian.Keys.Order(StringComparer.Ordinal).ToArray(),
+            english.Keys.Order(StringComparer.Ordinal).ToArray());
+    }
+
+    [Fact]
+    public void CatalogContainsKnownDefaultAndStatusKeys()
+    {
+        var english = new InMemoryLocalizationService("en");
+
+        Assert.Equal("View", english.Resources.DefaultEntryDisplayNamePrefix);
+        Assert.Equal("New folder", english.Resources.DefaultFolderName);
+        Assert.Equal("none", english.Resources.IconNone);
+        Assert.Equal("Settings loaded.", english.Resources.SettingsLoaded);
+        Assert.Equal("Draft entry added. Choose an .ico before saving.", english.Resources.DraftEntryAddedChooseIcon);
+    }
+
+    [Fact]
     public void RussianStringLookupWorks()
     {
         var service = new InMemoryLocalizationService("ru");
@@ -26,6 +49,15 @@ public sealed class LocalizationServiceTests
         var service = new InMemoryLocalizationService("ru");
 
         Assert.Equal("Missing.Key", service.Resources["Missing.Key"]);
+    }
+
+    [Fact]
+    public void UnsupportedLanguageFallsBackToRussian()
+    {
+        var service = new InMemoryLocalizationService("fr");
+
+        Assert.Equal("ru", service.CurrentLanguage);
+        Assert.Equal("Настройки", service.Resources.Settings);
     }
 
     [Fact]

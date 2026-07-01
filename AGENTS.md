@@ -14,6 +14,7 @@
   - `docs/ARCHITECTURE.md`;
   - `docs/REQUIREMENTS.md`;
   - `docs/SETTINGS.md`;
+  - `docs/LOCALIZATION.md`;
   - `docs/SHELL_INTEGRATION.md`;
   - `docs/DESKTOP_INI.md`;
   - `docs/SMOKE_TEST.md`;
@@ -32,6 +33,7 @@
 - При изменении UX flow или будущего WPF-поведения обновлять `docs/UX_FLOW.md`.
 - При изменении архитектуры обновлять `docs/ARCHITECTURE.md`.
 - При изменении настроек обновлять `docs/SETTINGS.md`.
+- При изменении локализации, языков, каталогов строк или language UX обновлять `docs/LOCALIZATION.md`, `docs/SETTINGS.md` и соответствующие тесты.
 - При изменении shell integration обновлять `docs/SHELL_INTEGRATION.md`.
 - При изменении desktop.ini механизма обновлять `docs/DESKTOP_INI.md`.
 - При изменении CLI обновлять `docs/CLI.md`.
@@ -39,6 +41,9 @@
 - Перед добавлением стороннего ресурса проверять явную лицензию, redistribution, modification, commercial use, attribution requirements, необходимость bundled license text и совместимость с публичным 0BSD-репозиторием.
 - При добавлении стороннего ресурса обновлять `THIRD_PARTY_NOTICES.md`, `README.md` для заметных ресурсов, `docs/FILE_INDEX.md` и bundled license files, если лицензия этого требует.
 - Не добавлять unknown-license assets, ripped/proprietary resources или файлы, найденные в интернете без понятной лицензии.
+- Не добавлять новые user-facing строки в ViewModel/XAML/services вне localization layer без ключа в complete locale catalogs и тестового покрытия.
+- Не переводить автоматически сохранённые пользовательские menu data при смене языка приложения.
+- Не показывать incomplete locales в Settings UI без отдельного explicit experimental state.
 - Не делать commit без прямого запроса пользователя.
 - В конце значимого шага предлагать commit message на английском, 1-2 предложения.
 - Не делать крупные изменения без краткого плана.

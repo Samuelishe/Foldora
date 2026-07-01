@@ -12,12 +12,17 @@ namespace Foldora.App.ViewModels;
 public sealed class SettingsViewModel : INotifyPropertyChanged
 {
     private readonly FoldoraSettingsStorage storage;
+    private readonly ILocalizationService localizationService;
     private string selectedLanguage;
     private string statusMessage = string.Empty;
 
-    public SettingsViewModel(FoldoraSettingsStorage storage, string currentLanguage)
+    public SettingsViewModel(
+        FoldoraSettingsStorage storage,
+        string currentLanguage,
+        ILocalizationService? localizationService = null)
     {
         this.storage = storage ?? throw new ArgumentNullException(nameof(storage));
+        this.localizationService = localizationService ?? new InMemoryLocalizationService(currentLanguage);
         selectedLanguage = FoldoraLanguage.NormalizeOrDefault(currentLanguage);
         AvailableLanguages =
         [
@@ -69,12 +74,16 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
 
     public bool Saved { get; private set; }
 
+    public LocalizationResources L => localizationService.Resources;
+
     public async Task SaveAsync()
     {
         var settings = await storage.LoadAsync();
         await storage.SaveAsync(settings with { Language = SelectedLanguage });
         Saved = true;
-        StatusMessage = "Настройки сохранены. Некоторые изменения языка могут применяться после перезапуска.";
+        localizationService.SetLanguage(SelectedLanguage);
+        OnPropertyChanged(nameof(L));
+        StatusMessage = L.LanguageSavedRestartNotice;
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

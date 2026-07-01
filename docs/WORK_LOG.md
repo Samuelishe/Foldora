@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-07-01 - Localization foundation cleanup
+
+- Added `docs/LOCALIZATION.md` as the source of truth for locale policy, string categories, saved user data behavior, fallback rules, audit commands and planned locales.
+- Replaced the early in-memory WPF string dictionaries with embedded JSON catalogs `src/Foldora.App/Localization/ru.json` and `en.json`.
+- Localized WPF new entry defaults: English UI now creates `View N` / `New folder`, Russian UI creates `Вид N` / `Новая папка`.
+- Preserved saved user data semantics: changing language does not rewrite existing menu title, entries, folder names or group names.
+- Moved visible WPF labels/status/icon state and settings labels further into the localization layer.
+- Added catalog completeness/fallback tests and presentation tests for localized new defaults and non-translation of existing user data.
+- Documented remaining localization debt: Core compatibility defaults, CLI defaults/diagnostics, validation messages and startup fatal dialog.
+
 ## 2026-07-01 - Per-user install layout foundation
 
 - Added `scripts/install-user.ps1`: it reuses fresh dev publish output and copies `Foldora.App.exe`, `Foldora.Cli.exe`, `Foldora.MenuHost.exe` and supporting files to `%LocalAppData%\Programs\Foldora`.

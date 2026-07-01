@@ -7,11 +7,23 @@ namespace Foldora.App.Services;
 /// </summary>
 public sealed class WindowsIconFilePicker : IIconFilePicker
 {
+    private readonly ILocalizationService localizationService;
+
+    public WindowsIconFilePicker()
+        : this(new InMemoryLocalizationService())
+    {
+    }
+
+    public WindowsIconFilePicker(ILocalizationService localizationService)
+    {
+        this.localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
+    }
+
     public IconFilePickerResult PickIcon()
     {
         var dialog = new OpenFileDialog
         {
-            Title = "Выбрать .ico",
+            Title = localizationService.Resources.IconPickerTitle,
             Filter = "ICO files (*.ico)|*.ico",
             CheckFileExists = true,
             CheckPathExists = true,

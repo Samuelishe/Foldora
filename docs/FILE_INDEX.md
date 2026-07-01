@@ -119,7 +119,9 @@
 - `src/Foldora.App/Services/WindowSettingsDialogService.cs` - WPF implementation settings dialog service.
 - `src/Foldora.App/Services/LanguageOption.cs` - option model для выбора языка в settings UI.
 - `src/Foldora.App/Services/ILocalizationService.cs` - abstraction локализации WPF.
-- `src/Foldora.App/Services/InMemoryLocalizationService.cs` - минимальная in-memory локализация RU/EN для основных WPF labels.
+- `src/Foldora.App/Services/InMemoryLocalizationService.cs` - catalog-backed локализация WPF поверх embedded JSON catalogs.
+- `src/Foldora.App/Localization/ru.json` - Russian complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/en.json` - English complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Services/StartupDiagnosticsService.cs` - минимальная запись startup exceptions в `%AppData%\Foldora\Logs\startup-error.log`.
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project на `net10.0-windows`.
 - `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.
@@ -129,7 +131,7 @@
 - `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
 - `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections и compact/edit entry behavior.
 - `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.
-- `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты минимальной локализации RU/EN.
+- `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты RU/EN catalog completeness, fallback и known localization keys.
 - `tests/Foldora.Tests/App/StartupDiagnosticsServiceTests.cs` - тесты controlled startup diagnostic log.
 - `tests/Foldora.Tests/App/WpfIconPreviewServiceTests.cs` - тесты WPF preview service.
 - `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser, включая reset confirmation и diagnostics command.
@@ -168,6 +170,7 @@
 - `docs/ARCHITECTURE.md` - архитектура.
 - `docs/REQUIREMENTS.md` - требования.
 - `docs/SETTINGS.md` - настройки.
+- `docs/LOCALIZATION.md` - правила локализации, locale roadmap, string categories, saved user data policy и audit commands.
 - `docs/SHELL_INTEGRATION.md` - shell integration.
 - `docs/DESKTOP_INI.md` - механизм desktop.ini.
 - `docs/SMOKE_TEST.md` - ручной smoke-test checklist для Windows 11 MVP.
