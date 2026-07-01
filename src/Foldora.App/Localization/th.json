@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Menu can contain at most {limit} entries. Current count: {count}.",
   "Validation.menu_enabled_entries_limit": "Menu can contain at most {limit} enabled entries. Current count: {count}.",
   "Validation.menu_group_limit": "Menu can contain at most {limit} groups. Current count: {count}.",
-  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}."
+  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}.",
+  "ApplicationSection": "แอปพลิเคชัน",
+  "ExplorerMenuSection": "เมนู Explorer",
+  "InstallationSection": "การติดตั้ง",
+  "InstalledAppPath": "เส้นทางแอป:",
+  "UserDataPath": "เส้นทางข้อมูลผู้ใช้:",
+  "CurrentCommandHost": "โฮสต์คำสั่งปัจจุบัน:",
+  "MenuHostServiceNote": "MenuHost ไม่ใช่บริการ และจะทำงานเฉพาะเมื่อ Explorer เรียกคำสั่งเมนู Foldora",
+  "ExplorerActionsApplyImmediately": "การกระทำเมนู Explorer มีผลทันที และไม่ถูกพักไว้กับการตั้งค่าภาษา",
+  "ManageInSettings": "จัดการในการตั้งค่า",
+  "SaveOrDiscardBeforeExplorer": "บันทึกหรือยกเลิกการเปลี่ยนแปลงเมนูก่อนเปลี่ยนการรวมกับ Explorer",
+  "UninstallHint": "ใช้สคริปต์ถอนการติดตั้งเพื่อลบไฟล์ที่ติดตั้ง ข้อมูลผู้ใช้จะถูกเก็บไว้ตามค่าเริ่มต้น"
 }

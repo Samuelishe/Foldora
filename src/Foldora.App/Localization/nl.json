@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Menu can contain at most {limit} entries. Current count: {count}.",
   "Validation.menu_enabled_entries_limit": "Menu can contain at most {limit} enabled entries. Current count: {count}.",
   "Validation.menu_group_limit": "Menu can contain at most {limit} groups. Current count: {count}.",
-  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}."
+  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}.",
+  "ApplicationSection": "Toepassing",
+  "ExplorerMenuSection": "Explorer-menu",
+  "InstallationSection": "Installatie",
+  "InstalledAppPath": "Pad van app:",
+  "UserDataPath": "Pad van gebruikersgegevens:",
+  "CurrentCommandHost": "Huidige command host:",
+  "MenuHostServiceNote": "MenuHost is geen service. Het draait alleen wanneer Explorer een Foldora-menuopdracht start.",
+  "ExplorerActionsApplyImmediately": "Explorer-menuacties worden direct toegepast en zijn niet gekoppeld aan taalinstellingen opslaan.",
+  "ManageInSettings": "Beheren in Instellingen",
+  "SaveOrDiscardBeforeExplorer": "Sla menu-wijzigingen op of verwerp ze voordat u Explorer-integratie wijzigt.",
+  "UninstallHint": "Gebruik het uninstall-script om geïnstalleerde bestanden te verwijderen. Gebruikersgegevens blijven standaard bewaard."
 }

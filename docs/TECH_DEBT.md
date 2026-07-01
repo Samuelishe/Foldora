@@ -15,6 +15,7 @@
 - Expected/desired behavior: UI, runtime/status, validation and diagnostic messages should be localized consistently, while saved user data remains unchanged when language changes.
 - Known cause or hypothesis: Early MVP started with Russian hardcoded defaults in Core and diagnostic CLI output. WPF validation now maps Core invariant issue codes/parameters to localized catalog strings; CLI output and startup fatal dialog still need a policy.
 - Current workaround: WPF passes localized defaults for new draft entries, tracks default/custom menu title separately, and persists first-run language detection before loading draft state. Existing Core fallbacks remain compatibility/CLI paths and are documented in `docs/LOCALIZATION.md`.
+- Manual check note: Ukrainian, Japanese and German WPF UI were spot-checked after locale expansion with no blocking layout issue. RU/EN remain primary verified locales; other enabled locales are catalog-complete and test-covered, with translation/layout polish left for feedback-driven future work.
 - Next investigation step: Decide CLI localization policy, replace startup fatal dialog literals, review remaining technical plan/details strings, and consider external translator review for enabled catalogs before a stable public release.
 - Links to docs/tests/code:
   - `docs/LOCALIZATION.md`

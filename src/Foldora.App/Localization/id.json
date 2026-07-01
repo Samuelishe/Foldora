@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Menu can contain at most {limit} entries. Current count: {count}.",
   "Validation.menu_enabled_entries_limit": "Menu can contain at most {limit} enabled entries. Current count: {count}.",
   "Validation.menu_group_limit": "Menu can contain at most {limit} groups. Current count: {count}.",
-  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}."
+  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}.",
+  "ApplicationSection": "Aplikasi",
+  "ExplorerMenuSection": "Menu Explorer",
+  "InstallationSection": "Instalasi",
+  "InstalledAppPath": "Path aplikasi:",
+  "UserDataPath": "Path data pengguna:",
+  "CurrentCommandHost": "Host perintah saat ini:",
+  "MenuHostServiceNote": "MenuHost bukan layanan. MenuHost hanya berjalan saat Explorer memanggil perintah menu Foldora.",
+  "ExplorerActionsApplyImmediately": "Aksi menu Explorer diterapkan segera dan tidak disimpan bersama pengaturan bahasa.",
+  "ManageInSettings": "Kelola di Pengaturan",
+  "SaveOrDiscardBeforeExplorer": "Simpan atau buang perubahan menu sebelum mengubah integrasi Explorer.",
+  "UninstallHint": "Gunakan skrip uninstall untuk menghapus file terpasang. Data pengguna tetap disimpan secara default."
 }

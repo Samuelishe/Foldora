@@ -5,6 +5,7 @@
 Foldora currently has a working MVP loop:
 
 - WPF editor with custom window chrome.
+- MainWindow focused on menu editing; Explorer integration, installation info and danger reset live in SettingsWindow.
 - Compact/edit entry cards for menu entries.
 - Settings gear and persisted language setting for enabled locales `bg`, `cs`, `de`, `en`, `es`, `fr`, `hi`, `hu`, `id`, `it`, `ja`, `ko`, `nl`, `pl`, `pt-BR`, `pt-PT`, `ro`, `ru`, `th`, `tr`, `uk`, `vi`, `zh-Hans`, `zh-Hant`.
 - Localization foundation for WPF labels/status/defaults and localized default menu title mode using embedded complete catalogs.
@@ -76,6 +77,7 @@ Foldora.MenuHost.exe
 
 Per-user install smoke and release polish before full installer work:
 
+- Manually smoke the SettingsWindow Explorer menu flow after the cleanup: dirty draft block, enable/disable, technical details and reset reload back into MainWindow.
 - Manually verify installed app enables Explorer integration with registry commands pointing to `%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe`.
 - Manually verify published MenuHost desktop-background create near the cursor/menu selection area.
 - If placement fails, inspect `%AppData%\Foldora\Logs\menuhost-placement.log` and use the latest JSONL entry for the next debugging step.

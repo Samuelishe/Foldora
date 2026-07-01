@@ -166,7 +166,7 @@ public sealed class ExplorerIntegrationController
     {
         return new ExplorerIntegrationOperationResult(
             false,
-            L.SaveUnsavedChangesFirst,
+            L.SaveOrDiscardBeforeExplorer,
             explorerIntegrationEnabled);
     }
 

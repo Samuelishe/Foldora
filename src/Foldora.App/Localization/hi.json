@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Menu can contain at most {limit} entries. Current count: {count}.",
   "Validation.menu_enabled_entries_limit": "Menu can contain at most {limit} enabled entries. Current count: {count}.",
   "Validation.menu_group_limit": "Menu can contain at most {limit} groups. Current count: {count}.",
-  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}."
+  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}.",
+  "ApplicationSection": "ऐप्लिकेशन",
+  "ExplorerMenuSection": "Explorer मेनू",
+  "InstallationSection": "इंस्टॉलेशन",
+  "InstalledAppPath": "ऐप पथ:",
+  "UserDataPath": "उपयोगकर्ता डेटा पथ:",
+  "CurrentCommandHost": "वर्तमान command host:",
+  "MenuHostServiceNote": "MenuHost कोई सेवा नहीं है। यह केवल तब चलता है जब Explorer Foldora मेनू कमांड चलाता है।",
+  "ExplorerActionsApplyImmediately": "Explorer मेनू कार्रवाइयाँ तुरंत लागू होती हैं और भाषा सेटिंग के साथ staged नहीं होतीं।",
+  "ManageInSettings": "Settings में प्रबंधित करें",
+  "SaveOrDiscardBeforeExplorer": "Explorer integration बदलने से पहले मेनू बदलाव सहेजें या छोड़ें।",
+  "UninstallHint": "इंस्टॉल की गई फ़ाइलें हटाने के लिए uninstall script का उपयोग करें। उपयोगकर्ता डेटा डिफ़ॉल्ट रूप से रखा जाता है।"
 }

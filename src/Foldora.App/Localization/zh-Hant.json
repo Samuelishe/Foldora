@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "菜单最多可包含 {limit} 个项目。当前数量：{count}。",
   "Validation.menu_enabled_entries_limit": "菜单最多可包含 {limit} 个启用项目。当前数量：{count}。",
   "Validation.menu_group_limit": "菜单最多可包含 {limit} 个组。当前数量：{count}。",
-  "Validation.menu_group_children_limit": "组 \"{groupName}\" 最多可包含 {limit} 个启用项目。当前数量：{count}。"
+  "Validation.menu_group_children_limit": "组 \"{groupName}\" 最多可包含 {limit} 个启用项目。当前数量：{count}。",
+  "ApplicationSection": "應用程式",
+  "ExplorerMenuSection": "檔案總管選單",
+  "InstallationSection": "安裝",
+  "InstalledAppPath": "應用程式路徑：",
+  "UserDataPath": "使用者資料路徑：",
+  "CurrentCommandHost": "目前命令主機：",
+  "MenuHostServiceNote": "MenuHost 不是服務。只有在檔案總管呼叫 Foldora 選單命令時才會執行。",
+  "ExplorerActionsApplyImmediately": "檔案總管選單動作會立即套用，不會與語言設定一起暫存。",
+  "ManageInSettings": "在設定中管理",
+  "SaveOrDiscardBeforeExplorer": "變更檔案總管整合前，請先儲存或放棄選單變更。",
+  "UninstallHint": "使用解除安裝腳本移除已安裝檔案。使用者資料預設會保留。"
 }

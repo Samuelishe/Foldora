@@ -57,6 +57,17 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string Reload => Get();
     public string Save => Get();
     public string Settings => Get();
+    public string ApplicationSection => Get();
+    public string ExplorerMenuSection => Get();
+    public string InstallationSection => Get();
+    public string InstalledAppPath => Get();
+    public string UserDataPath => Get();
+    public string CurrentCommandHost => Get();
+    public string MenuHostServiceNote => Get();
+    public string ExplorerActionsApplyImmediately => Get();
+    public string ManageInSettings => Get();
+    public string SaveOrDiscardBeforeExplorer => Get();
+    public string UninstallHint => Get();
     public string SettingsLanguageLabel => Get();
     public string SettingsLanguageRestartNote => Get();
     public string Minimize => Get();

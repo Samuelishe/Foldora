@@ -274,7 +274,7 @@ HKCU\Software\Classes\Directory\shell\Foldora
 
 ## WPF Explorer Integration Controls
 
-WPF phase 4 использует тот же `ExplorerMenuRegistrationService`, что и CLI, через App-level controller. Это не вторая registry implementation.
+WPF uses the same `ExplorerMenuRegistrationService`, что и CLI, через App-level controller. Это не вторая registry implementation. Settings/Explorer cleanup переносит эти controls из MainWindow в SettingsWindow: главный экран остаётся редактором меню, а Settings содержит Explorer menu section, technical details and danger reset.
 
 `Проверить план` соответствует `register-menu --dry-run`: строит и валидирует plan, показывает summary delete/create/set operations, Foldora-owned roots и пример command value. Registry и settings не меняются.
 
@@ -282,7 +282,7 @@ WPF phase 4 использует тот же `ExplorerMenuRegistrationService`, 
 
 `Отключить меню Проводника` соответствует `unregister-menu`: удаляет только Foldora-owned roots, сохраняет entries/title и ставит `ExplorerIntegrationEnabled = false`. Operation idempotent и разрешена даже при unsaved draft changes.
 
-`Сбросить меню` соответствует `menu reset --yes` после UI confirmation: очищает entries, возвращает title к `Создать папку`, ставит `ExplorerIntegrationEnabled = false`, удаляет только Foldora-owned roots и не удаляет AppData root, `settings.json`, packs или imported `.ico`.
+`Сбросить меню` находится в SettingsWindow danger zone и соответствует `menu reset --yes` после UI confirmation: очищает entries, возвращает title к localized default-title mode, ставит `ExplorerIntegrationEnabled = false`, удаляет только Foldora-owned roots и не удаляет AppData root, `settings.json`, packs или imported `.ico`. После закрытия SettingsWindow главный редактор перезагружает draft, чтобы не показывать stale entries.
 
 WPF `Сохранить` rebuild-ит registry menu только если `ExplorerIntegrationEnabled` уже был `true`. Если integration disabled, Save пишет только settings. Если rebuild после settings save упал, settings не откатываются, UI показывает `Настройки сохранены, но меню Проводника не обновлено.`
 

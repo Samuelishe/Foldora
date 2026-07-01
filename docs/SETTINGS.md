@@ -46,6 +46,14 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 - settings UI показывает только complete supported locales;
 - settings UI показывает native display names, но сортирует список по стабильному English/common sort order, а не по порядку добавления локалей.
 
+`SettingsWindow` также содержит системные секции, которые не являются staged language save:
+
+- `Explorer menu`: current status, dry-run, enable/disable Explorer legacy menu and technical details. Эти действия применяются сразу через `ExplorerIntegrationController`.
+- `Installation`: installed app/base path, `%AppData%\Foldora` user data path, current command host path and note that `Foldora.MenuHost.exe` is not a service/background helper.
+- `Danger zone`: reset menu с checkbox-подтверждением.
+
+`Сохранить` в footer SettingsWindow относится к language/settings save. Explorer integration actions and reset execute immediately. `Проверить план` и `Включить меню Проводника` сохраняют прежнюю dirty draft policy: если в главном редакторе есть unsaved menu changes, operation блокируется сообщением о необходимости сохранить или отменить изменения. `Отключить меню Проводника` остаётся разрешённым при unsaved draft changes. Reset после успешного выполнения сообщает главному окну перезагрузить draft после закрытия SettingsWindow, чтобы entries/title/status не оставались stale.
+
 После сохранения `Language` Foldora не определяет язык системы повторно на каждом старте. Ручной выбор в Settings имеет приоритет над системным языком. Future regional candidates (`be`, `kk`, `uz-Latn`, `az`, `hy`, `ka`, `lt`, `lv`, `et`, `sk`, `sl`, `hr`, `sr`) не выбираются автоматически, пока они не станут complete/enabled.
 
 Incomplete locales не показываются в Settings UI. Смена `Language` меняет UI labels/status messages и defaults для новых entries, но не переписывает сохранённые пользовательские menu data. Например, уже сохранённый `Вид 1` остаётся `Вид 1` после переключения на English; новый entry в English UI создаётся как `View N` и `New folder`.

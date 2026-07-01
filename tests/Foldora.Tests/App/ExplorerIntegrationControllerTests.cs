@@ -59,7 +59,7 @@ public sealed class ExplorerIntegrationControllerTests
             var settings = await new FoldoraSettingsStorage(paths).LoadAsync();
 
             Assert.False(result.Success);
-            Assert.Equal("Сначала сохраните изменения.", result.Message);
+            Assert.Equal("Сохраните или отмените изменения меню перед изменением интеграции с Проводником.", result.Message);
             Assert.True(result.ExplorerIntegrationEnabled);
             Assert.Empty(registry.Calls);
             Assert.Equal("Создать папку", settings.CreateFolderMenu.Title);
@@ -89,7 +89,7 @@ public sealed class ExplorerIntegrationControllerTests
             var settings = await new FoldoraSettingsStorage(paths).LoadAsync();
 
             Assert.False(result.Success);
-            Assert.Equal("Сначала сохраните изменения.", result.Message);
+            Assert.Equal("Сохраните или отмените изменения меню перед изменением интеграции с Проводником.", result.Message);
             Assert.Empty(registry.Calls);
             Assert.False(settings.ExplorerIntegrationEnabled);
             Assert.Equal("Создать папку", settings.CreateFolderMenu.Title);

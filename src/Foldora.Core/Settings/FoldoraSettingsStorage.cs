@@ -23,6 +23,8 @@ public sealed class FoldoraSettingsStorage
         this.paths = paths ?? throw new ArgumentNullException(nameof(paths));
     }
 
+    public FoldoraDataPaths Paths => paths;
+
     public async Task EnsureCreatedAsync(CancellationToken cancellationToken = default)
     {
         EnsureDataDirectories();

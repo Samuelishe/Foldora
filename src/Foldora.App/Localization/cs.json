@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Menu can contain at most {limit} entries. Current count: {count}.",
   "Validation.menu_enabled_entries_limit": "Menu can contain at most {limit} enabled entries. Current count: {count}.",
   "Validation.menu_group_limit": "Menu can contain at most {limit} groups. Current count: {count}.",
-  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}."
+  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}.",
+  "ApplicationSection": "Aplikace",
+  "ExplorerMenuSection": "Nabídka Průzkumníka",
+  "InstallationSection": "Instalace",
+  "InstalledAppPath": "Cesta aplikace:",
+  "UserDataPath": "Cesta uživatelských dat:",
+  "CurrentCommandHost": "Aktuální host příkazů:",
+  "MenuHostServiceNote": "MenuHost není služba. Spouští se jen tehdy, když Průzkumník vyvolá příkaz nabídky Foldora.",
+  "ExplorerActionsApplyImmediately": "Akce nabídky Průzkumníka se použijí okamžitě a nejsou součástí uložení jazyka.",
+  "ManageInSettings": "Spravovat v nastavení",
+  "SaveOrDiscardBeforeExplorer": "Před změnou integrace s Průzkumníkem uložte nebo zahoďte změny nabídky.",
+  "UninstallHint": "K odebrání nainstalovaných souborů použijte odinstalační skript. Uživatelská data zůstanou ve výchozím stavu zachována."
 }

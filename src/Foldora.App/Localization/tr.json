@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Menu can contain at most {limit} entries. Current count: {count}.",
   "Validation.menu_enabled_entries_limit": "Menu can contain at most {limit} enabled entries. Current count: {count}.",
   "Validation.menu_group_limit": "Menu can contain at most {limit} groups. Current count: {count}.",
-  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}."
+  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}.",
+  "ApplicationSection": "Uygulama",
+  "ExplorerMenuSection": "Explorer menüsü",
+  "InstallationSection": "Kurulum",
+  "InstalledAppPath": "Uygulama yolu:",
+  "UserDataPath": "Kullanıcı verisi yolu:",
+  "CurrentCommandHost": "Geçerli komut ana makinesi:",
+  "MenuHostServiceNote": "MenuHost bir hizmet değildir. Yalnızca Explorer bir Foldora menü komutu çağırdığında çalışır.",
+  "ExplorerActionsApplyImmediately": "Explorer menü eylemleri hemen uygulanır ve dil ayarlarıyla birlikte bekletilmez.",
+  "ManageInSettings": "Ayarlar’da yönet",
+  "SaveOrDiscardBeforeExplorer": "Explorer tümleştirmesini değiştirmeden önce menü değişikliklerini kaydedin veya atın.",
+  "UninstallHint": "Kurulu dosyaları kaldırmak için uninstall scriptini kullanın. Kullanıcı verileri varsayılan olarak korunur."
 }

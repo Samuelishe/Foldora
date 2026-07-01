@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Menu can contain at most {limit} entries. Current count: {count}.",
   "Validation.menu_enabled_entries_limit": "Menu can contain at most {limit} enabled entries. Current count: {count}.",
   "Validation.menu_group_limit": "Menu can contain at most {limit} groups. Current count: {count}.",
-  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}."
+  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}.",
+  "ApplicationSection": "Application",
+  "ExplorerMenuSection": "Explorer menu",
+  "InstallationSection": "Installation",
+  "InstalledAppPath": "Installed app path:",
+  "UserDataPath": "User data path:",
+  "CurrentCommandHost": "Current command host:",
+  "MenuHostServiceNote": "MenuHost is not a service. It runs only when Explorer invokes a Foldora menu command.",
+  "ExplorerActionsApplyImmediately": "Explorer menu actions apply immediately and are not staged with language settings.",
+  "ManageInSettings": "Manage in Settings",
+  "SaveOrDiscardBeforeExplorer": "Save or discard menu changes before changing Explorer integration.",
+  "UninstallHint": "Use the uninstall script to remove installed binaries. User data is kept by default."
 }

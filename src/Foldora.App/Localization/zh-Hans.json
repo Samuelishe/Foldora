@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "菜单最多可包含 {limit} 个项目。当前数量：{count}。",
   "Validation.menu_enabled_entries_limit": "菜单最多可包含 {limit} 个启用项目。当前数量：{count}。",
   "Validation.menu_group_limit": "菜单最多可包含 {limit} 个组。当前数量：{count}。",
-  "Validation.menu_group_children_limit": "组 \"{groupName}\" 最多可包含 {limit} 个启用项目。当前数量：{count}。"
+  "Validation.menu_group_children_limit": "组 \"{groupName}\" 最多可包含 {limit} 个启用项目。当前数量：{count}。",
+  "ApplicationSection": "应用",
+  "ExplorerMenuSection": "资源管理器菜单",
+  "InstallationSection": "安装",
+  "InstalledAppPath": "应用路径：",
+  "UserDataPath": "用户数据路径：",
+  "CurrentCommandHost": "当前命令主机：",
+  "MenuHostServiceNote": "MenuHost 不是服务。它只在资源管理器调用 Foldora 菜单命令时运行。",
+  "ExplorerActionsApplyImmediately": "资源管理器菜单操作会立即应用，不会随语言设置一起暂存。",
+  "ManageInSettings": "在设置中管理",
+  "SaveOrDiscardBeforeExplorer": "更改资源管理器集成前，请保存或放弃菜单更改。",
+  "UninstallHint": "使用卸载脚本删除已安装文件。用户数据默认保留。"
 }

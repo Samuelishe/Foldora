@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Menu can contain at most {limit} entries. Current count: {count}.",
   "Validation.menu_enabled_entries_limit": "Menu can contain at most {limit} enabled entries. Current count: {count}.",
   "Validation.menu_group_limit": "Menu can contain at most {limit} groups. Current count: {count}.",
-  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}."
+  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}.",
+  "ApplicationSection": "Alkalmazás",
+  "ExplorerMenuSection": "Intéző menü",
+  "InstallationSection": "Telepítés",
+  "InstalledAppPath": "Alkalmazás útvonala:",
+  "UserDataPath": "Felhasználói adatok útvonala:",
+  "CurrentCommandHost": "Aktuális parancsgazda:",
+  "MenuHostServiceNote": "A MenuHost nem szolgáltatás. Csak akkor fut, amikor az Intéző meghív egy Foldora menüparancsot.",
+  "ExplorerActionsApplyImmediately": "Az Intéző menü műveletei azonnal érvényesülnek, és nem a nyelvi mentéssel együtt történnek.",
+  "ManageInSettings": "Kezelés a Beállításokban",
+  "SaveOrDiscardBeforeExplorer": "Mentse vagy vesse el a menü módosításait az Intéző-integráció módosítása előtt.",
+  "UninstallHint": "A telepített fájlok eltávolításához használja az uninstall scriptet. A felhasználói adatok alapértelmezés szerint megmaradnak."
 }

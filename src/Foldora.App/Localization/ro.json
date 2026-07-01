@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Menu can contain at most {limit} entries. Current count: {count}.",
   "Validation.menu_enabled_entries_limit": "Menu can contain at most {limit} enabled entries. Current count: {count}.",
   "Validation.menu_group_limit": "Menu can contain at most {limit} groups. Current count: {count}.",
-  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}."
+  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}.",
+  "ApplicationSection": "Aplicație",
+  "ExplorerMenuSection": "Meniu Explorer",
+  "InstallationSection": "Instalare",
+  "InstalledAppPath": "Calea aplicației:",
+  "UserDataPath": "Calea datelor utilizatorului:",
+  "CurrentCommandHost": "Gazda curentă de comenzi:",
+  "MenuHostServiceNote": "MenuHost nu este un serviciu. Rulează doar când Explorer invocă o comandă din meniul Foldora.",
+  "ExplorerActionsApplyImmediately": "Acțiunile meniului Explorer se aplică imediat și nu sunt salvate împreună cu limba.",
+  "ManageInSettings": "Gestionează în Setări",
+  "SaveOrDiscardBeforeExplorer": "Salvează sau renunță la modificările meniului înainte de a schimba integrarea Explorer.",
+  "UninstallHint": "Folosește scriptul de dezinstalare pentru a elimina fișierele instalate. Datele utilizatorului se păstrează implicit."
 }

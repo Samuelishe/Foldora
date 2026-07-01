@@ -157,7 +157,7 @@ The script refreshes the dev publish output and copies it to:
 %LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe
 ```
 
-It does not require admin rights, does not register Explorer integration, and does not start the app. After install, run `%LocalAppData%\Programs\Foldora\Foldora.App.exe` and enable Explorer integration from the UI.
+It does not require admin rights, does not register Explorer integration, and does not start the app. After install, run `%LocalAppData%\Programs\Foldora\Foldora.App.exe` and enable Explorer integration from Settings.
 
 When the installed app enables Explorer integration, the registry command should point to the installed sibling `Foldora.MenuHost.exe`:
 

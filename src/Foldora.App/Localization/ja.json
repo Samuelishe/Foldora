@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "メニューには最大 {limit} 件の項目を含められます。現在の件数: {count}。",
   "Validation.menu_enabled_entries_limit": "メニューには最大 {limit} 件の有効な項目を含められます。現在の件数: {count}。",
   "Validation.menu_group_limit": "メニューには最大 {limit} 個のグループを含められます。現在の数: {count}。",
-  "Validation.menu_group_children_limit": "グループ \"{groupName}\" には最大 {limit} 件の有効な項目を含められます。現在の件数: {count}。"
+  "Validation.menu_group_children_limit": "グループ \"{groupName}\" には最大 {limit} 件の有効な項目を含められます。現在の件数: {count}。",
+  "ApplicationSection": "アプリケーション",
+  "ExplorerMenuSection": "Explorer メニュー",
+  "InstallationSection": "インストール",
+  "InstalledAppPath": "アプリのパス:",
+  "UserDataPath": "ユーザーデータのパス:",
+  "CurrentCommandHost": "現在のコマンド ホスト:",
+  "MenuHostServiceNote": "MenuHost はサービスではありません。Explorer が Foldora メニュー コマンドを呼び出したときだけ実行されます。",
+  "ExplorerActionsApplyImmediately": "Explorer メニュー操作はすぐに適用され、言語設定の保存とは別です。",
+  "ManageInSettings": "設定で管理",
+  "SaveOrDiscardBeforeExplorer": "Explorer 統合を変更する前に、メニューの変更を保存または破棄してください。",
+  "UninstallHint": "インストール済みファイルの削除にはアンインストール スクリプトを使用します。ユーザーデータは既定で保持されます。"
 }

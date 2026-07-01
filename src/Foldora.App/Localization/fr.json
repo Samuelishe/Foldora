@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Le menu peut contenir au plus {limit} entrées. Nombre actuel : {count}.",
   "Validation.menu_enabled_entries_limit": "Le menu peut contenir au plus {limit} entrées activées. Nombre actuel : {count}.",
   "Validation.menu_group_limit": "Le menu peut contenir au plus {limit} groupes. Nombre actuel : {count}.",
-  "Validation.menu_group_children_limit": "Le groupe \"{groupName}\" peut contenir au plus {limit} entrées activées. Nombre actuel : {count}."
+  "Validation.menu_group_children_limit": "Le groupe \"{groupName}\" peut contenir au plus {limit} entrées activées. Nombre actuel : {count}.",
+  "ApplicationSection": "Application",
+  "ExplorerMenuSection": "Menu de l’Explorateur",
+  "InstallationSection": "Installation",
+  "InstalledAppPath": "Chemin de l’application :",
+  "UserDataPath": "Chemin des données utilisateur :",
+  "CurrentCommandHost": "Hôte de commande actuel :",
+  "MenuHostServiceNote": "MenuHost n’est pas un service. Il s’exécute seulement quand l’Explorateur lance une commande du menu Foldora.",
+  "ExplorerActionsApplyImmediately": "Les actions du menu de l’Explorateur s’appliquent immédiatement et ne sont pas liées à l’enregistrement de la langue.",
+  "ManageInSettings": "Gérer dans les paramètres",
+  "SaveOrDiscardBeforeExplorer": "Enregistrez ou annulez les modifications du menu avant de modifier l’intégration à l’Explorateur.",
+  "UninstallHint": "Utilisez le script de désinstallation pour supprimer les fichiers installés. Les données utilisateur sont conservées par défaut."
 }

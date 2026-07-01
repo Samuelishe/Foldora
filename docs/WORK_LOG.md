@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-07-01 - Settings and Explorer integration cleanup
+
+- MainWindow cleanup: removed the large Explorer integration block, technical details and danger reset from the main editor surface.
+- MainWindow now focuses on menu title, groups, entry cards, icons, save/discard and editor status/errors; it keeps only a compact Explorer menu status with `Manage in Settings`.
+- SettingsWindow now contains Application/language, Explorer menu, Installation/path information and Danger zone sections.
+- Explorer menu actions in Settings execute immediately through the existing `ExplorerIntegrationController`; language Save remains separate.
+- Dirty draft policy is preserved: dry-run/register require save/discard menu changes, while unregister remains allowed with unsaved draft changes.
+- Reset from Settings keeps the existing reset semantics and causes MainWindow to reload saved draft state after the settings dialog closes.
+- Manual locale spot-check recorded: Ukrainian, Japanese and German UI showed no blocking layout issue; RU/EN remain primary verified and other locales remain catalog-complete/test-covered.
+
 ## 2026-07-01 - Popular locale expansion and public docs audit
 
 - Added embedded WPF localization catalogs for `it`, `nl`, `id`, `vi`, `hi`, `th`, `zh-Hant` and `pt-PT`.

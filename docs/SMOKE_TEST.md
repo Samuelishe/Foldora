@@ -45,7 +45,7 @@ artifacts/publish/Foldora/Foldora.MenuHost.exe
 1. Запустить `artifacts/publish/Foldora/Foldora.App.exe`.
 2. Добавить или отредактировать entry.
 3. Нажать `Сохранить`.
-4. Нажать `Включить меню Проводника`.
+4. Открыть Settings через gear и нажать `Включить меню Проводника` в секции Explorer menu.
 5. Проверить, что registry command указывает на `artifacts/publish/Foldora/Foldora.MenuHost.exe`, а не на Debug output.
 6. Проверить Explorer legacy menu через `Show more options`, если пункт не виден в compact menu.
 7. Создать папку через Desktop background context menu.
@@ -77,7 +77,7 @@ Install smoke:
 1. Запустить `%LocalAppData%\Programs\Foldora\Foldora.App.exe`.
 2. Добавить или отредактировать entry.
 3. Нажать `Сохранить`.
-4. Нажать `Включить меню Проводника`.
+4. Открыть Settings через gear и нажать `Включить меню Проводника` в секции Explorer menu.
 5. Проверить, что registry command указывает на `%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe`, а не на `artifacts/publish` или Debug output.
 6. Проверить Explorer legacy menu через `Show more options`, если пункт не виден в compact menu.
 7. Создать папку через Desktop background context menu.
@@ -153,11 +153,12 @@ dotnet run --project src/Foldora.App/Foldora.App.csproj
 
 ## 4. Explorer Integration
 
-1. Нажать `Проверить план`.
-2. Проверить short status и раскрываемые technical details.
-3. Нажать `Включить меню Проводника`.
-4. Открыть Explorer.
-5. Проверить legacy menu через `Show more options`, если пункт не виден в compact menu.
+1. Открыть Settings через gear.
+2. В секции Explorer menu нажать `Проверить план`.
+3. Проверить short status и раскрываемые technical details.
+4. Нажать `Включить меню Проводника`.
+5. Открыть Explorer.
+6. Проверить legacy menu через `Show more options`, если пункт не виден в compact menu.
 
 Ожидаемо:
 
@@ -219,7 +220,7 @@ desktop.ini attrib: H
 
 ## 6. Save-triggered Rebuild
 
-1. Включить Explorer integration.
+1. Открыть Settings и включить Explorer integration.
 2. Добавить новый entry или изменить `GroupName`.
 3. Нажать `Сохранить`.
 4. Проверить Explorer legacy menu.
@@ -232,7 +233,7 @@ desktop.ini attrib: H
 
 ## 7. Unregister/Reset
 
-Проверить `Отключить меню Проводника` или CLI:
+Проверить `Отключить меню Проводника` в Settings или CLI:
 
 ```text
 foldora unregister-menu
@@ -244,7 +245,15 @@ foldora unregister-menu
 - entries/settings сохраняются;
 - `ExplorerIntegrationEnabled = false`.
 
-Проверить reset:
+Проверить reset из Settings danger zone:
+
+1. Открыть Settings через gear.
+2. Включить checkbox подтверждения reset.
+3. Нажать `Сбросить меню`.
+4. Закрыть Settings.
+5. Убедиться, что MainWindow показывает пустой список entries и localized default title.
+
+CLI reset:
 
 ```text
 foldora menu reset --yes
@@ -258,6 +267,21 @@ foldora menu reset --yes
 - `%AppData%\Foldora\settings.json` сохраняется;
 - imported `.ico` остаются в `%AppData%\Foldora\icons`;
 - packs не трогаются.
+
+## 7a. Settings/Explorer Integration Cleanup
+
+1. Открыть приложение.
+2. Открыть Settings через gear.
+3. Сменить язык и сохранить.
+4. Создать unsaved draft change в главном редакторе.
+5. Открыть Settings и попробовать `Проверить план` или `Включить меню Проводника`.
+6. Убедиться, что operation блокируется сообщением о необходимости сохранить или отменить изменения меню.
+7. Сохранить или отменить draft changes.
+8. В Settings включить Explorer integration.
+9. Создать папку из Desktop context menu.
+10. В Settings выполнить reset из danger zone.
+11. Закрыть Settings и проверить, что MainWindow отражает reset.
+12. При необходимости выполнить `pwsh scripts/uninstall-user.ps1` и убедиться, что `%AppData%\Foldora` сохранён по умолчанию.
 
 ## 8. Known Manual Checks
 

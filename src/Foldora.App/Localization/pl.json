@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Menu can contain at most {limit} entries. Current count: {count}.",
   "Validation.menu_enabled_entries_limit": "Menu can contain at most {limit} enabled entries. Current count: {count}.",
   "Validation.menu_group_limit": "Menu can contain at most {limit} groups. Current count: {count}.",
-  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}."
+  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}.",
+  "ApplicationSection": "Aplikacja",
+  "ExplorerMenuSection": "Menu Eksploratora",
+  "InstallationSection": "Instalacja",
+  "InstalledAppPath": "Ścieżka aplikacji:",
+  "UserDataPath": "Ścieżka danych użytkownika:",
+  "CurrentCommandHost": "Bieżący host poleceń:",
+  "MenuHostServiceNote": "MenuHost nie jest usługą. Uruchamia się tylko wtedy, gdy Eksplorator wywoła polecenie menu Foldora.",
+  "ExplorerActionsApplyImmediately": "Akcje menu Eksploratora są stosowane od razu i nie są etapowane razem z zapisem języka.",
+  "ManageInSettings": "Zarządzaj w ustawieniach",
+  "SaveOrDiscardBeforeExplorer": "Zapisz albo odrzuć zmiany menu przed zmianą integracji z Eksploratorem.",
+  "UninstallHint": "Użyj skryptu odinstalowania, aby usunąć pliki aplikacji. Dane użytkownika są domyślnie zachowywane."
 }

@@ -1,6 +1,11 @@
+using Foldora.App.Services;
 using Foldora.App.ViewModels;
+using Foldora.Core.Menu;
 using Foldora.Core.Settings;
 using Foldora.Core.Storage;
+using Foldora.Shell.Registry;
+using Foldora.Shell.RegistryPlan;
+using Foldora.Tests.Shell.Fakes;
 
 namespace Foldora.Tests.App;
 
@@ -135,6 +140,100 @@ public sealed class SettingsViewModelTests
         }
     }
 
+    [Fact]
+    public async Task ExplorerRegister_ReportsDirtyDraftBlockFromSettings()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettingsVm-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, explorerIntegrationEnabled: false, CreateEntry("entry-documents", "Documents"));
+            var storage = new FoldoraSettingsStorage(paths);
+            var editor = new FolderMenuDraftEditor(storage, paths);
+            await editor.LoadAsync();
+            editor.Title = "Draft title";
+            var controller = CreateController(storage, editor, new FakeRegistryAccess(), await CreateFakeHostAsync(root.FullName));
+            var viewModel = new SettingsViewModel(storage, FoldoraLanguage.English, new InMemoryLocalizationService("en"), controller);
+
+            await viewModel.RegisterExplorerIntegrationAsync();
+
+            Assert.False(viewModel.MenuStateChanged);
+            Assert.NotEmpty(viewModel.Errors);
+            Assert.Equal("Save or discard menu changes before changing Explorer integration.", viewModel.StatusMessage);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ResetFromSettings_ClearsEntriesAndMarksMenuStateChanged()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettingsVm-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, explorerIntegrationEnabled: true, CreateEntry("entry-documents", "Documents"));
+            var storage = new FoldoraSettingsStorage(paths);
+            var editor = new FolderMenuDraftEditor(storage, paths);
+            await editor.LoadAsync();
+            var registry = new FakeRegistryAccess();
+            registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryRoot);
+            registry.CreateKey(ExplorerMenuRegistryHive.CurrentUser, ExplorerMenuRegistryPaths.DirectoryBackgroundRoot);
+            var controller = CreateController(storage, editor, registry, await CreateFakeHostAsync(root.FullName), new InMemoryLocalizationService("en"));
+            var viewModel = new SettingsViewModel(storage, FoldoraLanguage.English, new InMemoryLocalizationService("en"), controller);
+
+            Assert.False(viewModel.ResetMenuCommand.CanExecute(null));
+            viewModel.IsResetConfirmed = true;
+            Assert.True(viewModel.ResetMenuCommand.CanExecute(null));
+
+            await viewModel.ResetMenuAsync();
+
+            var settings = await storage.LoadAsync();
+            Assert.True(viewModel.MenuStateChanged);
+            Assert.False(viewModel.ExplorerIntegrationEnabled);
+            Assert.False(viewModel.IsResetConfirmed);
+            Assert.Equal("Menu entries reset.", viewModel.StatusMessage);
+            Assert.Empty(settings.CreateFolderMenu.Entries);
+            Assert.Equal("Create folder", settings.CreateFolderMenu.Title);
+            Assert.False(settings.CreateFolderMenu.TitleIsCustom);
+            Assert.False(settings.ExplorerIntegrationEnabled);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task InstallationInfo_ExposesUserDataAndCommandHostPath()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettingsVm-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var storage = new FoldoraSettingsStorage(paths);
+            var hostPath = await CreateFakeHostAsync(root.FullName);
+            var viewModel = new SettingsViewModel(
+                storage,
+                FoldoraLanguage.English,
+                new InMemoryLocalizationService("en"),
+                commandHostPathResolver: new FixedHostPathResolver(hostPath));
+
+            Assert.Equal(paths.RootDirectory, viewModel.UserDataPath);
+            Assert.Equal(hostPath, viewModel.CurrentCommandHostPath);
+            Assert.False(string.IsNullOrWhiteSpace(viewModel.InstalledAppPath));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
     [Theory]
     [MemberData(nameof(EnabledLocales))]
     public async Task SaveAsync_PersistsEveryEnabledLanguage(string language)
@@ -208,5 +307,87 @@ public sealed class SettingsViewModelTests
         }
 
         return data;
+    }
+
+    private static ExplorerIntegrationController CreateController(
+        FoldoraSettingsStorage storage,
+        FolderMenuDraftEditor editor,
+        FakeRegistryAccess registry,
+        string hostPath,
+        ILocalizationService? localizationService = null)
+    {
+        var service = new ExplorerMenuRegistrationService(
+            storage,
+            new ExplorerMenuRegistryPlanBuilder(),
+            new ExplorerMenuRegistryWriter(registry));
+
+        return new ExplorerIntegrationController(
+            editor,
+            service,
+            new FixedHostPathResolver(hostPath),
+            localizationService ?? new InMemoryLocalizationService("en"));
+    }
+
+    private static async Task SaveSettingsAsync(
+        FoldoraDataPaths paths,
+        bool explorerIntegrationEnabled,
+        params FolderMenuEntry[] entries)
+    {
+        await SaveSettingsAsync(paths, FoldoraLanguage.English, explorerIntegrationEnabled, entries);
+    }
+
+    private static async Task SaveSettingsAsync(
+        FoldoraDataPaths paths,
+        string language,
+        bool explorerIntegrationEnabled,
+        params FolderMenuEntry[] entries)
+    {
+        var storage = new FoldoraSettingsStorage(paths);
+        var defaultMenu = FolderMenuSettings.CreateDefault(language);
+        var menu = new FolderMenuSettings
+        {
+            Title = defaultMenu.Title,
+            TitleIsCustom = defaultMenu.TitleIsCustom,
+            Entries = entries.ToList()
+        };
+        await storage.SaveAsync(new FoldoraSettings
+        {
+            Language = language,
+            ExplorerIntegrationEnabled = explorerIntegrationEnabled,
+            CreateFolderMenu = menu
+        });
+    }
+
+    private static FolderMenuEntry CreateEntry(string id, string displayName)
+    {
+        return new FolderMenuEntry
+        {
+            Id = id,
+            DisplayName = displayName,
+            DefaultFolderName = displayName,
+            IconPath = Path.Combine(Path.GetTempPath(), $"{id}.ico")
+        };
+    }
+
+    private static async Task<string> CreateFakeHostAsync(string directory)
+    {
+        var path = Path.Combine(directory, "Foldora.MenuHost.exe");
+        await File.WriteAllTextAsync(path, "fake");
+        return path;
+    }
+
+    private sealed class FixedHostPathResolver : IExplorerCommandHostPathResolver
+    {
+        private readonly string hostPath;
+
+        public FixedHostPathResolver(string hostPath)
+        {
+            this.hostPath = hostPath;
+        }
+
+        public string ResolveCommandHostPath()
+        {
+            return hostPath;
+        }
     }
 }

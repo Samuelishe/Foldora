@@ -1,6 +1,6 @@
 # UI Design
 
-WPF editor после UX cleanup phase 1 содержит user-facing редактор menu entries с карточками, staged выбором `.ico`, прямым preview и явными Explorer integration controls.
+WPF editor содержит user-facing редактор menu entries с карточками, staged выбором `.ico`, прямым preview и компактным переходом в Settings для системных действий. Явные Explorer integration controls находятся в SettingsWindow.
 
 WPF shell/settings foundation переводит окно на custom title bar через `WindowChrome`. Видимый стандартный Windows title bar не используется; в шапке находятся название `Foldora`, кнопка настроек с gear glyph и window controls minimize/maximize/close. Resize должен сохраняться, а maximize должен respect Windows work area/taskbar.
 
@@ -25,7 +25,7 @@ Design system foundation добавляет централизованные WPF
 - Настройки и операции вызываются через сервисы Core/Shell.
 - Интерфейс MVP должен быть простым: список стилей, состояние integration, кнопки register/unregister и базовые настройки.
 - Главный экран MVP должен быть редактором пользовательского меню, а не landing page.
-- Минимальный редактор должен иметь title меню, список entries, user-facing поля `Название в меню` и `Имя создаваемой папки`, выбор `.ico`, preview около 50x50, checkbox `Показывать в меню`, `Сохранить`, `Отменить изменения`, `Включить меню Проводника`, `Отключить меню Проводника`, `Сбросить меню`.
+- Минимальный редактор должен иметь title меню, список entries, user-facing поля `Название в меню` и `Имя создаваемой папки`, выбор `.ico`, preview около 50x50, checkbox `Показывать в меню`, `Сохранить`, `Отменить изменения` и компактный status/link для Settings.
 - Для one-level grouping текущий основной UI управляет группами через visual group containers; пустой `GroupName` означает пункт в корне меню.
 - Entries визуально группируются по `GroupName`: пустая группа показывается как `Без группы`, непустые значения показываются отдельными group containers. Пустые группы не являются persistent model object; текущая модель остаётся entry-based.
 - `+ Добавить группу` создаёт обычный draft entry с новым `GroupName`, а UI показывает это как новую группу с первым пунктом. Отдельная persisted group entity не создаётся.
@@ -144,7 +144,8 @@ Validation errors из Core validation layer рендерятся через App
 - Preview `.ico` около 50x50 для saved и pending icon path.
 - `Сохранить` с validation перед записью settings.
 - `Отменить изменения` с возвратом draft к сохранённому состоянию.
-- Блок `Интеграция с Проводником` со статусом, dry-run, register, unregister и reset.
+- SettingsWindow section `Explorer menu` со статусом, dry-run, register, unregister and technical details.
+- SettingsWindow danger zone с reset.
 - `Сохранить` обновляет меню Проводника, если integration уже была включена.
 - `Проверить план` и `Включить меню Проводника` требуют отсутствия unsaved changes.
 - `Отключить меню Проводника` сохраняет entries/settings и может выполняться при unsaved draft changes.
@@ -160,8 +161,10 @@ Validation errors из Core validation layer рендерятся через App
 - После WPF grouping container cleanup карточки показываются внутри visual group containers `Без группы` или `<GroupName>`. Постоянное поле `Группа` убрано из основной карточки; group rename выполняется в заголовке контейнера.
 - Visual reference для grouping использован только как грубая структура `группа -> элементы`, без копирования цветов, размеров, шрифтов или геометрии.
 - Пустой список entries показывает empty state и кнопку `+ Добавить пункт`.
-- `Интеграция с Проводником` содержит только normal controls: dry-run/register/unregister.
-- Reset вынесен в отдельную `Опасная зона` с подтверждением.
+- Главный экран больше не содержит большой блок `Интеграция с Проводником` или `Опасная зона`; он сфокусирован на редактировании menu title/groups/entries/icons и глобальных `Сохранить`/`Отменить изменения`.
+- Компактный Explorer status на главном экране допустим только как non-dominant строка с переходом `Manage in Settings`.
+- `SettingsWindow` содержит секции Application, Explorer menu, Installation и Danger zone. Dry-run/register/unregister, technical details и reset находятся там.
+- Reset находится в отдельной `Опасная зона` SettingsWindow с подтверждением.
 - Technical plan details показываются через `Expander` только при наличии details.
 - Status/errors area отделена от technical details.
 

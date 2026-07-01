@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Меню может содержать не больше {limit} пунктов. Сейчас: {count}.",
   "Validation.menu_enabled_entries_limit": "Меню может содержать не больше {limit} включённых пунктов. Сейчас: {count}.",
   "Validation.menu_group_limit": "Меню может содержать не больше {limit} групп. Сейчас: {count}.",
-  "Validation.menu_group_children_limit": "Группа \"{groupName}\" может содержать не больше {limit} включённых пунктов. Сейчас: {count}."
+  "Validation.menu_group_children_limit": "Группа \"{groupName}\" может содержать не больше {limit} включённых пунктов. Сейчас: {count}.",
+  "ApplicationSection": "Приложение",
+  "ExplorerMenuSection": "Меню Проводника",
+  "InstallationSection": "Установка",
+  "InstalledAppPath": "Путь приложения:",
+  "UserDataPath": "Путь пользовательских данных:",
+  "CurrentCommandHost": "Текущий command host:",
+  "MenuHostServiceNote": "MenuHost не является сервисом. Он запускается только когда Проводник вызывает команду меню Foldora.",
+  "ExplorerActionsApplyImmediately": "Действия меню Проводника применяются сразу и не являются частью сохранения языка.",
+  "ManageInSettings": "Управлять в настройках",
+  "SaveOrDiscardBeforeExplorer": "Сохраните или отмените изменения меню перед изменением интеграции с Проводником.",
+  "UninstallHint": "Используйте uninstall script для удаления установленных файлов. Пользовательские данные сохраняются по умолчанию."
 }

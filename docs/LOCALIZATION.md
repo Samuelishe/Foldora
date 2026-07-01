@@ -101,6 +101,8 @@ Foldora uses canonical BCP-47-style tags where practical:
 
 UI labels are visible interface text such as `Save`, `Discard changes`, `Choose .ico`, group buttons and settings labels. They must come from the localization layer.
 
+Settings/Explorer cleanup adds localized section/action labels for Application, Explorer menu, Installation, path labels, MenuHost note, immediate Explorer-action note, `Manage in Settings` and dirty-draft guidance. These keys must exist in every complete catalog.
+
 Runtime/status messages are visible state messages such as settings loaded, settings saved, Explorer integration enabled/disabled and draft entry added. They must come from the localization layer.
 
 Validation messages are localized at the App/UI boundary for the WPF editor. Core returns invariant issue codes and parameters; App maps those to localized text through the enabled catalogs.
@@ -285,6 +287,7 @@ Current audit result:
 - CLI diagnostic output has Russian manual instructions;
 - startup fatal error dialog still uses hardcoded Russian;
 - Core validation `Message` fallbacks remain English debug/CLI text, but WPF renders validation issues through localized catalog keys.
+- Manual spot-check after the popular/regional catalog expansion: Ukrainian, Japanese and German UI were checked manually with no blocking layout issue found. RU/EN remain primary verified locales; other complete locales are catalog-complete and test-covered, with translation/layout polish left for future user/community feedback.
 
 ## Adding a language
 

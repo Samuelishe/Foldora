@@ -87,6 +87,16 @@
                 <TextBlock Text="{Binding L.PageSubtitle}"
                            Style="{StaticResource SecondaryBodyTextStyle}"
                            TextWrapping="Wrap" />
+                <WrapPanel Margin="0,10,0,0">
+                    <TextBlock Text="{Binding ExplorerIntegrationStatusLabel}"
+                               Style="{StaticResource SecondaryBodyTextStyle}"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0" />
+                    <Button Content="{Binding L.ManageInSettings}"
+                            Command="{Binding OpenSettingsCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            MinWidth="140" />
+                </WrapPanel>
             </StackPanel>
 
             <ScrollViewer Grid.Row="1"
@@ -462,70 +472,6 @@
                         </ItemsControl>
                     </StackPanel>
 
-                    <StackPanel Margin="{DynamicResource SectionSpacing}">
-                        <TextBlock Text="{Binding L.ExplorerIntegration}"
-                                   Style="{StaticResource SectionTitleStyle}" />
-                        <TextBlock Text="{Binding ExplorerIntegrationStatusLabel}"
-                                   Style="{StaticResource SecondaryBodyTextStyle}"
-                                   Margin="0,0,0,10" />
-                        <WrapPanel>
-                            <Button Content="{Binding L.DryRun}"
-                                    Command="{Binding DryRunCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}"
-                                    Margin="{DynamicResource ButtonInlineMargin}" />
-                            <Button Content="{Binding L.RegisterExplorer}"
-                                    Command="{Binding RegisterExplorerCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}"
-                                    MinWidth="190"
-                                    Margin="{DynamicResource ButtonInlineMargin}" />
-                            <Button Content="{Binding L.UnregisterExplorer}"
-                                    Command="{Binding UnregisterExplorerCommand}"
-                                    Style="{StaticResource SecondaryButtonStyle}"
-                                    MinWidth="200"
-                                    Margin="{DynamicResource ButtonInlineMargin}" />
-                        </WrapPanel>
-                        <Expander Header="{Binding L.TechnicalDetails}"
-                                  IsExpanded="{Binding ShowTechnicalDetails, Mode=TwoWay}"
-                                  Visibility="{Binding HasTechnicalDetails, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                  Margin="0,4,0,0">
-                            <ItemsControl ItemsSource="{Binding TechnicalDetails}"
-                                          Margin="0,8,0,0">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding}"
-                                                   Style="{StaticResource SecondaryBodyTextStyle}"
-                                                   TextWrapping="Wrap"
-                                                   Margin="0,0,0,4" />
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Expander>
-                    </StackPanel>
-
-                    <Border Style="{StaticResource DangerBannerStyle}"
-                            Margin="0,0,0,20">
-                        <StackPanel>
-                            <TextBlock Text="{Binding L.DangerZone}"
-                                       Style="{StaticResource SectionTitleStyle}"
-                                       Foreground="{DynamicResource DangerBrush}"
-                                       Margin="0,0,0,8" />
-                            <TextBlock Text="{Binding L.ResetDescription}"
-                                       Style="{StaticResource BodyTextStyle}"
-                                       TextWrapping="Wrap"
-                                       Margin="0,0,0,4" />
-                            <TextBlock Text="{Binding L.ResetIconNote}"
-                                       Style="{StaticResource SecondaryBodyTextStyle}"
-                                       TextWrapping="Wrap"
-                                       Margin="0,0,0,12" />
-                            <CheckBox Content="{Binding L.ResetConfirm}"
-                                      IsChecked="{Binding IsResetConfirmed, Mode=TwoWay}"
-                                      Margin="0,0,0,10" />
-                            <Button Content="{Binding L.ResetMenu}"
-                                    Command="{Binding ResetMenuCommand}"
-                                    Style="{StaticResource DangerButtonStyle}"
-                                    HorizontalAlignment="Left" />
-                        </StackPanel>
-                    </Border>
                 </StackPanel>
             </ScrollViewer>
 

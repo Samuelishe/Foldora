@@ -2,10 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{Binding L.Settings}"
-        Width="520"
-        Height="400"
-        MinWidth="420"
-        MinHeight="320"
+        Width="720"
+        Height="680"
+        MinWidth="560"
+        MinHeight="460"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
         SizeToContent="Manual"
@@ -34,6 +34,9 @@
             <StackPanel>
                 <Border Style="{StaticResource SectionContainerStyle}">
                     <StackPanel>
+                        <TextBlock Text="{Binding L.ApplicationSection}"
+                                   Style="{StaticResource SectionTitleStyle}"
+                                   Margin="0,0,0,10" />
                         <TextBlock Text="{Binding L.SettingsLanguageLabel}"
                                    Style="{StaticResource FieldLabelStyle}"
                                    Margin="0,0,0,8" />
@@ -54,6 +57,130 @@
                                    Foreground="{DynamicResource SuccessBrush}"
                                    Visibility="{Binding HasStatusMessage, Converter={StaticResource BooleanToVisibilityConverter}}"
                                    Margin="0,10,0,0" />
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource SectionContainerStyle}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding L.ExplorerMenuSection}"
+                                   Style="{StaticResource SectionTitleStyle}"
+                                   Margin="0,0,0,8" />
+                        <TextBlock Text="{Binding ExplorerIntegrationStatusLabel}"
+                                   Style="{StaticResource SecondaryBodyTextStyle}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,8" />
+                        <TextBlock Text="{Binding L.ExplorerActionsApplyImmediately}"
+                                   Style="{StaticResource SecondaryBodyTextStyle}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,8" />
+                        <TextBlock Text="{Binding L.SaveOrDiscardBeforeExplorer}"
+                                   Style="{StaticResource SecondaryBodyTextStyle}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,12" />
+
+                        <WrapPanel>
+                            <Button Content="{Binding L.DryRun}"
+                                    Command="{Binding DryRunCommand}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Margin="{DynamicResource ButtonInlineMargin}" />
+                            <Button Content="{Binding L.RegisterExplorer}"
+                                    Command="{Binding RegisterExplorerCommand}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    MinWidth="190"
+                                    Margin="{DynamicResource ButtonInlineMargin}" />
+                            <Button Content="{Binding L.UnregisterExplorer}"
+                                    Command="{Binding UnregisterExplorerCommand}"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    MinWidth="200"
+                                    Margin="{DynamicResource ButtonInlineMargin}" />
+                        </WrapPanel>
+
+                        <ItemsControl ItemsSource="{Binding Errors}"
+                                      Visibility="{Binding HasErrors, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                      Margin="0,10,0,0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}"
+                                               Style="{StaticResource ValidationErrorTextStyle}"
+                                               TextWrapping="Wrap"
+                                               Margin="0,0,0,4" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Expander Header="{Binding L.TechnicalDetails}"
+                                  IsExpanded="{Binding ShowTechnicalDetails, Mode=TwoWay}"
+                                  Visibility="{Binding HasTechnicalDetails, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Margin="0,8,0,0">
+                            <ItemsControl ItemsSource="{Binding TechnicalDetails}"
+                                          Margin="0,8,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"
+                                                   Style="{StaticResource SecondaryBodyTextStyle}"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,0,0,4" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Expander>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource SectionContainerStyle}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding L.InstallationSection}"
+                                   Style="{StaticResource SectionTitleStyle}"
+                                   Margin="0,0,0,10" />
+                        <TextBlock Text="{Binding L.InstalledAppPath}"
+                                   Style="{StaticResource FieldLabelStyle}" />
+                        <TextBlock Text="{Binding InstalledAppPath}"
+                                   Style="{StaticResource SecondaryBodyTextStyle}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,8" />
+                        <TextBlock Text="{Binding L.UserDataPath}"
+                                   Style="{StaticResource FieldLabelStyle}" />
+                        <TextBlock Text="{Binding UserDataPath}"
+                                   Style="{StaticResource SecondaryBodyTextStyle}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,8" />
+                        <TextBlock Text="{Binding L.CurrentCommandHost}"
+                                   Style="{StaticResource FieldLabelStyle}" />
+                        <TextBlock Text="{Binding CurrentCommandHostPath}"
+                                   Style="{StaticResource SecondaryBodyTextStyle}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,8" />
+                        <TextBlock Text="{Binding L.MenuHostServiceNote}"
+                                   Style="{StaticResource SecondaryBodyTextStyle}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,8" />
+                        <TextBlock Text="{Binding L.UninstallHint}"
+                                   Style="{StaticResource SecondaryBodyTextStyle}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource DangerBannerStyle}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding L.DangerZone}"
+                                   Style="{StaticResource SectionTitleStyle}"
+                                   Foreground="{DynamicResource DangerBrush}"
+                                   Margin="0,0,0,8" />
+                        <TextBlock Text="{Binding L.ResetDescription}"
+                                   Style="{StaticResource BodyTextStyle}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,4" />
+                        <TextBlock Text="{Binding L.ResetIconNote}"
+                                   Style="{StaticResource SecondaryBodyTextStyle}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,12" />
+                        <CheckBox Content="{Binding L.ResetConfirm}"
+                                  IsChecked="{Binding IsResetConfirmed, Mode=TwoWay}"
+                                  Margin="0,0,0,10" />
+                        <Button Content="{Binding L.ResetMenu}"
+                                Command="{Binding ResetMenuCommand}"
+                                Style="{StaticResource DangerButtonStyle}"
+                                HorizontalAlignment="Left" />
                     </StackPanel>
                 </Border>
             </StackPanel>

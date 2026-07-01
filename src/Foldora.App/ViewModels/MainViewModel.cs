@@ -234,10 +234,11 @@ public sealed class MainViewModel : INotifyPropertyChanged
             storage,
             new ExplorerMenuRegistryPlanBuilder(),
             new ExplorerMenuRegistryWriter(new WindowsRegistryAccess()));
+        var commandHostPathResolver = new ExplorerCommandHostPathResolver();
         var integrationController = new ExplorerIntegrationController(
             draftEditor,
             registrationService,
-            new ExplorerCommandHostPathResolver(),
+            commandHostPathResolver,
             localizationService);
         var settingsLanguageInitializer = new SettingsLanguageInitializer(
             storage,
@@ -248,7 +249,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             new WindowsIconFilePicker(localizationService),
             new WpfIconPreviewService(),
             integrationController,
-            new WindowSettingsDialogService(storage, localizationService),
+            new WindowSettingsDialogService(storage, localizationService, integrationController, commandHostPathResolver),
             localizationService,
             settingsLanguageInitializer: settingsLanguageInitializer);
     }
@@ -352,18 +353,37 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public async Task OpenSettingsAsync()
     {
         var result = await settingsDialogService.ShowSettingsAsync();
-        if (!result.Changed)
+        if (!result.Changed && !result.MenuStateChanged)
         {
             return;
         }
 
-        localizationService.SetLanguage(result.Language);
-        draftEditor.SetLanguage(result.Language);
-        OnPropertyChanged(nameof(L));
-        RefreshLocalizedDefaultTitle();
-        RefreshLocalizedEntryState();
-        RebuildEntryGroups();
-        StatusMessage = L.LanguageSavedRestartNotice;
+        if (result.Changed)
+        {
+            localizationService.SetLanguage(result.Language);
+            draftEditor.SetLanguage(result.Language);
+            OnPropertyChanged(nameof(L));
+            RefreshLocalizedDefaultTitle();
+            RefreshLocalizedEntryState();
+            RebuildEntryGroups();
+            StatusMessage = L.LanguageSavedRestartNotice;
+        }
+
+        if (result.MenuStateChanged)
+        {
+            await draftEditor.LoadAsync();
+            LoadDraftIntoViewModels();
+            Errors.Clear();
+            OperationDetails.Clear();
+            NotifyErrorAndDetailsStateChanged();
+            ExplorerIntegrationEnabled = draftEditor.ExplorerIntegrationEnabled;
+            RefreshDirtyState();
+            if (!result.Changed)
+            {
+                StatusMessage = L.SettingsLoaded;
+            }
+        }
+
         OnPropertyChanged(nameof(ExplorerIntegrationStatusText));
         OnPropertyChanged(nameof(ExplorerIntegrationStatusLabel));
         OnPropertyChanged(nameof(UnsavedChangesText));

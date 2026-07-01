@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Menu can contain at most {limit} entries. Current count: {count}.",
   "Validation.menu_enabled_entries_limit": "Menu can contain at most {limit} enabled entries. Current count: {count}.",
   "Validation.menu_group_limit": "Menu can contain at most {limit} groups. Current count: {count}.",
-  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}."
+  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}.",
+  "ApplicationSection": "Приложение",
+  "ExplorerMenuSection": "Меню на Explorer",
+  "InstallationSection": "Инсталация",
+  "InstalledAppPath": "Път на приложението:",
+  "UserDataPath": "Път на потребителските данни:",
+  "CurrentCommandHost": "Текущ command host:",
+  "MenuHostServiceNote": "MenuHost не е услуга. Стартира само когато Explorer извика команда от менюто на Foldora.",
+  "ExplorerActionsApplyImmediately": "Действията за менюто на Explorer се прилагат веднага и не са част от записването на езика.",
+  "ManageInSettings": "Управление в настройките",
+  "SaveOrDiscardBeforeExplorer": "Запазете или отменете промените в менюто, преди да промените интеграцията с Explorer.",
+  "UninstallHint": "Използвайте скрипта за деинсталиране, за да премахнете инсталираните файлове. Потребителските данни се запазват по подразбиране."
 }

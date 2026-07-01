@@ -93,6 +93,30 @@ public sealed class DesignResourceTests
         Assert.NotNull(footer);
     }
 
+    [Fact]
+    public void MainWindow_DoesNotExposeExplorerAdminActionsAsMainContent()
+    {
+        var mainWindowText = File.ReadAllText(Path.Combine(GetRepositoryRoot(), "src", "Foldora.App", "MainWindow.xaml"));
+
+        Assert.DoesNotContain("DryRunCommand", mainWindowText, StringComparison.Ordinal);
+        Assert.DoesNotContain("RegisterExplorerCommand", mainWindowText, StringComparison.Ordinal);
+        Assert.DoesNotContain("ResetMenuCommand", mainWindowText, StringComparison.Ordinal);
+        Assert.Contains("ManageInSettings", mainWindowText, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void SettingsWindow_ContainsExplorerInstallationAndDangerSections()
+    {
+        var settingsWindowText = File.ReadAllText(Path.Combine(GetRepositoryRoot(), "src", "Foldora.App", "SettingsWindow.xaml"));
+
+        Assert.Contains("ExplorerMenuSection", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("InstallationSection", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("DangerZone", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("DryRunCommand", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("RegisterExplorerCommand", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("ResetMenuCommand", settingsWindowText, StringComparison.Ordinal);
+    }
+
     private static XDocument LoadXml(params string[] pathParts)
     {
         return XDocument.Load(Path.Combine(GetRepositoryRoot(), Path.Combine(pathParts)));

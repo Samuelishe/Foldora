@@ -95,15 +95,15 @@
 - `src/Foldora.App/Resources/DesignTokens.xaml` - semantic colors/brushes, spacing, radius and size tokens for WPF design system.
 - `src/Foldora.App/Resources/Typography.xaml` - reusable WPF typography styles and app font family.
 - `src/Foldora.App/Resources/Controls.xaml` - reusable WPF control, card/container and status banner styles.
-- `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, empty state, Explorer integration controls, dangerous zone и technical details expander.
+- `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, empty state, save/discard и компактным Explorer menu status/link to Settings.
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI/window plumbing, custom title bar controls и установка `DataContext`.
-- `src/Foldora.App/SettingsWindow.xaml` - WPF окно настроек приложения с выбором языка.
+- `src/Foldora.App/SettingsWindow.xaml` - WPF окно настроек приложения с Application/language, Explorer menu, Installation и Danger zone секциями.
 - `src/Foldora.App/SettingsWindow.xaml.cs` - минимальный plumbing окна настроек.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
 - `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands и presentation state для card/list UI.
 - `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню с icon status, preview, compact/edit presentation state и inline errors.
 - `src/Foldora.App/ViewModels/FolderMenuEntryGroupViewModel.cs` - presentation-only group container WPF для entries по `GroupName`, включая entry count и add/rename/delete group commands.
-- `src/Foldora.App/ViewModels/SettingsViewModel.cs` - ViewModel настроек языка приложения.
+- `src/Foldora.App/ViewModels/SettingsViewModel.cs` - ViewModel окна настроек: language save, Explorer integration actions, installation/path info and danger reset presentation.
 - `src/Foldora.App/ViewModels/LocalizationResources.cs` - bindable набор локализованных строк для WPF.
 - `src/Foldora.App/ViewModels/RelayCommand.cs` - простая синхронная WPF-команда.
 - `src/Foldora.App/ViewModels/AsyncRelayCommand.cs` - простая асинхронная WPF-команда.

@@ -121,5 +121,16 @@
   "Validation.menu_total_entries_limit": "Menu can contain at most {limit} entries. Current count: {count}.",
   "Validation.menu_enabled_entries_limit": "Menu can contain at most {limit} enabled entries. Current count: {count}.",
   "Validation.menu_group_limit": "Menu can contain at most {limit} groups. Current count: {count}.",
-  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}."
+  "Validation.menu_group_children_limit": "Group \"{groupName}\" can contain at most {limit} enabled entries. Current count: {count}.",
+  "ApplicationSection": "Ứng dụng",
+  "ExplorerMenuSection": "Menu Explorer",
+  "InstallationSection": "Cài đặt",
+  "InstalledAppPath": "Đường dẫn ứng dụng:",
+  "UserDataPath": "Đường dẫn dữ liệu người dùng:",
+  "CurrentCommandHost": "Host lệnh hiện tại:",
+  "MenuHostServiceNote": "MenuHost không phải là dịch vụ. Nó chỉ chạy khi Explorer gọi lệnh menu Foldora.",
+  "ExplorerActionsApplyImmediately": "Các thao tác menu Explorer áp dụng ngay và không được lưu chung với thiết lập ngôn ngữ.",
+  "ManageInSettings": "Quản lý trong Cài đặt",
+  "SaveOrDiscardBeforeExplorer": "Lưu hoặc hủy thay đổi menu trước khi đổi tích hợp Explorer.",
+  "UninstallHint": "Dùng script gỡ cài đặt để xóa file đã cài. Dữ liệu người dùng được giữ theo mặc định."
 }
