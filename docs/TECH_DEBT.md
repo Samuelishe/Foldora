@@ -51,8 +51,8 @@
 - Observed behavior: Some MainWindow and SettingsWindow buttons look tight; text sits too close to button edges.
 - Expected/desired behavior: Buttons should have consistent padding, min-width and min-height that survive long localized labels.
 - Known cause or hypothesis: Current reusable button styles are functional but not yet tuned through a localization-heavy visual polish pass.
-- Current workaround: Shared action buttons now have larger padding and min-height.
-- Next investigation step: Continue long-label visual checks during product-grade polish, especially SettingsWindow actions.
+- Current workaround: Shared action buttons now have larger padding and min-height, and dense Settings rows use a compact inline action style so Explorer/path actions do not inherit overly wide normal button geometry.
+- Next investigation step: Continue long-label visual checks during product-grade polish, especially SettingsWindow actions in long locales.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UI_DESIGN.md`
@@ -123,7 +123,7 @@
 - Observed behavior: Settings now has targeted tooltips for Explorer menu preview and paths, but there is no single user-facing help/about window explaining the whole workflow.
 - Expected/desired behavior: A future localized Help/About/Instructions window should explain how to add entries, choose `.ico`, enable the Explorer menu, what `Foldora.MenuHost.exe` is, where data is stored and what uninstall preserves.
 - Known cause or hypothesis: MVP prioritized functional editor and shell integration before broader onboarding/help content.
-- Current workaround: Use tooltips, README and docs.
+- Current workaround: Use wrapped Settings tooltips, passive `?` info glyphs, README and docs.
 - Next investigation step: Design a small localized Help/About window after Settings clarity and visual polish settle.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`

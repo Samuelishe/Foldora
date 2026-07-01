@@ -50,6 +50,9 @@ public sealed class DesignResourceTests
         Assert.Contains("GroupContainerStyle", keys);
         Assert.Contains("StatusBannerStyle", keys);
         Assert.Contains("HelpIconButtonStyle", keys);
+        Assert.Contains("HelpInfoGlyphStyle", keys);
+        Assert.Contains("HelpTooltipTextStyle", keys);
+        Assert.Contains("InlineActionButtonStyle", keys);
     }
 
     [Fact]
@@ -80,6 +83,28 @@ public sealed class DesignResourceTests
         Assert.Equal("36", GetSetterValue(actionButtonStyle, "MinHeight"));
         Assert.Equal("18,7", GetSetterValue(actionButtonStyle, "Padding"));
         Assert.Equal("120", GetSetterValue(actionButtonStyle, "MinWidth"));
+    }
+
+    [Fact]
+    public void InlineActionButtonStyle_DefinesCompactSettingsGeometry()
+    {
+        var controls = LoadXml("src", "Foldora.App", "Resources", "Controls.xaml");
+        var inlineButtonStyle = FindStyle(controls, "InlineActionButtonStyle");
+
+        Assert.Equal("{StaticResource SecondaryButtonStyle}", inlineButtonStyle.Attribute("BasedOn")?.Value);
+        Assert.Equal("34", GetSetterValue(inlineButtonStyle, "MinHeight"));
+        Assert.Equal("14,6", GetSetterValue(inlineButtonStyle, "Padding"));
+        Assert.Equal("76", GetSetterValue(inlineButtonStyle, "MinWidth"));
+    }
+
+    [Fact]
+    public void HelpTooltipTextStyle_WrapsLongHelpText()
+    {
+        var controls = LoadXml("src", "Foldora.App", "Resources", "Controls.xaml");
+        var helpTooltipTextStyle = FindStyle(controls, "HelpTooltipTextStyle");
+
+        Assert.Equal("420", GetSetterValue(helpTooltipTextStyle, "MaxWidth"));
+        Assert.Equal("Wrap", GetSetterValue(helpTooltipTextStyle, "TextWrapping"));
     }
 
     [Fact]
@@ -132,12 +157,15 @@ public sealed class DesignResourceTests
         Assert.Contains("DangerZone", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("PreviewChanges", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("PreviewChangesTooltip", settingsWindowText, StringComparison.Ordinal);
-        Assert.Contains("HelpIconButtonStyle", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("HelpInfoGlyphStyle", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("HelpTooltipTextStyle", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("InlineActionButtonStyle", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("OpenInstalledAppPathCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("CopyCommandHostPathCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("DryRunCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("RegisterExplorerCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("ResetMenuCommand", settingsWindowText, StringComparison.Ordinal);
+        Assert.DoesNotContain("Style=\"{StaticResource HelpIconButtonStyle}\"", settingsWindowText, StringComparison.Ordinal);
         Assert.DoesNotContain("Проверить план", settingsWindowText, StringComparison.Ordinal);
         Assert.DoesNotContain("Check plan", settingsWindowText, StringComparison.OrdinalIgnoreCase);
     }

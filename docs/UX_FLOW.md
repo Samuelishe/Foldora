@@ -285,7 +285,7 @@ Explorer menu
   Preview changes
   Enable Explorer menu
   Disable Explorer menu
-  Tooltip/help text explaining HKCU preview and legacy Explorer menu
+  Passive ? glyphs with wrapped tooltip/help text explaining HKCU preview and legacy Explorer menu
   Technical details
 
 Installation
@@ -319,6 +319,7 @@ Documentation-first audit is tracked in `docs/UI_AUDIT.md`. Known follow-up item
 - initial button ergonomics pass for localized labels - addressed in shared action button style;
 - SettingsWindow scrollbar/content gutter - addressed;
 - SettingsWindow clarity pass - addressed: explicit Foldora Explorer menu status, Preview changes naming, tooltip help and path Open/Copy actions;
+- Settings help/layout regression - addressed: passive non-button `?` glyphs, wrapped long tooltips and compact inline action buttons for Settings rows;
 - defer product-grade visual polish and branding/app icon work to dedicated passes.
 
 This audit does not change the staged-save model, Explorer integration behavior, registry safety or SettingsWindow immediate-action semantics.

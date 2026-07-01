@@ -90,15 +90,19 @@ UI/UX audit baseline and small correctness cleanup before visual release polish:
    - user-facing `Preview changes` label for dry-run registry preview;
    - small self-authored help/info affordances;
    - Open/Copy actions for installation/user-data/MenuHost paths.
-4. Visual polish pass:
+4. Settings help/layout regression fix:
+   - passive non-button `?` glyphs for hover-only help;
+   - wrapped long help tooltip text;
+   - compact inline action buttons for Settings Explorer/path rows.
+5. Visual polish pass:
    - refine surfaces, spacing, hierarchy, empty states, status presentation, cards and Settings sections.
-5. Help/About/Instructions window:
+6. Help/About/Instructions window:
    - explain menu entries, `.ico` selection, Explorer menu enablement, MenuHost role, data paths and uninstall behavior.
-6. Branding/assets pass:
+7. Branding/assets pass:
    - app icon;
    - exe/window icon;
    - README hero/mockup after the UI looks ready for public presentation.
-7. Later layout/localization polish:
+8. Later layout/localization polish:
    - handle feedback from long labels and non-Latin scripts across enabled locales.
 
 Per-user install smoke and release polish before full installer work:

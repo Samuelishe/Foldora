@@ -57,6 +57,13 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Suggested direction: use explicit Explorer menu status wording, rename dry-run UI to `Preview changes`, add small tooltip/help affordances and add Open/Copy actions for paths.
 - Status: Addressed for Settings clarity. Future global Help/About/Instructions window remains separate work.
 
+### UIA-0008 Settings Help And Inline Action Layout Regression
+
+- Observed: after adding Settings help/tooltips and Open/Copy actions, small `?` affordances looked like clickable buttons but only showed hover tooltips, long tooltip text rendered as a single wide line, and Settings inline action rows became too wide because they reused the normal action button geometry.
+- Impact: users can misread the help affordance as a broken button, tooltips are hard to read, and Settings sections look visually unstable.
+- Suggested direction: use passive info glyphs unless click behavior exists, wrap long help tooltip text, and use a compact inline button style for Settings action rows/path actions.
+- Status: Addressed. Settings now uses passive `?` glyphs with wrapped tooltips and compact inline action buttons for Explorer/path actions.
+
 ## Near-Term UI Cleanup
 
 Small safe improvements for a future code pass:
@@ -67,6 +74,8 @@ Small safe improvements for a future code pass:
 - SettingsWindow scrollbar gutter and content padding pass - addressed;
 - check SettingsWindow sections with long labels in German, Portuguese, Ukrainian and other longer locales.
 - keep Settings wording understandable: Explorer menu status, preview/dry-run action and path actions are now clarified.
+- help/info affordances must not look like broken buttons: passive glyphs now use wrapped tooltips, and clickable help remains future work for a real Help/About window.
+- Settings inline action/path buttons use compact geometry instead of the normal wide action button style.
 
 ## Later Visual Polish
 
