@@ -26,7 +26,11 @@ public sealed class GroupNameValidatorTests
         var result = GroupNameValidator.Validate(new string('А', 81));
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Issues, issue => issue.Code == "group_name_too_long");
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == FolderMenuValidationIssueCodes.GroupNameTooLong
+                && issue.Parameters["maxLength"] == "80"
+                && issue.Parameters["actualLength"] == "81");
     }
 
     [Fact]
@@ -35,7 +39,10 @@ public sealed class GroupNameValidatorTests
         var result = GroupNameValidator.Validate("Bad\u0001Group");
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Issues, issue => issue.Code == "group_name_control_chars");
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == FolderMenuValidationIssueCodes.GroupNameControlChars
+                && issue.Parameters["characterCode"] == "U+0001");
     }
 
     [Theory]
@@ -46,6 +53,9 @@ public sealed class GroupNameValidatorTests
         var result = GroupNameValidator.Validate(value);
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Issues, issue => issue.Code == "group_name_nested_not_supported");
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == FolderMenuValidationIssueCodes.GroupNameNestedNotSupported
+                && issue.Parameters.ContainsKey("separator"));
     }
 }

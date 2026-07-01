@@ -23,28 +23,53 @@ public sealed class IconFileValidator
     {
         if (string.IsNullOrWhiteSpace(iconPath))
         {
-            return Error("Icon path must not be empty.", "icon_path_empty");
+            return Error("Icon path must not be empty.", FolderMenuValidationIssueCodes.IconPathEmpty);
         }
 
         var file = new FileInfo(iconPath);
         if (!file.Exists)
         {
-            return Error($"Icon file was not found: {file.FullName}", "icon_missing");
+            return Error(
+                $"Icon file was not found: {file.FullName}",
+                FolderMenuValidationIssueCodes.IconMissing,
+                new Dictionary<string, string>
+                {
+                    ["filePath"] = file.FullName
+                });
         }
 
         if (!string.Equals(file.Extension, ".ico", StringComparison.OrdinalIgnoreCase))
         {
-            return Error("Foldora supports only .ico files.", "icon_extension");
+            return Error(
+                "Foldora supports only .ico files.",
+                FolderMenuValidationIssueCodes.IconExtension,
+                new Dictionary<string, string>
+                {
+                    ["extension"] = string.IsNullOrEmpty(file.Extension) ? "<none>" : file.Extension
+                });
         }
 
         if (file.Length == 0)
         {
-            return Error("Icon file must not be empty.", "icon_empty");
+            return Error(
+                "Icon file must not be empty.",
+                FolderMenuValidationIssueCodes.IconEmpty,
+                new Dictionary<string, string>
+                {
+                    ["filePath"] = file.FullName
+                });
         }
 
         if (file.Length > MaxIconFileSizeBytes)
         {
-            return Error("Icon file must be 10 MB or smaller.", "icon_too_large");
+            return Error(
+                "Icon file must be 10 MB or smaller.",
+                FolderMenuValidationIssueCodes.IconTooLarge,
+                new Dictionary<string, string>
+                {
+                    ["maxBytes"] = MaxIconFileSizeBytes.ToString(),
+                    ["actualBytes"] = file.Length.ToString()
+                });
         }
 
         try
@@ -54,11 +79,24 @@ public sealed class IconFileValidator
         }
         catch (UnauthorizedAccessException)
         {
-            return Error("Icon file is not readable.", "icon_not_readable");
+            return Error(
+                "Icon file is not readable.",
+                FolderMenuValidationIssueCodes.IconNotReadable,
+                new Dictionary<string, string>
+                {
+                    ["filePath"] = file.FullName
+                });
         }
         catch (IOException exception)
         {
-            return Error($"Icon file could not be read: {exception.Message}", "icon_read_failed");
+            return Error(
+                $"Icon file could not be read: {exception.Message}",
+                FolderMenuValidationIssueCodes.IconReadFailed,
+                new Dictionary<string, string>
+                {
+                    ["filePath"] = file.FullName,
+                    ["error"] = exception.Message
+                });
         }
     }
 
@@ -67,7 +105,7 @@ public sealed class IconFileValidator
         Span<byte> header = stackalloc byte[6];
         if (!ReadExactly(stream, header))
         {
-            return Error("Icon file is too small for an ICO header.", "icon_header_too_small");
+            return Error("Icon file is too small for an ICO header.", FolderMenuValidationIssueCodes.IconHeaderTooSmall);
         }
 
         var reserved = ReadUInt16LittleEndian(header[..2]);
@@ -76,18 +114,25 @@ public sealed class IconFileValidator
 
         if (reserved != 0 || type != 1)
         {
-            return Error("Icon file has an invalid ICO header.", "icon_header_invalid");
+            return Error("Icon file has an invalid ICO header.", FolderMenuValidationIssueCodes.IconHeaderInvalid);
         }
 
         if (imageCount == 0 || imageCount > MaxImageCount)
         {
-            return Error("Icon file has an invalid image count.", "icon_image_count_invalid");
+            return Error(
+                "Icon file has an invalid image count.",
+                FolderMenuValidationIssueCodes.IconImageCountInvalid,
+                new Dictionary<string, string>
+                {
+                    ["count"] = imageCount.ToString(),
+                    ["limit"] = MaxImageCount.ToString()
+                });
         }
 
         var directoryLength = 6L + imageCount * 16L;
         if (directoryLength > fileLength)
         {
-            return Error("Icon directory entries do not fit inside the file.", "icon_directory_out_of_bounds");
+            return Error("Icon directory entries do not fit inside the file.", FolderMenuValidationIssueCodes.IconDirectoryOutOfBounds);
         }
 
         Span<byte> entryBuffer = stackalloc byte[16];
@@ -95,7 +140,13 @@ public sealed class IconFileValidator
         {
             if (!ReadExactly(stream, entryBuffer))
             {
-                return Error("Icon directory entry is incomplete.", "icon_directory_entry_incomplete");
+                return Error(
+                    "Icon directory entry is incomplete.",
+                    FolderMenuValidationIssueCodes.IconDirectoryEntryIncomplete,
+                    new Dictionary<string, string>
+                    {
+                        ["index"] = index.ToString()
+                    });
             }
 
             var imageSize = ReadUInt32LittleEndian(entryBuffer[8..12]);
@@ -103,17 +154,35 @@ public sealed class IconFileValidator
 
             if (imageSize == 0)
             {
-                return Error("Icon image data size must not be zero.", "icon_image_empty");
+                return Error(
+                    "Icon image data size must not be zero.",
+                    FolderMenuValidationIssueCodes.IconImageEmpty,
+                    new Dictionary<string, string>
+                    {
+                        ["index"] = index.ToString()
+                    });
             }
 
             if (imageOffset < directoryLength || imageOffset >= fileLength)
             {
-                return Error("Icon image data offset is outside the file.", "icon_image_offset_invalid");
+                return Error(
+                    "Icon image data offset is outside the file.",
+                    FolderMenuValidationIssueCodes.IconImageOffsetInvalid,
+                    new Dictionary<string, string>
+                    {
+                        ["index"] = index.ToString()
+                    });
             }
 
             if (imageOffset + imageSize > fileLength)
             {
-                return Error("Icon image data extends past the end of the file.", "icon_image_data_out_of_bounds");
+                return Error(
+                    "Icon image data extends past the end of the file.",
+                    FolderMenuValidationIssueCodes.IconImageDataOutOfBounds,
+                    new Dictionary<string, string>
+                    {
+                        ["index"] = index.ToString()
+                    });
             }
         }
 
@@ -147,9 +216,12 @@ public sealed class IconFileValidator
         return (uint)(bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24));
     }
 
-    private static FolderMenuValidationResult Error(string message, string code)
+    private static FolderMenuValidationResult Error(
+        string message,
+        string code,
+        IReadOnlyDictionary<string, string>? parameters = null)
     {
         return new FolderMenuValidationResult(
-            [new FolderMenuValidationIssue(FolderMenuValidationSeverity.Error, message, code)]);
+            [new FolderMenuValidationIssue(FolderMenuValidationSeverity.Error, message, code, parameters: parameters)]);
     }
 }

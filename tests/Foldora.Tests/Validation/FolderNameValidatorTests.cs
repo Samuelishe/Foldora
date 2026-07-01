@@ -27,6 +27,10 @@ public sealed class FolderNameValidatorTests
         var result = FolderNameValidator.Validate(value);
 
         Assert.False(result.IsValid);
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == FolderMenuValidationIssueCodes.FolderNameInvalidChars
+                && issue.Parameters.ContainsKey("character"));
     }
 
     [Theory]
@@ -40,6 +44,10 @@ public sealed class FolderNameValidatorTests
         var result = FolderNameValidator.Validate(value);
 
         Assert.False(result.IsValid);
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == FolderMenuValidationIssueCodes.FolderNameReserved
+                && issue.Parameters["reservedName"] == value);
     }
 
     [Theory]
@@ -58,6 +66,11 @@ public sealed class FolderNameValidatorTests
         var result = FolderNameValidator.Validate(new string('a', 81));
 
         Assert.False(result.IsValid);
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == FolderMenuValidationIssueCodes.FolderNameTooLong
+                && issue.Parameters["maxLength"] == "80"
+                && issue.Parameters["actualLength"] == "81");
     }
 
     [Fact]
@@ -66,5 +79,9 @@ public sealed class FolderNameValidatorTests
         var result = FolderNameValidator.Validate("Bad\u0001Name");
 
         Assert.False(result.IsValid);
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == FolderMenuValidationIssueCodes.FolderNameControlChars
+                && issue.Parameters["characterCode"] == "U+0001");
     }
 }

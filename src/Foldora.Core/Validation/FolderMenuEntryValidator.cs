@@ -22,7 +22,7 @@ public sealed class FolderMenuEntryValidator
             issues.Add(new FolderMenuValidationIssue(
                 FolderMenuValidationSeverity.Error,
                 "Menu entry id must not be empty.",
-                "entry_id_empty",
+                FolderMenuValidationIssueCodes.EntryIdEmpty,
                 entry.Id));
         }
 
@@ -31,7 +31,7 @@ public sealed class FolderMenuEntryValidator
             issues.Add(new FolderMenuValidationIssue(
                 FolderMenuValidationSeverity.Error,
                 "Menu entry icon path must not be empty.",
-                "entry_icon_path_empty",
+                FolderMenuValidationIssueCodes.EntryIconPathEmpty,
                 entry.Id));
         }
 

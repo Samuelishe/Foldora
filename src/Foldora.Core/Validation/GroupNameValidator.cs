@@ -24,24 +24,65 @@ public static class GroupNameValidator
 
         if (normalized.Length > MaxLength)
         {
-            issues.Add(Error($"Group name must be at most {MaxLength} characters.", "group_name_too_long", entryId));
+            issues.Add(Error(
+                $"Group name must be at most {MaxLength} characters.",
+                FolderMenuValidationIssueCodes.GroupNameTooLong,
+                entryId,
+                new Dictionary<string, string>
+                {
+                    ["maxLength"] = MaxLength.ToString(),
+                    ["actualLength"] = normalized.Length.ToString()
+                }));
         }
 
-        if (normalized.Any(char.IsControl))
+        var controlCharacter = FindControlCharacter(normalized);
+        if (controlCharacter.HasValue)
         {
-            issues.Add(Error("Group name must not contain control characters.", "group_name_control_chars", entryId));
+            issues.Add(Error(
+                "Group name must not contain control characters.",
+                FolderMenuValidationIssueCodes.GroupNameControlChars,
+                entryId,
+                new Dictionary<string, string>
+                {
+                    ["characterCode"] = $"U+{(int)controlCharacter.Value:X4}"
+                }));
         }
 
-        if (normalized.Contains('/') || normalized.Contains('\\'))
+        var separator = normalized.Contains('/') ? "/" : normalized.Contains('\\') ? "\\" : string.Empty;
+        if (separator.Length > 0)
         {
-            issues.Add(Error("Nested groups are not supported yet. Remove '/' and '\\' from the group name.", "group_name_nested_not_supported", entryId));
+            issues.Add(Error(
+                "Nested groups are not supported yet. Remove '/' and '\\' from the group name.",
+                FolderMenuValidationIssueCodes.GroupNameNestedNotSupported,
+                entryId,
+                new Dictionary<string, string>
+                {
+                    ["separator"] = separator
+                }));
         }
 
         return issues.Count == 0 ? FolderMenuValidationResult.Success : new FolderMenuValidationResult(issues);
     }
 
-    private static FolderMenuValidationIssue Error(string message, string code, string? entryId)
+    private static FolderMenuValidationIssue Error(
+        string message,
+        string code,
+        string? entryId,
+        IReadOnlyDictionary<string, string>? parameters = null)
     {
-        return new FolderMenuValidationIssue(FolderMenuValidationSeverity.Error, message, code, entryId);
+        return new FolderMenuValidationIssue(FolderMenuValidationSeverity.Error, message, code, entryId, parameters);
+    }
+
+    private static char? FindControlCharacter(string value)
+    {
+        foreach (var character in value)
+        {
+            if (char.IsControl(character))
+            {
+                return character;
+            }
+        }
+
+        return null;
     }
 }

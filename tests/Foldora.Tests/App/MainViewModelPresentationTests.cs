@@ -576,6 +576,59 @@ public sealed class MainViewModelPresentationTests
     }
 
     [Fact]
+    public async Task ValidationErrors_AreRenderedInEnglishWhenUiLanguageIsEnglish()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "en", CreateEntry("entry-invalid", "Music", "Bad:Name"));
+            var viewModel = await CreateViewModelAsync(paths);
+
+            await viewModel.SaveDraftAsync();
+
+            Assert.Contains(
+                viewModel.Errors,
+                error => error.Contains("Created folder name contains invalid character \":\".", StringComparison.Ordinal));
+            Assert.Contains(
+                viewModel.Entries[0].InlineErrors,
+                error => error == "Created folder name contains invalid character \":\".");
+            Assert.DoesNotContain(viewModel.Errors, error => error.Contains("Имя создаваемой папки", StringComparison.Ordinal));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ValidationErrors_AreRenderedInRussianWhenUiLanguageIsRussian()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "ru", CreateEntry("entry-invalid", "Музыка", "Bad:Name"));
+            var viewModel = await CreateViewModelAsync(paths);
+
+            await viewModel.SaveDraftAsync();
+
+            Assert.Contains(
+                viewModel.Errors,
+                error => error.Contains("Имя создаваемой папки содержит недопустимый символ \":\".", StringComparison.Ordinal));
+            Assert.Contains(
+                viewModel.Entries[0].InlineErrors,
+                error => error == "Имя создаваемой папки содержит недопустимый символ \":\".");
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task OpeningOneEntry_CollapsesAnotherEntryWithoutLosingDraftValues()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");

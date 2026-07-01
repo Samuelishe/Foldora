@@ -56,7 +56,7 @@ UI labels are visible interface text such as `Save`, `Discard changes`, `Choose 
 
 Runtime/status messages are visible state messages such as settings loaded, settings saved, Explorer integration enabled/disabled and draft entry added. They must come from the localization layer.
 
-Validation messages should be localized at the App/UI boundary. Core should prefer invariant issue codes and parameters; App maps those to localized text. Full validation-message localization is not complete yet.
+Validation messages are localized at the App/UI boundary for the WPF editor. Core returns invariant issue codes and parameters; App maps those to localized text through the same `ru`/`en` catalogs.
 
 New object defaults are localized values used when the user creates a new object in the current UI language:
 
@@ -72,7 +72,7 @@ Core must not own UI language or create localized user-facing text for normal UI
 
 Core may keep compatibility fallback values where needed for old settings, CLI behavior or deserialization safety, but App should pass localized defaults when creating new UI draft entries.
 
-Core may return invariant validation codes, issue types and parameters. App/ViewModels convert those into localized messages.
+Core returns invariant validation codes, issue types and parameters. App/ViewModels convert those into localized messages. Core `Message` values are compatibility/debug fallback text and are not the preferred WPF rendering path.
 
 Core must not depend on `Foldora.App`.
 
@@ -125,7 +125,36 @@ Core/Shell contain only a small compatibility list of known default titles (`С�
 
 ## Validation localization policy
 
-Validation should move toward invariant issue codes with localized App-level rendering. Current Core validation messages are partly user-facing and remain technical debt.
+Core validation issues contain:
+
+- stable invariant `Code`;
+- `Severity`;
+- optional `EntryId`;
+- optional parameter dictionary for values such as invalid character, max length, actual length, group name, file path or extension;
+- compatibility/debug `Message` fallback.
+
+WPF summary errors and inline entry-card errors render validation issues through `ValidationMessageLocalizer` in `Foldora.App`. Catalog keys use the format:
+
+```text
+Validation.<issue_code>
+```
+
+Example:
+
+```text
+Code: folder_name_invalid_chars
+Parameters:
+  character: ":"
+```
+
+renders as:
+
+- `ru`: `Имя создаваемой папки содержит недопустимый символ ":".`
+- `en`: `Created folder name contains invalid character ":".`
+
+Validation templates support simple `{parameterName}` replacement. There is no pluralization framework yet. If a validation key is missing, App falls back to Core `Message`; catalog completeness tests should prevent that for complete WPF locales.
+
+Visible validation messages already shown in the UI are string snapshots. After a language switch, new validation attempts render in the new language; existing shown errors are refreshed on the next validation/save action.
 
 ## Fallback policy
 
@@ -164,7 +193,7 @@ Current audit result:
 - Core/Shell still contain compatibility defaults `Создать папку`, `Create folder`, `Вид`, `Новая папка`;
 - CLI diagnostic output has Russian manual instructions;
 - startup fatal error dialog still uses hardcoded Russian;
-- validation messages are not fully App-localized yet.
+- Core validation `Message` fallbacks remain English debug/CLI text, but WPF renders validation issues through localized catalog keys.
 
 ## Adding a language
 
@@ -181,14 +210,14 @@ To add a complete language:
 
 - Core/Shell compatibility fallbacks remain for entry/folder defaults and startup/CLI debt; menu title default now has explicit `ru`/`en` default-title tracking.
 - CLI default text and diagnostic messages are not fully localized.
-- Validation messages are not fully localized.
+- CLI validation output still uses Core fallback messages.
 - Startup fatal error dialog is hardcoded Russian.
 - Technical plan/details text in Explorer integration is not fully localized.
 - `InMemoryLocalizationService` is now catalog-backed but still has its early MVP name.
 
 ## Future work
 
-- Full validation message localization.
+- CLI validation localization strategy.
 - CLI localization strategy.
 - Broader first-run locale strategy beyond persisted `Language`.
 - Pluralization rules.

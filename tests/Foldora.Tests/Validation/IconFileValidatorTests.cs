@@ -11,6 +11,10 @@ public sealed class IconFileValidatorTests
         var result = new IconFileValidator().Validate(Path.Combine(Path.GetTempPath(), "missing.ico"));
 
         Assert.False(result.IsValid);
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == FolderMenuValidationIssueCodes.IconMissing
+                && issue.Parameters.ContainsKey("filePath"));
     }
 
     [Fact]
@@ -26,6 +30,10 @@ public sealed class IconFileValidatorTests
             var result = new IconFileValidator().Validate(path);
 
             Assert.False(result.IsValid);
+            Assert.Contains(
+                result.Issues,
+                issue => issue.Code == FolderMenuValidationIssueCodes.IconExtension
+                    && issue.Parameters["extension"] == ".png");
         }
         finally
         {
@@ -46,6 +54,10 @@ public sealed class IconFileValidatorTests
             var result = new IconFileValidator().Validate(path);
 
             Assert.False(result.IsValid);
+            Assert.Contains(
+                result.Issues,
+                issue => issue.Code == FolderMenuValidationIssueCodes.IconEmpty
+                    && issue.Parameters["filePath"] == path);
         }
         finally
         {
@@ -69,6 +81,11 @@ public sealed class IconFileValidatorTests
             var result = new IconFileValidator().Validate(path);
 
             Assert.False(result.IsValid);
+            Assert.Contains(
+                result.Issues,
+                issue => issue.Code == FolderMenuValidationIssueCodes.IconTooLarge
+                    && issue.Parameters["maxBytes"] == IconFileValidator.MaxIconFileSizeBytes.ToString()
+                    && issue.Parameters["actualBytes"] == (IconFileValidator.MaxIconFileSizeBytes + 1).ToString());
         }
         finally
         {

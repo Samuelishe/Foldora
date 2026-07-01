@@ -27,6 +27,7 @@
 - Не добавлять новые user-facing string literals в ViewModels, XAML, App services или Shell/App presentation code вне localization layer.
 - Новый UI/status text должен иметь localization key, значения во всех complete catalogs и тестовое покрытие key completeness.
 - Core не должен зависеть от `Foldora.App` и не должен решать UI language; Core может возвращать invariant codes/params или compatibility fallback values.
+- Core validation issues должны иметь stable invariant code и параметры для dynamic values; WPF/App обязаны рендерить их через localization layer, а не через Core fallback `Message`.
 - Saved user data не переводится автоматически при смене языка.
 - New object defaults для WPF создаются в текущем UI language на App layer.
 - Incomplete planned locales не показываются в Settings UI без отдельного explicit experimental state.

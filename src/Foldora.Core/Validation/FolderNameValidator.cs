@@ -29,34 +29,83 @@ public static class FolderNameValidator
 
         if (value.Length > MaxLength)
         {
-            issues.Add(Error($"Default folder name must be {MaxLength} characters or shorter.", "folder_name_too_long"));
+            issues.Add(Error(
+                $"Default folder name must be {MaxLength} characters or shorter.",
+                FolderMenuValidationIssueCodes.FolderNameTooLong,
+                new Dictionary<string, string>
+                {
+                    ["maxLength"] = MaxLength.ToString(),
+                    ["actualLength"] = value.Length.ToString()
+                }));
         }
 
-        if (value.Any(char.IsControl))
+        var controlCharacter = FindControlCharacter(value);
+        if (controlCharacter.HasValue)
         {
-            issues.Add(Error("Default folder name must not contain control characters.", "folder_name_control_chars"));
+            issues.Add(Error(
+                "Default folder name must not contain control characters.",
+                FolderMenuValidationIssueCodes.FolderNameControlChars,
+                new Dictionary<string, string>
+                {
+                    ["characterCode"] = $"U+{(int)controlCharacter.Value:X4}"
+                }));
         }
 
-        if (value.IndexOfAny(InvalidFileNameCharacters) >= 0)
+        var invalidCharacter = value.FirstOrDefault(character => InvalidFileNameCharacters.Contains(character));
+        if (invalidCharacter != default)
         {
-            issues.Add(Error("Default folder name contains characters that are not allowed in Windows folder names.", "folder_name_invalid_chars"));
+            issues.Add(Error(
+                "Default folder name contains characters that are not allowed in Windows folder names.",
+                FolderMenuValidationIssueCodes.FolderNameInvalidChars,
+                new Dictionary<string, string>
+                {
+                    ["character"] = invalidCharacter.ToString()
+                }));
         }
 
         if (ReservedNames.Contains(value))
         {
-            issues.Add(Error("Default folder name uses a reserved Windows device name.", "folder_name_reserved"));
+            issues.Add(Error(
+                "Default folder name uses a reserved Windows device name.",
+                FolderMenuValidationIssueCodes.FolderNameReserved,
+                new Dictionary<string, string>
+                {
+                    ["reservedName"] = value
+                }));
         }
 
         if (value.EndsWith('.') || value.EndsWith(' '))
         {
-            issues.Add(Error("Default folder name must not end with a dot or a space.", "folder_name_trailing_dot_or_space"));
+            issues.Add(Error(
+                "Default folder name must not end with a dot or a space.",
+                FolderMenuValidationIssueCodes.FolderNameTrailingDotOrSpace,
+                new Dictionary<string, string>
+                {
+                    ["ending"] = value[^1].ToString()
+                }));
         }
 
         return issues.Count == 0 ? FolderMenuValidationResult.Success : new FolderMenuValidationResult(issues);
     }
 
-    private static FolderMenuValidationIssue Error(string message, string code)
+    private static FolderMenuValidationIssue Error(
+        string message,
+        string code,
+        IReadOnlyDictionary<string, string>? parameters = null)
     {
-        return new FolderMenuValidationIssue(FolderMenuValidationSeverity.Error, message, code);
+        return new FolderMenuValidationIssue(FolderMenuValidationSeverity.Error, message, code, parameters: parameters);
+    }
+
+    private static char? FindControlCharacter(string value)
+    {
+        foreach (var character in value)
+        {
+            if (char.IsControl(character))
+            {
+                return character;
+            }
+        }
+
+        return null;
     }
 }

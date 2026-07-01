@@ -22,6 +22,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private readonly ExplorerIntegrationController explorerIntegrationController;
     private readonly ISettingsDialogService settingsDialogService;
     private readonly ILocalizationService localizationService;
+    private readonly IValidationMessageLocalizer validationMessageLocalizer;
     private readonly AsyncRelayCommand saveCommand;
     private readonly AsyncRelayCommand openSettingsCommand;
     private readonly AsyncRelayCommand dryRunCommand;
@@ -44,7 +45,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         IIconPreviewService iconPreviewService,
         ExplorerIntegrationController explorerIntegrationController,
         ISettingsDialogService? settingsDialogService = null,
-        ILocalizationService? localizationService = null)
+        ILocalizationService? localizationService = null,
+        IValidationMessageLocalizer? validationMessageLocalizer = null)
     {
         this.draftEditor = draftEditor ?? throw new ArgumentNullException(nameof(draftEditor));
         this.iconFilePicker = iconFilePicker ?? throw new ArgumentNullException(nameof(iconFilePicker));
@@ -52,6 +54,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         this.explorerIntegrationController = explorerIntegrationController ?? throw new ArgumentNullException(nameof(explorerIntegrationController));
         this.settingsDialogService = settingsDialogService ?? new NoopSettingsDialogService();
         this.localizationService = localizationService ?? new InMemoryLocalizationService();
+        this.validationMessageLocalizer = validationMessageLocalizer ?? new ValidationMessageLocalizer(this.localizationService);
         title = L.CreateFolderMenuTitle;
         statusMessage = L.LoadingSettings;
 
@@ -678,7 +681,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
 
         var entry = Entries.FirstOrDefault(entry => string.Equals(entry.Id, issue.EntryId, StringComparison.Ordinal));
-        entry?.AddInlineError(issue.Message);
+        entry?.AddInlineError(validationMessageLocalizer.Localize(issue));
     }
 
     private void NotifyEntryStateChanged()
@@ -694,11 +697,12 @@ public sealed class MainViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(HasTechnicalDetails));
     }
 
-    private static string FormatIssue(FolderMenuValidationIssue issue)
+    private string FormatIssue(FolderMenuValidationIssue issue)
     {
+        var message = validationMessageLocalizer.Localize(issue);
         return string.IsNullOrWhiteSpace(issue.EntryId)
-            ? issue.Message
-            : $"{issue.EntryId}: {issue.Message}";
+            ? message
+            : $"{issue.EntryId}: {message}";
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

@@ -223,7 +223,7 @@ If you enable Explorer integration from `artifacts/publish/Foldora/Foldora.App.e
 - No drag-and-drop ordering or group icons yet.
 - No orphan icon cleanup yet.
 - No user-facing diagnostics if `Foldora.MenuHost.exe` fails when invoked by Explorer.
-- Full localization is not complete yet: Core compatibility defaults, CLI diagnostics, validation messages and startup fatal errors still need cleanup.
+- Full localization is not complete yet: Core compatibility defaults, CLI diagnostics/validation output and startup fatal errors still need cleanup.
 - No Explorer restart or icon cache reset flow.
 
 ## Safety Disclaimer

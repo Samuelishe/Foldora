@@ -26,6 +26,8 @@ public sealed class LocalizationServiceTests
         Assert.Equal("none", english.Resources.IconNone);
         Assert.Equal("Settings loaded.", english.Resources.SettingsLoaded);
         Assert.Equal("Draft entry added. Choose an .ico before saving.", english.Resources.DraftEntryAddedChooseIcon);
+        Assert.Equal("Created folder name contains invalid character \"{character}\".", english.Resources["Validation.folder_name_invalid_chars"]);
+        Assert.Equal("Choose an .ico for the menu entry before saving.", english.Resources["Validation.entry_icon_path_empty"]);
     }
 
     [Fact]

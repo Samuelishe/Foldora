@@ -116,7 +116,7 @@ public sealed class FolderMenuDraftEditor
         if (entry is null)
         {
             return new FolderMenuValidationResult(
-                [new FolderMenuValidationIssue(FolderMenuValidationSeverity.Error, "Menu entry was not found.", "entry_not_found", entryId)]);
+                [new FolderMenuValidationIssue(FolderMenuValidationSeverity.Error, "Menu entry was not found.", FolderMenuValidationIssueCodes.EntryNotFound, entryId)]);
         }
 
         var validation = iconFileValidator.Validate(sourceIconPath);

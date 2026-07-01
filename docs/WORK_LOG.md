@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - Validation localization cleanup
+
+- Extended Core validation issues with stable issue-code constants and parameter dictionaries for dynamic values such as invalid characters, length limits, group names, file paths and menu limits.
+- Added App-level `ValidationMessageLocalizer`; WPF summary errors and inline entry-card validation errors now render through embedded `ru`/`en` localization catalogs instead of showing Core fallback messages directly.
+- Added validation catalog keys for display name, folder name, group name, icon, entry and menu-limit errors.
+- Kept Core `Message` as compatibility/debug fallback for CLI and exception paths; CLI validation localization remains tracked debt.
+- Added tests for Core validation parameters, validation message rendering in Russian/English, catalog completeness and WPF localized inline errors.
+
 ## 2026-07-01 - Localized menu title default and custom-title tracking
 
 - Added `FolderMenuSettings.TitleIsCustom` to distinguish user-edited menu titles from localized product defaults.

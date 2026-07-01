@@ -24,12 +24,26 @@ public sealed class FolderMenuSettingsValidator
 
         if (totalEntries > MaxTotalEntries)
         {
-            issues.Add(Error($"Menu can contain at most {MaxTotalEntries} entries.", "menu_total_entries_limit"));
+            issues.Add(Error(
+                $"Menu can contain at most {MaxTotalEntries} entries.",
+                FolderMenuValidationIssueCodes.MenuTotalEntriesLimit,
+                new Dictionary<string, string>
+                {
+                    ["limit"] = MaxTotalEntries.ToString(),
+                    ["count"] = totalEntries.ToString()
+                }));
         }
 
         if (enabledEntries > MaxEnabledEntries)
         {
-            issues.Add(Error($"Menu can contain at most {MaxEnabledEntries} enabled entries.", "menu_enabled_entries_limit"));
+            issues.Add(Error(
+                $"Menu can contain at most {MaxEnabledEntries} enabled entries.",
+                FolderMenuValidationIssueCodes.MenuEnabledEntriesLimit,
+                new Dictionary<string, string>
+                {
+                    ["limit"] = MaxEnabledEntries.ToString(),
+                    ["count"] = enabledEntries.ToString()
+                }));
         }
 
         var enabledGroups = settings.Entries
@@ -41,14 +55,29 @@ public sealed class FolderMenuSettingsValidator
 
         if (enabledGroups.Length > MaxGroups)
         {
-            issues.Add(Error($"Menu can contain at most {MaxGroups} groups.", "menu_group_limit"));
+            issues.Add(Error(
+                $"Menu can contain at most {MaxGroups} groups.",
+                FolderMenuValidationIssueCodes.MenuGroupLimit,
+                new Dictionary<string, string>
+                {
+                    ["limit"] = MaxGroups.ToString(),
+                    ["count"] = enabledGroups.Length.ToString()
+                }));
         }
 
         foreach (var group in enabledGroups)
         {
             if (group.Count() > MaxChildrenPerGroup)
             {
-                issues.Add(Error($"Group '{group.Key}' can contain at most {MaxChildrenPerGroup} enabled entries.", "menu_group_children_limit"));
+                issues.Add(Error(
+                    $"Group '{group.Key}' can contain at most {MaxChildrenPerGroup} enabled entries.",
+                    FolderMenuValidationIssueCodes.MenuGroupChildrenLimit,
+                    new Dictionary<string, string>
+                    {
+                        ["groupName"] = group.Key,
+                        ["limit"] = MaxChildrenPerGroup.ToString(),
+                        ["count"] = group.Count().ToString()
+                    }));
             }
         }
 
@@ -60,8 +89,11 @@ public sealed class FolderMenuSettingsValidator
         return issues.Count == 0 ? FolderMenuValidationResult.Success : new FolderMenuValidationResult(issues);
     }
 
-    private static FolderMenuValidationIssue Error(string message, string code)
+    private static FolderMenuValidationIssue Error(
+        string message,
+        string code,
+        IReadOnlyDictionary<string, string>? parameters = null)
     {
-        return new FolderMenuValidationIssue(FolderMenuValidationSeverity.Error, message, code);
+        return new FolderMenuValidationIssue(FolderMenuValidationSeverity.Error, message, code, parameters: parameters);
     }
 }

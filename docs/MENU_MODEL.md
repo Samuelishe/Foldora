@@ -69,6 +69,8 @@ Menu limits на текущем этапе: max total entries 100, max enabled e
 
 `FolderNameSanitizer` существует только для будущего WPF input/paste convenience. Он не заменяет validator; перед сохранением validator всё равно проверяет данные.
 
+Core validators возвращают stable issue codes и параметры, а не выбирают UI language. Примеры параметров: invalid `character`, `maxLength`, `actualLength`, `reservedName`, `groupName`, `filePath`, `extension`, `limit`, `count`. WPF рендерит эти issues через App localization catalogs. Core `Message` остаётся compatibility/debug fallback для CLI и исключений.
+
 ## Icon Validation
 
 Foldora принимает только настоящие `.ico`: файл должен существовать, читаться, быть не пустым, быть не больше 10 MB и иметь корректную ICO-структуру header/directory. PNG не конвертируется и не принимается даже при переименовании.

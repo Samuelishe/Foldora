@@ -61,7 +61,11 @@ public sealed class FolderMenuSettingsValidatorTests
         var result = new FolderMenuSettingsValidator().Validate(settings);
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Issues, issue => issue.Code == "menu_group_limit");
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == FolderMenuValidationIssueCodes.MenuGroupLimit
+                && issue.Parameters["limit"] == "30"
+                && issue.Parameters["count"] == "31");
     }
 
     [Fact]
@@ -76,7 +80,12 @@ public sealed class FolderMenuSettingsValidatorTests
         var result = new FolderMenuSettingsValidator().Validate(settings);
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Issues, issue => issue.Code == "menu_group_children_limit");
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == FolderMenuValidationIssueCodes.MenuGroupChildrenLimit
+                && issue.Parameters["groupName"] == "Цветные"
+                && issue.Parameters["limit"] == "30"
+                && issue.Parameters["count"] == "31");
     }
 
     private static FolderMenuSettings CreateSettings(int count, bool enabled)

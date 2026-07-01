@@ -36,6 +36,7 @@
 - `src/Foldora.Core/Validation/FolderMenuEntryValidator.cs` - валидация одного menu entry.
 - `src/Foldora.Core/Validation/FolderMenuSettingsValidator.cs` - валидация меню, group limits и entry limits.
 - `src/Foldora.Core/Validation/FolderMenuValidationIssue.cs` - issue валидации.
+- `src/Foldora.Core/Validation/FolderMenuValidationIssueCodes.cs` - stable invariant codes для validation issues.
 - `src/Foldora.Core/Validation/FolderMenuValidationResult.cs` - результат валидации.
 - `src/Foldora.Core/Validation/FolderMenuValidationSeverity.cs` - severity валидации.
 - `src/Foldora.Core/Validation/IconFileValidator.cs` - structural validation `.ico`.
@@ -121,6 +122,8 @@
 - `src/Foldora.App/Services/LanguageOption.cs` - option model для выбора языка в settings UI.
 - `src/Foldora.App/Services/ILocalizationService.cs` - abstraction локализации WPF.
 - `src/Foldora.App/Services/InMemoryLocalizationService.cs` - catalog-backed локализация WPF поверх embedded JSON catalogs.
+- `src/Foldora.App/Services/IValidationMessageLocalizer.cs` - abstraction App-level рендера Core validation issues в текущей локали.
+- `src/Foldora.App/Services/ValidationMessageLocalizer.cs` - catalog-backed рендер validation issues по `Validation.<code>` keys.
 - `src/Foldora.App/Localization/ru.json` - Russian complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Localization/en.json` - English complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Services/StartupDiagnosticsService.cs` - минимальная запись startup exceptions в `%AppData%\Foldora\Logs\startup-error.log`.
@@ -133,6 +136,7 @@
 - `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections и compact/edit entry behavior.
 - `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.
 - `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты RU/EN catalog completeness, fallback и known localization keys.
+- `tests/Foldora.Tests/App/ValidationMessageLocalizerTests.cs` - тесты App-level локализации Core validation issues.
 - `tests/Foldora.Tests/App/StartupDiagnosticsServiceTests.cs` - тесты controlled startup diagnostic log.
 - `tests/Foldora.Tests/App/WpfIconPreviewServiceTests.cs` - тесты WPF preview service.
 - `tests/Foldora.Tests/Cli/CliCommandParserTests.cs` - тесты CLI parser, включая reset confirmation и diagnostics command.
