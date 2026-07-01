@@ -133,6 +133,34 @@ deletion warning caused by System attributes is gone for new folders
 
 `register-menu --host-path "<absolute-path-to-Foldora.MenuHost.exe>"` задаёт executable host для registry commands. Старый `--cli-path` сохранён как legacy/dev override, но для Explorer UX предпочтителен `--host-path`.
 
+## Dev Publish Layout
+
+Для ручной проверки без installer используется стабильная локальная publish-папка:
+
+```text
+artifacts/publish/Foldora/
+  Foldora.App.exe
+  Foldora.Cli.exe
+  Foldora.MenuHost.exe
+```
+
+Создаётся командой:
+
+```text
+pwsh scripts/publish-dev.ps1
+```
+
+При запуске `Foldora.App.exe` из этой папки WPF resolver использует sibling `Foldora.MenuHost.exe` для registry commands. Это позволяет Explorer integration ссылаться на stable publish path, а не на Debug output. Если `Foldora.MenuHost.exe` отсутствует, включение/проверка Explorer integration должны вернуть понятную ошибку и не регистрировать неправильный host path.
+
+CLI flow для той же publish-папки:
+
+```text
+artifacts/publish/Foldora/Foldora.Cli.exe register-menu --host-path "<repo>\artifacts\publish\Foldora\Foldora.MenuHost.exe"
+artifacts/publish/Foldora/Foldora.Cli.exe unregister-menu
+```
+
+Перед удалением `artifacts/publish/Foldora` нужно выполнить `unregister-menu`, иначе Explorer registry command будет ссылаться на удалённый `Foldora.MenuHost.exe`.
+
 `unregister-menu` удаляет только:
 
 ```text
@@ -197,6 +225,12 @@ foldora register-menu --host-path "<absolute-path-to-Foldora.MenuHost.exe>"
 ```
 
 `--cli-path` можно использовать как legacy/dev override, но тогда Explorer будет запускать console app и может кратко показать console window.
+
+Для manual publish layout preferred host path:
+
+```text
+<repo>\artifacts\publish\Foldora\Foldora.MenuHost.exe
+```
 
 5. Проверить в Windows 11 Explorer:
 

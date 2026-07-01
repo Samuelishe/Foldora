@@ -21,6 +21,35 @@ dotnet test Foldora.sln
 - build проходит без ошибок;
 - test suite проходит полностью.
 
+## 1a. Manual Publish Layout
+
+```text
+pwsh scripts/publish-dev.ps1
+```
+
+Ожидаемо:
+
+- script создаёт `artifacts/publish/Foldora`;
+- script не регистрирует Explorer menu;
+- script не запускает приложение;
+- рядом лежат:
+
+```text
+artifacts/publish/Foldora/Foldora.App.exe
+artifacts/publish/Foldora/Foldora.Cli.exe
+artifacts/publish/Foldora/Foldora.MenuHost.exe
+```
+
+Для publish smoke:
+
+1. Запустить `artifacts/publish/Foldora/Foldora.App.exe`.
+2. Добавить или отредактировать entry.
+3. Нажать `Сохранить`.
+4. Нажать `Включить меню Проводника`.
+5. Проверить, что registry command указывает на `artifacts/publish/Foldora/Foldora.MenuHost.exe`, а не на Debug output.
+6. Проверить Explorer legacy menu через `Show more options`, если пункт не виден в compact menu.
+7. Перед удалением publish-папки выполнить `artifacts/publish/Foldora/Foldora.Cli.exe unregister-menu`.
+
 ## 2. WPF Startup
 
 ```text
@@ -95,8 +124,8 @@ dotnet run --project src/Foldora.App/Foldora.App.csproj
 Для CLI/manual flow:
 
 ```text
-foldora register-menu --dry-run
-foldora register-menu --host-path "<path-to-Foldora.MenuHost.exe>"
+artifacts/publish/Foldora/Foldora.Cli.exe register-menu --dry-run --host-path "<repo>\artifacts\publish\Foldora\Foldora.MenuHost.exe"
+artifacts/publish/Foldora/Foldora.Cli.exe register-menu --host-path "<repo>\artifacts\publish\Foldora\Foldora.MenuHost.exe"
 ```
 
 ## 5. Folder Creation
@@ -177,5 +206,6 @@ foldora menu reset --yes
 
 - Modern Windows 11 compact context menu не реализован; legacy menu может быть под `Show more options`.
 - Позицию нового значка на Desktop выбирает Explorer; Foldora не создаёт desktop folder строго под курсором.
-- Registry menu в dev/manual проверке может указывать на Debug `Foldora.MenuHost.exe`; production publish должен дать стабильный installed path.
+- Registry menu в publish/manual проверке должен указывать на `artifacts/publish/Foldora/Foldora.MenuHost.exe`.
+- Если publish-папку нужно удалить, сначала выполнить `unregister-menu`, чтобы Explorer menu не ссылался на удалённый host.
 - User-facing diagnostics для failures внутри `Foldora.MenuHost` из Explorer menu пока future work.

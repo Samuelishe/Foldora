@@ -6,6 +6,7 @@
 - `LICENSE` - Zero-Clause BSD License (0BSD) для оригинального кода, документации и self-authored ресурсов Foldora, если не указано иное.
 - `THIRD_PARTY_NOTICES.md` - notices для bundled third-party materials; сейчас фиксирует отсутствие сторонних visual assets и test-only NuGet dependency license metadata.
 - `AGENTS.md` - правила для будущих агентных сессий.
+- `scripts/publish-dev.ps1` - dev/manual publish helper: публикует `Foldora.App.exe`, `Foldora.Cli.exe` и `Foldora.MenuHost.exe` в `artifacts/publish/Foldora`.
 - `src/Foldora.Core/Foldora.Core.csproj` - доменная библиотека.
 - `src/Foldora.Core/Models/IconPack.cs` - модель набора иконок.
 - `src/Foldora.Core/Models/FolderIconStyle.cs` - модель стиля иконки.
@@ -94,7 +95,7 @@
 - `src/Foldora.App/Services/IconPreviewResult.cs` - structured result загрузки preview.
 - `src/Foldora.App/Services/WpfIconPreviewService.cs` - WPF decoder preview из `.ico` без генерации файлов.
 - `src/Foldora.App/Services/IExplorerCommandHostPathResolver.cs` - abstraction поиска executable host для WPF Explorer integration.
-- `src/Foldora.App/Services/ExplorerCommandHostPathResolver.cs` - resolver `Foldora.MenuHost.exe` рядом с текущим executable или в Debug output.
+- `src/Foldora.App/Services/ExplorerCommandHostPathResolver.cs` - resolver `Foldora.MenuHost.exe` рядом с текущим executable или в Debug output, с controlled failure при отсутствии host.
 - `src/Foldora.App/Services/ExplorerIntegrationOperationResult.cs` - result model для WPF Explorer integration operations.
 - `src/Foldora.App/Services/ExplorerIntegrationController.cs` - App-level controller для dry-run/register/unregister/reset из WPF поверх Shell service.
 - `src/Foldora.App/Services/ISettingsDialogService.cs` - abstraction открытия settings UI.
@@ -107,6 +108,7 @@
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project на `net10.0-windows`.
 - `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.
 - `tests/Foldora.Tests/App/ExplorerIntegrationControllerTests.cs` - тесты WPF Explorer integration controller с fake registry.
+- `tests/Foldora.Tests/App/ExplorerCommandHostPathResolverTests.cs` - тесты WPF command-host resolver для publish sibling, missing-host failure, Debug fallback и registry command path.
 - `tests/Foldora.Tests/App/DesignResourceTests.cs` - lightweight tests for WPF design resource dictionary wiring and core style keys.
 - `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
 - `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections и compact/edit entry behavior.

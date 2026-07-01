@@ -12,7 +12,7 @@ Stabilization pass 2026-07-01: README/LICENSE/THIRD_PARTY_NOTICES/resource-polic
 
 Desktop.ini production default: `ReadOnlyFolderHiddenDesktopIni`, то есть folder `ReadOnly`, `desktop.ini` `Hidden`. Ручная проверка подтвердила `attrib` result `R/H`, сохранение custom icon после Explorer refresh/reopen и отсутствие System-related deletion warnings для новых Foldora folders. Repair/normalize command в MVP не реализован.
 
-Следующий практический этап: publish/dev layout и стабильные пути для ручной release-проверки. Production/dev package должен дать стабильные executable paths:
+Publish/dev layout foundation: `scripts/publish-dev.ps1` создаёт framework-dependent Release layout в `artifacts/publish/Foldora` и кладёт рядом стабильные executable paths:
 
 ```text
 Foldora.App.exe
@@ -20,7 +20,9 @@ Foldora.Cli.exe
 Foldora.MenuHost.exe
 ```
 
-Registry menu в production должен указывать на installed `Foldora.MenuHost.exe`, а не на Debug build output и не на console `Foldora.Cli.exe`.
+Script не регистрирует Explorer menu и не запускает приложение. При запуске WPF из publish-папки command-host resolver ищет sibling `Foldora.MenuHost.exe`; если host отсутствует, Explorer integration возвращает user-facing failure, а не регистрирует неправильный путь. CLI `register-menu --host-path` остаётся явным способом указать published `Foldora.MenuHost.exe`. `artifacts/` не входит в git.
+
+Следующий практический этап: ручная publish smoke-проверка и release packaging documentation без installer/MSIX. Registry menu в publish/manual проверке должен указывать на `artifacts/publish/Foldora/Foldora.MenuHost.exe`, а не на Debug build output и не на console `Foldora.Cli.exe`.
 
 Открытые вопросы:
 
@@ -30,5 +32,5 @@ Registry menu в production должен указывать на installed `Fold
 - Фактическое поведение Explorer placeholders `%1` и `%V` на Windows 11 после повторной ручной проверки.
 - Preview generation/cache policy, если прямой WPF preview из `.ico` окажется недостаточным.
 - Full tree migration, drag-and-drop group ordering и group icons остаются future work; текущий MVP ограничен one-level `GroupName`.
-- Publish/manual release layout со стабильными installed executable paths.
+- Manual release packaging beyond dev publish layout.
 - User-facing diagnostics для failures внутри `Foldora.MenuHost.exe`, когда он запускается из Explorer.

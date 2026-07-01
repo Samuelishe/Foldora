@@ -92,7 +92,7 @@ Foldora stores user data under:
 
 Imported icons are copied into the `icons` directory. The original source icon file is not used as the permanent menu icon path.
 
-## Build and Run
+## Build, Run and Manual Publish
 
 ```text
 dotnet restore Foldora.sln
@@ -102,6 +102,23 @@ dotnet run --project src/Foldora.App/Foldora.App.csproj
 ```
 
 The project currently targets .NET 10. Do not retarget it to .NET 8 for this repository state.
+
+For repeatable manual Explorer testing without an installer, create the dev publish layout:
+
+```text
+pwsh scripts/publish-dev.ps1
+```
+
+The script publishes framework-dependent Release builds into:
+
+```text
+artifacts/publish/Foldora/
+artifacts/publish/Foldora/Foldora.App.exe
+artifacts/publish/Foldora/Foldora.Cli.exe
+artifacts/publish/Foldora/Foldora.MenuHost.exe
+```
+
+The script does not register the Explorer menu and does not start the app. A published build requires the .NET 10 Windows Desktop Runtime unless a future self-contained publish mode is added.
 
 ## Basic CLI Example
 
@@ -116,13 +133,21 @@ foldora unregister-menu
 
 `Foldora.MenuHost.exe` is the no-console executable intended for Explorer context menu commands. `Foldora.Cli.exe` remains a console tool for manual commands and diagnostics.
 
+When testing the manual publish layout, Explorer integration should point to the published sibling MenuHost:
+
+```text
+artifacts/publish/Foldora/Foldora.Cli.exe register-menu --host-path "<repo>\artifacts\publish\Foldora\Foldora.MenuHost.exe"
+```
+
+If you enable Explorer integration from `artifacts/publish/Foldora/Foldora.App.exe`, the WPF app resolves the sibling `Foldora.MenuHost.exe` from the same publish folder.
+
 ## Limitations
 
 - Modern Windows 11 context menu integration is not implemented.
 - The current Explorer integration uses the legacy context menu, so the menu may appear under `Show more options`.
 - Creating a desktop folder exactly under the mouse cursor is not supported in the current legacy-menu MVP; Explorer chooses the new desktop icon position.
 - No installer/MSIX yet.
-- Manual/dev registry registration may point to a Debug `Foldora.MenuHost.exe`; production needs stable installed paths for `Foldora.App.exe`, `Foldora.Cli.exe`, and `Foldora.MenuHost.exe`.
+- Manual/dev publish is available under `artifacts/publish/Foldora`, but there is no production installer, Program Files layout, code signing, or MSIX package yet.
 - No icon pack import/export yet.
 - No PNG-to-ICO conversion yet.
 - No full nested tree storage beyond the current one-level `GroupName`.

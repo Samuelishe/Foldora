@@ -7,9 +7,21 @@ namespace Foldora.App.Services;
 /// </summary>
 public sealed class ExplorerCommandHostPathResolver : IExplorerCommandHostPathResolver
 {
+    private readonly Func<string?> processPathProvider;
+
+    public ExplorerCommandHostPathResolver()
+        : this(() => Environment.ProcessPath)
+    {
+    }
+
+    public ExplorerCommandHostPathResolver(Func<string?> processPathProvider)
+    {
+        this.processPathProvider = processPathProvider ?? throw new ArgumentNullException(nameof(processPathProvider));
+    }
+
     public string ResolveCommandHostPath()
     {
-        var processPath = Environment.ProcessPath
+        var processPath = processPathProvider()
             ?? throw new InvalidOperationException("Current process path could not be resolved.");
 
         if (IsMenuHostExecutable(processPath))
@@ -32,14 +44,9 @@ public sealed class ExplorerCommandHostPathResolver : IExplorerCommandHostPathRe
             return devHostPath;
         }
 
-        var legacyCliPath = Path.Combine(directory, "Foldora.Cli.exe");
-        if (File.Exists(legacyCliPath))
-        {
-            return legacyCliPath;
-        }
-
-        var devCliPath = TryResolveDevelopmentExecutablePath(directory, "Foldora.Cli", "net10.0", "Foldora.Cli.exe");
-        return devCliPath ?? installedHostPath;
+        throw new FileNotFoundException(
+            "Foldora.MenuHost.exe was not found next to the current executable or in the development build output. Publish the dev layout or pass an explicit host path before enabling Explorer integration.",
+            installedHostPath);
     }
 
     private static string? TryResolveDevelopmentExecutablePath(

@@ -7,8 +7,10 @@
 - JSON для настроек.
 - xUnit для unit-тестов.
 - HKCU registry для legacy context menu MVP.
+- Manual publish layout остаётся framework-dependent и требует .NET 10 Windows Desktop Runtime для запуска опубликованного WPF-приложения.
 
 PowerShell разрешен только для временного прототипирования и ручной проверки, но не как production-механизм.
+`scripts/publish-dev.ps1` является dev/manual packaging helper, не installer и не production shell mechanism.
 
 ## Local Tooling
 

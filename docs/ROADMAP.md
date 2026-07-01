@@ -33,6 +33,7 @@ Foldora currently has a working MVP loop:
 ```
 
 - No-console `Foldora.MenuHost.exe` for Explorer menu commands.
+- Dev/manual publish layout in `artifacts/publish/Foldora`.
 - Small menu icons through registry `Icon`.
 - `register-menu`, `register-menu --dry-run`, `register-menu --host-path`, `unregister-menu`.
 - `menu reset --yes`.
@@ -44,21 +45,29 @@ Foldora currently has a working MVP loop:
 - Resource policy for future icons/fonts/assets.
 - 0BSD repository license and third-party notices.
 
-## Next Stage
+## Current Publish Foundation
 
-Prepare the MVP for repeatable manual release/publish testing:
+The MVP has a dev/manual publish foundation for repeatable local Explorer testing:
 
-- Define publish/dev layout with stable paths:
+- `scripts/publish-dev.ps1` creates a framework-dependent Release layout:
 
 ```text
+artifacts/publish/Foldora/
 Foldora.App.exe
 Foldora.Cli.exe
 Foldora.MenuHost.exe
 ```
 
-- Ensure production Explorer registry commands point to installed `Foldora.MenuHost.exe`, not Debug build output and not console `Foldora.Cli.exe`.
+- The script does not register Explorer integration and does not start the app.
+- WPF resolves sibling `Foldora.MenuHost.exe` when launched from the publish folder.
+- CLI still supports explicit `register-menu --host-path "<path-to-Foldora.MenuHost.exe>"`.
+
+## Next Stage
+
+Prepare the MVP for repeatable manual release verification:
+
+- Verify Explorer registry commands point to `artifacts/publish/Foldora/Foldora.MenuHost.exe`, not Debug build output and not console `Foldora.Cli.exe`.
 - Document manual release packaging steps.
-- Decide how WPF resolves command host path in published layout.
 - Keep installer/MSIX as a later step unless the publish layout reveals a hard requirement.
 
 ## Known MVP Limitations
@@ -67,6 +76,7 @@ Foldora.MenuHost.exe
 - Legacy menu may appear under `Show more options`.
 - Foldora does not control desktop icon placement under the mouse cursor; Explorer chooses the icon position.
 - No installer/MSIX yet.
+- No production Program Files layout or code signing yet.
 - No pack import/export yet.
 - No PNG-to-ICO conversion.
 - No full nested tree storage/runtime beyond one-level `GroupName`.

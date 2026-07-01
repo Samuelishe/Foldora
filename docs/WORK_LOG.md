@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - Dev publish layout foundation
+
+- Добавлен `scripts/publish-dev.ps1`: PowerShell 7 compatible script очищает только `artifacts/publish/Foldora`, публикует Release framework-dependent `Foldora.App`, `Foldora.Cli` и `Foldora.MenuHost` в одну папку и печатает next steps.
+- `artifacts/` добавлен в `.gitignore`.
+- WPF `ExplorerCommandHostPathResolver` теперь предпочитает sibling `Foldora.MenuHost.exe`, сохраняет Debug fallback и выдаёт controlled failure, если host не найден, вместо fallback на console CLI или несуществующий путь.
+- Добавлены unit-тесты resolver-а: sibling publish host, missing-host failure, Debug fallback и регистрация через resolved sibling MenuHost без реального registry.
+- README и docs обновлены под manual publish smoke flow; installer/MSIX/Program Files/code signing не добавлялись.
+
 ## 2026-07-01 - MVP stabilization pass
 
 - Проверены root `README.md`, `LICENSE`, `THIRD_PARTY_NOTICES.md`, `AGENTS.md` и resource-policy docs после 0BSD/licensing изменения: README не обещает installer/MSIX/publish flow, лицензия указана как 0BSD, сторонние visual assets не заявлены.

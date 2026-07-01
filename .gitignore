@@ -9,6 +9,7 @@ obj/
 *.sln.docstates
 TestResults/
 coverage/
+artifacts/
 *.log
 docs/private/
 *.local.*

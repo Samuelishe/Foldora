@@ -47,7 +47,7 @@ foldora settings
 - `--style` пока не реализован.
 - `import-pack` пока не реализован.
 - Legacy registry context menu использует HKCU и Foldora-owned roots. Modern Windows 11 compact menu не реализован.
-- При запуске через `dotnet run` путь текущего процесса может отличаться от будущего publish/install path; для ручной проверки Explorer UX используйте `register-menu --host-path`.
+- При запуске через `dotnet run` путь текущего процесса может отличаться от publish path; для ручной проверки Explorer UX используйте `register-menu --host-path`.
 - Explorer restart и icon cache reset не выполняются.
 - Explorer может не обновить иконку мгновенно из-за кэша.
 
@@ -68,6 +68,32 @@ CLI не исправляет явно невалидный `--folder-name` мо
 `unregister-menu` не удаляет entries/settings и нужен для безопасного временного отключения Explorer integration.
 
 `register-menu` по умолчанию пытается использовать `Foldora.MenuHost.exe` рядом с текущим executable или в соседнем Debug output. MenuHost - Windows-subsystem executable без console window; именно он должен быть target для Explorer legacy menu. `Foldora.Cli.exe` остаётся console app для ручных команд, diagnostics и разработки. `--cli-path` сохранён как backward-compatible override, но может вернуть console flash при запуске из Explorer.
+
+Manual publish layout создаётся командой:
+
+```text
+pwsh scripts/publish-dev.ps1
+```
+
+После этого рядом лежат:
+
+```text
+artifacts/publish/Foldora/Foldora.App.exe
+artifacts/publish/Foldora/Foldora.Cli.exe
+artifacts/publish/Foldora/Foldora.MenuHost.exe
+```
+
+Для publish CLI registration:
+
+```text
+artifacts/publish/Foldora/Foldora.Cli.exe register-menu --host-path "<repo>\artifacts\publish\Foldora\Foldora.MenuHost.exe"
+```
+
+Перед удалением publish-папки:
+
+```text
+artifacts/publish/Foldora/Foldora.Cli.exe unregister-menu
+```
 
 `menu reset --yes` - полный сброс пользовательского меню к пустому дефолту. Команда не удаляет весь `%AppData%\Foldora`, не удаляет `settings.json`, не трогает `packs` и не удаляет импортированные `.ico` на этом шаге. Без `--yes` reset отказывается выполняться.
 
