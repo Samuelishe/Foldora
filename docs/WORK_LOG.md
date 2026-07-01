@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - Desktop icon positioning prototype spike
+
+- Добавлен isolated Shell diagnostic/prototype layer `Foldora.Shell.Desktop`: `IDesktopIconPositioningService`, result model, coordinate-space enum и Windows implementation для попытки reposition existing desktop item.
+- Добавлена CLI diagnostic command `foldora diagnostics desktop-icon-position --name "<desktop item name>" --x <int> --y <int> [--coordinate-space screen|view]`.
+- Команда не создаёт папки, не меняет registry command shape, не используется `Foldora.MenuHost.exe` и не решает получение original right-click coordinates.
+- Добавлены unit-тесты parser-а и diagnostic runner-а через fake service без реального Explorer/Desktop.
+- Docs обновлены, чтобы prototype был явно отделён от production create-under-cursor behavior.
+
 ## 2026-07-01 - Desktop icon placement research spike
 
 - Проведён research spike текущего legacy desktop background flow: registry command получает target path через `%V`, но не получает original right-click coordinates или desktop icon-view coordinates.

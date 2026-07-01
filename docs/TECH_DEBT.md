@@ -17,11 +17,13 @@
   - `TD-0001A`: current HKCU legacy context menu commands receive target directory path through Explorer placeholders such as `%V`, but they do not receive original right-click cursor coordinates or desktop icon-view coordinates.
   - `TD-0001B`: post-create desktop icon positioning may be technically possible through Shell view APIs, but it needs a separate design and manual Windows 11 verification matrix.
 - Current workaround: User can move the created desktop icon manually after creation.
-- Next investigation step: Decide whether to run an implementation spike for an isolated Shell positioning service. The spike must prove coordinate source reliability, desktop view lookup, auto-arrange behavior, DPI/multi-monitor behavior and failure/no-op semantics before production use.
+- Next investigation step: Run manual feasibility checks with `foldora diagnostics desktop-icon-position --name "<desktop item name>" --x <int> --y <int> [--coordinate-space screen|view]`. The spike must still prove coordinate source reliability, desktop view lookup, auto-arrange behavior, DPI/multi-monitor behavior and failure/no-op semantics before production use.
 - Links to docs/tests/code:
   - `docs/SHELL_INTEGRATION.md`
   - `docs/research/DESKTOP_ICON_PLACEMENT.md`
   - `docs/SMOKE_TEST.md`
+  - `src/Foldora.Shell/Desktop/WindowsDesktopIconPositioningService.cs`
+  - `src/Foldora.Cli/DesktopIconPositionDiagnosticsRunner.cs`
   - `src/Foldora.Shell/RegistryPlan/ExplorerMenuShellTargetPlaceholder.cs`
   - `src/Foldora.Shell/RegistryPlan/ExplorerMenuCommandBuilder.cs`
   - `tests/Foldora.Tests/Shell/ExplorerMenuRegistryPlanBuilderTests.cs`

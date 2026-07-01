@@ -67,7 +67,7 @@ Foldora.MenuHost.exe
 Desktop placement research before installer/release polish:
 
 - Decide whether to run an implementation spike for post-create desktop icon positioning.
-- Prototype Shell COM desktop view lookup and item positioning only in an isolated Shell layer.
+- Manually verify the isolated `diagnostics desktop-icon-position` prototype against real Windows 11 Desktop behavior.
 - Prove or reject reliable coordinate capture for the original desktop invocation point.
 - Define manual smoke coverage for auto-arrange icons, align-to-grid, multi-monitor, DPI scaling and Explorer restart.
 - Keep installer/MSIX as a later step until this UX-critical limitation has an explicit decision.
@@ -95,6 +95,7 @@ Desktop placement research before installer/release polish:
 - Installer/MSIX after stable publish layout.
 - Modern Windows 11 context menu research.
 - Shell COM desktop icon placement spike, if accepted after `docs/research/DESKTOP_ICON_PLACEMENT.md`.
+- Production integration of desktop icon placement only if diagnostic prototype proves reliable movement and a separate coordinate source is designed.
 - Modern `IExplorerCommand` research for advanced shell integration.
 - Optional Shell refresh notification investigation for desktop.ini apply/create timing, only if `TD-0002` is reproduced again and scoped.
 - Full tree menu runtime/storage beyond current one-level groups.

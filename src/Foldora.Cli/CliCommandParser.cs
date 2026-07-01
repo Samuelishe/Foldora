@@ -50,11 +50,51 @@ public static class CliCommandParser
         return subcommand switch
         {
             "desktop-ini-policy" => ParseDiagnosticsDesktopIniPolicy(options),
+            "desktop-icon-position" => ParseDiagnosticsDesktopIconPosition(options),
             _ => new CliCommand(
                 CliCommandKind.Unknown,
                 $"diagnostics {subcommand}",
                 Error: $"Unknown diagnostics subcommand '{subcommand}'.")
         };
+    }
+
+    private static CliCommand ParseDiagnosticsDesktopIconPosition(IReadOnlyDictionary<string, string?> options)
+    {
+        const string commandName = "diagnostics desktop-icon-position";
+
+        if (!TryGetRequiredOption(options, "--name", out var nameError, out var itemName))
+        {
+            return new CliCommand(CliCommandKind.DiagnosticsDesktopIconPosition, commandName, Error: nameError);
+        }
+
+        if (!TryGetRequiredIntOption(options, "--x", out var xError, out var x))
+        {
+            return new CliCommand(CliCommandKind.DiagnosticsDesktopIconPosition, commandName, Error: xError);
+        }
+
+        if (!TryGetRequiredIntOption(options, "--y", out var yError, out var y))
+        {
+            return new CliCommand(CliCommandKind.DiagnosticsDesktopIconPosition, commandName, Error: yError);
+        }
+
+        options.TryGetValue("--coordinate-space", out var coordinateSpace);
+        coordinateSpace = string.IsNullOrWhiteSpace(coordinateSpace) ? "screen" : coordinateSpace.Trim();
+        if (!string.Equals(coordinateSpace, "screen", StringComparison.OrdinalIgnoreCase)
+            && !string.Equals(coordinateSpace, "view", StringComparison.OrdinalIgnoreCase))
+        {
+            return new CliCommand(
+                CliCommandKind.DiagnosticsDesktopIconPosition,
+                commandName,
+                Error: "Option --coordinate-space must be either 'screen' or 'view'.");
+        }
+
+        return new CliCommand(
+            CliCommandKind.DiagnosticsDesktopIconPosition,
+            commandName,
+            DisplayName: itemName,
+            X: x,
+            Y: y,
+            CoordinateSpace: coordinateSpace);
     }
 
     private static CliCommand ParseDiagnosticsDesktopIniPolicy(IReadOnlyDictionary<string, string?> options)
@@ -235,6 +275,29 @@ public static class CliCommandParser
 
         error = string.Empty;
         value = rawValue;
+        return true;
+    }
+
+    private static bool TryGetRequiredIntOption(
+        IReadOnlyDictionary<string, string?> options,
+        string name,
+        out string error,
+        out int value)
+    {
+        if (!TryGetRequiredOption(options, name, out error, out var rawValue))
+        {
+            value = 0;
+            return false;
+        }
+
+        if (!int.TryParse(rawValue, out value))
+        {
+            error = $"Option {name} must be an integer.";
+            value = 0;
+            return false;
+        }
+
+        error = string.Empty;
         return true;
     }
 

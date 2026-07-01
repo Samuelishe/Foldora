@@ -14,6 +14,7 @@ public enum CliCommandKind
     RegisterMenu,
     UnregisterMenu,
     DiagnosticsDesktopIniPolicy,
+    DiagnosticsDesktopIconPosition,
     Quote,
     Unknown
 }
@@ -32,6 +33,9 @@ public sealed record CliCommand(
     string? CommandHostPath = null,
     bool DryRun = false,
     bool Yes = false,
+    int? X = null,
+    int? Y = null,
+    string? CoordinateSpace = null,
     string? QuoteValue = null,
     string? Error = null)
 {

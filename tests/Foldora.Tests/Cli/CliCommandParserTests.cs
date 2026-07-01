@@ -308,4 +308,105 @@ public sealed class CliCommandParserTests
         Assert.Equal(CliCommandKind.DiagnosticsDesktopIniPolicy, command.Kind);
         Assert.Contains("--icon", command.Error);
     }
+
+    [Fact]
+    public void Parse_AcceptsDesktopIconPositionDiagnosticsWithDefaultScreenCoordinates()
+    {
+        var command = CliCommandParser.Parse([
+            "diagnostics",
+            "desktop-icon-position",
+            "--name",
+            "Foldora Test",
+            "--x",
+            "100",
+            "--y",
+            "200"
+        ]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.DiagnosticsDesktopIconPosition, command.Kind);
+        Assert.Equal("Foldora Test", command.DisplayName);
+        Assert.Equal(100, command.X);
+        Assert.Equal(200, command.Y);
+        Assert.Equal("screen", command.CoordinateSpace);
+    }
+
+    [Fact]
+    public void Parse_AcceptsDesktopIconPositionDiagnosticsWithViewCoordinates()
+    {
+        var command = CliCommandParser.Parse([
+            "diagnostics",
+            "desktop-icon-position",
+            "--name",
+            "Foldora Test",
+            "--x",
+            "10",
+            "--y",
+            "20",
+            "--coordinate-space",
+            "view"
+        ]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.DiagnosticsDesktopIconPosition, command.Kind);
+        Assert.Equal("view", command.CoordinateSpace);
+    }
+
+    [Fact]
+    public void Parse_RejectsDesktopIconPositionDiagnosticsWithoutName()
+    {
+        var command = CliCommandParser.Parse([
+            "diagnostics",
+            "desktop-icon-position",
+            "--x",
+            "100",
+            "--y",
+            "200"
+        ]);
+
+        Assert.False(command.IsValid);
+        Assert.Equal(CliCommandKind.DiagnosticsDesktopIconPosition, command.Kind);
+        Assert.Contains("--name", command.Error);
+    }
+
+    [Fact]
+    public void Parse_RejectsDesktopIconPositionDiagnosticsWithNonIntegerCoordinate()
+    {
+        var command = CliCommandParser.Parse([
+            "diagnostics",
+            "desktop-icon-position",
+            "--name",
+            "Foldora Test",
+            "--x",
+            "left",
+            "--y",
+            "200"
+        ]);
+
+        Assert.False(command.IsValid);
+        Assert.Equal(CliCommandKind.DiagnosticsDesktopIconPosition, command.Kind);
+        Assert.Contains("--x", command.Error);
+        Assert.Contains("integer", command.Error);
+    }
+
+    [Fact]
+    public void Parse_RejectsDesktopIconPositionDiagnosticsWithUnknownCoordinateSpace()
+    {
+        var command = CliCommandParser.Parse([
+            "diagnostics",
+            "desktop-icon-position",
+            "--name",
+            "Foldora Test",
+            "--x",
+            "100",
+            "--y",
+            "200",
+            "--coordinate-space",
+            "cursor"
+        ]);
+
+        Assert.False(command.IsValid);
+        Assert.Equal(CliCommandKind.DiagnosticsDesktopIconPosition, command.Kind);
+        Assert.Contains("--coordinate-space", command.Error);
+    }
 }

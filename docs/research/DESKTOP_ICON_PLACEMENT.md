@@ -86,6 +86,26 @@ If this becomes the next implementation spike, keep it isolated:
 - keep `MenuHost` no-console and keep registry writes under Foldora-owned roots only;
 - define a manual smoke matrix for auto-arrange, align-to-grid, multi-monitor, DPI scaling and Explorer restart.
 
+## Prototype Command
+
+The current prototype exposes only a manual diagnostic command:
+
+```text
+foldora diagnostics desktop-icon-position --name "<desktop item name>" --x <int> --y <int> [--coordinate-space screen|view]
+```
+
+Scope:
+
+- moves an already existing desktop item by display name;
+- accepts explicit coordinates supplied by the user;
+- does not create folders;
+- does not infer original right-click coordinates;
+- does not use `GetCursorPos` as production truth;
+- does not change legacy registry command shape;
+- does not change `Foldora.MenuHost.exe create` behavior.
+
+Implementation note: the prototype is isolated in `Foldora.Shell.Desktop` behind `IDesktopIconPositioningService`. It uses Explorer desktop folder view APIs where available and returns controlled failure if the desktop view, item or positioning operation cannot be resolved.
+
 ## Recommendation
 
 Do not promise "create under cursor" in the current MVP. The next practical step, if the UX priority is high enough, is an explicit implementation spike for Shell COM desktop view positioning. If that spike cannot prove reliable coordinate capture and safe no-op behavior, keep the limitation documented honestly.

@@ -107,6 +107,14 @@ Legacy registry context menu передаёт Foldora target directory path (`%1
 - Shell refresh notification через `SHChangeNotify` только для icon/visibility refresh, не для placement;
 - desktop ListView messages только как unsupported research path, не как первый production design.
 
+Для проверки feasibility добавлена только ручная diagnostic-команда:
+
+```text
+foldora diagnostics desktop-icon-position --name "<desktop item name>" --x <int> --y <int> [--coordinate-space screen|view]
+```
+
+Она пытается reposition уже существующий desktop item и не подключена к production Explorer menu flow. Registry command shape, `%V`, `Foldora.MenuHost.exe create` и Core create/apply behavior не меняются.
+
 Этот пункт зафиксирован как high-priority research `TD-0001` в `TECH_DEBT.md`, а подробности собраны в `docs/research/DESKTOP_ICON_PLACEMENT.md`. Его нельзя смешивать с отдельным desktop.ini/icon refresh debt: если папка появилась не под курсором, это ожидаемое ограничение legacy integration, а не ошибка `desktop.ini`.
 
 ## Desktop Icon Refresh Debt

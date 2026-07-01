@@ -4,6 +4,7 @@ using Foldora.Core.Menu;
 using Foldora.Core.Settings;
 using Foldora.Core.Storage;
 using Foldora.Shell.ContextMenu;
+using Foldora.Shell.Desktop;
 using Foldora.Shell.Registry;
 using Foldora.Shell.RegistryPlan;
 
@@ -86,6 +87,16 @@ try
                 Console.Out);
             return 0;
 
+        case CliCommandKind.DiagnosticsDesktopIconPosition:
+            var coordinateSpace = ParseCoordinateSpace(parsedCommand.CoordinateSpace);
+            return await new DesktopIconPositionDiagnosticsRunner(new WindowsDesktopIconPositioningService()).RunAsync(
+                parsedCommand.DisplayName!,
+                parsedCommand.X!.Value,
+                parsedCommand.Y!.Value,
+                coordinateSpace,
+                Console.Out,
+                Console.Error);
+
         case CliCommandKind.Quote:
             Console.WriteLine(CommandLineQuoter.Quote(parsedCommand.QuoteValue ?? string.Empty));
             return 0;
@@ -126,6 +137,7 @@ Usage:
   foldora register-menu [--dry-run] [--host-path "<absolute-path-to-Foldora.MenuHost.exe>"] [--cli-path "<legacy-dev-override>"]
   foldora unregister-menu
   foldora diagnostics desktop-ini-policy --target "<directory>" --icon "<absolute-icon-path>"
+  foldora diagnostics desktop-icon-position --name "<desktop item name>" --x <int> --y <int> [--coordinate-space screen|view]
   foldora import-pack --path "<pack-path>"
   foldora list-packs
   foldora list-styles
@@ -143,9 +155,17 @@ Implemented now:
   register-menu [--dry-run] [--host-path] [--cli-path]
   unregister-menu
   diagnostics desktop-ini-policy --target --icon
+  diagnostics desktop-icon-position --name --x --y [--coordinate-space]
 
-The --style flow, pack import, Explorer restart, and icon cache reset are not implemented in this step.
+The --style flow, pack import, Explorer restart, icon cache reset, and production create-under-cursor behavior are not implemented in this step.
 """);
+}
+
+static DesktopIconCoordinateSpace ParseCoordinateSpace(string? value)
+{
+    return string.Equals(value, "view", StringComparison.OrdinalIgnoreCase)
+        ? DesktopIconCoordinateSpace.View
+        : DesktopIconCoordinateSpace.Screen;
 }
 
 static FolderMenuService CreateFolderMenuService()

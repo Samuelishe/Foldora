@@ -19,6 +19,7 @@ foldora register-menu
 foldora register-menu --host-path "<absolute-path-to-Foldora.MenuHost.exe>"
 foldora unregister-menu
 foldora diagnostics desktop-ini-policy --target "<directory>" --icon "<absolute-icon-path>"
+foldora diagnostics desktop-icon-position --name "<desktop item name>" --x <int> --y <int> [--coordinate-space screen|view]
 foldora settings
 ```
 
@@ -40,6 +41,7 @@ foldora settings
 - выполняет `register-menu --cli-path "<path>"` как legacy/dev alias для старого console host behavior;
 - выполняет `unregister-menu`, удаляя только Foldora-owned HKCU roots;
 - выполняет `diagnostics desktop-ini-policy --target ... --icon ...`, создавая тестовые папки для ручной проверки desktop.ini attribute policies;
+- выполняет `diagnostics desktop-icon-position --name ... --x ... --y ... [--coordinate-space screen|view]`, prototype-попытку переместить уже существующий desktop item;
 - для неготовых команд пишет понятное skeleton-сообщение;
 
 Ограничения текущего CLI:
@@ -50,6 +52,7 @@ foldora settings
 - При запуске через `dotnet run` путь текущего процесса может отличаться от publish path; для ручной проверки Explorer UX используйте `register-menu --host-path`.
 - Explorer restart и icon cache reset не выполняются.
 - Explorer может не обновить иконку мгновенно из-за кэша.
+- `diagnostics desktop-icon-position` не используется Explorer menu и не получает исходные координаты right-click; это только ручная feasibility-проверка post-create positioning.
 
 Если `--name` не указан или пустой, `menu add` использует первое свободное fallback-имя `Вид N`.
 Если `--folder-name` не указан или пустой, используется `Новая папка`.
@@ -119,3 +122,20 @@ foldora diagnostics desktop-ini-policy --target "C:\Users\User\Desktop" --icon "
 После запуска нужно вручную проверить, видна ли кастомная иконка после refresh/reopen Explorer и появляется ли warning при удалении папки.
 
 Текущий production default уже выбран: `ReadOnlyFolderHiddenDesktopIni`. Остальные policies оставлены для diagnostics и regression/manual verification. Команда diagnostics не выполняет repair/migration старых папок.
+
+`diagnostics desktop-icon-position` предназначена только для ручной проверки, может ли Foldora попросить Explorer reposition уже существующий desktop item.
+
+Пример:
+
+```text
+foldora diagnostics desktop-icon-position --name "Foldora Test" --x 100 --y 100 --coordinate-space screen
+```
+
+Параметры:
+
+- `--name` - display name существующего desktop item/folder.
+- `--x` и `--y` - целевая точка.
+- `--coordinate-space screen` - входные координаты экрана; CLI попытается преобразовать их в desktop view coordinates.
+- `--coordinate-space view` - координаты уже считаются desktop view coordinates.
+
+Команда не создаёт папки, не пишет registry, не меняет settings, не регистрирует Explorer menu и не запускается из `Foldora.MenuHost.exe`. Она может вернуть controlled failure, если desktop view не найден, item не найден, Explorer отклонил positioning или layout policy вроде auto-arrange не позволяет перемещение.
