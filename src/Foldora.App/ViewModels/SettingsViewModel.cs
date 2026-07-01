@@ -45,10 +45,17 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
     private readonly ILocalizationService localizationService;
     private readonly ExplorerIntegrationController? explorerIntegrationController;
     private readonly IExplorerCommandHostPathResolver? commandHostPathResolver;
+    private readonly IPathActionService pathActionService;
     private readonly AsyncRelayCommand dryRunCommand;
     private readonly AsyncRelayCommand registerExplorerCommand;
     private readonly AsyncRelayCommand unregisterExplorerCommand;
     private readonly AsyncRelayCommand resetMenuCommand;
+    private readonly RelayCommand openInstalledAppPathCommand;
+    private readonly RelayCommand copyInstalledAppPathCommand;
+    private readonly RelayCommand openUserDataPathCommand;
+    private readonly RelayCommand copyUserDataPathCommand;
+    private readonly RelayCommand openCommandHostPathCommand;
+    private readonly RelayCommand copyCommandHostPathCommand;
     private string selectedLanguage;
     private string statusMessage = string.Empty;
     private bool explorerIntegrationEnabled;
@@ -60,12 +67,14 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
         string currentLanguage,
         ILocalizationService? localizationService = null,
         ExplorerIntegrationController? explorerIntegrationController = null,
-        IExplorerCommandHostPathResolver? commandHostPathResolver = null)
+        IExplorerCommandHostPathResolver? commandHostPathResolver = null,
+        IPathActionService? pathActionService = null)
     {
         this.storage = storage ?? throw new ArgumentNullException(nameof(storage));
         this.localizationService = localizationService ?? new InMemoryLocalizationService(currentLanguage);
         this.explorerIntegrationController = explorerIntegrationController;
         this.commandHostPathResolver = commandHostPathResolver;
+        this.pathActionService = pathActionService ?? new WindowsPathActionService();
         selectedLanguage = FoldoraLanguage.NormalizeOrDefault(currentLanguage);
         explorerIntegrationEnabled = explorerIntegrationController?.ExplorerIntegrationEnabled ?? false;
         AvailableLanguages = new ObservableCollection<LanguageOption>(
@@ -77,6 +86,12 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
         registerExplorerCommand = new AsyncRelayCommand(RegisterExplorerIntegrationAsync, () => HasExplorerIntegrationController);
         unregisterExplorerCommand = new AsyncRelayCommand(UnregisterExplorerIntegrationAsync, () => HasExplorerIntegrationController);
         resetMenuCommand = new AsyncRelayCommand(ResetMenuAsync, () => HasExplorerIntegrationController && IsResetConfirmed);
+        openInstalledAppPathCommand = new RelayCommand(() => OpenFolderPath(InstalledAppPath));
+        copyInstalledAppPathCommand = new RelayCommand(() => CopyPath(InstalledAppPath));
+        openUserDataPathCommand = new RelayCommand(() => OpenFolderPath(UserDataPath));
+        copyUserDataPathCommand = new RelayCommand(() => CopyPath(UserDataPath));
+        openCommandHostPathCommand = new RelayCommand(() => OpenLocationPath(CurrentCommandHostPath));
+        copyCommandHostPathCommand = new RelayCommand(() => CopyPath(CurrentCommandHostPath));
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -96,6 +111,18 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
     public AsyncRelayCommand UnregisterExplorerCommand => unregisterExplorerCommand;
 
     public AsyncRelayCommand ResetMenuCommand => resetMenuCommand;
+
+    public RelayCommand OpenInstalledAppPathCommand => openInstalledAppPathCommand;
+
+    public RelayCommand CopyInstalledAppPathCommand => copyInstalledAppPathCommand;
+
+    public RelayCommand OpenUserDataPathCommand => openUserDataPathCommand;
+
+    public RelayCommand CopyUserDataPathCommand => copyUserDataPathCommand;
+
+    public RelayCommand OpenCommandHostPathCommand => openCommandHostPathCommand;
+
+    public RelayCommand CopyCommandHostPathCommand => copyCommandHostPathCommand;
 
     public string SelectedLanguage
     {
@@ -154,9 +181,9 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
         }
     }
 
-    public string ExplorerIntegrationStatusText => ExplorerIntegrationEnabled ? L.ExplorerEnabled : L.ExplorerDisabled;
+    public string ExplorerIntegrationStatusText => ExplorerIntegrationEnabled ? L.ExplorerMenuStatusOn : L.ExplorerMenuStatusOff;
 
-    public string ExplorerIntegrationStatusLabel => string.Format(L.StatusLabelFormat, ExplorerIntegrationStatusText);
+    public string ExplorerIntegrationStatusLabel => ExplorerIntegrationStatusText;
 
     public string InstalledAppPath => TrimTrailingDirectorySeparator(AppContext.BaseDirectory);
 
@@ -280,6 +307,43 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(HasTechnicalDetails));
     }
 
+    private void OpenFolderPath(string path)
+    {
+        try
+        {
+            pathActionService.OpenFolder(path);
+        }
+        catch (Exception exception) when (IsPathActionException(exception))
+        {
+            StatusMessage = string.Format(L.PathOpenFailedFormat, exception.Message);
+        }
+    }
+
+    private void OpenLocationPath(string path)
+    {
+        try
+        {
+            pathActionService.OpenLocation(path);
+        }
+        catch (Exception exception) when (IsPathActionException(exception))
+        {
+            StatusMessage = string.Format(L.PathOpenFailedFormat, exception.Message);
+        }
+    }
+
+    private void CopyPath(string path)
+    {
+        try
+        {
+            pathActionService.CopyPath(path);
+            StatusMessage = string.Format(L.PathCopiedFormat, path);
+        }
+        catch (Exception exception) when (IsPathActionException(exception))
+        {
+            StatusMessage = string.Format(L.PathCopyFailedFormat, exception.Message);
+        }
+    }
+
     private string ResolveCommandHostPathForDisplay()
     {
         if (commandHostPathResolver is null)
@@ -304,6 +368,16 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
     private static string TrimTrailingDirectorySeparator(string path)
     {
         return path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+    }
+
+    private static bool IsPathActionException(Exception exception)
+    {
+        return exception is InvalidOperationException
+            or FileNotFoundException
+            or DirectoryNotFoundException
+            or UnauthorizedAccessException
+            or IOException
+            or System.Security.SecurityException;
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)

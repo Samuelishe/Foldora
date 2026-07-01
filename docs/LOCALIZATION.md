@@ -103,6 +103,8 @@ UI labels are visible interface text such as `Save`, `Discard changes`, `Choose 
 
 Settings/Explorer cleanup adds localized section/action labels for Application, Explorer menu, Installation, path labels, MenuHost note, immediate Explorer-action note and dirty-draft guidance. The legacy `ManageInSettings` key remains in complete catalogs for compatibility but is no longer shown on MainWindow after the small UX correctness cleanup.
 
+Settings clarity strings are also catalog-backed: explicit Foldora Explorer menu status, `Preview changes` dry-run wording, help/tooltips and path Open/Copy status messages must be present in every complete catalog.
+
 Runtime/status messages are visible state messages such as settings loaded, settings saved, Explorer integration enabled/disabled and draft entry added. They must come from the localization layer.
 
 MainWindow editor state text must also be localized user-facing status text. The saved/dirty state uses catalog keys such as `AllChangesSaved` and `UnsavedChanges`; raw boolean formatting like `Unsaved changes: True/False` must not be shown to users.

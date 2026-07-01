@@ -129,6 +129,8 @@
 - `src/Foldora.App/Services/SettingsLanguageInitializer.cs` - first-run language detection/persistence для WPF startup.
 - `src/Foldora.App/Services/IValidationMessageLocalizer.cs` - abstraction App-level рендера Core validation issues в текущей локали.
 - `src/Foldora.App/Services/ValidationMessageLocalizer.cs` - catalog-backed рендер validation issues по `Validation.<code>` keys.
+- `src/Foldora.App/Services/IPathActionService.cs` - abstraction Open/Copy actions для installation/user-data/MenuHost paths в SettingsWindow.
+- `src/Foldora.App/Services/WindowsPathActionService.cs` - Windows implementation path actions через Explorer/Clipboard для WPF settings UI.
 - `src/Foldora.App/Localization/ru.json` - Russian complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Localization/en.json` - English complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Localization/zh-Hans.json` - Simplified Chinese complete localization catalog для WPF UI/status/defaults.

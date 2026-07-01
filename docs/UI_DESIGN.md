@@ -25,6 +25,9 @@ Design system foundation добавляет централизованные WPF
 - Настройки и операции вызываются через сервисы Core/Shell.
 - MainWindow должен оставаться focused menu editor: title, groups, entries, icons, save/discard and editor status/errors.
 - SettingsWindow содержит system/admin actions: language/application settings, Explorer integration, installation/path information and danger reset.
+- SettingsWindow system actions must use user-facing wording: `Preview changes` for dry-run registry preview, explicit `Foldora Explorer menu: On/Off` style status, and short tooltips for technical concepts.
+- Installation/path rows should be actionable: visible path, `Open`/`Open location`, and `Copy`, with failures shown as localized status messages.
+- Small help/info affordances may use self-authored XAML/text styling such as a `?` button; do not add external icon assets for this.
 - Main UI text must be user-facing, not debug-state text. Не показывать raw booleans вроде `True/False` как пользовательский статус.
 - Buttons must account for localization and long labels: shared action buttons use consistent min-height, padding and min-width; further per-locale polish remains future work.
 - Settings content should keep proper scroll gutter and section spacing; scrollbar не должен визуально прилипать к тексту.
@@ -42,6 +45,7 @@ Design system foundation добавляет централизованные WPF
 - Основной entry UI должен быть карточным/list-style, а не технической таблицей.
 - `EntryId` не показывать в основном пользовательском flow.
 - Technical registry plan details скрывать по умолчанию за раскрываемым блоком.
+- Dry-run/preview action should be named for users. Internal code may keep `DryRun`, but visible UI should say `Предпросмотр изменений` / `Preview changes` and explain that HKCU registry is not modified.
 - Dangerous reset отделять визуально от обычных integration controls.
 - Редактор пользовательского меню должен работать через draft state и применять изменения только по кнопке `Сохранить`.
 - При редактировании списка registry не трогать. `Сохранить` rebuild-ит registry только если Explorer integration уже была включена; при disabled integration пишет settings only. Registry operations также выполняются отдельными кнопками integration.
@@ -153,7 +157,7 @@ Validation errors из Core validation layer рендерятся через App
 - SettingsWindow section `Explorer menu` со статусом, dry-run, register, unregister and technical details.
 - SettingsWindow danger zone с reset.
 - `Сохранить` обновляет меню Проводника, если integration уже была включена.
-- `Проверить план` и `Включить меню Проводника` требуют отсутствия unsaved changes.
+- `Предпросмотр изменений` и `Включить меню Проводника` требуют отсутствия unsaved changes.
 - `Отключить меню Проводника` сохраняет entries/settings и может выполняться при unsaved draft changes.
 - `Сбросить меню` требует checkbox-подтверждения, очищает entries и не удаляет импортированные `.ico`.
 - Status area и список ошибок без `MessageBox` как основного механизма.

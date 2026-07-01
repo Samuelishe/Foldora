@@ -234,6 +234,94 @@ public sealed class SettingsViewModelTests
         }
     }
 
+    [Fact]
+    public void ExplorerStatus_UsesUserFacingMenuWording()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettingsVm-");
+
+        try
+        {
+            var viewModel = new SettingsViewModel(
+                new FoldoraSettingsStorage(new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"))),
+                FoldoraLanguage.English,
+                new InMemoryLocalizationService("en"));
+
+            Assert.Equal("Foldora Explorer menu: Off", viewModel.ExplorerIntegrationStatusLabel);
+            Assert.DoesNotContain("True", viewModel.ExplorerIntegrationStatusLabel, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("False", viewModel.ExplorerIntegrationStatusLabel, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("Status:", viewModel.ExplorerIntegrationStatusLabel, StringComparison.OrdinalIgnoreCase);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public void PathCommands_CallPathActionServiceWithExpectedPaths()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettingsVm-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var hostPath = Path.Combine(root.FullName, "Foldora.MenuHost.exe");
+            var pathActions = new RecordingPathActionService();
+            var viewModel = new SettingsViewModel(
+                new FoldoraSettingsStorage(paths),
+                FoldoraLanguage.English,
+                new InMemoryLocalizationService("en"),
+                commandHostPathResolver: new FixedHostPathResolver(hostPath),
+                pathActionService: pathActions);
+
+            viewModel.OpenInstalledAppPathCommand.Execute(null);
+            viewModel.CopyInstalledAppPathCommand.Execute(null);
+            viewModel.OpenUserDataPathCommand.Execute(null);
+            viewModel.CopyUserDataPathCommand.Execute(null);
+            viewModel.OpenCommandHostPathCommand.Execute(null);
+            viewModel.CopyCommandHostPathCommand.Execute(null);
+
+            Assert.Equal(viewModel.InstalledAppPath, pathActions.OpenedFolders[0]);
+            Assert.Equal(viewModel.InstalledAppPath, pathActions.CopiedPaths[0]);
+            Assert.Equal(paths.RootDirectory, pathActions.OpenedFolders[1]);
+            Assert.Equal(paths.RootDirectory, pathActions.CopiedPaths[1]);
+            Assert.Equal(hostPath, pathActions.OpenedLocations[0]);
+            Assert.Equal(hostPath, pathActions.CopiedPaths[2]);
+            Assert.Equal($"Path copied: {hostPath}", viewModel.StatusMessage);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public void PathCommandFailure_ReportsLocalizedStatusMessage()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettingsVm-");
+
+        try
+        {
+            var pathActions = new RecordingPathActionService
+            {
+                CopyException = new IOException("clipboard unavailable")
+            };
+            var viewModel = new SettingsViewModel(
+                new FoldoraSettingsStorage(new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"))),
+                FoldoraLanguage.English,
+                new InMemoryLocalizationService("en"),
+                pathActionService: pathActions);
+
+            viewModel.CopyInstalledAppPathCommand.Execute(null);
+
+            Assert.Equal("Could not copy path: clipboard unavailable", viewModel.StatusMessage);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
     [Theory]
     [MemberData(nameof(EnabledLocales))]
     public async Task SaveAsync_PersistsEveryEnabledLanguage(string language)
@@ -388,6 +476,49 @@ public sealed class SettingsViewModelTests
         public string ResolveCommandHostPath()
         {
             return hostPath;
+        }
+    }
+
+    private sealed class RecordingPathActionService : IPathActionService
+    {
+        public List<string> OpenedFolders { get; } = [];
+
+        public List<string> OpenedLocations { get; } = [];
+
+        public List<string> CopiedPaths { get; } = [];
+
+        public Exception? OpenException { get; set; }
+
+        public Exception? CopyException { get; set; }
+
+        public void OpenFolder(string path)
+        {
+            if (OpenException is not null)
+            {
+                throw OpenException;
+            }
+
+            OpenedFolders.Add(path);
+        }
+
+        public void OpenLocation(string path)
+        {
+            if (OpenException is not null)
+            {
+                throw OpenException;
+            }
+
+            OpenedLocations.Add(path);
+        }
+
+        public void CopyPath(string path)
+        {
+            if (CopyException is not null)
+            {
+                throw CopyException;
+            }
+
+            CopiedPaths.Add(path);
         }
     }
 }

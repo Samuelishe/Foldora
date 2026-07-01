@@ -49,6 +49,7 @@ public sealed class DesignResourceTests
         Assert.Contains("CardContainerStyle", keys);
         Assert.Contains("GroupContainerStyle", keys);
         Assert.Contains("StatusBannerStyle", keys);
+        Assert.Contains("HelpIconButtonStyle", keys);
     }
 
     [Fact]
@@ -129,9 +130,16 @@ public sealed class DesignResourceTests
         Assert.Contains("ExplorerMenuSection", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("InstallationSection", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("DangerZone", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("PreviewChanges", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("PreviewChangesTooltip", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("HelpIconButtonStyle", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("OpenInstalledAppPathCommand", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("CopyCommandHostPathCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("DryRunCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("RegisterExplorerCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("ResetMenuCommand", settingsWindowText, StringComparison.Ordinal);
+        Assert.DoesNotContain("Проверить план", settingsWindowText, StringComparison.Ordinal);
+        Assert.DoesNotContain("Check plan", settingsWindowText, StringComparison.OrdinalIgnoreCase);
     }
 
     private static XDocument LoadXml(params string[] pathParts)

@@ -139,9 +139,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public bool HasStatusMessage => !string.IsNullOrWhiteSpace(StatusMessage);
 
-    public string ExplorerIntegrationStatusText => ExplorerIntegrationEnabled ? L.ExplorerEnabled : L.ExplorerDisabled;
+    public string ExplorerIntegrationStatusText => ExplorerIntegrationEnabled ? L.ExplorerMenuStatusOn : L.ExplorerMenuStatusOff;
 
-    public string ExplorerIntegrationStatusLabel => string.Format(L.StatusLabelFormat, ExplorerIntegrationStatusText);
+    public string ExplorerIntegrationStatusLabel => ExplorerIntegrationStatusText;
 
     public string UnsavedChangesText => HasUnsavedChanges ? L.UnsavedChanges : L.AllChangesSaved;
 

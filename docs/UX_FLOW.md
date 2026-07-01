@@ -217,12 +217,12 @@ Preview generation всё ещё future:
 
 Explorer integration управляется в SettingsWindow. В UI явно разделены операции:
 
-- `Проверить план` - WPF-аналог `register-menu --dry-run`: построить и валидировать registry plan, показать summary операций/root paths/command example, ничего не писать в registry и не менять `ExplorerIntegrationEnabled`.
+- `Предпросмотр изменений` / `Preview changes` - WPF-аналог `register-menu --dry-run`: построить и валидировать registry plan, показать summary операций/root paths/command example, ничего не писать в registry и не менять `ExplorerIntegrationEnabled`.
 - `Включить меню Проводника` - применить validated HKCU legacy menu из saved settings и поставить `ExplorerIntegrationEnabled = true`, если есть enabled entries.
 - `Отключить меню Проводника` - выполнить семантику `unregister-menu`: убрать Foldora из Explorer, но сохранить entries/settings.
 - `Сбросить меню` - выполнить семантику `menu reset --yes` после явного подтверждения: очистить entries, вернуть title к localized default-title mode, отключить integration.
 
-`Проверить план` и `Включить меню Проводника` требуют clean draft. Если есть unsaved changes, UI показывает `Сначала сохраните изменения.` и не выполняет operation. Это сохраняет правило: registry отражает saved settings, а не временный draft.
+`Предпросмотр изменений` и `Включить меню Проводника` требуют clean draft. Если есть unsaved changes, UI показывает `Сначала сохраните изменения.` и не выполняет operation. Это сохраняет правило: registry отражает saved settings, а не временный draft.
 
 `Отключить меню Проводника` можно выполнять при unsaved changes, потому что операция не зависит от draft entries и не удаляет пользовательские entries/settings.
 
@@ -281,16 +281,20 @@ Application
   [Български / 简体中文 / 繁體中文 / Čeština / Nederlands / English / Français / Deutsch / हिन्दी / Magyar / Bahasa Indonesia / Italiano / 日本語 / 한국어 / Polski / Português (Brasil) / Português (Portugal) / Română / Русский / Español / ไทย / Türkçe / Українська / Tiếng Việt]
 
 Explorer menu
-  Status
-  Dry run
+  Foldora Explorer menu: On/Off
+  Preview changes
   Enable Explorer menu
   Disable Explorer menu
+  Tooltip/help text explaining HKCU preview and legacy Explorer menu
   Technical details
 
 Installation
   Installed app path
+    Open / Copy
   User data path
+    Open / Copy
   Current command host
+    Open location / Copy
   MenuHost is not a service note
 
 Danger zone
@@ -314,6 +318,7 @@ Documentation-first audit is tracked in `docs/UI_AUDIT.md`. Known follow-up item
 - raw unsaved-changes boolean text - addressed with localized saved/unsaved status;
 - initial button ergonomics pass for localized labels - addressed in shared action button style;
 - SettingsWindow scrollbar/content gutter - addressed;
+- SettingsWindow clarity pass - addressed: explicit Foldora Explorer menu status, Preview changes naming, tooltip help and path Open/Copy actions;
 - defer product-grade visual polish and branding/app icon work to dedicated passes.
 
 This audit does not change the staged-save model, Explorer integration behavior, registry safety or SettingsWindow immediate-action semantics.

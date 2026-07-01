@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-07-01 - Settings clarity/help/path actions cleanup
+
+- Reworded Explorer menu status in Settings/MainWindow from generic status text to explicit `Foldora Explorer menu: On/Off` style strings.
+- Renamed the visible Settings dry-run action to `Preview changes` / `Предпросмотр изменений`; internal command naming and shell behavior remain unchanged.
+- Added small self-authored `?` help buttons/tooltips for Explorer menu meaning, registry preview and installation paths; no external assets were added.
+- Added App-layer path actions for installed app path, user data path and current command host: Open/Open location and Copy.
+- Added `IPathActionService` / `WindowsPathActionService` so path open/copy is testable and stays out of WPF code-behind/Core.
+- Documented future Help/About/Instructions window as separate UX debt.
+
 ## 2026-07-01 - Small UX correctness cleanup
 
 - Removed the duplicate `Manage in Settings` content-area action from MainWindow; the title-bar gear remains the Settings entry point and the editor keeps only compact Explorer menu status.

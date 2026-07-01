@@ -99,7 +99,7 @@ Phase 2 WPF editor добавил draft-состояние для title, entries
 
 Phase 3 WPF editor показывает preview напрямую из pending source path или saved `IconPath`. Preview не меняет модель entries, не пишет `PreviewPath` и не создаёт файлы в `%AppData%\Foldora\previews`.
 
-Phase 4 WPF editor добавляет explicit Explorer integration controls. `Проверить план` и `Включить меню Проводника` требуют clean draft, чтобы registry строился только из saved settings. `Отключить меню Проводника` можно выполнять при unsaved draft changes; оно не удаляет entries. `Сбросить меню` требует подтверждения, очищает saved entries, возвращает title к `Создать папку`, отключает integration и не удаляет imported `.ico`.
+Phase 4 WPF editor добавляет explicit Explorer integration controls. В текущем Settings UI действие `Предпросмотр изменений` соответствует dry-run preview и вместе с `Включить меню Проводника` требует clean draft, чтобы registry строился только из saved settings. `Отключить меню Проводника` можно выполнять при unsaved draft changes; оно не удаляет entries. `Сбросить меню` требует подтверждения, очищает saved entries, возвращает title к `Создать папку`, отключает integration и не удаляет imported `.ico`.
 
 После UX hardening WPF `Сохранить` rebuild-ит Foldora-owned registry menu, если `ExplorerIntegrationEnabled` уже был `true`. Это не нарушает staged-save: registry меняется только по явному нажатию Save, а не при редактировании полей. Если enabled entries после save нет, menu roots удаляются и `ExplorerIntegrationEnabled` сохраняется как `false`.
 

@@ -85,13 +85,20 @@ UI/UX audit baseline and small correctness cleanup before visual release polish:
    - raw `Unsaved changes: True/False` replaced with localized saved/unsaved status;
    - shared action button padding/min-height tuned for localized labels;
    - SettingsWindow scroll content gutter added.
-3. Visual polish pass:
+3. Settings clarity/help/path actions cleanup:
+   - explicit Foldora Explorer menu status wording;
+   - user-facing `Preview changes` label for dry-run registry preview;
+   - small self-authored help/info affordances;
+   - Open/Copy actions for installation/user-data/MenuHost paths.
+4. Visual polish pass:
    - refine surfaces, spacing, hierarchy, empty states, status presentation, cards and Settings sections.
-4. Branding/assets pass:
+5. Help/About/Instructions window:
+   - explain menu entries, `.ico` selection, Explorer menu enablement, MenuHost role, data paths and uninstall behavior.
+6. Branding/assets pass:
    - app icon;
    - exe/window icon;
    - README hero/mockup after the UI looks ready for public presentation.
-5. Later layout/localization polish:
+7. Later layout/localization polish:
    - handle feedback from long labels and non-Latin scripts across enabled locales.
 
 Per-user install smoke and release polish before full installer work:

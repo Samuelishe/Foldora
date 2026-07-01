@@ -154,7 +154,7 @@ dotnet run --project src/Foldora.App/Foldora.App.csproj
 ## 4. Explorer Integration
 
 1. Открыть Settings через gear.
-2. В секции Explorer menu нажать `Проверить план`.
+2. В секции Explorer menu нажать `Предпросмотр изменений`.
 3. Проверить short status и раскрываемые technical details.
 4. Нажать `Включить меню Проводника`.
 5. Открыть Explorer.
@@ -274,7 +274,7 @@ foldora menu reset --yes
 2. Открыть Settings через gear.
 3. Сменить язык и сохранить.
 4. Создать unsaved draft change в главном редакторе.
-5. Открыть Settings и попробовать `Проверить план` или `Включить меню Проводника`.
+5. Открыть Settings и попробовать `Предпросмотр изменений` или `Включить меню Проводника`.
 6. Убедиться, что operation блокируется сообщением о необходимости сохранить или отменить изменения меню.
 7. Сохранить или отменить draft changes.
 8. В Settings включить Explorer integration.

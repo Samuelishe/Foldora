@@ -50,6 +50,13 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Impact: продуктовая идентичность не сформирована; installed/published app выглядит незавершённой.
 - Suggested direction: отдельный branding/assets pass: app icon, exe icon, window icon, README visual assets. Любые bundled assets должны соблюдать `docs/RESOURCE_POLICY.md` и обновлять notices/license docs.
 
+### UIA-0007 Settings Clarity And Help
+
+- Observed: SettingsWindow system sections can still be unclear for non-technical users: `Status: Disabled` did not say which menu is disabled, `Проверить план` sounded technical, and installation paths were visible but not actionable.
+- Impact: Explorer integration is functionally correct but requires too much inference from the user.
+- Suggested direction: use explicit Explorer menu status wording, rename dry-run UI to `Preview changes`, add small tooltip/help affordances and add Open/Copy actions for paths.
+- Status: Addressed for Settings clarity. Future global Help/About/Instructions window remains separate work.
+
 ## Near-Term UI Cleanup
 
 Small safe improvements for a future code pass:
@@ -59,6 +66,7 @@ Small safe improvements for a future code pass:
 - button padding/min-width/min-height pass across MainWindow and SettingsWindow - initial pass addressed;
 - SettingsWindow scrollbar gutter and content padding pass - addressed;
 - check SettingsWindow sections with long labels in German, Portuguese, Ukrainian and other longer locales.
+- keep Settings wording understandable: Explorer menu status, preview/dry-run action and path actions are now clarified.
 
 ## Later Visual Polish
 
@@ -70,6 +78,7 @@ Future product-grade polish can include:
 - more polished status banners/chips;
 - calmer spacing rhythm and surface hierarchy;
 - README hero/mockup only after the UI is visually ready for public presentation.
+- a small Help/About/Instructions window that explains entries, `.ico` selection, Explorer menu enablement, MenuHost, data paths and uninstall behavior.
 
 ## Branding / Assets Pass
 

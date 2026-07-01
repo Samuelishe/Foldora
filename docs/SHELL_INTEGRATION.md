@@ -276,7 +276,7 @@ HKCU\Software\Classes\Directory\shell\Foldora
 
 WPF uses the same `ExplorerMenuRegistrationService`, что и CLI, через App-level controller. Это не вторая registry implementation. Settings/Explorer cleanup переносит эти controls из MainWindow в SettingsWindow: главный экран остаётся редактором меню, а Settings содержит Explorer menu section, technical details and danger reset.
 
-`Проверить план` соответствует `register-menu --dry-run`: строит и валидирует plan, показывает summary delete/create/set operations, Foldora-owned roots и пример command value. Registry и settings не меняются.
+Visible WPF label `Preview changes` / `Предпросмотр изменений` соответствует internal dry-run / `register-menu --dry-run`: строит и валидирует plan, показывает summary delete/create/set operations, Foldora-owned roots и пример command value. Registry и settings не меняются.
 
 `Включить меню Проводника` соответствует `register-menu`: требует отсутствия unsaved draft changes, строит validated plan из saved settings, применяет HKCU writer и сохраняет `ExplorerIntegrationEnabled = true`, если есть enabled entries. Если enabled entries нет, пустое menu не создаётся: Foldora-owned roots удаляются, а `ExplorerIntegrationEnabled = false`.
 

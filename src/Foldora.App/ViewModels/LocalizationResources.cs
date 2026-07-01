@@ -45,6 +45,9 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string ExplorerIntegration => Get();
     public string StatusLabelFormat => Get();
     public string DryRun => Get();
+    public string PreviewChanges => Get();
+    public string PreviewChangesTooltip => Get();
+    public string ExplorerMenuHelpTooltip => Get();
     public string RegisterExplorer => Get();
     public string UnregisterExplorer => Get();
     public string TechnicalDetails => Get();
@@ -65,6 +68,14 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string InstalledAppPath => Get();
     public string UserDataPath => Get();
     public string CurrentCommandHost => Get();
+    public string InstallationPathsHelpTooltip => Get();
+    public string OpenFolder => Get();
+    public string OpenLocation => Get();
+    public string CopyPath => Get();
+    public string PathCopiedFormat => Get();
+    public string PathOpenFailedFormat => Get();
+    public string PathCopyFailedFormat => Get();
+    public string HelpTooltip => Get();
     public string MenuHostServiceNote => Get();
     public string ExplorerActionsApplyImmediately => Get();
     public string ManageInSettings => Get();
@@ -81,6 +92,8 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string UntitledEntry => Get();
     public string ExplorerEnabled => Get();
     public string ExplorerDisabled => Get();
+    public string ExplorerMenuStatusOn => Get();
+    public string ExplorerMenuStatusOff => Get();
     public string LoadingSettings => Get();
     public string EmptyMenuStatus => Get();
     public string SettingsLoaded => Get();
