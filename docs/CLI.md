@@ -56,7 +56,7 @@ foldora settings
 
 Если `--name` не указан или пустой, `menu add` использует первое свободное fallback-имя `Вид N`.
 Если `--folder-name` не указан или пустой, используется `Новая папка`.
-Если `--group` не указан или пустой, entry остаётся в root menu. Если `--group "Цветные"` указан, entry попадает в одноуровневую группу `Цветные`. `/` и `\` в group name запрещены, потому что nested groups пока не поддерживаются.
+Если `--group` не указан или пустой, entry остаётся в root menu. Если `--group "Colors"` указан, entry попадает в одноуровневую группу `Colors`. `/` и `\` в group name запрещены, потому что nested groups пока не поддерживаются.
 CLI не исправляет явно невалидный `--folder-name` молча: запрещённые Windows filename characters, reserved device names, trailing dot/space, control chars и слишком длинные значения дают понятную ошибку, entry не создаётся.
 
 `menu list` показывает группу как `Group: <root>` или `Group: <group-name>`.

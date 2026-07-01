@@ -17,7 +17,11 @@ public sealed class SettingsLanguageInitializerTests
     [InlineData("zh-SG", "zh-Hans")]
     [InlineData("zh-Hans", "zh-Hans")]
     [InlineData("zh-Hans-CN", "zh-Hans")]
-    [InlineData("zh-TW", "en")]
+    [InlineData("zh-TW", "zh-Hant")]
+    [InlineData("zh-HK", "zh-Hant")]
+    [InlineData("zh-MO", "zh-Hant")]
+    [InlineData("zh-Hant", "zh-Hant")]
+    [InlineData("zh-Hant-HK", "zh-Hant")]
     [InlineData("de", "de")]
     [InlineData("de-DE", "de")]
     [InlineData("es", "es")]
@@ -28,7 +32,10 @@ public sealed class SettingsLanguageInitializerTests
     [InlineData("ja-JP", "ja")]
     [InlineData("pt", "pt-BR")]
     [InlineData("pt-BR", "pt-BR")]
-    [InlineData("pt-PT", "pt-BR")]
+    [InlineData("pt-BR-x-test", "pt-BR")]
+    [InlineData("pt-PT", "pt-PT")]
+    [InlineData("pt-PT-x-test", "pt-PT")]
+    [InlineData("pt-AO", "pt-BR")]
     [InlineData("ko", "ko")]
     [InlineData("ko-KR", "ko")]
     [InlineData("uk", "uk")]
@@ -45,6 +52,18 @@ public sealed class SettingsLanguageInitializerTests
     [InlineData("hu-HU", "hu")]
     [InlineData("bg", "bg")]
     [InlineData("bg-BG", "bg")]
+    [InlineData("it", "it")]
+    [InlineData("it-IT", "it")]
+    [InlineData("nl", "nl")]
+    [InlineData("nl-NL", "nl")]
+    [InlineData("id", "id")]
+    [InlineData("id-ID", "id")]
+    [InlineData("vi", "vi")]
+    [InlineData("vi-VN", "vi")]
+    [InlineData("hi", "hi")]
+    [InlineData("hi-IN", "hi")]
+    [InlineData("th", "th")]
+    [InlineData("th-TH", "th")]
     [InlineData("be-BY", "en")]
     [InlineData("kk-KZ", "en")]
     [InlineData("uz-Latn-UZ", "en")]
@@ -58,7 +77,6 @@ public sealed class SettingsLanguageInitializerTests
     [InlineData("sl-SI", "en")]
     [InlineData("hr-HR", "en")]
     [InlineData("sr-RS", "en")]
-    [InlineData("it-IT", "en")]
     public void DetectStartupLanguage_SelectsEnabledCompleteLocales(string cultureName, string expected)
     {
         Assert.Equal(expected, SettingsLanguageInitializer.DetectStartupLanguage(cultureName));
@@ -97,7 +115,7 @@ public sealed class SettingsLanguageInitializerTests
         {
             var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
             var storage = new FoldoraSettingsStorage(paths);
-            var initializer = new SettingsLanguageInitializer(storage, new FixedSystemLanguageProvider("it-IT"));
+            var initializer = new SettingsLanguageInitializer(storage, new FixedSystemLanguageProvider("be-BY"));
 
             await initializer.InitializeAsync();
 
@@ -117,6 +135,8 @@ public sealed class SettingsLanguageInitializerTests
     [InlineData("zh-Hans", "en-US", "zh-Hans")]
     [InlineData("uk", "en-US", "uk")]
     [InlineData("bg", "en-US", "bg")]
+    [InlineData("it", "en-US", "it")]
+    [InlineData("pt-PT", "en-US", "pt-PT")]
     public async Task InitializeAsync_PersistedSupportedLanguageWinsOverSystemLanguage(
         string savedLanguage,
         string systemLanguage,
@@ -149,7 +169,10 @@ public sealed class SettingsLanguageInitializerTests
     [InlineData("pl-PL", "pl", "Utwórz folder")]
     [InlineData("tr-TR", "tr", "Klasör oluştur")]
     [InlineData("bg-BG", "bg", "Създай папка")]
-    [InlineData("it-IT", "en", "Create folder")]
+    [InlineData("it-IT", "it", "Crea cartella")]
+    [InlineData("nl-NL", "nl", "Map maken")]
+    [InlineData("pt-PT", "pt-PT", "Criar pasta")]
+    [InlineData("be-BY", "en", "Create folder")]
     public async Task InitializeAsync_OldSettingsWithoutLanguage_DetectsAndPreservesMenuData(
         string systemLanguage,
         string expectedLanguage,
@@ -214,7 +237,7 @@ public sealed class SettingsLanguageInitializerTests
                 paths.SettingsFile,
                 """
                 {
-                  "language": "it",
+                  "language": "be",
                   "explorerIntegrationEnabled": false,
                   "createFolderMenu": {
                     "title": "Создать папку",

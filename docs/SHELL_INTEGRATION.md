@@ -41,10 +41,10 @@ Builder поддерживает два target kind:
 Текущая one-level menu shape:
 
 ```text
-Создать папку
-  Цветные
-    Синяя
-    Красная
+Create folder
+  Colors
+    Blue
+    Red
   <DisplayName entry 1>
   <DisplayName entry 2>
 ```
@@ -293,7 +293,7 @@ WPF `Сохранить` rebuild-ит registry menu только если `Explo
 1. Добавить тестовый entry:
 
 ```text
-foldora menu add --icon "<path-to-test.ico>" --name "Череп" --folder-name "Череп"
+foldora menu add --icon "<path-to-test.ico>" --name "Documents" --folder-name "Documents"
 ```
 
 2. Посмотреть entries:
@@ -351,8 +351,8 @@ foldora menu reset --yes
 Для grouped menu дополнительно проверить:
 
 ```text
-Создать папку
-  Цветные
+Create folder
+  Colors
     <entry>
   <root entry>
 ```

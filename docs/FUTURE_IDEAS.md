@@ -5,12 +5,12 @@
 - Full tree menu runtime/storage beyond current one-level `GroupName`:
 
 ```text
-Создать папку
-  Цветные
-    Красная
-    Синяя
-  Готические
-    Череп
+Create folder
+  Colors
+    Red
+    Blue
+  Work
+    Documents
     Скелет
   Фото
 ```

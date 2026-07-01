@@ -8,24 +8,41 @@
 
 Complete and enabled locales:
 
-- `ru` - Русский
-- `en` - English
-- `zh-Hans` - 简体中文
+- `bg` - Български
+- `cs` - Čeština
 - `de` - Deutsch
+- `en` - English
 - `es` - Español
 - `fr` - Français
-- `ja` - 日本語
-- `pt-BR` - Português (Brasil)
-- `ko` - 한국어
-- `uk` - Українська
-- `pl` - Polski
-- `tr` - Türkçe
-- `ro` - Română
-- `cs` - Čeština
+- `hi` - हिन्दी
 - `hu` - Magyar
-- `bg` - Български
+- `id` - Bahasa Indonesia
+- `it` - Italiano
+- `ja` - 日本語
+- `ko` - 한국어
+- `nl` - Nederlands
+- `pl` - Polski
+- `pt-BR` - Português (Brasil)
+- `pt-PT` - Português (Portugal)
+- `ro` - Română
+- `ru` - Русский
+- `th` - ไทย
+- `tr` - Türkçe
+- `uk` - Українська
+- `vi` - Tiếng Việt
+- `zh-Hans` - 简体中文
+- `zh-Hant` - 繁體中文
 
 Settings UI must expose only complete locales. Incomplete planned locales are not shown unless a separate explicit experimental state is designed.
+
+Settings UI displays native language names, but the dropdown order is stable and sorted by English/common language name:
+
+```text
+Bulgarian, Chinese Simplified, Chinese Traditional, Czech, Dutch, English,
+French, German, Hindi, Hungarian, Indonesian, Italian, Japanese, Korean,
+Polish, Portuguese Brazil, Portuguese Portugal, Romanian, Russian, Spanish,
+Thai, Turkish, Ukrainian, Vietnamese
+```
 
 ## Planned locales
 
@@ -45,10 +62,6 @@ Future regional candidates:
 - `hr`
 - `sr`
 
-Other later candidate:
-
-- `it`
-
 RTL languages such as Arabic or Hebrew are not part of the current plan because RTL layout verification is a separate UI task.
 
 ## Language code policy
@@ -58,11 +71,17 @@ Foldora uses canonical BCP-47-style tags where practical:
 - `ru`
 - `en`
 - `zh-Hans`
+- `zh-Hant`
 - `de`
 - `es`
 - `fr`
+- `hi`
+- `id`
+- `it`
 - `ja`
+- `nl`
 - `pt-BR`
+- `pt-PT`
 - `ko`
 - `uk`
 - `pl`
@@ -71,10 +90,12 @@ Foldora uses canonical BCP-47-style tags where practical:
 - `cs`
 - `hu`
 - `bg`
+- `th`
+- `vi`
 
 `FoldoraLanguage` accepts and normalizes only complete enabled locales. Unsupported saved values normalize to `en` and are persisted as `en` by the WPF startup language initializer.
 
-`pt-BR` is currently the only Portuguese catalog shipped by Foldora. First-run detection maps generic `pt` and `pt-*` cultures to `pt-BR` until a separate Portuguese locale is intentionally added.
+`pt-BR` and `pt-PT` are both shipped. First-run detection maps exact `pt-BR`/`pt-BR-*` to `pt-BR`, exact `pt-PT`/`pt-PT-*` to `pt-PT`, and keeps bare `pt` plus other `pt-*` cultures on `pt-BR` for backward-compatible MVP behavior.
 
 ## String categories
 
@@ -141,12 +162,13 @@ WPF first-run language selection happens before the draft menu is loaded:
 3. `ru`, `ru-RU` and other `ru-*` cultures map to `ru`.
 4. `en`, `en-US`, `en-GB` and other `en-*` cultures map to `en`.
 5. `zh`, `zh-CN`, `zh-SG`, `zh-Hans` and `zh-Hans-*` map to `zh-Hans`.
-6. `de`, `es`, `fr`, `ja` and `ko` culture families map to their matching enabled locale.
-7. `pt`, `pt-BR` and `pt-*` map to `pt-BR`.
-8. `uk`, `pl`, `tr`, `ro`, `cs`, `hu` and `bg` culture families map to their matching enabled locale.
-9. Any other system culture maps to `en`.
-10. The selected language is saved to `settings.json`, so later startups do not auto-detect again.
-11. If `settings.json` contains an unsupported language value such as `it`, Foldora normalizes and saves `en`; it does not keep re-running system detection.
+6. `zh-TW`, `zh-HK`, `zh-MO`, `zh-Hant` and `zh-Hant-*` map to `zh-Hant`.
+7. `de`, `es`, `fr`, `ja`, `ko`, `it`, `nl`, `id`, `vi`, `hi` and `th` culture families map to their matching enabled locale.
+8. Exact `pt-BR`/`pt-BR-*` maps to `pt-BR`; exact `pt-PT`/`pt-PT-*` maps to `pt-PT`; bare `pt` and other `pt-*` cultures map to `pt-BR`.
+9. `uk`, `pl`, `tr`, `ro`, `cs`, `hu` and `bg` culture families map to their matching enabled locale.
+10. Any other system culture maps to `en`.
+11. The selected language is saved to `settings.json`, so later startups do not auto-detect again.
+12. If `settings.json` contains an unsupported language value such as `be`, Foldora normalizes and saves `en`; it does not keep re-running system detection.
 
 Manual language selection in Settings always wins over system language after it is saved. Future regional candidates such as `be`, `kk`, `uz-Latn`, `az`, `hy`, `ka`, `lt`, `lv`, `et`, `sk`, `sl`, `hr` and `sr` are not selected automatically until their catalogs are complete and exposed.
 
@@ -170,6 +192,14 @@ When the WPF editor creates a new entry, it uses the current UI language:
 - `cs`: `Zobrazení N` and `Nová složka`
 - `hu`: `Nézet N` and `Új mappa`
 - `bg`: `Изглед N` and `Нова папка`
+- `it`: `Vista N` and `Nuova cartella`
+- `nl`: `Weergave N` and `Nieuwe map`
+- `id`: `Tampilan N` and `Folder baru`
+- `vi`: `Chế độ xem N` and `Thư mục mới`
+- `hi`: `दृश्य N` and `नया फ़ोल्डर`
+- `th`: `มุมมอง N` and `โฟลเดอร์ใหม่`
+- `zh-Hant`: `檢視 N` and `新資料夾`
+- `pt-PT`: `Vista N` and `Nova pasta`
 
 The `N` suffix is still generated from existing draft entries. Existing entries keep their saved values.
 

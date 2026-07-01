@@ -38,12 +38,13 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 
 `Language`:
 
-- supported values: `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`, `uk`, `pl`, `tr`, `ro`, `cs`, `hu`, `bg`;
+- supported values: `bg`, `cs`, `de`, `en`, `es`, `fr`, `hi`, `hu`, `id`, `it`, `ja`, `ko`, `nl`, `pl`, `pt-BR`, `pt-PT`, `ro`, `ru`, `th`, `tr`, `uk`, `vi`, `zh-Hans`, `zh-Hant`;
 - first-run WPF default: detected from `CultureInfo.CurrentUICulture` if system language is supported, otherwise `en`;
 - старые settings без `language` получают one-time WPF detection, после чего выбранный язык сохраняется;
 - unsupported persisted values нормализуются и сохраняются как `en`;
 - settings UI сохраняет язык в тот же `settings.json`;
-- settings UI показывает только complete supported locales.
+- settings UI показывает только complete supported locales;
+- settings UI показывает native display names, но сортирует список по стабильному English/common sort order, а не по порядку добавления локалей.
 
 После сохранения `Language` Foldora не определяет язык системы повторно на каждом старте. Ручной выбор в Settings имеет приоритет над системным языком. Future regional candidates (`be`, `kk`, `uz-Latn`, `az`, `hy`, `ka`, `lt`, `lv`, `et`, `sk`, `sl`, `hr`, `sr`) не выбираются автоматически, пока они не станут complete/enabled.
 

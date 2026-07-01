@@ -70,7 +70,7 @@ public sealed class LocalizationServiceTests
     [Fact]
     public void UnsupportedLanguageFallsBackToEnglish()
     {
-        var service = new InMemoryLocalizationService("it");
+        var service = new InMemoryLocalizationService("ar");
 
         Assert.Equal("en", service.CurrentLanguage);
         Assert.Equal("Settings", service.Resources.Settings);
@@ -161,7 +161,15 @@ public sealed class LocalizationServiceTests
             { FoldoraLanguage.Romanian, "Creează folder", "Vizualizare", "Folder nou" },
             { FoldoraLanguage.Czech, "Vytvořit složku", "Zobrazení", "Nová složka" },
             { FoldoraLanguage.Hungarian, "Mappa létrehozása", "Nézet", "Új mappa" },
-            { FoldoraLanguage.Bulgarian, "Създай папка", "Изглед", "Нова папка" }
+            { FoldoraLanguage.Bulgarian, "Създай папка", "Изглед", "Нова папка" },
+            { FoldoraLanguage.Italian, "Crea cartella", "Vista", "Nuova cartella" },
+            { FoldoraLanguage.Dutch, "Map maken", "Weergave", "Nieuwe map" },
+            { FoldoraLanguage.Indonesian, "Buat folder", "Tampilan", "Folder baru" },
+            { FoldoraLanguage.Vietnamese, "Tạo thư mục", "Chế độ xem", "Thư mục mới" },
+            { FoldoraLanguage.Hindi, "फ़ोल्डर बनाएँ", "दृश्य", "नया फ़ोल्डर" },
+            { FoldoraLanguage.Thai, "สร้างโฟลเดอร์", "มุมมอง", "โฟลเดอร์ใหม่" },
+            { FoldoraLanguage.TraditionalChinese, "建立資料夾", "檢視", "新資料夾" },
+            { FoldoraLanguage.PortuguesePortugal, "Criar pasta", "Vista", "Nova pasta" }
         };
     }
 }

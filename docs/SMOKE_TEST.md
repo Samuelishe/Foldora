@@ -134,7 +134,7 @@ dotnet run --project src/Foldora.App/Foldora.App.csproj
 8. Нажать `Готово` и убедиться, что карточка свернулась в compact view.
 9. Нажать `Редактировать` и убедиться, что draft fields не потерялись.
 10. Добавить grouped entry.
-11. Указать группу через group container, например `Цветные`.
+11. Указать группу через group container, например `Colors`.
 12. Временно сделать entry невалидным, например указать запрещённый символ в имени создаваемой папки, и нажать `Сохранить`.
 13. Убедиться, что affected card раскрылась и показала inline validation error.
 14. Исправить значение и нажать `Готово`; убедиться, что карточка снова свернулась без сохранения settings.
@@ -162,10 +162,11 @@ dotnet run --project src/Foldora.App/Foldora.App.csproj
 Ожидаемо:
 
 ```text
-Создать папку
-  Цветные
-    Синяя
-  Музыка
+Create folder
+  Colors
+    Blue
+  Media
+    Music
 ```
 
 - root entry работает;

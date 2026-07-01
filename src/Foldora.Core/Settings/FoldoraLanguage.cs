@@ -21,6 +21,14 @@ public static class FoldoraLanguage
     public const string Czech = "cs";
     public const string Hungarian = "hu";
     public const string Bulgarian = "bg";
+    public const string Italian = "it";
+    public const string Dutch = "nl";
+    public const string Indonesian = "id";
+    public const string Vietnamese = "vi";
+    public const string Hindi = "hi";
+    public const string Thai = "th";
+    public const string TraditionalChinese = "zh-Hant";
+    public const string PortuguesePortugal = "pt-PT";
 
     private static readonly string[] SupportedLocaleValues =
     [
@@ -39,7 +47,15 @@ public static class FoldoraLanguage
         Romanian,
         Czech,
         Hungarian,
-        Bulgarian
+        Bulgarian,
+        Italian,
+        Dutch,
+        Indonesian,
+        Vietnamese,
+        Hindi,
+        Thai,
+        TraditionalChinese,
+        PortuguesePortugal
     ];
 
     public static IReadOnlyList<string> SupportedLocales => SupportedLocaleValues;

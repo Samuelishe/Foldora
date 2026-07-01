@@ -55,6 +55,11 @@ public sealed class SettingsLanguageInitializer : ISettingsLanguageInitializer
             return FoldoraLanguage.English;
         }
 
+        if (IsTraditionalChineseCulture(normalized))
+        {
+            return FoldoraLanguage.TraditionalChinese;
+        }
+
         if (IsSimplifiedChineseCulture(normalized))
         {
             return FoldoraLanguage.SimplifiedChinese;
@@ -78,6 +83,16 @@ public sealed class SettingsLanguageInitializer : ISettingsLanguageInitializer
         if (MatchesLanguage(normalized, FoldoraLanguage.Japanese))
         {
             return FoldoraLanguage.Japanese;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.BrazilianPortuguese))
+        {
+            return FoldoraLanguage.BrazilianPortuguese;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.PortuguesePortugal))
+        {
+            return FoldoraLanguage.PortuguesePortugal;
         }
 
         if (MatchesLanguage(normalized, "pt"))
@@ -125,6 +140,36 @@ public sealed class SettingsLanguageInitializer : ISettingsLanguageInitializer
             return FoldoraLanguage.Bulgarian;
         }
 
+        if (MatchesLanguage(normalized, FoldoraLanguage.Italian))
+        {
+            return FoldoraLanguage.Italian;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Dutch))
+        {
+            return FoldoraLanguage.Dutch;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Indonesian))
+        {
+            return FoldoraLanguage.Indonesian;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Vietnamese))
+        {
+            return FoldoraLanguage.Vietnamese;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Hindi))
+        {
+            return FoldoraLanguage.Hindi;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Thai))
+        {
+            return FoldoraLanguage.Thai;
+        }
+
         return FoldoraLanguage.English;
     }
 
@@ -141,5 +186,14 @@ public sealed class SettingsLanguageInitializer : ISettingsLanguageInitializer
                || cultureName.Equals("zh-SG", StringComparison.OrdinalIgnoreCase)
                || cultureName.Equals(FoldoraLanguage.SimplifiedChinese, StringComparison.OrdinalIgnoreCase)
                || cultureName.StartsWith(FoldoraLanguage.SimplifiedChinese + "-", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsTraditionalChineseCulture(string cultureName)
+    {
+        return cultureName.Equals("zh-TW", StringComparison.OrdinalIgnoreCase)
+               || cultureName.Equals("zh-HK", StringComparison.OrdinalIgnoreCase)
+               || cultureName.Equals("zh-MO", StringComparison.OrdinalIgnoreCase)
+               || cultureName.Equals(FoldoraLanguage.TraditionalChinese, StringComparison.OrdinalIgnoreCase)
+               || cultureName.StartsWith(FoldoraLanguage.TraditionalChinese + "-", StringComparison.OrdinalIgnoreCase);
     }
 }

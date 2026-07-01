@@ -22,13 +22,15 @@ Foldora imports the icon into AppData, stores settings as JSON, and generates a 
 Example visible legacy menu:
 
 ```text
-Создать папку
-  Цветные
-    Синяя
-    Красная
-  Готические
-    Череп
-  Музыка
+Create folder
+  Colors
+    Blue
+    Red
+  Work
+    Documents
+  Media
+    Music
+    Pictures
 ```
 
 Selecting an entry creates a folder and applies its icon through `desktop.ini`.
@@ -48,7 +50,7 @@ Selecting an entry creates a folder and applies its icon through `desktop.ini`.
 - Small icons in the legacy Explorer menu.
 - Folder creation with a custom icon through `desktop.ini`.
 - Best-effort desktop icon placement for folders created from the desktop background legacy menu.
-- WPF localization for Russian, English, Simplified Chinese, German, Spanish, French, Japanese, Brazilian Portuguese, Korean, Ukrainian, Polish, Turkish, Romanian, Czech, Hungarian and Bulgarian; new entries use localized defaults for the current UI language.
+- WPF localization for Bulgarian, Czech, German, English, Spanish, French, Hindi, Hungarian, Indonesian, Italian, Japanese, Korean, Dutch, Polish, Brazilian Portuguese, European Portuguese, Romanian, Russian, Thai, Turkish, Ukrainian, Vietnamese, Simplified Chinese and Traditional Chinese; new entries use localized defaults for the current UI language.
 - Deletion-friendly folder icon attributes: folder `ReadOnly`, `desktop.ini` `Hidden`.
 - Unregister flow that disables Explorer integration without deleting entries.
 - Reset flow that clears the user menu and disables Explorer integration.
@@ -106,7 +108,7 @@ Uninstall keeps `%AppData%\Foldora` by default because existing styled folders c
 
 ## Localization
 
-Complete enabled UI languages are Russian (`ru`), English (`en`), Simplified Chinese (`zh-Hans`), German (`de`), Spanish (`es`), French (`fr`), Japanese (`ja`), Brazilian Portuguese (`pt-BR`), Korean (`ko`), Ukrainian (`uk`), Polish (`pl`), Turkish (`tr`), Romanian (`ro`), Czech (`cs`), Hungarian (`hu`) and Bulgarian (`bg`). On first WPF launch, Foldora chooses the system UI language only if it is complete and enabled; unsupported system languages fall back to English. The selected language is saved and is not re-detected on later launches. Changing the application language changes UI labels, status text, the untouched default menu title, and defaults for newly created entries. It does not rewrite a custom menu title, entry names, folder names, or group names.
+Complete enabled UI languages are Bulgarian (`bg`), Czech (`cs`), German (`de`), English (`en`), Spanish (`es`), French (`fr`), Hindi (`hi`), Hungarian (`hu`), Indonesian (`id`), Italian (`it`), Japanese (`ja`), Korean (`ko`), Dutch (`nl`), Polish (`pl`), Brazilian Portuguese (`pt-BR`), European Portuguese (`pt-PT`), Romanian (`ro`), Russian (`ru`), Thai (`th`), Turkish (`tr`), Ukrainian (`uk`), Vietnamese (`vi`), Simplified Chinese (`zh-Hans`) and Traditional Chinese (`zh-Hant`). On first WPF launch, Foldora chooses the system UI language only if it is complete and enabled; unsupported system languages fall back to English. The selected language is saved and is not re-detected on later launches. Changing the application language changes UI labels, status text, the untouched default menu title, and defaults for newly created entries. It does not rewrite a custom menu title, entry names, folder names, or group names.
 
 ## Development Run
 
@@ -165,6 +167,8 @@ When the installed app enables Explorer integration, the registry command should
 
 `Foldora.MenuHost.exe` is not a service, tray app, background helper, or autostart process. It is a short-lived no-console executable launched by Explorer only when the user clicks a Foldora context-menu command.
 
+Foldora does not install a background service, tray helper, autostart process, global mouse hook, Explorer patch, shell replacement, or system DLL modification.
+
 ## Uninstall
 
 To unregister the menu and remove installed binaries:
@@ -194,8 +198,8 @@ Use `-RemoveUserData` only when you intentionally want to delete settings, impor
 After building/publishing, use the CLI executable for manual commands:
 
 ```text
-foldora menu add --icon "<path-to-icon.ico>" --name "Череп" --folder-name "Череп"
-foldora menu add --icon "<path-to-blue.ico>" --name "Синяя" --folder-name "Синяя" --group "Цветные"
+foldora menu add --icon "<path-to-documents.ico>" --name "Documents" --folder-name "Documents" --group "Work"
+foldora menu add --icon "<path-to-music.ico>" --name "Music" --folder-name "Music" --group "Media"
 foldora register-menu --host-path "<path-to-Foldora.MenuHost.exe>"
 foldora unregister-menu
 ```

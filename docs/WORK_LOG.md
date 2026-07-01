@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - Popular locale expansion and public docs audit
+
+- Added embedded WPF localization catalogs for `it`, `nl`, `id`, `vi`, `hi`, `th`, `zh-Hant` and `pt-PT`.
+- Enabled the popular locale batch in `FoldoraLanguage`, Settings UI and first-run language detection.
+- Changed Settings language dropdown from insertion order to stable English/common-name sorting while still displaying native names.
+- Documented Portuguese detection policy: exact `pt-BR` maps to `pt-BR`, exact `pt-PT` maps to `pt-PT`, and bare/other `pt-*` remains `pt-BR`.
+- Audited the public README-linked docs and replaced old Russian legacy-menu examples with neutral English examples where they were not specifically about Russian localization.
+
 ## 2026-07-01 - Regional locale expansion
 
 - Added embedded WPF localization catalogs for `uk`, `pl`, `tr`, `ro`, `cs`, `hu` and `bg`.

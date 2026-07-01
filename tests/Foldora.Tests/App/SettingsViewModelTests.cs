@@ -17,9 +17,11 @@ public sealed class SettingsViewModelTests
                 new FoldoraSettingsStorage(new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"))),
                 "ru");
 
-            Assert.Equal(FoldoraLanguage.SupportedLocales, viewModel.AvailableLanguages.Select(language => language.Code).ToArray());
+            Assert.Equal(FoldoraLanguage.SupportedLocales.Order(StringComparer.Ordinal), viewModel.AvailableLanguages.Select(language => language.Code).Order(StringComparer.Ordinal).ToArray());
             Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.SimplifiedChinese && language.DisplayName == "简体中文");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.TraditionalChinese && language.DisplayName == "繁體中文");
             Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.BrazilianPortuguese && language.DisplayName == "Português (Brasil)");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.PortuguesePortugal && language.DisplayName == "Português (Portugal)");
             Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Ukrainian && language.DisplayName == "Українська");
             Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Polish && language.DisplayName == "Polski");
             Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Turkish && language.DisplayName == "Türkçe");
@@ -27,6 +29,58 @@ public sealed class SettingsViewModelTests
             Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Czech && language.DisplayName == "Čeština");
             Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Hungarian && language.DisplayName == "Magyar");
             Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Bulgarian && language.DisplayName == "Български");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Italian && language.DisplayName == "Italiano");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Dutch && language.DisplayName == "Nederlands");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Indonesian && language.DisplayName == "Bahasa Indonesia");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Vietnamese && language.DisplayName == "Tiếng Việt");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Hindi && language.DisplayName == "हिन्दी");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Thai && language.DisplayName == "ไทย");
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public void AvailableLanguages_UsesStableEnglishSortOrder()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettingsVm-");
+
+        try
+        {
+            var viewModel = new SettingsViewModel(
+                new FoldoraSettingsStorage(new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"))),
+                "en");
+
+            Assert.Equal(
+                [
+                    FoldoraLanguage.Bulgarian,
+                    FoldoraLanguage.SimplifiedChinese,
+                    FoldoraLanguage.TraditionalChinese,
+                    FoldoraLanguage.Czech,
+                    FoldoraLanguage.Dutch,
+                    FoldoraLanguage.English,
+                    FoldoraLanguage.French,
+                    FoldoraLanguage.German,
+                    FoldoraLanguage.Hindi,
+                    FoldoraLanguage.Hungarian,
+                    FoldoraLanguage.Indonesian,
+                    FoldoraLanguage.Italian,
+                    FoldoraLanguage.Japanese,
+                    FoldoraLanguage.Korean,
+                    FoldoraLanguage.Polish,
+                    FoldoraLanguage.BrazilianPortuguese,
+                    FoldoraLanguage.PortuguesePortugal,
+                    FoldoraLanguage.Romanian,
+                    FoldoraLanguage.Russian,
+                    FoldoraLanguage.Spanish,
+                    FoldoraLanguage.Thai,
+                    FoldoraLanguage.Turkish,
+                    FoldoraLanguage.Ukrainian,
+                    FoldoraLanguage.Vietnamese
+                ],
+                viewModel.AvailableLanguages.Select(language => language.Code).ToArray());
         }
         finally
         {
@@ -129,7 +183,17 @@ public sealed class SettingsViewModelTests
     [InlineData("cs", "cs")]
     [InlineData("hu", "hu")]
     [InlineData("bg", "bg")]
-    [InlineData("it", "en")]
+    [InlineData("it", "it")]
+    [InlineData("nl", "nl")]
+    [InlineData("id", "id")]
+    [InlineData("vi", "vi")]
+    [InlineData("hi", "hi")]
+    [InlineData("th", "th")]
+    [InlineData("zh-Hant", "zh-Hant")]
+    [InlineData("ZH-HANT", "zh-Hant")]
+    [InlineData("pt-PT", "pt-PT")]
+    [InlineData("PT-pt", "pt-PT")]
+    [InlineData("be", "en")]
     public void FoldoraLanguage_NormalizesCompleteLocales(string input, string expected)
     {
         Assert.Equal(expected, FoldoraLanguage.NormalizeOrDefault(input));

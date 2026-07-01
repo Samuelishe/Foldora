@@ -359,7 +359,7 @@ public sealed class MainViewModelPresentationTests
     [Theory]
     [InlineData("ru-RU", "ru", "Создать папку")]
     [InlineData("de-DE", "de", "Ordner erstellen")]
-    [InlineData("it-IT", "en", "Create folder")]
+    [InlineData("it-IT", "it", "Crea cartella")]
     public async Task LoadAsync_FirstRunDetectsAndPersistsSystemLanguage(
         string systemLanguage,
         string expectedLanguage,

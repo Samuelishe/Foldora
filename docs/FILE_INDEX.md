@@ -120,7 +120,7 @@
 - `src/Foldora.App/Services/ISettingsDialogService.cs` - abstraction открытия settings UI.
 - `src/Foldora.App/Services/SettingsDialogResult.cs` - результат settings dialog.
 - `src/Foldora.App/Services/WindowSettingsDialogService.cs` - WPF implementation settings dialog service.
-- `src/Foldora.App/Services/LanguageOption.cs` - option model для выбора языка в settings UI.
+- `src/Foldora.App/Services/LanguageOption.cs` - option model для выбора языка в settings UI, включая native display name и стабильный sort metadata.
 - `src/Foldora.App/Services/ILocalizationService.cs` - abstraction локализации WPF.
 - `src/Foldora.App/Services/InMemoryLocalizationService.cs` - catalog-backed локализация WPF поверх embedded JSON catalogs.
 - `src/Foldora.App/Services/ISystemLanguageProvider.cs` - abstraction чтения текущей system UI culture для first-run language detection.
@@ -145,6 +145,14 @@
 - `src/Foldora.App/Localization/cs.json` - Czech complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Localization/hu.json` - Hungarian complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Localization/bg.json` - Bulgarian complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/it.json` - Italian complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/nl.json` - Dutch complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/id.json` - Indonesian complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/vi.json` - Vietnamese complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/hi.json` - Hindi complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/th.json` - Thai complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/zh-Hant.json` - Traditional Chinese complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/pt-PT.json` - European Portuguese complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Services/StartupDiagnosticsService.cs` - минимальная запись startup exceptions в `%AppData%\Foldora\Logs\startup-error.log`.
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project на `net10.0-windows`.
 - `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.

@@ -39,6 +39,22 @@ public static class FolderMenuDefaultTitles
 
     public const string Bulgarian = "Създай папка";
 
+    public const string Italian = "Crea cartella";
+
+    public const string Dutch = "Map maken";
+
+    public const string Indonesian = "Buat folder";
+
+    public const string Vietnamese = "Tạo thư mục";
+
+    public const string Hindi = "फ़ोल्डर बनाएँ";
+
+    public const string Thai = "สร้างโฟลเดอร์";
+
+    public const string TraditionalChinese = "建立資料夾";
+
+    public const string PortuguesePortugal = "Criar pasta";
+
     private static readonly string[] KnownDefaults =
     [
         Russian,
@@ -56,7 +72,15 @@ public static class FolderMenuDefaultTitles
         Romanian,
         Czech,
         Hungarian,
-        Bulgarian
+        Bulgarian,
+        Italian,
+        Dutch,
+        Indonesian,
+        Vietnamese,
+        Hindi,
+        Thai,
+        TraditionalChinese,
+        PortuguesePortugal
     ];
 
     public static string GetForLanguage(string language)
@@ -78,6 +102,14 @@ public static class FolderMenuDefaultTitles
             FoldoraLanguage.Czech => Czech,
             FoldoraLanguage.Hungarian => Hungarian,
             FoldoraLanguage.Bulgarian => Bulgarian,
+            FoldoraLanguage.Italian => Italian,
+            FoldoraLanguage.Dutch => Dutch,
+            FoldoraLanguage.Indonesian => Indonesian,
+            FoldoraLanguage.Vietnamese => Vietnamese,
+            FoldoraLanguage.Hindi => Hindi,
+            FoldoraLanguage.Thai => Thai,
+            FoldoraLanguage.TraditionalChinese => TraditionalChinese,
+            FoldoraLanguage.PortuguesePortugal => PortuguesePortugal,
             _ => English
         };
     }
