@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - Settings tab header clipping fix
+
+- Fixed a separate Settings tab header clipping issue found by manual screenshot after the button layout robustness pass.
+- Replaced the custom Settings `TabControl` header host with a wrapping content-sized host so tab headers do not get squeezed by WPF `TabPanel` behavior.
+- Tuned Settings tab header padding/margins and content alignment without fixed tab widths or label changes.
+- Added design resource tests for wrapping Settings tab headers and non-clipping TabItem header style.
+- Did not change tab labels, SettingsWindow minimum width, ViewModel state, localization catalogs, settings JSON, registry/MenuHost/install behavior or shell behavior.
+
 ## 2026-07-01 - Settings layout robustness pass
 
 - Fixed the shared WPF button template so button `Padding` and content alignment are actually applied by the control template.

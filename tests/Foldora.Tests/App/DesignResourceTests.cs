@@ -127,6 +127,45 @@ public sealed class DesignResourceTests
     }
 
     [Fact]
+    public void SettingsTabControlStyle_UsesWrappingHeaderHost()
+    {
+        var controls = LoadXml("src", "Foldora.App", "Resources", "Controls.xaml");
+        var settingsTabControlStyle = FindStyle(controls, "SettingsTabControlStyle");
+
+        var headerHost = settingsTabControlStyle.Descendants()
+            .Single(element => element.Attribute("IsItemsHost")?.Value == "True");
+
+        Assert.Equal("WrapPanel", headerHost.Name.LocalName);
+        Assert.Equal("Top", headerHost.Attribute("DockPanel.Dock")?.Value);
+        Assert.Null(headerHost.Attribute("Width"));
+        Assert.Null(headerHost.Attribute("MaxWidth"));
+        Assert.Null(headerHost.Attribute("ClipToBounds"));
+    }
+
+    [Fact]
+    public void SettingsTabItemStyle_UsesContentSizedNonClippingHeaders()
+    {
+        var controls = LoadXml("src", "Foldora.App", "Resources", "Controls.xaml");
+        var settingsTabItemStyle = FindStyle(controls, "SettingsTabItemStyle");
+
+        Assert.Equal("{DynamicResource SettingsTabHeaderPadding}", GetSetterValue(settingsTabItemStyle, "Padding"));
+        Assert.Equal("32", GetSetterValue(settingsTabItemStyle, "MinHeight"));
+        Assert.Equal("Center", GetSetterValue(settingsTabItemStyle, "HorizontalContentAlignment"));
+        Assert.Equal("Center", GetSetterValue(settingsTabItemStyle, "VerticalContentAlignment"));
+        Assert.Null(GetOptionalSetterValue(settingsTabItemStyle, "Width"));
+        Assert.Null(GetOptionalSetterValue(settingsTabItemStyle, "MaxWidth"));
+        Assert.Null(GetOptionalSetterValue(settingsTabItemStyle, "TextTrimming"));
+        Assert.Null(GetOptionalSetterValue(settingsTabItemStyle, "ClipToBounds"));
+
+        var contentPresenter = settingsTabItemStyle.Descendants()
+            .Single(element => element.Name.LocalName == "ContentPresenter" && element.Attribute("ContentSource")?.Value == "Header");
+        Assert.Equal("{TemplateBinding HorizontalContentAlignment}", contentPresenter.Attribute("HorizontalAlignment")?.Value);
+        Assert.Equal("{TemplateBinding VerticalContentAlignment}", contentPresenter.Attribute("VerticalAlignment")?.Value);
+        Assert.Null(contentPresenter.Attribute("Width"));
+        Assert.Null(contentPresenter.Attribute("MaxWidth"));
+    }
+
+    [Fact]
     public void Typography_DefinesHelpStepTextStyle()
     {
         var typography = LoadXml("src", "Foldora.App", "Resources", "Typography.xaml");
@@ -355,6 +394,15 @@ public sealed class DesignResourceTests
             .Where(element => element.Name.LocalName == "Setter")
             .Single(element => element.Attribute("Property")?.Value == property)
             .Attribute("Value")?.Value;
+    }
+
+    private static string? GetOptionalSetterValue(XElement style, string property)
+    {
+        return style.Elements()
+            .Where(element => element.Name.LocalName == "Setter")
+            .SingleOrDefault(element => element.Attribute("Property")?.Value == property)
+            ?.Attribute("Value")
+            ?.Value;
     }
 
     private static string GetRepositoryRoot()

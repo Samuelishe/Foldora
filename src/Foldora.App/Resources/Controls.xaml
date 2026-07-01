@@ -238,10 +238,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="TabControl">
                     <DockPanel KeyboardNavigation.TabNavigation="Local">
-                        <TabPanel DockPanel.Dock="Top"
-                                  IsItemsHost="True"
-                                  Margin="0,0,0,12"
-                                  KeyboardNavigation.TabIndex="1" />
+                        <WrapPanel DockPanel.Dock="Top"
+                                   IsItemsHost="True"
+                                   Margin="0,0,0,12"
+                                   KeyboardNavigation.TabIndex="1" />
                         <Border Background="{DynamicResource SurfaceBrush}"
                                 BorderBrush="{DynamicResource BorderBrush}"
                                 BorderThickness="{DynamicResource StandardBorderThickness}"
@@ -264,7 +264,10 @@
         <Setter Property="FontSize" Value="13" />
         <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
         <Setter Property="Padding" Value="{DynamicResource SettingsTabHeaderPadding}" />
-        <Setter Property="Margin" Value="0,0,8,0" />
+        <Setter Property="Margin" Value="0,0,6,6" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
@@ -275,8 +278,8 @@
                             CornerRadius="{DynamicResource RadiusSmall}"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter ContentSource="Header"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           RecognizesAccessKey="True" />
                     </Border>
                     <ControlTemplate.Triggers>

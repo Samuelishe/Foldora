@@ -314,7 +314,7 @@ Danger zone tab
 
 Settings window должен оставаться пригодным для будущих секций настроек. Окно resizable; содержимое настроек разделено на category tabs, а footer actions `Сохранить`/`Закрыть` закреплены снизу и не прокручиваются. Vertical scroll допустим внутри конкретной вкладки, если её содержимое не помещается, но SettingsWindow не должен снова превращаться в одну длинную scroll-простыню. `Сохранить` относится к language/settings save. Explorer menu actions и reset выполняются immediately через отдельные кнопки и не являются staged changes. Проверка открытия modal settings window выполняется вручную; автоматические UIAutomation-клики не используются как критерий acceptance для custom-chrome/modal WPF.
 
-SettingsWindow имеет практический minimum width для вкладок и RU/EN action labels. Если action labels становятся длиннее в других локалях, кнопки должны измеряться по содержимому и переноситься через wrapping action row, а не clip-иться. Installation path rows держат path text в `*` content column, а Open/Copy actions в `Auto` column; длинный path может wrap/trim через tooltip, но кнопки не должны вытесняться.
+SettingsWindow имеет практический minimum width для вкладок и RU/EN action labels. Tab headers are content-sized and may wrap as a header row instead of clipping long localized category labels. Если action labels становятся длиннее в других локалях, кнопки должны измеряться по содержимому и переноситься через wrapping action row, а не clip-иться. Installation path rows держат path text в `*` content column, а Open/Copy actions в `Auto` column; длинный path может wrap/trim через tooltip, но кнопки не должны вытесняться.
 
 Installation path rows use short visible `Open` / `Copy` labels. For command-host path, `Open` still opens the containing folder; tooltip text explains this without making the visible button label long.
 
@@ -339,6 +339,7 @@ Documentation-first audit is tracked in `docs/UI_AUDIT.md`. Known follow-up item
 - visual polish pass v1 - addressed for current MVP windows and shared WPF resources;
 - SettingsWindow tabbed layout cleanup - addressed: settings categories are tabs, danger reset is isolated, and path row actions use short Open/Copy labels;
 - Settings layout robustness pass - addressed: shared button template applies padding/alignment, Settings minimum width protects normal tab/action layout, and Explorer/path actions no longer rely on fixed small widths;
+- Settings tab header clipping - addressed: tab headers use content-sized wrapping layout, separate from the action-button clipping fix;
 - defer branding/app icon/window icon/README hero work to a dedicated assets pass;
 - treat further visual polish as feedback-driven, especially for long labels and non-Latin font fallback.
 

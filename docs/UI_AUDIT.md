@@ -86,6 +86,13 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Suggested direction: make button sizing a shared style/template contract, keep action rows wrapping or auto-sized, and prevent SettingsWindow from resizing below its practical content minimum.
 - Status: Addressed. The shared button template applies padding/content alignment, inline actions measure by content, SettingsWindow minimum width was raised, Explorer actions remain in a `WrapPanel`, and path rows use star path text plus auto action buttons.
 
+### UIA-0012 Settings Tab Header Clipping
+
+- Observed: after the button/layout robustness fix, SettingsWindow path/action buttons looked better, but the top Settings tab row still visually squeezed or clipped labels such as `Справка / О программе`.
+- Impact: the settings categories looked broken even though tab content and action rows were now stable.
+- Suggested direction: treat tab header layout separately from action button layout; tab headers should be content-sized, free of fixed small widths/trimming, and wrap cleanly if they need more than one row.
+- Status: Addressed. Settings tab headers now use a wrapping content-sized host instead of WPF `TabPanel` layout, and the tab item style has explicit content alignment with no fixed width/max width/trimming.
+
 ## Near-Term UI Cleanup
 
 Small safe improvements for a future code pass:
@@ -102,6 +109,7 @@ Small safe improvements for a future code pass:
 - Visual polish pass v1 is addressed for the current MVP windows: MainWindow, SettingsWindow, HelpWindow and shared resource styles have calmer spacing, surfaces, status and empty/path/help presentation.
 - SettingsWindow tabbed layout cleanup is addressed: the previous long vertical settings document was replaced by category tabs, and Installation path actions use short `Open`/`Copy` labels.
 - Settings layout robustness pass is addressed: SettingsWindow no longer allows the known too-narrow state that clipped action labels, and action/path rows have a shared sizing contract.
+- Settings tab header clipping fix is addressed: tab header clipping was separate from button clipping, and Settings tabs now wrap as content-sized headers.
 
 ## Later Visual Polish
 

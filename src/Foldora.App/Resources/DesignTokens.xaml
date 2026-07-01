@@ -69,7 +69,7 @@
     <Thickness x:Key="EmptyStatePadding">22</Thickness>
     <Thickness x:Key="StatusPillPadding">10,4</Thickness>
     <Thickness x:Key="PathRowPadding">12</Thickness>
-    <Thickness x:Key="SettingsTabHeaderPadding">12,7</Thickness>
+    <Thickness x:Key="SettingsTabHeaderPadding">10,6</Thickness>
     <Thickness x:Key="SettingsTabContentPadding">16</Thickness>
     <Thickness x:Key="FieldBottomMargin">0,0,0,8</Thickness>
     <Thickness x:Key="ButtonInlineMargin">0,0,8,8</Thickness>
