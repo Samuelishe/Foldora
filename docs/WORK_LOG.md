@@ -5,6 +5,8 @@
 - Replaced Settings `?` help controls with passive self-authored glyphs so hover-only help no longer looks like a broken clickable button.
 - Added wrapped help tooltip text styling so long Explorer/registry/path help does not render as one wide line.
 - Added compact inline action button geometry for Settings Explorer actions and path Open/Copy buttons, preserving the wider normal action buttons elsewhere.
+- Increased inline Settings button horizontal padding after manual inspection still found cramped labels.
+- Raised MainWindow and SettingsWindow minimum widths to prevent known broken narrow layouts while keeping resizing and vertical scrolling.
 - Updated UI audit/design/UX docs to track the regression fix while keeping the full Help/About window and product-grade polish as future work.
 
 ## 2026-07-01 - Settings clarity/help/path actions cleanup

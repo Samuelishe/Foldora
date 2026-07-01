@@ -4,7 +4,7 @@
         Title="{Binding L.Settings}"
         Width="720"
         Height="680"
-        MinWidth="560"
+        MinWidth="720"
         MinHeight="460"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"

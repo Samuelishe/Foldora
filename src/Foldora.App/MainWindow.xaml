@@ -9,7 +9,7 @@
         Height="780"
         Width="980"
         MinHeight="640"
-        MinWidth="780"
+        MinWidth="940"
         WindowStyle="None"
         ResizeMode="CanResize">
     <shell:WindowChrome.WindowChrome>

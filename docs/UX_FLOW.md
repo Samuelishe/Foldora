@@ -320,6 +320,7 @@ Documentation-first audit is tracked in `docs/UI_AUDIT.md`. Known follow-up item
 - SettingsWindow scrollbar/content gutter - addressed;
 - SettingsWindow clarity pass - addressed: explicit Foldora Explorer menu status, Preview changes naming, tooltip help and path Open/Copy actions;
 - Settings help/layout regression - addressed: passive non-button `?` glyphs, wrapped long tooltips and compact inline action buttons for Settings rows;
+- button/window sizing regression - addressed: Settings inline buttons have more horizontal padding and MainWindow/SettingsWindow minimum widths prevent known broken narrow layouts;
 - defer product-grade visual polish and branding/app icon work to dedicated passes.
 
 This audit does not change the staged-save model, Explorer integration behavior, registry safety or SettingsWindow immediate-action semantics.

@@ -29,7 +29,7 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Observed: в MainWindow и SettingsWindow некоторые кнопки выглядят тесно, текст находится слишком близко к краям.
 - Impact: UI ощущается менее аккуратным, а длинные локализованные labels повышают риск визуального сжатия/обрезки.
 - Suggested direction: сделать button geometry pass: consistent horizontal padding, min-width, min-height, wrapping/trimming rules and localized-label checks.
-- Status: Initial pass addressed. Shared `ActionButtonStyle` now uses larger horizontal padding and a slightly taller min-height. Further per-locale visual polish remains future work.
+- Status: Partially addressed / monitor. Shared `ActionButtonStyle` uses larger horizontal padding and min-height; Settings inline actions now use a separate compact style with larger horizontal padding than the first compact pass. Further per-locale visual polish remains future work.
 
 ### UIA-0004 SettingsWindow Scrollbar / Content Gutter
 
@@ -64,6 +64,13 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Suggested direction: use passive info glyphs unless click behavior exists, wrap long help tooltip text, and use a compact inline button style for Settings action rows/path actions.
 - Status: Addressed. Settings now uses passive `?` glyphs with wrapped tooltips and compact inline action buttons for Explorer/path actions.
 
+### UIA-0009 Window Minimum Widths For Settings And Editor Layouts
+
+- Observed: SettingsWindow could be narrowed until Explorer/path action rows wrapped into visually broken layouts.
+- Impact: the window remained technically resizable but allowed a width below the practical content minimum.
+- Suggested direction: keep windows resizable, but set reasonable `MinWidth` values so core editor/settings rows do not collapse into broken narrow states.
+- Status: Addressed for current MVP. SettingsWindow minimum width is raised for its system/action rows, and MainWindow minimum width is raised for the editor layout.
+
 ## Near-Term UI Cleanup
 
 Small safe improvements for a future code pass:
@@ -75,7 +82,8 @@ Small safe improvements for a future code pass:
 - check SettingsWindow sections with long labels in German, Portuguese, Ukrainian and other longer locales.
 - keep Settings wording understandable: Explorer menu status, preview/dry-run action and path actions are now clarified.
 - help/info affordances must not look like broken buttons: passive glyphs now use wrapped tooltips, and clickable help remains future work for a real Help/About window.
-- Settings inline action/path buttons use compact geometry instead of the normal wide action button style.
+- Settings inline action/path buttons use compact geometry instead of the normal wide action button style, with enough horizontal padding for labels.
+- MainWindow and SettingsWindow now have higher minimum widths to prevent known broken narrow layouts.
 
 ## Later Visual Polish
 

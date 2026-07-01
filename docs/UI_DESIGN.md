@@ -30,7 +30,7 @@ Design system foundation добавляет централизованные WPF
 - Small help/info affordances may use self-authored XAML/text styling. If an affordance is only a hover/focus hint, it must look like a passive info glyph, not a broken clickable button. If it looks like a button, it needs real click behavior. Do not add external icon assets for this.
 - Long technical help tooltips must wrap within a reasonable width instead of rendering as a single line across the screen.
 - Main UI text must be user-facing, not debug-state text. Не показывать raw booleans вроде `True/False` как пользовательский статус.
-- Buttons must account for localization and long labels: shared action buttons use consistent min-height, padding and min-width. Dense Settings rows use a separate compact inline action style so `Preview changes`, enable/disable and path Open/Copy actions do not inherit overly wide normal action geometry. Further per-locale polish remains future work.
+- Buttons must account for localization and long labels: shared action buttons use consistent min-height, padding and min-width. Dense Settings rows use a separate compact inline action style so `Preview changes`, enable/disable and path Open/Copy actions do not inherit overly wide normal action geometry, while still keeping visible horizontal breathing room. Further per-locale polish remains future work.
 - Settings content should keep proper scroll gutter and section spacing; scrollbar не должен визуально прилипать к тексту.
 - App icon, exe/window icon and README hero/mockup are future branding/assets work, not ad hoc UI code additions.
 - Интерфейс MVP должен быть простым: список стилей, состояние integration, кнопки register/unregister и базовые настройки.
@@ -120,6 +120,8 @@ Custom title bar остаётся единственным местом, где 
 Action buttons одного ряда используют общую геометрию через `ActionButtonStyle`. `PrimaryButtonStyle`, `SecondaryButtonStyle` и `DangerButtonStyle` отличаются цветовой семантикой, но не высотой, padding, border thickness или focus behavior. Локальные margins допустимы только для расстояния между кнопками в конкретном ряду.
 
 Settings inline action rows are denser than main editor action rows. They use `InlineActionButtonStyle` so path Open/Copy buttons and Explorer actions remain compact while keeping readable padding. Help hints in these rows use passive `?` glyphs with wrapped tooltip text; they are not styled as primary or secondary buttons unless click behavior is implemented.
+
+MainWindow and SettingsWindow should remain resizable, but not below the practical width where core editor/settings rows visually break. Current MVP minimum widths are intentionally higher than the earliest prototype values: MainWindow protects the card/editor layout, and SettingsWindow protects Explorer/path action rows. Vertical scrolling remains the overflow mechanism; horizontal overflow should not be introduced.
 
 Settings window является resizable и подготовлен к будущему росту настроек. Layout:
 

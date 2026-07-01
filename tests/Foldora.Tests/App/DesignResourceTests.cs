@@ -93,8 +93,8 @@ public sealed class DesignResourceTests
 
         Assert.Equal("{StaticResource SecondaryButtonStyle}", inlineButtonStyle.Attribute("BasedOn")?.Value);
         Assert.Equal("34", GetSetterValue(inlineButtonStyle, "MinHeight"));
-        Assert.Equal("14,6", GetSetterValue(inlineButtonStyle, "Padding"));
-        Assert.Equal("76", GetSetterValue(inlineButtonStyle, "MinWidth"));
+        Assert.Equal("16,6", GetSetterValue(inlineButtonStyle, "Padding"));
+        Assert.Equal("88", GetSetterValue(inlineButtonStyle, "MinWidth"));
     }
 
     [Fact]
@@ -115,6 +115,7 @@ public sealed class DesignResourceTests
 
         Assert.Equal("CanResize", root.Attribute("ResizeMode")?.Value);
         Assert.Equal("Manual", root.Attribute("SizeToContent")?.Value);
+        Assert.Equal("720", root.Attribute("MinWidth")?.Value);
 
         var scrollViewer = settingsWindow.Descendants()
             .SingleOrDefault(element => element.Name.LocalName == "ScrollViewer");
@@ -133,6 +134,15 @@ public sealed class DesignResourceTests
             .SingleOrDefault(element => element.Attribute("Grid.Row")?.Value == "2");
 
         Assert.NotNull(footer);
+    }
+
+    [Fact]
+    public void MainWindow_DefinesEditorFriendlyMinimumWidth()
+    {
+        var mainWindow = LoadXml("src", "Foldora.App", "MainWindow.xaml");
+        var root = mainWindow.Root ?? throw new InvalidOperationException("MainWindow root was not found.");
+
+        Assert.Equal("940", root.Attribute("MinWidth")?.Value);
     }
 
     [Fact]

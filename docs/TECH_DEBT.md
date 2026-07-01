@@ -51,7 +51,7 @@
 - Observed behavior: Some MainWindow and SettingsWindow buttons look tight; text sits too close to button edges.
 - Expected/desired behavior: Buttons should have consistent padding, min-width and min-height that survive long localized labels.
 - Known cause or hypothesis: Current reusable button styles are functional but not yet tuned through a localization-heavy visual polish pass.
-- Current workaround: Shared action buttons now have larger padding and min-height, and dense Settings rows use a compact inline action style so Explorer/path actions do not inherit overly wide normal button geometry.
+- Current workaround: Shared action buttons now have larger padding and min-height, dense Settings rows use a compact inline action style with non-tiny horizontal padding, and MainWindow/SettingsWindow have minimum widths that prevent the known broken narrow layouts.
 - Next investigation step: Continue long-label visual checks during product-grade polish, especially SettingsWindow actions in long locales.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`

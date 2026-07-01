@@ -135,8 +135,8 @@
 
     <Style x:Key="InlineActionButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
         <Setter Property="MinHeight" Value="34" />
-        <Setter Property="MinWidth" Value="76" />
-        <Setter Property="Padding" Value="14,6" />
+        <Setter Property="MinWidth" Value="88" />
+        <Setter Property="Padding" Value="16,6" />
     </Style>
 
     <Style x:Key="HelpInfoGlyphStyle" TargetType="TextBlock">
