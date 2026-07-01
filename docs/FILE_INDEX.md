@@ -214,6 +214,7 @@
 - `docs/MENU_MODEL.md` - модель пользовательского меню, validation, staged-save, nested menu и registry safety.
 - `docs/CLI.md` - CLI.
 - `docs/UI_DESIGN.md` - UI правила.
+- `docs/UI_AUDIT.md` - documentation-first UI/UX audit baseline: confirmed issues, near-term cleanup, visual polish and branding/assets pass.
 - `docs/CODING_RULES.md` - правила кодирования.
 - `docs/FILE_INDEX.md` - этот индекс.
 - `docs/FUTURE_IDEAS.md` - отложенные идеи.

@@ -23,6 +23,12 @@ Design system foundation добавляет централизованные WPF
 - WPF code-behind только для UI plumbing.
 - Бизнес-логика не размещается в окне.
 - Настройки и операции вызываются через сервисы Core/Shell.
+- MainWindow должен оставаться focused menu editor: title, groups, entries, icons, save/discard and editor status/errors.
+- SettingsWindow содержит system/admin actions: language/application settings, Explorer integration, installation/path information and danger reset.
+- Main UI text must be user-facing, not debug-state text. Не показывать raw booleans вроде `True/False` как пользовательский статус.
+- Buttons must account for localization and long labels: достаточный padding, min-width, min-height and wrapping/trimming policy.
+- Settings content should keep proper scroll gutter and section spacing; scrollbar не должен визуально прилипать к тексту.
+- App icon, exe/window icon and README hero/mockup are future branding/assets work, not ad hoc UI code additions.
 - Интерфейс MVP должен быть простым: список стилей, состояние integration, кнопки register/unregister и базовые настройки.
 - Главный экран MVP должен быть редактором пользовательского меню, а не landing page.
 - Минимальный редактор должен иметь title меню, список entries, user-facing поля `Название в меню` и `Имя создаваемой папки`, выбор `.ico`, preview около 50x50, checkbox `Показывать в меню`, `Сохранить`, `Отменить изменения` и компактный status/link для Settings.

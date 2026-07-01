@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - UI/UX audit baseline
+
+- Added `docs/UI_AUDIT.md` as a documentation-first baseline for UI/UX/design issues found during manual inspection after Settings cleanup.
+- Captured confirmed issues: redundant Settings entry points, raw boolean unsaved-changes status, cramped buttons, SettingsWindow scrollbar/content gutter, product-grade polish gap and missing app/build/window icon.
+- Added UI/design debt items `TD-UI-0001` through `TD-UI-0006` to `docs/TECH_DEBT.md`.
+- Updated roadmap to sequence small UX correctness cleanup, visual polish, branding/assets and later localization-sensitive layout feedback.
+- Production code/XAML was intentionally not changed in this audit pass.
+
 ## 2026-07-01 - Settings and Explorer integration cleanup
 
 - MainWindow cleanup: removed the large Explorer integration block, technical details and danger reset from the main editor surface.

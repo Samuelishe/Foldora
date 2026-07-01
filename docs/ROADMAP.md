@@ -75,6 +75,25 @@ Foldora.MenuHost.exe
 
 ## Next Stage
 
+UI/UX audit baseline and small correctness cleanup before visual release polish:
+
+1. UI/UX audit baseline:
+   - `docs/UI_AUDIT.md` tracks confirmed design debt from manual inspection.
+   - Keep audit findings in docs/TECH_DEBT instead of chat-only notes.
+2. Small UX correctness cleanup:
+   - remove or redesign redundant settings entry point on MainWindow;
+   - replace raw `Unsaved changes: True/False` with user-facing saved/unsaved status;
+   - tune button padding/min-width/min-height for localized labels;
+   - add SettingsWindow scrollbar/content gutter.
+3. Visual polish pass:
+   - refine surfaces, spacing, hierarchy, empty states, status presentation, cards and Settings sections.
+4. Branding/assets pass:
+   - app icon;
+   - exe/window icon;
+   - README hero/mockup after the UI looks ready for public presentation.
+5. Later layout/localization polish:
+   - handle feedback from long labels and non-Latin scripts across enabled locales.
+
 Per-user install smoke and release polish before full installer work:
 
 - Manually smoke the SettingsWindow Explorer menu flow after the cleanup: dirty draft block, enable/disable, technical details and reset reload back into MainWindow.

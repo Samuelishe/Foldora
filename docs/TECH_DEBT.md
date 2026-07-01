@@ -4,6 +4,115 @@
 
 ## Active Debt
 
+### TD-UI-0001 Redundant Settings Entry Points
+
+- ID: `TD-UI-0001`
+- Title: Redundant settings entry points
+- Status: Open
+- Severity: Low
+- Area: WPF / UX
+- Observed behavior: MainWindow has a title-bar gear button for Settings and also shows `Manage in Settings` / `Управлять в настройках` in the content area.
+- Expected/desired behavior: Settings should have one clear primary entry point, and MainWindow should stay focused on menu editing.
+- Known cause or hypothesis: Settings/Explorer cleanup kept a compact management action on the editor surface after moving Explorer controls to SettingsWindow.
+- Current workaround: Users can use either entry point; behavior is not broken.
+- Next investigation step: Small UX cleanup to remove or redesign the content-area settings link/status.
+- Links to docs/tests/code:
+  - `docs/UI_AUDIT.md`
+  - `docs/UI_DESIGN.md`
+  - `src/Foldora.App/MainWindow.xaml`
+- Date added: 2026-07-01
+
+### TD-UI-0002 Developer-Facing Boolean Status
+
+- ID: `TD-UI-0002`
+- Title: Developer-facing unsaved changes status
+- Status: Open
+- Severity: Low
+- Area: WPF / UX / Localization
+- Observed behavior: MainWindow shows `Unsaved changes: True/False` and localized equivalents, exposing a raw boolean state to users.
+- Expected/desired behavior: Use user-facing state text such as `All changes saved` / `Unsaved changes` or a localized status chip.
+- Known cause or hypothesis: Early presentation state was added as direct debug-friendly text.
+- Current workaround: The text is understandable but not product-grade.
+- Next investigation step: Replace boolean formatting with localized saved/unsaved status strings and update tests/catalogs.
+- Links to docs/tests/code:
+  - `docs/UI_AUDIT.md`
+  - `docs/LOCALIZATION.md`
+  - `src/Foldora.App/ViewModels/MainViewModel.cs`
+  - `src/Foldora.App/Localization/*.json`
+- Date added: 2026-07-01
+
+### TD-UI-0003 Cramped Button Geometry
+
+- ID: `TD-UI-0003`
+- Title: Cramped button geometry
+- Status: Open
+- Severity: Low
+- Area: WPF / Design System / Localization
+- Observed behavior: Some MainWindow and SettingsWindow buttons look tight; text sits too close to button edges.
+- Expected/desired behavior: Buttons should have consistent padding, min-width and min-height that survive long localized labels.
+- Known cause or hypothesis: Current reusable button styles are functional but not yet tuned through a localization-heavy visual polish pass.
+- Current workaround: Buttons are usable and tests pass.
+- Next investigation step: Design-token/control-style pass for button ergonomics, including long-label checks.
+- Links to docs/tests/code:
+  - `docs/UI_AUDIT.md`
+  - `docs/UI_DESIGN.md`
+  - `src/Foldora.App/Resources/Controls.xaml`
+- Date added: 2026-07-01
+
+### TD-UI-0004 Settings Scrollbar And Content Gutter
+
+- ID: `TD-UI-0004`
+- Title: Settings scrollbar and content gutter
+- Status: Open
+- Severity: Low
+- Area: WPF / Settings UI
+- Observed behavior: SettingsWindow scrollbar is visually too close to content.
+- Expected/desired behavior: SettingsWindow should have a clearer right-side gutter/content padding and robust spacing when sections scroll.
+- Known cause or hypothesis: SettingsWindow grew from a compact language dialog into a multi-section settings window without a dedicated spacing hardening pass.
+- Current workaround: Window remains resizable and scrollable.
+- Next investigation step: Small layout cleanup for ScrollViewer/content padding and section spacing.
+- Links to docs/tests/code:
+  - `docs/UI_AUDIT.md`
+  - `docs/UI_DESIGN.md`
+  - `src/Foldora.App/SettingsWindow.xaml`
+- Date added: 2026-07-01
+
+### TD-UI-0005 Product-Grade Visual Polish Gap
+
+- ID: `TD-UI-0005`
+- Title: Product-grade visual polish gap
+- Status: Open
+- Severity: Medium
+- Area: WPF / UX / Visual Design
+- Observed behavior: The app is functional and cleaner after Settings cleanup, but still looks like a careful prototype rather than a polished product UI.
+- Expected/desired behavior: Clearer hierarchy, spacing, surfaces, empty states, status presentation, cards and settings sections before public hero/mockup work.
+- Known cause or hypothesis: MVP work prioritized functional shell integration, safety and localization over visual polish.
+- Current workaround: UI is usable for manual MVP testing.
+- Next investigation step: Dedicated visual polish pass after small UX correctness cleanup.
+- Links to docs/tests/code:
+  - `docs/UI_AUDIT.md`
+  - `docs/UI_DESIGN.md`
+  - `docs/ROADMAP.md`
+- Date added: 2026-07-01
+
+### TD-UI-0006 Missing App And Build Icon
+
+- ID: `TD-UI-0006`
+- Title: Missing application/build/window icon
+- Status: Open
+- Severity: Low
+- Area: WPF / Branding / Packaging
+- Observed behavior: Foldora does not yet have a proper app/build/window icon.
+- Expected/desired behavior: App icon, exe icon and window icon should be designed and bundled under the repository resource policy.
+- Known cause or hypothesis: Branding/assets work was intentionally deferred until the functional MVP stabilized.
+- Current workaround: The app runs without a polished icon.
+- Next investigation step: Separate branding/assets pass, including license/resource review and README hero/mockup planning.
+- Links to docs/tests/code:
+  - `docs/UI_AUDIT.md`
+  - `docs/RESOURCE_POLICY.md`
+  - `THIRD_PARTY_NOTICES.md`
+- Date added: 2026-07-01
+
 ### TD-0004 Remaining Localization Debt
 
 - ID: `TD-0004`

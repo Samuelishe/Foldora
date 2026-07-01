@@ -305,3 +305,15 @@ Danger zone
 Settings window должен оставаться пригодным для будущих секций настроек. Окно resizable; содержимое настроек находится в scrollable центральной области, а footer actions `Сохранить`/`Закрыть` закреплены снизу и не прокручиваются. `Сохранить` относится к language/settings save. Explorer menu actions и reset выполняются immediately через отдельные кнопки и не являются staged changes. Проверка открытия modal settings window выполняется вручную; автоматические UIAutomation-клики не используются как критерий acceptance для custom-chrome/modal WPF.
 
 Manual locale spot-check после catalog expansion: Ukrainian, Japanese and German UI were manually checked without blocking layout issues. RU/EN остаются primary verified locales; остальные enabled locales catalog-complete and test-covered, а translation/layout polish принимается как future feedback work.
+
+## UI Audit Follow-Up
+
+Documentation-first audit is tracked in `docs/UI_AUDIT.md`. Known follow-up items:
+
+- remove or redesign redundant settings entry point on MainWindow;
+- replace raw unsaved-changes boolean text with a user-facing saved/unsaved status;
+- improve button ergonomics for localized labels;
+- add SettingsWindow scrollbar/content gutter;
+- defer product-grade visual polish and branding/app icon work to dedicated passes.
+
+This audit does not change the staged-save model, Explorer integration behavior, registry safety or SettingsWindow immediate-action semantics.
