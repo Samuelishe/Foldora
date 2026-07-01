@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - GitHub README product landing pass
+
+- Reworked the top of `README.md` from an engineering-first status document into a product-oriented GitHub landing flow.
+- Added a concise pitch, visible hero/screenshot placeholder, highlights, quick start, example menu and screenshots placeholder without adding image assets.
+- Reordered the lower README sections so user-facing capabilities, requirements, install/uninstall and development details come before limitations, safety, license and documentation links.
+- Kept MVP limitations explicit below the onboarding flow: no MSI/MSIX, no modern Windows 11 compact context menu, no PNG-to-ICO conversion, no pack import/export and best-effort desktop placement only.
+- No production code, screenshots, generated hero image, installer behavior, shell behavior, localization catalogs or external assets were changed.
+
 ## 2026-07-01 - App icon folded ribbon refinement
 
 - Replaced the visually rejected app icon implementation while keeping the same production asset paths: `src/Foldora.App/Assets/FoldoraIcon.svg` and `src/Foldora.App/Assets/Foldora.ico`.

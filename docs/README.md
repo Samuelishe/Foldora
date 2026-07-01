@@ -17,7 +17,7 @@
 
 Foldora пока является рабочим названием и может измениться перед публичным релизом.
 
-Корневой `README.md` является публичным GitHub README с кратким описанием продукта, текущих возможностей, ограничений и базовых команд сборки/запуска.
+Корневой `README.md` является публичным GitHub README с product landing верхом: pitch, highlights, quick start, example menu, placeholder для будущих screenshots/hero, а затем текущие возможности, ограничения и базовые команды сборки/запуска.
 Корневые `LICENSE` и `THIRD_PARTY_NOTICES.md` фиксируют 0BSD-лицензирование оригинальных материалов Foldora и правила/состояние сторонних материалов.
 
 Dev/manual publish helper находится в `scripts/publish-dev.ps1` и создаёт `artifacts/publish/Foldora` без installer/MSIX.

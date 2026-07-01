@@ -128,7 +128,7 @@ Future product-grade polish can include:
 - additional localization-sensitive layout tweaks after manual reports;
 - Settings tab spacing/content tuning after manual RU/EN and long-locale checks;
 - more polished status/banner variants if real workflows need them;
-- README hero/mockup only after the UI is visually ready for public presentation.
+- README hero/mockup only after the UI is visually ready for public presentation. The root README now has landing-page structure and placeholders, but no screenshot/hero assets are bundled yet.
 - deeper Help/About content polish: screenshots, richer instructions, and full translation review for long help text across all enabled locales.
 
 ## Branding / Assets Pass
@@ -137,7 +137,7 @@ Future branding work:
 
 - further app icon refinement if manual feedback finds small-size readability issues;
 - Settings/window icon consistency;
-- README hero image or mockup built from improved screenshots;
+- README hero image or mockup built from improved screenshots; current README work only added product copy and placeholders;
 - explicit resource/license review for every bundled visual asset.
 
 Do not add unknown-license icons, fonts, images or generated third-party-looking assets. Follow `docs/RESOURCE_POLICY.md` and update `THIRD_PARTY_NOTICES.md` if any external resource is bundled.

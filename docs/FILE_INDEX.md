@@ -2,7 +2,7 @@
 
 - `Foldora.sln` - solution.
 - `.gitignore` - исключения для .NET/WPF и локальных файлов.
-- `README.md` - публичный GitHub README: краткое описание продукта, текущие возможности, ограничения, build/run и базовые CLI-примеры.
+- `README.md` - публичный GitHub README: product landing top, hero/screenshot placeholder, highlights, quick start, текущие возможности, ограничения, build/run и базовые CLI-примеры.
 - `LICENSE` - Zero-Clause BSD License (0BSD) для оригинального кода, документации и self-authored ресурсов Foldora, если не указано иное.
 - `THIRD_PARTY_NOTICES.md` - notices для bundled third-party materials; сейчас фиксирует отсутствие сторонних visual assets и test-only NuGet dependency license metadata.
 - `AGENTS.md` - правила для будущих агентных сессий.
