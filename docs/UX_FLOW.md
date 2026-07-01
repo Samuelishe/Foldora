@@ -341,7 +341,7 @@ Documentation-first audit is tracked in `docs/UI_AUDIT.md`. Known follow-up item
 - Settings layout robustness pass - addressed: shared button template applies padding/alignment, Settings minimum width protects normal tab/action layout, and Explorer/path actions no longer rely on fixed small widths;
 - Settings tab header clipping - addressed: tab headers use content-sized wrapping layout, separate from the action-button clipping fix;
 - Settings tab body alignment - addressed: Application/Help/Danger content is left/top aligned, not centered in the tab body;
-- defer branding/app icon/window icon/README hero work to a dedicated assets pass;
+- app/window/exe icon foundation - addressed with a self-authored folded blue/cyan project asset; README hero and broader branding remain future work;
 - treat further visual polish as feedback-driven, especially for long labels and non-Latin font fallback.
 
 This audit does not change the staged-save model, Explorer integration behavior, registry safety or SettingsWindow immediate-action semantics.

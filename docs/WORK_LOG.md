@@ -1,5 +1,32 @@
 # Work Log
 
+## 2026-07-01 - App icon folded ribbon refinement
+
+- Replaced the visually rejected app icon implementation while keeping the same production asset paths: `src/Foldora.App/Assets/FoldoraIcon.svg` and `src/Foldora.App/Assets/Foldora.ico`.
+- Redrew the left folded/origami ribbon as a broad light-cyan folded plane instead of the thin diagonal hook/needle shape from the previous replacement.
+- Kept the dark rounded app tile, blue/cyan/violet folder direction, generated 16/32/48/256 px ICO frames and existing WPF/exe wiring.
+- Generated manual review previews under `artifacts/icon-preview/` for 256/48/32/16 px checks.
+- Used the provided reference image only as visual direction; no reference board image, raster crop, external asset, icon pack or third-party resource was added.
+- README hero/mockup, full branding system, registry/MenuHost/install/shell behavior, settings JSON and localization catalogs were not changed.
+
+## 2026-07-01 - App icon replacement pass
+
+- Replaced the first self-authored folder/menu-badge icon concept with a folded blue/cyan folder mark on a dark rounded app tile.
+- Kept the same production asset paths: `src/Foldora.App/Assets/FoldoraIcon.svg` and `src/Foldora.App/Assets/Foldora.ico`.
+- Regenerated the ICO with 16/32/48/256 px frames and kept existing WPF/exe wiring through `ApplicationIcon` and shared window `Icon` attributes.
+- Updated the design resource test to assert the source concept text and reject the old small menu badge concept.
+- Used the provided image only as visual direction; no reference board image, external asset, icon pack or third-party resource was added.
+- README hero/mockup, full branding system, registry/MenuHost/install/shell behavior, settings JSON and localization catalogs were not changed.
+
+## 2026-07-01 - Branding/App icon foundation
+
+- Added the first self-authored Foldora app icon concept.
+- Added `src/Foldora.App/Assets/FoldoraIcon.svg` as the source vector and generated `src/Foldora.App/Assets/Foldora.ico` with 16/32/48/256 px Windows icon frames.
+- Wired `Foldora.App.csproj` `ApplicationIcon` and the WPF `MainWindow`, `SettingsWindow` and `HelpWindow` `Icon` attributes to the shared app icon.
+- Added design/resource tests for app icon project wiring, icon file presence, core ICO sizes and window icon references.
+- Updated resource policy/docs to record the icon as a self-authored 0BSD project asset; no external assets or icon packs were used.
+- README hero/mockup, full branding system, registry/MenuHost/install/shell behavior, settings JSON and localization catalogs were not changed.
+
 ## 2026-07-01 - Runtime Settings tab content centering fix
 
 - Rechecked the ineffective Settings tab content alignment fix after the fresh Release binary still showed Application, Help/About and Danger zone as centered islands.

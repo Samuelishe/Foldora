@@ -34,7 +34,7 @@ Design system foundation добавляет централизованные WPF
 - Buttons must account for localization and long labels: shared action buttons use consistent min-height, padding and min-width, and the base button template must apply `Padding`, `HorizontalContentAlignment` and `VerticalContentAlignment` instead of visually clipping content. Dense Settings rows use a separate compact inline action style so `Preview changes`, enable/disable and path Open/Copy actions do not inherit overly wide normal action geometry, while still keeping visible horizontal breathing room. Further per-locale polish remains future work.
 - Settings tab headers and selected tab content must keep separate alignment contracts: tab headers may center their header text inside each header chrome, but selected tab content must stretch to the tab body so forms/cards can start at the left/top property-panel inset.
 - Settings content should keep proper scroll gutter and section spacing; scrollbar не должен визуально прилипать к тексту.
-- App icon, exe/window icon and README hero/mockup are future branding/assets work, not ad hoc UI code additions.
+- App/window/exe icon foundation uses the self-authored folded blue/cyan Foldora app icon from `src/Foldora.App/Assets`; the current mark uses a broad light-cyan folded plane rather than a thin diagonal stroke. README hero/mockup and broader branding remain future branding/assets work, not ad hoc UI code additions.
 - Интерфейс MVP должен быть простым: список стилей, состояние integration, кнопки register/unregister и базовые настройки.
 - Главный экран MVP должен быть редактором пользовательского меню, а не landing page.
 - Минимальный редактор должен иметь title меню, список entries, user-facing поля `Название в меню` и `Имя создаваемой папки`, выбор `.ico`, preview около 50x50, checkbox `Показывать в меню`, `Сохранить`, `Отменить изменения` и компактный Explorer menu status. Gear в title/header area остаётся основным entry point в Settings.
@@ -124,7 +124,7 @@ Visual polish v1 is a controlled refinement of the existing MVP windows, not a r
 - MainWindow remains the menu editor and now uses a page header surface, compact Explorer status chip, framed menu settings/menu entries sections, a calmer empty state, group/card hierarchy and a footer bar for saved/unsaved plus save/discard actions.
 - SettingsWindow keeps Application, Help/About, Explorer menu, Installation and Danger zone sections, with shared section rhythm, passive help glyphs, compact inline buttons, path row containers and a softer danger banner.
 - HelpWindow uses the same header/section rhythm as SettingsWindow and renders the basic workflow steps as readable boxed rows while keeping the localized content unchanged.
-- App icon, window/exe icon, README hero/mockup and external visual assets remain out of scope for this pass and require a separate branding/resource-policy review.
+- App/window/exe icon foundation is now handled through a self-authored folded blue/cyan project asset. README hero/mockup and any external visual assets remain out of scope for visual polish v1 and require a separate branding/resource-policy review.
 - RU/EN remain primary manually verified locales; other enabled locales are catalog-complete and should continue to be checked through smoke/spot checks and user feedback for long-label/font-fallback issues.
 
 ## Layout Correctness

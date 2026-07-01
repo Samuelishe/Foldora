@@ -88,7 +88,7 @@
 - Expected/desired behavior: Clearer hierarchy, spacing, surfaces, empty states, status presentation, cards and settings sections before public hero/mockup work.
 - Known cause or hypothesis: MVP work prioritized functional shell integration, safety and localization over visual polish.
 - Current workaround: Not needed for the current MVP windows; visual polish v1 refined MainWindow, SettingsWindow, HelpWindow and shared WPF resources with calmer headers, sections, status chips, empty state, path rows, help step rows and footer presentation.
-- Next investigation step: Monitor manual feedback and long-locale layout issues. App icon, branding assets and README hero remain a separate branding pass, not part of this debt item.
+- Next investigation step: Monitor manual feedback and long-locale layout issues. README hero and broader branding assets remain a separate branding pass, not part of this debt item; app/window/exe icon foundation is tracked under `TD-UI-0006`.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UI_DESIGN.md`
@@ -99,18 +99,20 @@
 
 - ID: `TD-UI-0006`
 - Title: Missing application/build/window icon
-- Status: Open
+- Status: Fixed for folded app icon foundation / Monitor
 - Severity: Low
 - Area: WPF / Branding / Packaging
-- Observed behavior: Foldora does not yet have a proper app/build/window icon.
+- Observed behavior: Foldora previously did not have a proper app/build/window icon.
 - Expected/desired behavior: App icon, exe icon and window icon should be designed and bundled under the repository resource policy.
 - Known cause or hypothesis: Branding/assets work was intentionally deferred until the functional MVP stabilized.
-- Current workaround: The app runs without a polished icon.
-- Next investigation step: Separate branding/assets pass, including license/resource review and README hero/mockup planning.
+- Current workaround: Not needed for the WPF app foundation; `Foldora.App.exe`, MainWindow, SettingsWindow and HelpWindow now use a self-authored folded blue/cyan Foldora icon with a broad light-cyan folded plane, SVG source and generated multi-size ICO. The first folder/menu-badge concept and the later too-thin folded-ribbon attempt were replaced after visual review.
+- Next investigation step: Monitor small-size readability and later plan README hero/mockup or broader branding polish. MenuHost/CLI executable icons are intentionally lower priority because MenuHost is no-console/invisible and CLI is developer-facing.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/RESOURCE_POLICY.md`
   - `THIRD_PARTY_NOTICES.md`
+  - `src/Foldora.App/Assets/FoldoraIcon.svg`
+  - `src/Foldora.App/Assets/Foldora.ico`
 - Date added: 2026-07-01
 
 ### TD-UI-0007 Help / About / Instructions Window

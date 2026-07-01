@@ -8,7 +8,7 @@ Third-party components and assets remain under their respective licenses. Foldor
 
 No third-party visual assets are currently bundled in this repository.
 
-Current WPF UI icons and vector shapes are self-authored XAML resources unless a future notice states otherwise.
+Current WPF UI icons, vector shapes and the Foldora app icon are self-authored project assets unless a future notice states otherwise.
 
 ## NuGet and .NET Dependencies
 

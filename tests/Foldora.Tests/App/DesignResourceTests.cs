@@ -20,6 +20,85 @@ public sealed class DesignResourceTests
     }
 
     [Fact]
+    public void FoldoraAppProject_ConfiguresSelfAuthoredApplicationIcon()
+    {
+        var repositoryRoot = GetRepositoryRoot();
+        var appProject = LoadXml("src", "Foldora.App", "Foldora.App.csproj");
+
+        var applicationIcon = appProject.Descendants()
+            .Single(element => element.Name.LocalName == "ApplicationIcon")
+            .Value;
+        var iconResource = appProject.Descendants()
+            .SingleOrDefault(element => element.Name.LocalName == "Resource" && element.Attribute("Include")?.Value == @"Assets\Foldora.ico");
+
+        var iconPath = Path.Combine(repositoryRoot, "src", "Foldora.App", "Assets", "Foldora.ico");
+        var sourcePath = Path.Combine(repositoryRoot, "src", "Foldora.App", "Assets", "FoldoraIcon.svg");
+
+        Assert.Equal(@"Assets\Foldora.ico", applicationIcon);
+        Assert.NotNull(iconResource);
+        Assert.True(File.Exists(iconPath));
+        Assert.True(new FileInfo(iconPath).Length > 0);
+        Assert.True(File.Exists(sourcePath));
+
+        var sourceText = File.ReadAllText(sourcePath);
+        Assert.Contains("folded blue/cyan folder mark", sourceText, StringComparison.Ordinal);
+        Assert.Contains("broad light-cyan folded plane", sourceText, StringComparison.Ordinal);
+        Assert.DoesNotContain("small menu customization badge", sourceText, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void FoldoraIcon_ContainsCoreWindowsIconSizes()
+    {
+        var iconPath = Path.Combine(GetRepositoryRoot(), "src", "Foldora.App", "Assets", "Foldora.ico");
+        using var stream = File.OpenRead(iconPath);
+        using var reader = new BinaryReader(stream);
+
+        Assert.Equal((ushort)0, reader.ReadUInt16());
+        Assert.Equal((ushort)1, reader.ReadUInt16());
+        var count = reader.ReadUInt16();
+        Assert.Equal((ushort)4, count);
+
+        var sizes = new List<int>();
+        for (var i = 0; i < count; i++)
+        {
+            var width = reader.ReadByte();
+            var height = reader.ReadByte();
+            _ = reader.ReadByte();
+            _ = reader.ReadByte();
+            Assert.Equal((ushort)1, reader.ReadUInt16());
+            Assert.Equal((ushort)32, reader.ReadUInt16());
+            Assert.True(reader.ReadUInt32() > 0);
+            Assert.True(reader.ReadUInt32() > 0);
+
+            var normalizedWidth = width == 0 ? 256 : width;
+            var normalizedHeight = height == 0 ? 256 : height;
+            Assert.Equal(normalizedWidth, normalizedHeight);
+            sizes.Add(normalizedWidth);
+        }
+
+        Assert.Equal([16, 32, 48, 256], sizes.Order().ToArray());
+    }
+
+    [Fact]
+    public void FoldoraWindows_ReferenceSharedWindowIcon()
+    {
+        var windows = new[]
+        {
+            "MainWindow.xaml",
+            "SettingsWindow.xaml",
+            "HelpWindow.xaml"
+        };
+
+        foreach (var window in windows)
+        {
+            var document = LoadXml("src", "Foldora.App", window);
+            var root = document.Root ?? throw new InvalidOperationException($"{window} root was not found.");
+
+            Assert.Equal("Assets/Foldora.ico", root.Attribute("Icon")?.Value);
+        }
+    }
+
+    [Fact]
     public void DesignTokens_DefineCoreSemanticBrushes()
     {
         var tokens = LoadXml("src", "Foldora.App", "Resources", "DesignTokens.xaml");

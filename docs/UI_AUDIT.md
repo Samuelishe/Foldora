@@ -50,6 +50,7 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Observed: нет нормальной app/build/window icon; exe/window/settings icon выглядит недоделанной.
 - Impact: продуктовая идентичность не сформирована; installed/published app выглядит незавершённой.
 - Suggested direction: отдельный branding/assets pass: app icon, exe icon, window icon, README visual assets. Любые bundled assets должны соблюдать `docs/RESOURCE_POLICY.md` и обновлять notices/license docs.
+- Status: Addressed for app/window/exe icon foundation, then replaced/refined after visual review. Foldora now has a self-authored folded blue/cyan folder mark with a broad light-cyan folded plane wired into the WPF windows and `Foldora.App.exe`. README hero/mockup and broader branding remain future work.
 
 ### UIA-0007 Settings Clarity And Help
 
@@ -134,9 +135,7 @@ Future product-grade polish can include:
 
 Future branding work:
 
-- application icon;
-- exe icon;
-- window icon;
+- further app icon refinement if manual feedback finds small-size readability issues;
 - Settings/window icon consistency;
 - README hero image or mockup built from improved screenshots;
 - explicit resource/license review for every bundled visual asset.

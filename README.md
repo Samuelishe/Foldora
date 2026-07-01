@@ -45,6 +45,7 @@ Selecting an entry creates a folder and applies its icon through `desktop.ini`.
 - Staged save: changes are not written until `Save`.
 - `.ico` import into `%AppData%\Foldora\icons\`.
 - Direct `.ico` preview in the WPF editor.
+- Self-authored folded blue/cyan Foldora app/window/exe icon with a broad light-cyan folded plane for the WPF app.
 - Safe HKCU legacy context menu registration under Foldora-owned registry roots.
 - No-console `Foldora.MenuHost.exe` for Explorer menu commands.
 - Small icons in the legacy Explorer menu.
@@ -252,7 +253,7 @@ Unless otherwise noted, original Foldora source code, documentation and self-aut
 
 ## Third-Party Resources
 
-No third-party visual assets are currently bundled. Third-party materials, if added later, are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Resource rules are documented in [docs/RESOURCE_POLICY.md](docs/RESOURCE_POLICY.md).
+No third-party visual assets are currently bundled. The Foldora app icon is a self-authored folded blue/cyan folder mark with a broad light-cyan folded plane under 0BSD. Third-party materials, if added later, are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Resource rules are documented in [docs/RESOURCE_POLICY.md](docs/RESOURCE_POLICY.md).
 
 Free download availability is not enough to include an asset in this repository. Every bundled third-party resource must have an explicit license that allows Foldora's actual use, redistribution and attribution model.
 

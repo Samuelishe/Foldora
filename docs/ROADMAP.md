@@ -105,9 +105,8 @@ UI/UX audit baseline, correctness cleanup and visual polish:
    - addressed after manual visual check: the long settings document was replaced with Application, Explorer menu, Installation, Help/About and Danger zone tabs.
    - Installation path actions now use short `Open`/`Copy` visible labels; Danger zone is isolated from the default Application tab.
 8. Branding/assets pass:
-   - app icon;
-   - exe/window icon;
-   - README hero/mockup after the UI looks ready for public presentation.
+   - app/window/exe icon foundation addressed with a self-authored folded blue/cyan Foldora icon using a broad light-cyan folded plane;
+   - README hero/mockup remains future work after more manual visual confidence.
 9. Later layout/localization polish:
    - handle feedback from long labels and non-Latin scripts across enabled locales.
 

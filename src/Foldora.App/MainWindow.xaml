@@ -6,6 +6,7 @@
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         mc:Ignorable="d"
         Title="Foldora"
+        Icon="Assets/Foldora.ico"
         Height="780"
         Width="980"
         MinHeight="640"
