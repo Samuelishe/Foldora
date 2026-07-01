@@ -54,8 +54,11 @@ dotnet run --project src/Foldora.App/Foldora.App.csproj
 9. Нажать `Редактировать` и убедиться, что draft fields не потерялись.
 10. Добавить grouped entry.
 11. Указать группу через group container, например `Цветные`.
-12. Нажать `Сохранить`.
-13. Изменить draft и нажать `Отменить изменения`.
+12. Временно сделать entry невалидным, например указать запрещённый символ в имени создаваемой папки, и нажать `Сохранить`.
+13. Убедиться, что affected card раскрылась и показала inline validation error.
+14. Исправить значение и нажать `Готово`; убедиться, что карточка снова свернулась без сохранения settings.
+15. Нажать `Сохранить`.
+16. Изменить draft и нажать `Отменить изменения`.
 
 Ожидаемо:
 
@@ -63,6 +66,7 @@ dotnet run --project src/Foldora.App/Foldora.App.csproj
 - grouped entry попадает в одноуровневую группу;
 - saved entries показываются compact по умолчанию;
 - validation errors раскрывают affected card и показываются inline;
+- `Готово` только сворачивает карточку и не сохраняет settings;
 - pending icon импортируется только после `Сохранить`;
 - `Отменить изменения` откатывает draft fields, added/removed entries и pending icon selections.
 

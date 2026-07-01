@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - MVP stabilization pass
+
+- Проверены root `README.md`, `LICENSE`, `THIRD_PARTY_NOTICES.md`, `AGENTS.md` и resource-policy docs после 0BSD/licensing изменения: README не обещает installer/MSIX/publish flow, лицензия указана как 0BSD, сторонние visual assets не заявлены.
+- Проверены WPF compact/edit ViewModel/XAML: `IsEditing`, inline validation errors и entry count остаются presentation-only; `EntryId` не показывается в normal compact flow, кроме tooltip.
+- `docs/SMOKE_TEST.md` дополнен явным шагом invalid entry -> inline error -> исправление -> `Готово`/`Сохранить`.
+- `docs/UI_DESIGN.md` и `docs/MENU_MODEL.md` уточнены, чтобы current grouping containers не смешивались с прежним полем `Группа` в карточке и чтобы save-triggered registry rebuild не конфликтовал с историческим phase 2 описанием.
+- Production-код и XAML не менялись.
+
 ## 2026-06-18 - Licensing and compact entry cards
 
 - Добавлен root `LICENSE` со стандартной Zero-Clause BSD License (0BSD).
