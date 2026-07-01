@@ -159,7 +159,7 @@ public sealed class FoldoraSettingsStorageTests
     }
 
     [Fact]
-    public async Task LoadAsync_NormalizesUnsupportedLanguageToRussian()
+    public async Task LoadAsync_NormalizesUnsupportedLanguageToEnglish()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraSettings-");
 
@@ -182,7 +182,73 @@ public sealed class FoldoraSettingsStorageTests
 
             var loaded = await new FoldoraSettingsStorage(paths).LoadAsync();
 
-            Assert.Equal("ru", loaded.Language);
+            Assert.Equal("en", loaded.Language);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task LoadWithLanguageMetadataAsync_ReportsMissingLanguage()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettings-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            Directory.CreateDirectory(paths.RootDirectory);
+            await File.WriteAllTextAsync(
+                paths.SettingsFile,
+                """
+                {
+                  "explorerIntegrationEnabled": false,
+                  "createFolderMenu": {
+                    "title": "Создать папку",
+                    "entries": []
+                  }
+                }
+                """);
+
+            var loaded = await new FoldoraSettingsStorage(paths).LoadWithLanguageMetadataAsync(createSettingsIfMissing: false);
+
+            Assert.False(loaded.LanguageWasPersisted);
+            Assert.False(loaded.LanguageWasSupported);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task LoadWithLanguageMetadataAsync_ReportsUnsupportedLanguage()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettings-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            Directory.CreateDirectory(paths.RootDirectory);
+            await File.WriteAllTextAsync(
+                paths.SettingsFile,
+                """
+                {
+                  "language": "de",
+                  "explorerIntegrationEnabled": false,
+                  "createFolderMenu": {
+                    "title": "Создать папку",
+                    "entries": []
+                  }
+                }
+                """);
+
+            var loaded = await new FoldoraSettingsStorage(paths).LoadWithLanguageMetadataAsync(createSettingsIfMissing: false);
+
+            Assert.True(loaded.LanguageWasPersisted);
+            Assert.False(loaded.LanguageWasSupported);
+            Assert.Equal("en", loaded.Settings.Language);
         }
         finally
         {

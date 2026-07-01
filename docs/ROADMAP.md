@@ -8,6 +8,7 @@ Foldora currently has a working MVP loop:
 - Compact/edit entry cards for menu entries.
 - Settings gear and persisted language setting `ru`/`en`.
 - Localization foundation for WPF labels/status/defaults and localized default menu title mode using embedded `ru`/`en` catalogs.
+- First-run WPF language detection from `CultureInfo.CurrentUICulture`, with unsupported languages persisted as `en` and manual Settings choice preserved.
 - Localized WPF validation rendering from Core invariant issue codes/parameters.
 - Grouped WPF presentation sections for root-level and one-level grouped entries.
 - User menu entries with:

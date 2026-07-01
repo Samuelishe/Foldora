@@ -25,10 +25,7 @@ public sealed class FoldoraSettingsStorage
 
     public async Task EnsureCreatedAsync(CancellationToken cancellationToken = default)
     {
-        Directory.CreateDirectory(paths.RootDirectory);
-        Directory.CreateDirectory(paths.IconsDirectory);
-        Directory.CreateDirectory(paths.PreviewsDirectory);
-        Directory.CreateDirectory(paths.PacksDirectory);
+        EnsureDataDirectories();
 
         if (!File.Exists(paths.SettingsFile))
         {
@@ -40,13 +37,48 @@ public sealed class FoldoraSettingsStorage
     {
         await EnsureCreatedAsync(cancellationToken);
 
+        var result = await LoadWithLanguageMetadataAsync(createSettingsIfMissing: true, cancellationToken);
+        return result.Settings;
+    }
+
+    public Task<FoldoraSettingsLoadResult> LoadWithLanguageMetadataAsync(CancellationToken cancellationToken = default)
+    {
+        return LoadWithLanguageMetadataAsync(createSettingsIfMissing: true, cancellationToken);
+    }
+
+    public async Task<FoldoraSettingsLoadResult> LoadWithLanguageMetadataAsync(
+        bool createSettingsIfMissing,
+        CancellationToken cancellationToken = default)
+    {
+        EnsureDataDirectories();
+
+        if (!File.Exists(paths.SettingsFile))
+        {
+            if (createSettingsIfMissing)
+            {
+                await SaveAsync(new FoldoraSettings(), cancellationToken);
+            }
+            else
+            {
+                return new FoldoraSettingsLoadResult(
+                    Normalize(new FoldoraSettings()),
+                    LanguageWasPersisted: false,
+                    LanguageWasSupported: false);
+            }
+        }
+
+        var languageState = await ReadLanguageStateAsync(cancellationToken);
+
         await using var stream = File.OpenRead(paths.SettingsFile);
         var settings = await JsonSerializer.DeserializeAsync<FoldoraSettings>(
             stream,
             JsonOptions,
             cancellationToken);
 
-        return Normalize(settings ?? new FoldoraSettings());
+        return new FoldoraSettingsLoadResult(
+            Normalize(settings ?? new FoldoraSettings()),
+            languageState.WasPersisted,
+            languageState.WasSupported);
     }
 
     public async Task SaveAsync(FoldoraSettings settings, CancellationToken cancellationToken = default)
@@ -75,6 +107,28 @@ public sealed class FoldoraSettingsStorage
             Language = language,
             CreateFolderMenu = menu
         };
+    }
+
+    private void EnsureDataDirectories()
+    {
+        Directory.CreateDirectory(paths.RootDirectory);
+        Directory.CreateDirectory(paths.IconsDirectory);
+        Directory.CreateDirectory(paths.PreviewsDirectory);
+        Directory.CreateDirectory(paths.PacksDirectory);
+    }
+
+    private async Task<(bool WasPersisted, bool WasSupported)> ReadLanguageStateAsync(CancellationToken cancellationToken)
+    {
+        await using var stream = File.OpenRead(paths.SettingsFile);
+        using var document = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken);
+        if (!document.RootElement.TryGetProperty("language", out var languageElement)
+            || languageElement.ValueKind != JsonValueKind.String)
+        {
+            return (false, false);
+        }
+
+        var language = languageElement.GetString();
+        return (true, FoldoraLanguage.IsSupported(language));
     }
 
     private static FolderMenuSettings NormalizeMenu(FolderMenuSettings menu, string language)

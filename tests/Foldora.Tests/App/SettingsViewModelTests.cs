@@ -79,7 +79,7 @@ public sealed class SettingsViewModelTests
     [InlineData("RU", "ru")]
     [InlineData("en", "en")]
     [InlineData("EN", "en")]
-    [InlineData("zh-Hans", "ru")]
+    [InlineData("zh-Hans", "en")]
     public void FoldoraLanguage_NormalizesCompleteLocalesOnly(string input, string expected)
     {
         Assert.Equal(expected, FoldoraLanguage.NormalizeOrDefault(input));

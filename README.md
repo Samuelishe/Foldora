@@ -106,7 +106,7 @@ Uninstall keeps `%AppData%\Foldora` by default because existing styled folders c
 
 ## Localization
 
-Complete enabled UI languages are Russian (`ru`) and English (`en`). Changing the application language changes UI labels, status text, the untouched default menu title, and defaults for newly created entries. It does not rewrite a custom menu title, entry names, folder names, or group names.
+Complete enabled UI languages are Russian (`ru`) and English (`en`). On first WPF launch, Foldora chooses the system UI language only if it is complete and enabled; unsupported system languages fall back to English. The selected language is saved and is not re-detected on later launches. Changing the application language changes UI labels, status text, the untouched default menu title, and defaults for newly created entries. It does not rewrite a custom menu title, entry names, folder names, or group names.
 
 ## Development Run
 

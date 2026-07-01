@@ -55,12 +55,12 @@ public sealed class LocalizationServiceTests
     }
 
     [Fact]
-    public void UnsupportedLanguageFallsBackToRussian()
+    public void UnsupportedLanguageFallsBackToEnglish()
     {
         var service = new InMemoryLocalizationService("fr");
 
-        Assert.Equal("ru", service.CurrentLanguage);
-        Assert.Equal("Настройки", service.Resources.Settings);
+        Assert.Equal("en", service.CurrentLanguage);
+        Assert.Equal("Settings", service.Resources.Settings);
     }
 
     [Fact]

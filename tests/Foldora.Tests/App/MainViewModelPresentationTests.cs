@@ -356,6 +356,69 @@ public sealed class MainViewModelPresentationTests
         }
     }
 
+    [Theory]
+    [InlineData("ru-RU", "ru", "Создать папку")]
+    [InlineData("de-DE", "en", "Create folder")]
+    public async Task LoadAsync_FirstRunDetectsAndPersistsSystemLanguage(
+        string systemLanguage,
+        string expectedLanguage,
+        string expectedTitle)
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var viewModel = await CreateViewModelAsync(
+                paths,
+                new RecordingSettingsDialogService(),
+                systemLanguage);
+
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+            Assert.Equal(expectedLanguage, saved.Language);
+            Assert.Equal(expectedTitle, viewModel.Title);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task LoadAsync_ManualLanguageChoiceIsNotOverriddenBySystemLanguage()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "en");
+
+            var viewModel = await CreateViewModelAsync(
+                paths,
+                new RecordingSettingsDialogService("ru"),
+                "ru-RU");
+
+            Assert.Equal("Create folder", viewModel.Title);
+
+            await viewModel.OpenSettingsAsync();
+            await viewModel.SaveDraftAsync();
+
+            var reloaded = await CreateViewModelAsync(
+                paths,
+                new RecordingSettingsDialogService(),
+                "en-US");
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.Equal("ru", saved.Language);
+            Assert.Equal("Создать папку", reloaded.Title);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
     [Fact]
     public async Task ExistingUserData_IsNotTranslatedWhenUiLanguageIsEnglish()
     {
@@ -727,7 +790,8 @@ public sealed class MainViewModelPresentationTests
 
     private static async Task<MainViewModel> CreateViewModelAsync(
         FoldoraDataPaths paths,
-        ISettingsDialogService settingsDialogService)
+        ISettingsDialogService settingsDialogService,
+        string systemLanguage = "ru-RU")
     {
         var storage = new FoldoraSettingsStorage(paths);
         var draftEditor = new FolderMenuDraftEditor(storage, paths);
@@ -746,7 +810,10 @@ public sealed class MainViewModelPresentationTests
                 new FixedHostPathResolver(Path.Combine(paths.RootDirectory, "Foldora.MenuHost.exe")),
                 localizationService),
             settingsDialogService,
-            localizationService);
+            localizationService,
+            settingsLanguageInitializer: new SettingsLanguageInitializer(
+                storage,
+                new FixedSystemLanguageProvider(systemLanguage)));
 
         await viewModel.LoadAsync();
         return viewModel;
@@ -850,5 +917,15 @@ public sealed class MainViewModelPresentationTests
             WasCalled = true;
             return Task.FromResult(new SettingsDialogResult(true, language));
         }
+    }
+
+    private sealed class FixedSystemLanguageProvider : ISystemLanguageProvider
+    {
+        public FixedSystemLanguageProvider(string currentUiCultureName)
+        {
+            CurrentUiCultureName = currentUiCultureName;
+        }
+
+        public string CurrentUiCultureName { get; }
     }
 }

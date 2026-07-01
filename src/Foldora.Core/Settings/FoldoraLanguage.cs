@@ -10,9 +10,12 @@ public static class FoldoraLanguage
 
     public static string NormalizeOrDefault(string? language)
     {
-        return string.Equals(language, English, StringComparison.OrdinalIgnoreCase)
-            ? English
-            : Russian;
+        if (string.Equals(language, Russian, StringComparison.OrdinalIgnoreCase))
+        {
+            return Russian;
+        }
+
+        return English;
     }
 
     public static bool IsSupported(string? language)

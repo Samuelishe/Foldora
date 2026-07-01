@@ -14,6 +14,7 @@
 - `src/Foldora.Core/Models/FolderIconStyle.cs` - модель стиля иконки.
 - `src/Foldora.Core/Settings/FoldoraSettings.cs` - модель пользовательских настроек.
 - `src/Foldora.Core/Settings/FoldoraSettingsStorage.cs` - JSON storage настроек в AppData.
+- `src/Foldora.Core/Settings/FoldoraSettingsLoadResult.cs` - результат загрузки settings с metadata о persisted language.
 - `src/Foldora.Core/Settings/FoldoraLanguage.cs` - supported language values и fallback-нормализация `ru`/`en`.
 - `src/Foldora.Core/Storage/FoldoraDataPaths.cs` - AppData paths.
 - `src/Foldora.Core/Menu/FolderMenuEntry.cs` - пользовательский пункт будущего submenu, включая optional one-level `GroupName`.
@@ -122,6 +123,10 @@
 - `src/Foldora.App/Services/LanguageOption.cs` - option model для выбора языка в settings UI.
 - `src/Foldora.App/Services/ILocalizationService.cs` - abstraction локализации WPF.
 - `src/Foldora.App/Services/InMemoryLocalizationService.cs` - catalog-backed локализация WPF поверх embedded JSON catalogs.
+- `src/Foldora.App/Services/ISystemLanguageProvider.cs` - abstraction чтения текущей system UI culture для first-run language detection.
+- `src/Foldora.App/Services/SystemLanguageProvider.cs` - implementation `ISystemLanguageProvider` через `CultureInfo.CurrentUICulture`.
+- `src/Foldora.App/Services/ISettingsLanguageInitializer.cs` - abstraction one-time initialization persisted language перед WPF draft load.
+- `src/Foldora.App/Services/SettingsLanguageInitializer.cs` - first-run language detection/persistence для WPF startup.
 - `src/Foldora.App/Services/IValidationMessageLocalizer.cs` - abstraction App-level рендера Core validation issues в текущей локали.
 - `src/Foldora.App/Services/ValidationMessageLocalizer.cs` - catalog-backed рендер validation issues по `Validation.<code>` keys.
 - `src/Foldora.App/Localization/ru.json` - Russian complete localization catalog для WPF UI/status/defaults.
@@ -136,6 +141,7 @@
 - `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections и compact/edit entry behavior.
 - `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.
 - `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты RU/EN catalog completeness, fallback и known localization keys.
+- `tests/Foldora.Tests/App/SettingsLanguageInitializerTests.cs` - тесты first-run language detection, unsupported culture fallback и persistence policy.
 - `tests/Foldora.Tests/App/ValidationMessageLocalizerTests.cs` - тесты App-level локализации Core validation issues.
 - `tests/Foldora.Tests/App/StartupDiagnosticsServiceTests.cs` - тесты controlled startup diagnostic log.
 - `tests/Foldora.Tests/App/WpfIconPreviewServiceTests.cs` - тесты WPF preview service.

@@ -23,6 +23,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private readonly ISettingsDialogService settingsDialogService;
     private readonly ILocalizationService localizationService;
     private readonly IValidationMessageLocalizer validationMessageLocalizer;
+    private readonly ISettingsLanguageInitializer settingsLanguageInitializer;
     private readonly AsyncRelayCommand saveCommand;
     private readonly AsyncRelayCommand openSettingsCommand;
     private readonly AsyncRelayCommand dryRunCommand;
@@ -46,7 +47,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         ExplorerIntegrationController explorerIntegrationController,
         ISettingsDialogService? settingsDialogService = null,
         ILocalizationService? localizationService = null,
-        IValidationMessageLocalizer? validationMessageLocalizer = null)
+        IValidationMessageLocalizer? validationMessageLocalizer = null,
+        ISettingsLanguageInitializer? settingsLanguageInitializer = null)
     {
         this.draftEditor = draftEditor ?? throw new ArgumentNullException(nameof(draftEditor));
         this.iconFilePicker = iconFilePicker ?? throw new ArgumentNullException(nameof(iconFilePicker));
@@ -55,6 +57,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         this.settingsDialogService = settingsDialogService ?? new NoopSettingsDialogService();
         this.localizationService = localizationService ?? new InMemoryLocalizationService();
         this.validationMessageLocalizer = validationMessageLocalizer ?? new ValidationMessageLocalizer(this.localizationService);
+        this.settingsLanguageInitializer = settingsLanguageInitializer ?? new NoopSettingsLanguageInitializer();
         title = L.CreateFolderMenuTitle;
         statusMessage = L.LoadingSettings;
 
@@ -236,6 +239,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
             registrationService,
             new ExplorerCommandHostPathResolver(),
             localizationService);
+        var settingsLanguageInitializer = new SettingsLanguageInitializer(
+            storage,
+            new SystemLanguageProvider());
 
         return new MainViewModel(
             draftEditor,
@@ -243,11 +249,13 @@ public sealed class MainViewModel : INotifyPropertyChanged
             new WpfIconPreviewService(),
             integrationController,
             new WindowSettingsDialogService(storage, localizationService),
-            localizationService);
+            localizationService,
+            settingsLanguageInitializer: settingsLanguageInitializer);
     }
 
     public async Task LoadAsync(CancellationToken cancellationToken = default)
     {
+        await settingsLanguageInitializer.InitializeAsync(cancellationToken);
         await draftEditor.LoadAsync(cancellationToken);
         localizationService.SetLanguage(draftEditor.Language);
         OnPropertyChanged(nameof(L));
@@ -715,6 +723,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
         public Task<SettingsDialogResult> ShowSettingsAsync()
         {
             return Task.FromResult(new SettingsDialogResult(false, FoldoraLanguage.Russian));
+        }
+    }
+
+    private sealed class NoopSettingsLanguageInitializer : ISettingsLanguageInitializer
+    {
+        public Task InitializeAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
         }
     }
 }

@@ -48,7 +48,7 @@ Foldora uses canonical BCP-47-style tags where practical:
 - `pt-BR`
 - `ko`
 
-Current `FoldoraLanguage` accepts and normalizes only complete enabled locales `ru` and `en`. Unsupported saved values fall back to `ru` to keep old or corrupted settings loadable.
+Current `FoldoraLanguage` accepts and normalizes only complete enabled locales `ru` and `en`. Unsupported saved values normalize to `en` and are persisted as `en` by the WPF startup language initializer.
 
 ## String categories
 
@@ -106,6 +106,20 @@ Migration/inference for old settings without `titleIsCustom`:
 
 Edge case: an old pre-flag settings file with title exactly `Создать папку` or `Create folder` is treated as untouched default, even if the user had intentionally typed that same value before the flag existed. After this migration, explicitly editing the title marks it custom and preserves it across language changes.
 
+## First-run locale detection
+
+WPF first-run language selection happens before the draft menu is loaded:
+
+1. If `settings.json` contains supported `language` (`ru` or `en`), Foldora uses it and does not inspect the system language.
+2. If `settings.json` is missing or does not contain `language`, Foldora reads `CultureInfo.CurrentUICulture`.
+3. `ru`, `ru-RU` and other `ru-*` cultures map to `ru`.
+4. `en`, `en-US`, `en-GB` and other `en-*` cultures map to `en`.
+5. Any other system culture maps to `en`.
+6. The selected language is saved to `settings.json`, so later startups do not auto-detect again.
+7. If `settings.json` contains an unsupported language value such as `de`, Foldora normalizes and saves `en`; it does not keep re-running system detection.
+
+Manual language selection in Settings always wins over system language after it is saved. Planned incomplete locales such as `de`, `ja` or `zh-Hans` are not selected automatically until their catalogs are complete and exposed.
+
 ## New entry defaults
 
 When the WPF editor creates a new entry, it uses the current UI language:
@@ -162,6 +176,8 @@ The current WPF localization engine loads embedded JSON catalogs from `src/Foldo
 
 `ru` is the fallback catalog. Non-Russian catalogs are merged over `ru`, so a missing key has a controlled fallback. Tests require complete `ru` and `en` catalogs to have the same keys.
 
+Unsupported requested application language codes normalize to `en`. This is separate from catalog key fallback: complete non-Russian catalogs still merge over `ru` for missing keys.
+
 No third-party localization libraries are used.
 
 ## Completeness tests
@@ -172,6 +188,7 @@ Localization tests must cover:
 - fallback behavior is controlled;
 - known default/status keys exist;
 - settings UI exposes only complete locales;
+- first-run language detection persists `ru`/`en` without selecting incomplete planned locales;
 - new draft entries use localized defaults;
 - existing user data is not auto-translated on language switch.
 
@@ -219,7 +236,7 @@ To add a complete language:
 
 - CLI validation localization strategy.
 - CLI localization strategy.
-- Broader first-run locale strategy beyond persisted `Language`.
+- Extend first-run locale matching when planned locales become complete.
 - Pluralization rules.
 - RTL support after dedicated layout testing.
 - Complete translation pass for planned locales.

@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - First-run locale detection and persisted language selection
+
+- Added storage metadata for whether `language` exists in `settings.json` and whether the persisted value is supported.
+- Added App-level `SettingsLanguageInitializer` and `ISystemLanguageProvider`; WPF first-run uses `CultureInfo.CurrentUICulture`, maps `ru-*` to `ru`, `en-*` to `en`, and unsupported cultures to `en`.
+- Persisted the selected language before normal draft loading, so system language detection runs only for missing/invalid language and does not override manual Settings choices later.
+- Unsupported persisted language values now normalize to `en` and are saved as `en`; planned incomplete locales are not auto-selected.
+- Added tests for first-run Russian/unsupported system cultures, old settings without language, invalid saved language, manual override preservation, and Settings UI locale exposure.
+
 ## 2026-07-01 - Validation localization cleanup
 
 - Extended Core validation issues with stable issue-code constants and parameter dictionaries for dynamic values such as invalid characters, length limits, group names, file paths and menu limits.
