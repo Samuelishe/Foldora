@@ -9,6 +9,8 @@ MVP применяет иконку папки через `desktop.ini` внут
 IconResource=<absolute-path-to-icon>,0
 ```
 
+Для saved menu entries `IconResource` обычно указывает на imported `.ico` в `%AppData%\Foldora\icons`. Поэтому per-user uninstall сохраняет `%AppData%\Foldora` по default: удаление imported icons может сломать custom icons уже созданных папок. Более self-contained режим, где icon file копируется внутрь каждой целевой папки, остаётся future work и не реализован в текущем MVP.
+
 Алгоритм `apply`:
 
 1. Создать или обновить `desktop.ini`.

@@ -62,6 +62,25 @@
   - `tests/Foldora.Tests/MenuHost/MenuHostCommandRunnerTests.cs`
 - Date added: 2026-07-01
 
+### TD-0003 Self-Contained Icons For Created Folders
+
+- ID: `TD-0003`
+- Title: Self-contained icons for created folders
+- Status: Open / Future consideration
+- Severity: Low
+- Area: Desktop.ini / Packaging
+- Observed behavior: Foldora-created folders usually reference imported `.ico` files under `%AppData%\Foldora\icons` from `desktop.ini`.
+- Expected/desired behavior: If users need fully portable/stable styled folders, Foldora could optionally copy the selected `.ico` into each target folder and reference that local copy.
+- Known cause or hypothesis: Current MVP intentionally centralizes imported icons in user data to avoid duplicating files and to keep menu entry metadata simple.
+- Current workaround: Default uninstall preserves `%AppData%\Foldora`, so existing styled folders keep access to imported icons.
+- Next investigation step: Only design a self-contained folder-icon mode if real uninstall/portability needs justify extra file management and cleanup behavior.
+- Links to docs/tests/code:
+  - `docs/DESKTOP_INI.md`
+  - `docs/SETTINGS.md`
+  - `src/Foldora.Core/DesktopIni/DesktopIniService.cs`
+  - `src/Foldora.Core/Menu/IconImportService.cs`
+- Date added: 2026-07-01
+
 ## Do Not Do
 
 - Не обещать создание папки под курсором в текущем MVP.
@@ -71,4 +90,5 @@
 - Не добавлять random sleep как production fix без investigation.
 - Не ломать deletion-friendly desktop.ini policy `ReadOnlyFolderHiddenDesktopIni` (`folder: ReadOnly`, `desktop.ini: Hidden`).
 - Не менять Core/JSON model ради desktop icon placement или icon refresh timing.
+- Не удалять `%AppData%\Foldora` по default при uninstall, потому что existing styled folders могут ссылаться на imported icons.
 - Не использовать UIAutomation как acceptance criterion для этих пунктов.

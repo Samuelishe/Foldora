@@ -11,6 +11,14 @@
 %AppData%\Foldora\packs\
 ```
 
+Installed binaries не хранятся в `%AppData%\Foldora`. Per-user install layout использует:
+
+```text
+%LocalAppData%\Programs\Foldora\
+```
+
+Это разделяет application files и user data. Uninstall удаляет `%LocalAppData%\Programs\Foldora`, но по default сохраняет `%AppData%\Foldora`.
+
 Пути строятся через:
 
 ```csharp
@@ -108,5 +116,7 @@ WPF phase 4 меняет `ExplorerIntegrationEnabled` только через я
 ```
 
 Команда не удаляет `%AppData%\Foldora`, `packs` и импортированные `.ico`.
+
+`scripts/uninstall-user.ps1` по default также не удаляет `%AppData%\Foldora`. Это важно: уже созданные Foldora folders могут иметь `desktop.ini` со ссылкой на imported `.ico` в `%AppData%\Foldora\icons`. Удаление user data через `scripts/uninstall-user.ps1 -RemoveUserData` может привести к потере custom icons у таких папок.
 
 `%AppData%\Foldora\previews\` зарезервирован на будущее. WPF MVP может показывать `.ico` напрямую и не обязан генерировать preview-файлы.

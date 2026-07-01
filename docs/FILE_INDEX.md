@@ -7,6 +7,8 @@
 - `THIRD_PARTY_NOTICES.md` - notices для bundled third-party materials; сейчас фиксирует отсутствие сторонних visual assets и test-only NuGet dependency license metadata.
 - `AGENTS.md` - правила для будущих агентных сессий.
 - `scripts/publish-dev.ps1` - dev/manual publish helper: публикует `Foldora.App.exe`, `Foldora.Cli.exe` и `Foldora.MenuHost.exe` в `artifacts/publish/Foldora`.
+- `scripts/install-user.ps1` - per-user install helper: обновляет dev publish output и копирует Foldora binaries в `%LocalAppData%\Programs\Foldora` без auto-register/auto-run.
+- `scripts/uninstall-user.ps1` - per-user uninstall helper: удаляет Foldora-owned HKCU menu roots и installed binaries, сохраняя `%AppData%\Foldora` по default.
 - `src/Foldora.Core/Foldora.Core.csproj` - доменная библиотека.
 - `src/Foldora.Core/Models/IconPack.cs` - модель набора иконок.
 - `src/Foldora.Core/Models/FolderIconStyle.cs` - модель стиля иконки.

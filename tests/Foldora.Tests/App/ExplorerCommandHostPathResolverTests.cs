@@ -35,6 +35,30 @@ public sealed class ExplorerCommandHostPathResolverTests
     }
 
     [Fact]
+    public async Task ResolveCommandHostPath_FindsInstalledSiblingMenuHostInPathWithSpaces()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraHostResolver-");
+
+        try
+        {
+            var installDirectory = Directory.CreateDirectory(Path.Combine(root.FullName, "Local AppData", "Programs", "Foldora"));
+            var appPath = Path.Combine(installDirectory.FullName, "Foldora.App.exe");
+            var hostPath = Path.Combine(installDirectory.FullName, "Foldora.MenuHost.exe");
+            await File.WriteAllTextAsync(appPath, "fake app");
+            await File.WriteAllTextAsync(hostPath, "fake host");
+            var resolver = new ExplorerCommandHostPathResolver(() => appPath);
+
+            var resolvedPath = resolver.ResolveCommandHostPath();
+
+            Assert.Equal(hostPath, resolvedPath);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task ResolveCommandHostPath_ReportsControlledFailureWhenMenuHostIsMissing()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraHostResolver-");

@@ -6,7 +6,7 @@ License: 0BSD
 
 Foldora is a working name for a lightweight Windows 11 utility for creating folders with custom icons from a user-defined Explorer menu.
 
-The project is in an early MVP / experimental stage. It is usable for local testing, but it does not have an installer, modern Windows 11 context menu integration, or a stable public release flow yet.
+The project is in an early MVP / experimental stage. It is usable for local testing through a per-user install script, but it does not have an MSI/MSIX installer, modern Windows 11 context menu integration, or a stable public release flow yet.
 
 ## Idea
 
@@ -93,7 +93,17 @@ Foldora stores user data under:
 
 Imported icons are copied into the `icons` directory. The original source icon file is not used as the permanent menu icon path.
 
-## Build, Run and Manual Publish
+Per-user installed binaries live separately under:
+
+```text
+%LocalAppData%\Programs\Foldora\Foldora.App.exe
+%LocalAppData%\Programs\Foldora\Foldora.Cli.exe
+%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe
+```
+
+Uninstall keeps `%AppData%\Foldora` by default because existing styled folders can reference imported icons from `%AppData%\Foldora\icons`.
+
+## Development Run
 
 ```text
 dotnet restore Foldora.sln
@@ -103,6 +113,8 @@ dotnet run --project src/Foldora.App/Foldora.App.csproj
 ```
 
 The project currently targets .NET 10. Do not retarget it to .NET 8 for this repository state.
+
+## Dev Publish
 
 For repeatable manual Explorer testing without an installer, create the dev publish layout:
 
@@ -121,6 +133,57 @@ artifacts/publish/Foldora/Foldora.MenuHost.exe
 
 The script does not register the Explorer menu and does not start the app. A published build requires the .NET 10 Windows Desktop Runtime unless a future self-contained publish mode is added.
 
+## Per-User Install
+
+To install the current framework-dependent build for the current user:
+
+```text
+pwsh scripts/install-user.ps1
+```
+
+The script refreshes the dev publish output and copies it to:
+
+```text
+%LocalAppData%\Programs\Foldora\
+%LocalAppData%\Programs\Foldora\Foldora.App.exe
+%LocalAppData%\Programs\Foldora\Foldora.Cli.exe
+%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe
+```
+
+It does not require admin rights, does not register Explorer integration, and does not start the app. After install, run `%LocalAppData%\Programs\Foldora\Foldora.App.exe` and enable Explorer integration from the UI.
+
+When the installed app enables Explorer integration, the registry command should point to the installed sibling `Foldora.MenuHost.exe`:
+
+```text
+%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe
+```
+
+`Foldora.MenuHost.exe` is not a service, tray app, background helper, or autostart process. It is a short-lived no-console executable launched by Explorer only when the user clicks a Foldora context-menu command.
+
+## Uninstall
+
+To unregister the menu and remove installed binaries:
+
+```text
+pwsh scripts/uninstall-user.ps1
+```
+
+By default this keeps:
+
+```text
+%AppData%\Foldora\
+```
+
+That preserves settings, imported icons and logs. This matters because already styled folders can have `desktop.ini` entries that reference imported `.ico` files under `%AppData%\Foldora\icons`.
+
+Optional full user-data removal:
+
+```text
+pwsh scripts/uninstall-user.ps1 -RemoveUserData
+```
+
+Use `-RemoveUserData` only when you intentionally want to delete settings, imported icons and logs; existing styled folders can lose their custom icons.
+
 ## Basic CLI Example
 
 After building/publishing, use the CLI executable for manual commands:
@@ -132,7 +195,7 @@ foldora register-menu --host-path "<path-to-Foldora.MenuHost.exe>"
 foldora unregister-menu
 ```
 
-`Foldora.MenuHost.exe` is the no-console executable intended for Explorer context menu commands. `Foldora.Cli.exe` remains a console tool for manual commands and diagnostics.
+`Foldora.MenuHost.exe` is the short-lived no-console executable intended for Explorer context menu commands. `Foldora.Cli.exe` remains a console tool for manual commands and diagnostics.
 
 When testing the manual publish layout, Explorer integration should point to the published sibling MenuHost:
 
@@ -147,8 +210,8 @@ If you enable Explorer integration from `artifacts/publish/Foldora/Foldora.App.e
 - Modern Windows 11 context menu integration is not implemented.
 - The current Explorer integration uses the legacy context menu, so the menu may appear under `Show more options`.
 - Exact original right-click desktop placement is not available from the current legacy-menu MVP. Foldora does a best-effort move of newly created desktop folder icons near the cursor/menu selection position, and Explorer may snap or shift icons according to its grid/layout rules.
-- No installer/MSIX yet.
-- Manual/dev publish is available under `artifacts/publish/Foldora`, but there is no production installer, Program Files layout, code signing, or MSIX package yet.
+- No MSI/MSIX installer yet.
+- Per-user install script is available under `%LocalAppData%\Programs\Foldora`, but there is no Program Files layout, code signing, winget package or MSIX package yet.
 - No icon pack import/export yet.
 - No PNG-to-ICO conversion yet.
 - No full nested tree storage beyond the current one-level `GroupName`.

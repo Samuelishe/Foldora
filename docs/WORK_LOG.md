@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - Per-user install layout foundation
+
+- Added `scripts/install-user.ps1`: it reuses fresh dev publish output and copies `Foldora.App.exe`, `Foldora.Cli.exe`, `Foldora.MenuHost.exe` and supporting files to `%LocalAppData%\Programs\Foldora`.
+- Added `scripts/uninstall-user.ps1`: it unregisters Foldora-owned Explorer menu roots through installed CLI when available, falls back to deleting only Foldora-owned HKCU roots, removes installed binaries and preserves `%AppData%\Foldora` by default.
+- Documented the split between installed binaries in `%LocalAppData%\Programs\Foldora` and user data/settings/imported icons/logs in `%AppData%\Foldora`.
+- Documented that `Foldora.MenuHost.exe` is a short-lived no-console Explorer command host, not a service/tray/background/autostart process.
+- Added resolver coverage for installed sibling `Foldora.MenuHost.exe` in a path with spaces.
+
 ## 2026-07-01 - MenuHost desktop placement diagnostics and bounded retry
 
 - Added append-only JSONL diagnostic logging for MenuHost desktop placement at `%AppData%\Foldora\Logs\menuhost-placement.log`.

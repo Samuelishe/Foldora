@@ -85,7 +85,7 @@ Command values вызывают no-console MenuHost:
 "<Foldora.MenuHost.exe>" create --target "<placeholder>" --entry-id "<entry-id>"
 ```
 
-Путь к executable host, shell target placeholder и `entry-id` quote-ятся через `CommandLineQuoter`. `Foldora.Cli.exe` остаётся console tool для ручных команд; Explorer context menu должен использовать `Foldora.MenuHost.exe`, чтобы не мигало console window.
+Путь к executable host, shell target placeholder и `entry-id` quote-ятся через `CommandLineQuoter`. `Foldora.Cli.exe` остаётся console tool для ручных команд; Explorer context menu должен использовать `Foldora.MenuHost.exe`, чтобы не мигало console window. `Foldora.MenuHost.exe` не является service/tray/background helper: Explorer запускает его только на пользовательский клик в Foldora menu, после выполнения команды процесс завершается.
 
 Placeholder policy на текущем этапе:
 
@@ -210,6 +210,52 @@ artifacts/publish/Foldora/Foldora.Cli.exe unregister-menu
 ```
 
 Перед удалением `artifacts/publish/Foldora` нужно выполнить `unregister-menu`, иначе Explorer registry command будет ссылаться на удалённый `Foldora.MenuHost.exe`.
+
+## Per-User Install Layout
+
+Для более устойчивой локальной установки без MSI/MSIX используется per-user layout:
+
+```text
+%LocalAppData%\Programs\Foldora\
+  Foldora.App.exe
+  Foldora.Cli.exe
+  Foldora.MenuHost.exe
+```
+
+Создаётся командой:
+
+```text
+pwsh scripts/install-user.ps1
+```
+
+Script переиспользует fresh `scripts/publish-dev.ps1`, копирует publish output в install root, не регистрирует Explorer menu и не запускает приложение. При запуске installed `Foldora.App.exe` resolver должен найти sibling `Foldora.MenuHost.exe`, поэтому command values в HKCU должны ссылаться на:
+
+```text
+%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe
+```
+
+Удаление:
+
+```text
+pwsh scripts/uninstall-user.ps1
+```
+
+Uninstall сначала пытается выполнить installed CLI:
+
+```text
+%LocalAppData%\Programs\Foldora\Foldora.Cli.exe unregister-menu
+```
+
+Если CLI отсутствует, fallback удаляет только Foldora-owned roots:
+
+```text
+HKCU\Software\Classes\Directory\shell\Foldora
+HKCU\Software\Classes\Directory\Background\shell\Foldora
+```
+
+Затем uninstall удаляет `%LocalAppData%\Programs\Foldora`. `%AppData%\Foldora` сохраняется по умолчанию и удаляется только при явном `-RemoveUserData`.
+
+Причина разделения: `%LocalAppData%\Programs\Foldora` содержит application binaries, а `%AppData%\Foldora` содержит settings, imported icons, packs and logs. Уже созданные folders могут ссылаться из `desktop.ini` на imported icons в `%AppData%\Foldora\icons`, поэтому default uninstall не удаляет user data.
 
 `unregister-menu` удаляет только:
 

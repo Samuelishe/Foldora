@@ -7,10 +7,13 @@
 - JSON для настроек.
 - xUnit для unit-тестов.
 - HKCU registry для legacy context menu MVP.
-- Manual publish layout остаётся framework-dependent и требует .NET 10 Windows Desktop Runtime для запуска опубликованного WPF-приложения.
+- Manual publish и per-user install layout остаются framework-dependent и требуют .NET 10 Windows Desktop Runtime для запуска опубликованного WPF-приложения.
+- Per-user install root: `%LocalAppData%\Programs\Foldora`.
+- User data root: `%AppData%\Foldora`.
 
 PowerShell разрешен только для временного прототипирования и ручной проверки, но не как production-механизм.
 `scripts/publish-dev.ps1` является dev/manual packaging helper, не installer и не production shell mechanism.
+`scripts/install-user.ps1` и `scripts/uninstall-user.ps1` являются temporary per-user install helpers без admin rights, MSI/MSIX, code signing, autostart или service.
 
 ## Local Tooling
 

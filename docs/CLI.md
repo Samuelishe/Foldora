@@ -98,6 +98,32 @@ artifacts/publish/Foldora/Foldora.Cli.exe register-menu --host-path "<repo>\arti
 artifacts/publish/Foldora/Foldora.Cli.exe unregister-menu
 ```
 
+Per-user install layout создаётся отдельно:
+
+```text
+pwsh scripts/install-user.ps1
+```
+
+После install CLI находится здесь:
+
+```text
+%LocalAppData%\Programs\Foldora\Foldora.Cli.exe
+```
+
+Installed app/CLI должны регистрировать Explorer menu с sibling host:
+
+```text
+%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe
+```
+
+Удаление installed binaries и Explorer menu:
+
+```text
+pwsh scripts/uninstall-user.ps1
+```
+
+Uninstall по default сохраняет `%AppData%\Foldora`; `-RemoveUserData` удаляет settings/imported icons/logs и может сломать custom icons уже созданных folders, если их `desktop.ini` ссылается на `%AppData%\Foldora\icons`.
+
 `menu reset --yes` - полный сброс пользовательского меню к пустому дефолту. Команда не удаляет весь `%AppData%\Foldora`, не удаляет `settings.json`, не трогает `packs` и не удаляет импортированные `.ico` на этом шаге. Без `--yes` reset отказывается выполняться.
 
 Будущее улучшение: `unregister-menu --dry-run`, который покажет удаляемые Foldora-owned roots без записи в registry и без изменения settings.

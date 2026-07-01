@@ -52,6 +52,56 @@ artifacts/publish/Foldora/Foldora.MenuHost.exe
 8. Проверить `%AppData%\Foldora\Logs\menuhost-placement.log`; последняя запись должна соответствовать create-команде.
 9. Перед удалением publish-папки выполнить `artifacts/publish/Foldora/Foldora.Cli.exe unregister-menu`.
 
+## 1b. Per-User Install Layout
+
+```text
+pwsh scripts/install-user.ps1
+```
+
+Ожидаемо:
+
+- script создаёт fresh dev publish output;
+- script копирует binaries в `%LocalAppData%\Programs\Foldora`;
+- script не регистрирует Explorer menu;
+- script не запускает приложение;
+- рядом лежат:
+
+```text
+%LocalAppData%\Programs\Foldora\Foldora.App.exe
+%LocalAppData%\Programs\Foldora\Foldora.Cli.exe
+%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe
+```
+
+Install smoke:
+
+1. Запустить `%LocalAppData%\Programs\Foldora\Foldora.App.exe`.
+2. Добавить или отредактировать entry.
+3. Нажать `Сохранить`.
+4. Нажать `Включить меню Проводника`.
+5. Проверить, что registry command указывает на `%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe`, а не на `artifacts/publish` или Debug output.
+6. Проверить Explorer legacy menu через `Show more options`, если пункт не виден в compact menu.
+7. Создать папку через Desktop background context menu.
+8. Проверить `%AppData%\Foldora\Logs\menuhost-placement.log`; последняя запись должна соответствовать create-команде.
+9. Перед удалением install folder выполнить:
+
+```text
+pwsh scripts/uninstall-user.ps1
+```
+
+Ожидаемо:
+
+- uninstall удаляет Foldora-owned HKCU roots;
+- uninstall удаляет `%LocalAppData%\Programs\Foldora`;
+- `%AppData%\Foldora` сохраняется по default.
+
+Full user data removal является отдельной явной проверкой:
+
+```text
+pwsh scripts/uninstall-user.ps1 -RemoveUserData
+```
+
+Использовать только если нужно удалить settings/imported icons/logs. Это может сломать custom icons уже созданных folders, если их `desktop.ini` ссылается на `%AppData%\Foldora\icons`.
+
 ## 2. WPF Startup
 
 ```text
@@ -214,6 +264,9 @@ foldora menu reset --yes
 - Desktop placement является best-effort: Foldora пытается передвинуть созданный desktop folder near captured cursor/menu selection point, но exact original right-click point недоступна через legacy `%V`.
 - Первая папка на Desktop может сначала появиться с default icon из-за возможного Explorer refresh/icon cache timing issue; это отдельный `TD-0002`, не placement limitation.
 - Registry menu в publish/manual проверке должен указывать на `artifacts/publish/Foldora/Foldora.MenuHost.exe`.
+- Registry menu в install/manual проверке должен указывать на `%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe`.
+- `Foldora.MenuHost.exe` не является сервисом или background helper; Explorer запускает его только при выборе Foldora menu entry.
 - MenuHost desktop placement diagnostics находятся в `%AppData%\Foldora\Logs\menuhost-placement.log`.
 - Если publish-папку нужно удалить, сначала выполнить `unregister-menu`, чтобы Explorer menu не ссылался на удалённый host.
+- Если per-user install folder нужно удалить, сначала выполнить `pwsh scripts/uninstall-user.ps1`.
 - User-facing diagnostics для failures внутри `Foldora.MenuHost` из Explorer menu пока future work.
