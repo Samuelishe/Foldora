@@ -276,11 +276,11 @@ Settings UI минимален:
 Настройки
 
 Язык приложения:
-[Русский / English / 简体中文 / Deutsch / Español / Français / 日本語 / Português (Brasil) / 한국어]
+[Русский / English / 简体中文 / Deutsch / Español / Français / 日本語 / Português (Brasil) / 한국어 / Українська / Polski / Türkçe / Română / Čeština / Magyar / Български]
 
 [Сохранить] [Закрыть]
 ```
 
-`Language` сохраняется в `%AppData%\Foldora\settings.json`. Complete/enabled values: `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`. При первом WPF запуске язык выбирается из system UI culture только для complete/enabled locale; unsupported language -> `en`; затем выбор сохраняется и не определяется повторно на каждом старте. `pt`/`pt-*` currently maps to `pt-BR`, the only Portuguese locale Foldora ships. Labels/status/defaults WPF идут через App localization catalogs. Смена языка обновляет untouched/default menu title, но не переводит custom menu title, entries, folder names или group names. Новые entries после смены языка используют текущий UI language. UI честно предупреждает, что некоторые изменения языка могут применяться после перезапуска.
+`Language` сохраняется в `%AppData%\Foldora\settings.json`. Complete/enabled values: `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`, `uk`, `pl`, `tr`, `ro`, `cs`, `hu`, `bg`. При первом WPF запуске язык выбирается из system UI culture только для complete/enabled locale; unsupported language -> `en`; затем выбор сохраняется и не определяется повторно на каждом старте. `pt`/`pt-*` currently maps to `pt-BR`, the only Portuguese locale Foldora ships. Labels/status/defaults WPF идут через App localization catalogs. Смена языка обновляет untouched/default menu title, но не переводит custom menu title, entries, folder names или group names. Новые entries после смены языка используют текущий UI language. UI честно предупреждает, что некоторые изменения языка могут применяться после перезапуска.
 
 Settings window должен оставаться пригодным для будущих секций настроек. Окно resizable; содержимое настроек находится в scrollable центральной области, а footer actions `Сохранить`/`Закрыть` закреплены снизу и не прокручиваются. Проверка открытия modal settings window выполняется вручную; автоматические UIAutomation-клики не используются как критерий acceptance для custom-chrome/modal WPF.

@@ -20,6 +20,13 @@ public sealed class SettingsViewModelTests
             Assert.Equal(FoldoraLanguage.SupportedLocales, viewModel.AvailableLanguages.Select(language => language.Code).ToArray());
             Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.SimplifiedChinese && language.DisplayName == "简体中文");
             Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.BrazilianPortuguese && language.DisplayName == "Português (Brasil)");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Ukrainian && language.DisplayName == "Українська");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Polish && language.DisplayName == "Polski");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Turkish && language.DisplayName == "Türkçe");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Romanian && language.DisplayName == "Română");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Czech && language.DisplayName == "Čeština");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Hungarian && language.DisplayName == "Magyar");
+            Assert.Contains(viewModel.AvailableLanguages, language => language.Code == FoldoraLanguage.Bulgarian && language.DisplayName == "Български");
         }
         finally
         {
@@ -114,6 +121,14 @@ public sealed class SettingsViewModelTests
     [InlineData("pt-BR", "pt-BR")]
     [InlineData("PT-br", "pt-BR")]
     [InlineData("ko", "ko")]
+    [InlineData("uk", "uk")]
+    [InlineData("UK", "uk")]
+    [InlineData("pl", "pl")]
+    [InlineData("tr", "tr")]
+    [InlineData("ro", "ro")]
+    [InlineData("cs", "cs")]
+    [InlineData("hu", "hu")]
+    [InlineData("bg", "bg")]
     [InlineData("it", "en")]
     public void FoldoraLanguage_NormalizesCompleteLocales(string input, string expected)
     {

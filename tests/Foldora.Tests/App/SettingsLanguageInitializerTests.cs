@@ -31,6 +31,33 @@ public sealed class SettingsLanguageInitializerTests
     [InlineData("pt-PT", "pt-BR")]
     [InlineData("ko", "ko")]
     [InlineData("ko-KR", "ko")]
+    [InlineData("uk", "uk")]
+    [InlineData("uk-UA", "uk")]
+    [InlineData("pl", "pl")]
+    [InlineData("pl-PL", "pl")]
+    [InlineData("tr", "tr")]
+    [InlineData("tr-TR", "tr")]
+    [InlineData("ro", "ro")]
+    [InlineData("ro-RO", "ro")]
+    [InlineData("cs", "cs")]
+    [InlineData("cs-CZ", "cs")]
+    [InlineData("hu", "hu")]
+    [InlineData("hu-HU", "hu")]
+    [InlineData("bg", "bg")]
+    [InlineData("bg-BG", "bg")]
+    [InlineData("be-BY", "en")]
+    [InlineData("kk-KZ", "en")]
+    [InlineData("uz-Latn-UZ", "en")]
+    [InlineData("az-AZ", "en")]
+    [InlineData("hy-AM", "en")]
+    [InlineData("ka-GE", "en")]
+    [InlineData("lt-LT", "en")]
+    [InlineData("lv-LV", "en")]
+    [InlineData("et-EE", "en")]
+    [InlineData("sk-SK", "en")]
+    [InlineData("sl-SI", "en")]
+    [InlineData("hr-HR", "en")]
+    [InlineData("sr-RS", "en")]
     [InlineData("it-IT", "en")]
     public void DetectStartupLanguage_SelectsEnabledCompleteLocales(string cultureName, string expected)
     {
@@ -88,6 +115,8 @@ public sealed class SettingsLanguageInitializerTests
     [InlineData("ru", "en-US", "ru")]
     [InlineData("de", "ru-RU", "de")]
     [InlineData("zh-Hans", "en-US", "zh-Hans")]
+    [InlineData("uk", "en-US", "uk")]
+    [InlineData("bg", "en-US", "bg")]
     public async Task InitializeAsync_PersistedSupportedLanguageWinsOverSystemLanguage(
         string savedLanguage,
         string systemLanguage,
@@ -116,6 +145,10 @@ public sealed class SettingsLanguageInitializerTests
     [Theory]
     [InlineData("ru-RU", "ru", "Создать папку")]
     [InlineData("ja-JP", "ja", "フォルダーを作成")]
+    [InlineData("uk-UA", "uk", "Створити папку")]
+    [InlineData("pl-PL", "pl", "Utwórz folder")]
+    [InlineData("tr-TR", "tr", "Klasör oluştur")]
+    [InlineData("bg-BG", "bg", "Създай папка")]
     [InlineData("it-IT", "en", "Create folder")]
     public async Task InitializeAsync_OldSettingsWithoutLanguage_DetectsAndPreservesMenuData(
         string systemLanguage,

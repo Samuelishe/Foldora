@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-01 - Regional locale expansion
+
+- Added embedded WPF localization catalogs for `uk`, `pl`, `tr`, `ro`, `cs`, `hu` and `bg`.
+- Enabled Ukrainian, Polish, Turkish, Romanian, Czech, Hungarian and Bulgarian in `FoldoraLanguage`, Settings language options and first-run language detection.
+- Kept future regional candidates `be`, `kk`, `uz-Latn`, `az`, `hy`, `ka`, `lt`, `lv`, `et`, `sk`, `sl`, `hr` and `sr` out of Settings until their catalogs are complete.
+- Extended localized default menu titles, new-entry prefixes and default folder names for the regional batch without translating existing saved menu data.
+- Updated localization tests for catalog completeness, native display names, supported culture mapping, future-candidate fallback and per-locale defaults.
+
 ## 2026-07-01 - Locale catalog expansion
 
 - Added complete embedded WPF localization catalogs for `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR` and `ko` alongside existing `ru`/`en`.

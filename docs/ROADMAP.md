@@ -6,7 +6,7 @@ Foldora currently has a working MVP loop:
 
 - WPF editor with custom window chrome.
 - Compact/edit entry cards for menu entries.
-- Settings gear and persisted language setting for enabled locales `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`.
+- Settings gear and persisted language setting for enabled locales `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`, `uk`, `pl`, `tr`, `ro`, `cs`, `hu`, `bg`.
 - Localization foundation for WPF labels/status/defaults and localized default menu title mode using embedded complete catalogs.
 - First-run WPF language detection from `CultureInfo.CurrentUICulture`, with unsupported languages persisted as `en` and manual Settings choice preserved.
 - Localized WPF validation rendering from Core invariant issue codes/parameters.
@@ -95,15 +95,15 @@ Per-user install smoke and release polish before full installer work:
 - No orphan icon cleanup for imported `.ico`.
 - No user-facing diagnostics for `Foldora.MenuHost.exe` failures launched from Explorer.
 - First-created desktop folder default-icon timing is currently not reproduced; tracked as `TD-0002` monitor item.
-- WPF catalog expansion is complete for `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`; CLI defaults/diagnostics/validation output and startup fatal dialog remain tracked debt.
-- Later locale candidates `it`, `pl`, `tr`, `uk` must not be exposed in Settings UI until complete catalogs and tests exist.
+- WPF catalog expansion is complete for `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`, `uk`, `pl`, `tr`, `ro`, `cs`, `hu`, `bg`; CLI defaults/diagnostics/validation output and startup fatal dialog remain tracked debt.
+- Future regional locale candidates `be`, `kk`, `uz-Latn`, `az`, `hy`, `ka`, `lt`, `lv`, `et`, `sk`, `sl`, `hr` and `sr` must not be exposed in Settings UI until complete catalogs and tests exist.
 - No Explorer restart or icon cache reset flow.
 
 ## Future
 
 - MSI/MSIX or winget after stable per-user install layout.
 - Modern Windows 11 context menu research.
-- Later candidate locale catalogs (`it`, `pl`, `tr`, `uk`) after enabled catalog quality is reviewed.
+- Future regional candidate locale catalogs (`be`, `kk`, `uz-Latn`, `az`, `hy`, `ka`, `lt`, `lv`, `et`, `sk`, `sl`, `hr`, `sr`) after enabled catalog quality is reviewed.
 - Exact original right-click coordinate source research, if best-effort placement is not enough.
 - Modern `IExplorerCommand` research for advanced shell integration.
 - Optional Shell refresh notification investigation for desktop.ini apply/create timing, only if `TD-0002` is reproduced again and scoped.

@@ -154,7 +154,14 @@ public sealed class LocalizationServiceTests
             { FoldoraLanguage.French, "Créer un dossier", "Vue", "Nouveau dossier" },
             { FoldoraLanguage.Japanese, "フォルダーを作成", "ビュー", "新しいフォルダー" },
             { FoldoraLanguage.BrazilianPortuguese, "Criar pasta", "Visualização", "Nova pasta" },
-            { FoldoraLanguage.Korean, "폴더 만들기", "보기", "새 폴더" }
+            { FoldoraLanguage.Korean, "폴더 만들기", "보기", "새 폴더" },
+            { FoldoraLanguage.Ukrainian, "Створити папку", "Вигляд", "Нова папка" },
+            { FoldoraLanguage.Polish, "Utwórz folder", "Widok", "Nowy folder" },
+            { FoldoraLanguage.Turkish, "Klasör oluştur", "Görünüm", "Yeni klasör" },
+            { FoldoraLanguage.Romanian, "Creează folder", "Vizualizare", "Folder nou" },
+            { FoldoraLanguage.Czech, "Vytvořit složku", "Zobrazení", "Nová složka" },
+            { FoldoraLanguage.Hungarian, "Mappa létrehozása", "Nézet", "Új mappa" },
+            { FoldoraLanguage.Bulgarian, "Създай папка", "Изглед", "Нова папка" }
         };
     }
 }

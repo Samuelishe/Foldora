@@ -44,7 +44,7 @@ Design system foundation добавляет централизованные WPF
 - Для `DefaultFolderName` при ручном вводе желательно блокировать invalid Windows filename chars; при paste допустимо заменить/удалить их и показать предупреждение. Validator всё равно обязан проверить данные при сохранении.
 - Для preview в WPF MVP можно показывать `.ico` напрямую. Генерация файлов в `%AppData%\Foldora\previews\` остаётся future-задачей.
 - Settings gear находится в title/header area и открывает настройки приложения.
-- Language setting выбирается в settings UI. First-run language выбирается из system UI culture только для complete/enabled values `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`; unsupported system languages получают `en`, а сохранённый ручной выбор не переопределяется.
+- Language setting выбирается в settings UI. First-run language выбирается из system UI culture только для complete/enabled values `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`, `uk`, `pl`, `tr`, `ro`, `cs`, `hu`, `bg`; unsupported system languages получают `en`, а сохранённый ручной выбор не переопределяется.
 - Labels/buttons/status defaults подключены к App localization foundation. Новые user-facing строки в XAML/ViewModels должны идти через localization keys; incomplete planned locales не показываются.
 - Смена языка обновляет untouched/default menu title, но не переводит custom menu title, entries или group names; новые entry defaults используют текущий UI language.
 

@@ -90,6 +90,41 @@ public sealed class SettingsLanguageInitializer : ISettingsLanguageInitializer
             return FoldoraLanguage.Korean;
         }
 
+        if (MatchesLanguage(normalized, FoldoraLanguage.Ukrainian))
+        {
+            return FoldoraLanguage.Ukrainian;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Polish))
+        {
+            return FoldoraLanguage.Polish;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Turkish))
+        {
+            return FoldoraLanguage.Turkish;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Romanian))
+        {
+            return FoldoraLanguage.Romanian;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Czech))
+        {
+            return FoldoraLanguage.Czech;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Hungarian))
+        {
+            return FoldoraLanguage.Hungarian;
+        }
+
+        if (MatchesLanguage(normalized, FoldoraLanguage.Bulgarian))
+        {
+            return FoldoraLanguage.Bulgarian;
+        }
+
         return FoldoraLanguage.English;
     }
 

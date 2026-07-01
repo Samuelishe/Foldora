@@ -25,6 +25,20 @@ public static class FolderMenuDefaultTitles
 
     public const string Korean = "폴더 만들기";
 
+    public const string Ukrainian = "Створити папку";
+
+    public const string Polish = "Utwórz folder";
+
+    public const string Turkish = "Klasör oluştur";
+
+    public const string Romanian = "Creează folder";
+
+    public const string Czech = "Vytvořit složku";
+
+    public const string Hungarian = "Mappa létrehozása";
+
+    public const string Bulgarian = "Създай папка";
+
     private static readonly string[] KnownDefaults =
     [
         Russian,
@@ -35,7 +49,14 @@ public static class FolderMenuDefaultTitles
         French,
         Japanese,
         BrazilianPortuguese,
-        Korean
+        Korean,
+        Ukrainian,
+        Polish,
+        Turkish,
+        Romanian,
+        Czech,
+        Hungarian,
+        Bulgarian
     ];
 
     public static string GetForLanguage(string language)
@@ -50,6 +71,13 @@ public static class FolderMenuDefaultTitles
             FoldoraLanguage.Japanese => Japanese,
             FoldoraLanguage.BrazilianPortuguese => BrazilianPortuguese,
             FoldoraLanguage.Korean => Korean,
+            FoldoraLanguage.Ukrainian => Ukrainian,
+            FoldoraLanguage.Polish => Polish,
+            FoldoraLanguage.Turkish => Turkish,
+            FoldoraLanguage.Romanian => Romanian,
+            FoldoraLanguage.Czech => Czech,
+            FoldoraLanguage.Hungarian => Hungarian,
+            FoldoraLanguage.Bulgarian => Bulgarian,
             _ => English
         };
     }

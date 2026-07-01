@@ -21,7 +21,14 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
         [FoldoraLanguage.French] = "Français",
         [FoldoraLanguage.Japanese] = "日本語",
         [FoldoraLanguage.BrazilianPortuguese] = "Português (Brasil)",
-        [FoldoraLanguage.Korean] = "한국어"
+        [FoldoraLanguage.Korean] = "한국어",
+        [FoldoraLanguage.Ukrainian] = "Українська",
+        [FoldoraLanguage.Polish] = "Polski",
+        [FoldoraLanguage.Turkish] = "Türkçe",
+        [FoldoraLanguage.Romanian] = "Română",
+        [FoldoraLanguage.Czech] = "Čeština",
+        [FoldoraLanguage.Hungarian] = "Magyar",
+        [FoldoraLanguage.Bulgarian] = "Български"
     };
 
     private readonly FoldoraSettingsStorage storage;

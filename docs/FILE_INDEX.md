@@ -138,6 +138,13 @@
 - `src/Foldora.App/Localization/ja.json` - Japanese complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Localization/pt-BR.json` - Brazilian Portuguese complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Localization/ko.json` - Korean complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/uk.json` - Ukrainian complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/pl.json` - Polish complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/tr.json` - Turkish complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/ro.json` - Romanian complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/cs.json` - Czech complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/hu.json` - Hungarian complete localization catalog для WPF UI/status/defaults.
+- `src/Foldora.App/Localization/bg.json` - Bulgarian complete localization catalog для WPF UI/status/defaults.
 - `src/Foldora.App/Services/StartupDiagnosticsService.cs` - минимальная запись startup exceptions в `%AppData%\Foldora\Logs\startup-error.log`.
 - `tests/Foldora.Tests/Foldora.Tests.csproj` - xUnit project на `net10.0-windows`.
 - `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.
@@ -147,7 +154,7 @@
 - `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
 - `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections и compact/edit entry behavior.
 - `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.
-- `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты RU/EN catalog completeness, fallback и known localization keys.
+- `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты enabled catalog completeness, fallback и known localization keys.
 - `tests/Foldora.Tests/App/SettingsLanguageInitializerTests.cs` - тесты first-run language detection, unsupported culture fallback и persistence policy.
 - `tests/Foldora.Tests/App/ValidationMessageLocalizerTests.cs` - тесты App-level локализации Core validation issues.
 - `tests/Foldora.Tests/App/StartupDiagnosticsServiceTests.cs` - тесты controlled startup diagnostic log.

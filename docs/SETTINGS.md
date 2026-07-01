@@ -38,14 +38,14 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 
 `Language`:
 
-- supported values: `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`;
+- supported values: `ru`, `en`, `zh-Hans`, `de`, `es`, `fr`, `ja`, `pt-BR`, `ko`, `uk`, `pl`, `tr`, `ro`, `cs`, `hu`, `bg`;
 - first-run WPF default: detected from `CultureInfo.CurrentUICulture` if system language is supported, otherwise `en`;
 - старые settings без `language` получают one-time WPF detection, после чего выбранный язык сохраняется;
 - unsupported persisted values нормализуются и сохраняются как `en`;
 - settings UI сохраняет язык в тот же `settings.json`;
 - settings UI показывает только complete supported locales.
 
-После сохранения `Language` Foldora не определяет язык системы повторно на каждом старте. Ручной выбор в Settings имеет приоритет над системным языком. Later candidate locales (`it`, `pl`, `tr`, `uk`) не выбираются автоматически, пока они не станут complete/enabled.
+После сохранения `Language` Foldora не определяет язык системы повторно на каждом старте. Ручной выбор в Settings имеет приоритет над системным языком. Future regional candidates (`be`, `kk`, `uz-Latn`, `az`, `hy`, `ka`, `lt`, `lv`, `et`, `sk`, `sl`, `hr`, `sr`) не выбираются автоматически, пока они не станут complete/enabled.
 
 Incomplete locales не показываются в Settings UI. Смена `Language` меняет UI labels/status messages и defaults для новых entries, но не переписывает сохранённые пользовательские menu data. Например, уже сохранённый `Вид 1` остаётся `Вид 1` после переключения на English; новый entry в English UI создаётся как `View N` и `New folder`.
 

@@ -14,6 +14,13 @@ public static class FoldoraLanguage
     public const string Japanese = "ja";
     public const string BrazilianPortuguese = "pt-BR";
     public const string Korean = "ko";
+    public const string Ukrainian = "uk";
+    public const string Polish = "pl";
+    public const string Turkish = "tr";
+    public const string Romanian = "ro";
+    public const string Czech = "cs";
+    public const string Hungarian = "hu";
+    public const string Bulgarian = "bg";
 
     private static readonly string[] SupportedLocaleValues =
     [
@@ -25,7 +32,14 @@ public static class FoldoraLanguage
         French,
         Japanese,
         BrazilianPortuguese,
-        Korean
+        Korean,
+        Ukrainian,
+        Polish,
+        Turkish,
+        Romanian,
+        Czech,
+        Hungarian,
+        Bulgarian
     ];
 
     public static IReadOnlyList<string> SupportedLocales => SupportedLocaleValues;
