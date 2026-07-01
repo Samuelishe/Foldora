@@ -322,6 +322,30 @@ public sealed class SettingsViewModelTests
         }
     }
 
+    [Fact]
+    public void OpenHelpCommand_DelegatesToHelpDialogService()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraSettingsVm-");
+
+        try
+        {
+            var helpDialog = new RecordingHelpDialogService();
+            var viewModel = new SettingsViewModel(
+                new FoldoraSettingsStorage(new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"))),
+                FoldoraLanguage.English,
+                new InMemoryLocalizationService("en"),
+                helpDialogService: helpDialog);
+
+            viewModel.OpenHelpCommand.Execute(null);
+
+            Assert.Equal(1, helpDialog.ShowCount);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
     [Theory]
     [MemberData(nameof(EnabledLocales))]
     public async Task SaveAsync_PersistsEveryEnabledLanguage(string language)
@@ -519,6 +543,16 @@ public sealed class SettingsViewModelTests
             }
 
             CopiedPaths.Add(path);
+        }
+    }
+
+    private sealed class RecordingHelpDialogService : IHelpDialogService
+    {
+        public int ShowCount { get; private set; }
+
+        public void ShowHelp()
+        {
+            ShowCount++;
         }
     }
 }

@@ -24,11 +24,12 @@ Design system foundation добавляет централизованные WPF
 - Бизнес-логика не размещается в окне.
 - Настройки и операции вызываются через сервисы Core/Shell.
 - MainWindow должен оставаться focused menu editor: title, groups, entries, icons, save/discard and editor status/errors.
-- SettingsWindow содержит system/admin actions: language/application settings, Explorer integration, installation/path information and danger reset.
+- SettingsWindow содержит system/admin/support actions: language/application settings, Help/About, Explorer integration, installation/path information and danger reset.
 - SettingsWindow system actions must use user-facing wording: `Preview changes` for dry-run registry preview, explicit `Foldora Explorer menu: On/Off` style status, and short tooltips for technical concepts.
 - Installation/path rows should be actionable: visible path, `Open`/`Open location`, and `Copy`, with failures shown as localized status messages.
 - Small help/info affordances may use self-authored XAML/text styling. If an affordance is only a hover/focus hint, it must look like a passive info glyph, not a broken clickable button. If it looks like a button, it needs real click behavior. Do not add external icon assets for this.
 - Long technical help tooltips must wrap within a reasonable width instead of rendering as a single line across the screen.
+- Longer instructions belong in the Settings Help/About window, not in crowded inline tooltips or on MainWindow.
 - Main UI text must be user-facing, not debug-state text. Не показывать raw booleans вроде `True/False` как пользовательский статус.
 - Buttons must account for localization and long labels: shared action buttons use consistent min-height, padding and min-width. Dense Settings rows use a separate compact inline action style so `Preview changes`, enable/disable and path Open/Copy actions do not inherit overly wide normal action geometry, while still keeping visible horizontal breathing room. Further per-locale polish remains future work.
 - Settings content should keep proper scroll gutter and section spacing; scrollbar не должен визуально прилипать к тексту.
@@ -180,7 +181,7 @@ Validation errors из Core validation layer рендерятся через App
 - Пустой список entries показывает empty state и кнопку `+ Добавить пункт`.
 - Главный экран больше не содержит большой блок `Интеграция с Проводником` или `Опасная зона`; он сфокусирован на редактировании menu title/groups/entries/icons и глобальных `Сохранить`/`Отменить изменения`.
 - Компактный Explorer status на главном экране допустим только как non-dominant строка без дублирующей content-area Settings action.
-- `SettingsWindow` содержит секции Application, Explorer menu, Installation и Danger zone. Dry-run/register/unregister, technical details и reset находятся там.
+- `SettingsWindow` содержит секции Application, Help/About, Explorer menu, Installation и Danger zone. Dry-run/register/unregister, technical details и reset находятся там.
 - Reset находится в отдельной `Опасная зона` SettingsWindow с подтверждением.
 - Technical plan details показываются через `Expander` только при наличии details.
 - Status/errors area отделена от technical details.

@@ -46,10 +46,12 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
     private readonly ExplorerIntegrationController? explorerIntegrationController;
     private readonly IExplorerCommandHostPathResolver? commandHostPathResolver;
     private readonly IPathActionService pathActionService;
+    private readonly IHelpDialogService helpDialogService;
     private readonly AsyncRelayCommand dryRunCommand;
     private readonly AsyncRelayCommand registerExplorerCommand;
     private readonly AsyncRelayCommand unregisterExplorerCommand;
     private readonly AsyncRelayCommand resetMenuCommand;
+    private readonly RelayCommand openHelpCommand;
     private readonly RelayCommand openInstalledAppPathCommand;
     private readonly RelayCommand copyInstalledAppPathCommand;
     private readonly RelayCommand openUserDataPathCommand;
@@ -68,13 +70,15 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
         ILocalizationService? localizationService = null,
         ExplorerIntegrationController? explorerIntegrationController = null,
         IExplorerCommandHostPathResolver? commandHostPathResolver = null,
-        IPathActionService? pathActionService = null)
+        IPathActionService? pathActionService = null,
+        IHelpDialogService? helpDialogService = null)
     {
         this.storage = storage ?? throw new ArgumentNullException(nameof(storage));
         this.localizationService = localizationService ?? new InMemoryLocalizationService(currentLanguage);
         this.explorerIntegrationController = explorerIntegrationController;
         this.commandHostPathResolver = commandHostPathResolver;
         this.pathActionService = pathActionService ?? new WindowsPathActionService();
+        this.helpDialogService = helpDialogService ?? new WindowHelpDialogService(this.localizationService);
         selectedLanguage = FoldoraLanguage.NormalizeOrDefault(currentLanguage);
         explorerIntegrationEnabled = explorerIntegrationController?.ExplorerIntegrationEnabled ?? false;
         AvailableLanguages = new ObservableCollection<LanguageOption>(
@@ -86,6 +90,7 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
         registerExplorerCommand = new AsyncRelayCommand(RegisterExplorerIntegrationAsync, () => HasExplorerIntegrationController);
         unregisterExplorerCommand = new AsyncRelayCommand(UnregisterExplorerIntegrationAsync, () => HasExplorerIntegrationController);
         resetMenuCommand = new AsyncRelayCommand(ResetMenuAsync, () => HasExplorerIntegrationController && IsResetConfirmed);
+        openHelpCommand = new RelayCommand(OpenHelp);
         openInstalledAppPathCommand = new RelayCommand(() => OpenFolderPath(InstalledAppPath));
         copyInstalledAppPathCommand = new RelayCommand(() => CopyPath(InstalledAppPath));
         openUserDataPathCommand = new RelayCommand(() => OpenFolderPath(UserDataPath));
@@ -111,6 +116,8 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
     public AsyncRelayCommand UnregisterExplorerCommand => unregisterExplorerCommand;
 
     public AsyncRelayCommand ResetMenuCommand => resetMenuCommand;
+
+    public RelayCommand OpenHelpCommand => openHelpCommand;
 
     public RelayCommand OpenInstalledAppPathCommand => openInstalledAppPathCommand;
 
@@ -279,6 +286,11 @@ public sealed class SettingsViewModel : INotifyPropertyChanged
 
         ApplyIntegrationResult(await explorerIntegrationController.ResetMenuAsync());
         IsResetConfirmed = false;
+    }
+
+    private void OpenHelp()
+    {
+        helpDialogService.ShowHelp();
     }
 
     private void ApplyIntegrationResult(ExplorerIntegrationOperationResult result)

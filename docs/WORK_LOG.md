@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-07-01 - Help/About/Instructions window foundation
+
+- Added a small Settings entry point for Help/About instead of adding another MainWindow title-bar/action entry.
+- Added `HelpWindow` with resizable WPF window, scrollable content and fixed Close footer, using existing design resources.
+- Added `IHelpDialogService` / `WindowHelpDialogService` and `HelpWindowViewModel` so SettingsViewModel opens help through an App-layer service and code-behind remains window plumbing only.
+- Help/About content explains what Foldora does, basic entry/.ico workflow, Windows 11 legacy menu location, HKCU legacy context menu scope, MenuHost role, installed/user-data paths, uninstall behavior and 0BSD/resource policy notes.
+- Added Help/About localization keys to all enabled catalogs and tests for Settings help command/XAML/localization completeness.
+- Documented that this is a foundation, not a full help center; screenshots, richer onboarding and long-form translation review remain future polish.
+
 ## 2026-07-01 - Settings help/layout regression fix
 
 - Replaced Settings `?` help controls with passive self-authored glyphs so hover-only help no longer looks like a broken clickable button.

@@ -117,18 +117,19 @@
 
 - ID: `TD-UI-0007`
 - Title: Help, about and instructions window
-- Status: Open
+- Status: Partially fixed / polish remains
 - Severity: Low
 - Area: WPF / UX / Docs
-- Observed behavior: Settings now has targeted tooltips for Explorer menu preview and paths, but there is no single user-facing help/about window explaining the whole workflow.
-- Expected/desired behavior: A future localized Help/About/Instructions window should explain how to add entries, choose `.ico`, enable the Explorer menu, what `Foldora.MenuHost.exe` is, where data is stored and what uninstall preserves.
+- Observed behavior: Settings now has targeted tooltips and a small Help/About window explaining the basic workflow, Explorer menu behavior, `Foldora.MenuHost.exe`, data paths, uninstall and license notes.
+- Expected/desired behavior: Future polish should improve help copy, add screenshots only after UI visual polish, and review long help translations across all enabled locales.
 - Known cause or hypothesis: MVP prioritized functional editor and shell integration before broader onboarding/help content.
-- Current workaround: Use wrapped Settings tooltips, passive `?` info glyphs, README and docs.
-- Next investigation step: Design a small localized Help/About window after Settings clarity and visual polish settle.
+- Current workaround: Use the Settings Help/About window, wrapped tooltips, README and docs.
+- Next investigation step: Translation/content review and possible richer Help/About content after the UI is visually stable.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UX_FLOW.md`
   - `docs/SETTINGS.md`
+  - `src/Foldora.App/HelpWindow.xaml`
 - Date added: 2026-07-01
 
 ### TD-0004 Remaining Localization Debt

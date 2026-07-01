@@ -103,7 +103,7 @@ UI labels are visible interface text such as `Save`, `Discard changes`, `Choose 
 
 Settings/Explorer cleanup adds localized section/action labels for Application, Explorer menu, Installation, path labels, MenuHost note, immediate Explorer-action note and dirty-draft guidance. The legacy `ManageInSettings` key remains in complete catalogs for compatibility but is no longer shown on MainWindow after the small UX correctness cleanup.
 
-Settings clarity strings are also catalog-backed: explicit Foldora Explorer menu status, `Preview changes` dry-run wording, help/tooltips and path Open/Copy status messages must be present in every complete catalog.
+Settings clarity strings are also catalog-backed: explicit Foldora Explorer menu status, `Preview changes` dry-run wording, help/tooltips, Help/About window content and path Open/Copy status messages must be present in every complete catalog.
 
 Runtime/status messages are visible state messages such as settings loaded, settings saved, Explorer integration enabled/disabled and draft entry added. They must come from the localization layer.
 
@@ -311,6 +311,7 @@ To add a complete language:
 - CLI validation output still uses Core fallback messages.
 - Startup fatal error dialog is hardcoded Russian.
 - Technical plan/details text in Explorer integration is not fully localized.
+- Help/About foundation is catalog-backed, but long-form help copy for non-primary locales still needs translation/content review before treating it as product-grade help text.
 - `InMemoryLocalizationService` is now catalog-backed but still has its early MVP name.
 
 ## Future work
@@ -321,4 +322,5 @@ To add a complete language:
 - Pluralization rules.
 - RTL support after dedicated layout testing.
 - External translator review for enabled catalogs before a stable public release.
+- Help/About copy review and possible richer localized onboarding after visual polish.
 - External translator review before exposing additional languages.

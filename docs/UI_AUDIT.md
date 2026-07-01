@@ -55,7 +55,7 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Observed: SettingsWindow system sections can still be unclear for non-technical users: `Status: Disabled` did not say which menu is disabled, `Проверить план` sounded technical, and installation paths were visible but not actionable.
 - Impact: Explorer integration is functionally correct but requires too much inference from the user.
 - Suggested direction: use explicit Explorer menu status wording, rename dry-run UI to `Preview changes`, add small tooltip/help affordances and add Open/Copy actions for paths.
-- Status: Addressed for Settings clarity. Future global Help/About/Instructions window remains separate work.
+- Status: Addressed for Settings clarity. A small Help/About/Instructions window foundation now exists in Settings; deeper help content remains future polish.
 
 ### UIA-0008 Settings Help And Inline Action Layout Regression
 
@@ -81,7 +81,7 @@ Small safe improvements for a future code pass:
 - SettingsWindow scrollbar gutter and content padding pass - addressed;
 - check SettingsWindow sections with long labels in German, Portuguese, Ukrainian and other longer locales.
 - keep Settings wording understandable: Explorer menu status, preview/dry-run action and path actions are now clarified.
-- help/info affordances must not look like broken buttons: passive glyphs now use wrapped tooltips, and clickable help remains future work for a real Help/About window.
+- help/info affordances must not look like broken buttons: passive glyphs now use wrapped tooltips, and longer instructions live in the Settings Help/About window.
 - Settings inline action/path buttons use compact geometry instead of the normal wide action button style, with enough horizontal padding for labels.
 - MainWindow and SettingsWindow now have higher minimum widths to prevent known broken narrow layouts.
 
@@ -95,7 +95,7 @@ Future product-grade polish can include:
 - more polished status banners/chips;
 - calmer spacing rhythm and surface hierarchy;
 - README hero/mockup only after the UI is visually ready for public presentation.
-- a small Help/About/Instructions window that explains entries, `.ico` selection, Explorer menu enablement, MenuHost, data paths and uninstall behavior.
+- deeper Help/About polish: screenshots, richer instructions, and full translation review for long help text across all enabled locales.
 
 ## Branding / Assets Pass
 

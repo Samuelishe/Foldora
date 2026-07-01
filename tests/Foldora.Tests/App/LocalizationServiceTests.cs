@@ -51,6 +51,12 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Open", english.Resources.OpenFolder);
         Assert.Equal("Open location", english.Resources.OpenLocation);
         Assert.Equal("Copy", english.Resources.CopyPath);
+        Assert.Equal("Help / About", english.Resources.HelpAboutSection);
+        Assert.Equal("Help and About", english.Resources.OpenHelpAbout);
+        Assert.Equal("Help / About Foldora", english.Resources.HelpWindowTitle);
+        Assert.Equal("What Foldora does", english.Resources.HelpWhatFoldoraDoesTitle);
+        Assert.Equal("How to use", english.Resources.HelpHowToUseTitle);
+        Assert.Equal("Version: {0}", english.Resources.HelpVersionFormat);
         Assert.Equal("Save or discard menu changes before changing Explorer integration.", english.Resources.SaveOrDiscardBeforeExplorer);
         Assert.Equal("Created folder name contains invalid character \"{character}\".", english.Resources["Validation.folder_name_invalid_chars"]);
         Assert.Equal("Choose an .ico for the menu entry before saving.", english.Resources["Validation.entry_icon_path_empty"]);

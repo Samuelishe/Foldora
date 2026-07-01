@@ -99,11 +99,14 @@
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI/window plumbing, custom title bar controls и установка `DataContext`.
 - `src/Foldora.App/SettingsWindow.xaml` - WPF окно настроек приложения с Application/language, Explorer menu, Installation и Danger zone секциями.
 - `src/Foldora.App/SettingsWindow.xaml.cs` - минимальный plumbing окна настроек.
+- `src/Foldora.App/HelpWindow.xaml` - WPF окно краткой Help/About справки с scrollable content and fixed close footer.
+- `src/Foldora.App/HelpWindow.xaml.cs` - минимальный plumbing окна справки.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
 - `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands и presentation state для card/list UI.
 - `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню с icon status, preview, compact/edit presentation state и inline errors.
 - `src/Foldora.App/ViewModels/FolderMenuEntryGroupViewModel.cs` - presentation-only group container WPF для entries по `GroupName`, включая entry count и add/rename/delete group commands.
 - `src/Foldora.App/ViewModels/SettingsViewModel.cs` - ViewModel окна настроек: language save, Explorer integration actions, installation/path info and danger reset presentation.
+- `src/Foldora.App/ViewModels/HelpWindowViewModel.cs` - ViewModel краткой Help/About справки поверх App localization service.
 - `src/Foldora.App/ViewModels/LocalizationResources.cs` - bindable набор локализованных строк для WPF.
 - `src/Foldora.App/ViewModels/RelayCommand.cs` - простая синхронная WPF-команда.
 - `src/Foldora.App/ViewModels/AsyncRelayCommand.cs` - простая асинхронная WPF-команда.
@@ -120,6 +123,8 @@
 - `src/Foldora.App/Services/ISettingsDialogService.cs` - abstraction открытия settings UI.
 - `src/Foldora.App/Services/SettingsDialogResult.cs` - результат settings dialog.
 - `src/Foldora.App/Services/WindowSettingsDialogService.cs` - WPF implementation settings dialog service.
+- `src/Foldora.App/Services/IHelpDialogService.cs` - abstraction открытия Help/About UI.
+- `src/Foldora.App/Services/WindowHelpDialogService.cs` - WPF implementation Help/About dialog service.
 - `src/Foldora.App/Services/LanguageOption.cs` - option model для выбора языка в settings UI, включая native display name и стабильный sort metadata.
 - `src/Foldora.App/Services/ILocalizationService.cs` - abstraction локализации WPF.
 - `src/Foldora.App/Services/InMemoryLocalizationService.cs` - catalog-backed локализация WPF поверх embedded JSON catalogs.

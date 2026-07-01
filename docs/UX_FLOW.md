@@ -2,7 +2,7 @@
 
 Этот документ фиксирует целевой пользовательский flow для WPF MVP. WPF editor реализует staged editing, add/remove entries, staged выбор `.ico`, прямой preview из `.ico`, явные Explorer integration controls и user-facing card/list layout.
 
-Window shell foundation: главное окно использует custom title bar с названием приложения, settings gear и window controls. Settings gear открывает настройки приложения: language, Explorer integration, installation/path information and danger zone. Изменение языка сохраняется отдельно от draft entries и не пишет registry; Explorer integration actions в Settings выполняются сразу.
+Window shell foundation: главное окно использует custom title bar с названием приложения, settings gear и window controls. Settings gear открывает настройки приложения: language, Help/About, Explorer integration, installation/path information and danger zone. Изменение языка сохраняется отдельно от draft entries и не пишет registry; Explorer integration actions в Settings выполняются сразу.
 
 Startup errors не должны приводить к silent exit/no-window состоянию. При startup exception Foldora пишет `%AppData%\Foldora\Logs\startup-error.log` и показывает простой startup error dialog. Обычная загрузка settings остаётся async после создания `MainWindow`, чтобы не блокировать WPF dispatcher до появления окна.
 
@@ -280,6 +280,10 @@ Application
   Язык приложения:
   [Български / 简体中文 / 繁體中文 / Čeština / Nederlands / English / Français / Deutsch / हिन्दी / Magyar / Bahasa Indonesia / Italiano / 日本語 / 한국어 / Polski / Português (Brasil) / Português (Portugal) / Română / Русский / Español / ไทย / Türkçe / Українська / Tiếng Việt]
 
+Help / About
+  Short instructions
+  Open Help/About window
+
 Explorer menu
   Foldora Explorer menu: On/Off
   Preview changes
@@ -308,6 +312,8 @@ Danger zone
 
 Settings window должен оставаться пригодным для будущих секций настроек. Окно resizable; содержимое настроек находится в scrollable центральной области, а footer actions `Сохранить`/`Закрыть` закреплены снизу и не прокручиваются. `Сохранить` относится к language/settings save. Explorer menu actions и reset выполняются immediately через отдельные кнопки и не являются staged changes. Проверка открытия modal settings window выполняется вручную; автоматические UIAutomation-клики не используются как критерий acceptance для custom-chrome/modal WPF.
 
+Help/About window является короткой встроенной справкой, а не полноценным help center. Оно открывается из SettingsWindow, использует resizable WPF Window, scrollable content and fixed close footer, и объясняет: что делает Foldora, базовые шаги создания entry, выбор `.ico`, где появляется legacy Explorer menu, что `Foldora.MenuHost.exe` не является сервисом/background helper, где лежат installed binaries/user data, как работает uninstall and why user data/icons are kept by default.
+
 Manual locale spot-check после catalog expansion: Ukrainian, Japanese and German UI were manually checked without blocking layout issues. RU/EN остаются primary verified locales; остальные enabled locales catalog-complete and test-covered, а translation/layout polish принимается как future feedback work.
 
 ## UI Audit Follow-Up
@@ -321,6 +327,7 @@ Documentation-first audit is tracked in `docs/UI_AUDIT.md`. Known follow-up item
 - SettingsWindow clarity pass - addressed: explicit Foldora Explorer menu status, Preview changes naming, tooltip help and path Open/Copy actions;
 - Settings help/layout regression - addressed: passive non-button `?` glyphs, wrapped long tooltips and compact inline action buttons for Settings rows;
 - button/window sizing regression - addressed: Settings inline buttons have more horizontal padding and MainWindow/SettingsWindow minimum widths prevent known broken narrow layouts;
+- Help/About foundation - addressed: SettingsWindow now opens a small localized Help/About window for longer instructions;
 - defer product-grade visual polish and branding/app icon work to dedicated passes.
 
 This audit does not change the staged-save model, Explorer integration behavior, registry safety or SettingsWindow immediate-action semantics.

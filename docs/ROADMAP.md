@@ -94,10 +94,12 @@ UI/UX audit baseline and small correctness cleanup before visual release polish:
    - passive non-button `?` glyphs for hover-only help;
    - wrapped long help tooltip text;
    - compact inline action buttons for Settings Explorer/path rows.
-5. Visual polish pass:
+5. Help/About/Instructions window foundation:
+   - Settings includes a small Help/About entry point;
+   - Help/About explains basic workflow, `.ico` selection, Explorer menu location, MenuHost role, data paths, uninstall behavior and license notes;
+   - this is not a full help center or screenshot-based documentation system.
+6. Visual polish pass:
    - refine surfaces, spacing, hierarchy, empty states, status presentation, cards and Settings sections.
-6. Help/About/Instructions window:
-   - explain menu entries, `.ico` selection, Explorer menu enablement, MenuHost role, data paths and uninstall behavior.
 7. Branding/assets pass:
    - app icon;
    - exe/window icon;

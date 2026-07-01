@@ -50,6 +50,7 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
 
 - `Explorer menu`: explicit Foldora Explorer menu status, `Preview changes` dry-run, enable/disable Explorer legacy menu, passive help glyphs with wrapped tooltips and technical details. Эти действия применяются сразу через `ExplorerIntegrationController`.
 - `Installation`: installed app/base path, `%AppData%\Foldora` user data path, current command host path, compact Open/Copy actions and note that `Foldora.MenuHost.exe` is not a service/background helper.
+- `Help / About`: краткая user-facing справка по workflow, `.ico`, Explorer menu, MenuHost, data paths, uninstall and license/resource policy.
 - `Danger zone`: reset menu с checkbox-подтверждением.
 
 `Сохранить` в footer SettingsWindow относится к language/settings save. Explorer integration actions and reset execute immediately. `Preview changes` / `Предпросмотр изменений` и `Включить меню Проводника` сохраняют прежнюю dirty draft policy: если в главном редакторе есть unsaved menu changes, operation блокируется сообщением о необходимости сохранить или отменить изменения. `Отключить меню Проводника` остаётся разрешённым при unsaved draft changes. Reset после успешного выполнения сообщает главному окну перезагрузить draft после закрытия SettingsWindow, чтобы entries/title/status не оставались stale.

@@ -164,6 +164,8 @@ public sealed class DesignResourceTests
 
         Assert.Contains("ExplorerMenuSection", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("InstallationSection", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("HelpAboutSection", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("OpenHelpCommand", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("DangerZone", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("PreviewChanges", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("PreviewChangesTooltip", settingsWindowText, StringComparison.Ordinal);
@@ -178,6 +180,32 @@ public sealed class DesignResourceTests
         Assert.DoesNotContain("Style=\"{StaticResource HelpIconButtonStyle}\"", settingsWindowText, StringComparison.Ordinal);
         Assert.DoesNotContain("Проверить план", settingsWindowText, StringComparison.Ordinal);
         Assert.DoesNotContain("Check plan", settingsWindowText, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void HelpWindow_IsResizableScrollableAndLocalized()
+    {
+        var helpWindow = LoadXml("src", "Foldora.App", "HelpWindow.xaml");
+        var root = helpWindow.Root ?? throw new InvalidOperationException("HelpWindow root was not found.");
+        var helpWindowText = File.ReadAllText(Path.Combine(GetRepositoryRoot(), "src", "Foldora.App", "HelpWindow.xaml"));
+
+        Assert.Equal("CanResize", root.Attribute("ResizeMode")?.Value);
+        Assert.Equal("Manual", root.Attribute("SizeToContent")?.Value);
+        Assert.Equal("560", root.Attribute("MinWidth")?.Value);
+        Assert.Equal("420", root.Attribute("MinHeight")?.Value);
+        Assert.Contains("HelpWindowTitle", helpWindowText, StringComparison.Ordinal);
+        Assert.Contains("HelpWhatFoldoraDoesBody", helpWindowText, StringComparison.Ordinal);
+        Assert.Contains("HelpUseStepEnableExplorer", helpWindowText, StringComparison.Ordinal);
+        Assert.Contains("HelpMenuHostBody", helpWindowText, StringComparison.Ordinal);
+        Assert.Contains("HelpUninstallUserDataWarning", helpWindowText, StringComparison.Ordinal);
+        Assert.DoesNotContain("Foldora lets you create", helpWindowText, StringComparison.Ordinal);
+
+        var scrollViewer = helpWindow.Descendants()
+            .SingleOrDefault(element => element.Name.LocalName == "ScrollViewer");
+        Assert.NotNull(scrollViewer);
+        Assert.Equal("1", scrollViewer!.Attribute("Grid.Row")?.Value);
+        Assert.Equal("Auto", scrollViewer.Attribute("VerticalScrollBarVisibility")?.Value);
+        Assert.Equal("Disabled", scrollViewer.Attribute("HorizontalScrollBarVisibility")?.Value);
     }
 
     private static XDocument LoadXml(params string[] pathParts)
