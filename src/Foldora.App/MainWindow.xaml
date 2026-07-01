@@ -92,10 +92,6 @@
                                Style="{StaticResource SecondaryBodyTextStyle}"
                                VerticalAlignment="Center"
                                Margin="0,0,10,0" />
-                    <Button Content="{Binding L.ManageInSettings}"
-                            Command="{Binding OpenSettingsCommand}"
-                            Style="{StaticResource SecondaryButtonStyle}"
-                            MinWidth="140" />
                 </WrapPanel>
             </StackPanel>
 

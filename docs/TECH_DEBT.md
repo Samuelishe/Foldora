@@ -8,14 +8,14 @@
 
 - ID: `TD-UI-0001`
 - Title: Redundant settings entry points
-- Status: Open
+- Status: Fixed
 - Severity: Low
 - Area: WPF / UX
 - Observed behavior: MainWindow has a title-bar gear button for Settings and also shows `Manage in Settings` / `Управлять в настройках` in the content area.
 - Expected/desired behavior: Settings should have one clear primary entry point, and MainWindow should stay focused on menu editing.
 - Known cause or hypothesis: Settings/Explorer cleanup kept a compact management action on the editor surface after moving Explorer controls to SettingsWindow.
-- Current workaround: Users can use either entry point; behavior is not broken.
-- Next investigation step: Small UX cleanup to remove or redesign the content-area settings link/status.
+- Current workaround: Not needed; the duplicate content-area settings action has been removed.
+- Next investigation step: Keep MainWindow editor-first during future visual polish.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UI_DESIGN.md`
@@ -26,14 +26,14 @@
 
 - ID: `TD-UI-0002`
 - Title: Developer-facing unsaved changes status
-- Status: Open
+- Status: Fixed
 - Severity: Low
 - Area: WPF / UX / Localization
 - Observed behavior: MainWindow shows `Unsaved changes: True/False` and localized equivalents, exposing a raw boolean state to users.
 - Expected/desired behavior: Use user-facing state text such as `All changes saved` / `Unsaved changes` or a localized status chip.
 - Known cause or hypothesis: Early presentation state was added as direct debug-friendly text.
-- Current workaround: The text is understandable but not product-grade.
-- Next investigation step: Replace boolean formatting with localized saved/unsaved status strings and update tests/catalogs.
+- Current workaround: Not needed; MainWindow now shows localized saved/unsaved status strings without raw booleans.
+- Next investigation step: Future visual polish may turn the text into a status chip, but the debug-style boolean is gone.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/LOCALIZATION.md`
@@ -45,14 +45,14 @@
 
 - ID: `TD-UI-0003`
 - Title: Cramped button geometry
-- Status: Open
+- Status: Partially addressed / Monitor
 - Severity: Low
 - Area: WPF / Design System / Localization
 - Observed behavior: Some MainWindow and SettingsWindow buttons look tight; text sits too close to button edges.
 - Expected/desired behavior: Buttons should have consistent padding, min-width and min-height that survive long localized labels.
 - Known cause or hypothesis: Current reusable button styles are functional but not yet tuned through a localization-heavy visual polish pass.
-- Current workaround: Buttons are usable and tests pass.
-- Next investigation step: Design-token/control-style pass for button ergonomics, including long-label checks.
+- Current workaround: Shared action buttons now have larger padding and min-height.
+- Next investigation step: Continue long-label visual checks during product-grade polish, especially SettingsWindow actions.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UI_DESIGN.md`
@@ -63,14 +63,14 @@
 
 - ID: `TD-UI-0004`
 - Title: Settings scrollbar and content gutter
-- Status: Open
+- Status: Fixed
 - Severity: Low
 - Area: WPF / Settings UI
 - Observed behavior: SettingsWindow scrollbar is visually too close to content.
 - Expected/desired behavior: SettingsWindow should have a clearer right-side gutter/content padding and robust spacing when sections scroll.
 - Known cause or hypothesis: SettingsWindow grew from a compact language dialog into a multi-section settings window without a dedicated spacing hardening pass.
-- Current workaround: Window remains resizable and scrollable.
-- Next investigation step: Small layout cleanup for ScrollViewer/content padding and section spacing.
+- Current workaround: Not needed; scroll content now has a right-side gutter.
+- Next investigation step: Watch long-locale SettingsWindow layouts during future polish.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UI_DESIGN.md`

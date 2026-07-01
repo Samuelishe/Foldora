@@ -101,9 +101,11 @@ Foldora uses canonical BCP-47-style tags where practical:
 
 UI labels are visible interface text such as `Save`, `Discard changes`, `Choose .ico`, group buttons and settings labels. They must come from the localization layer.
 
-Settings/Explorer cleanup adds localized section/action labels for Application, Explorer menu, Installation, path labels, MenuHost note, immediate Explorer-action note, `Manage in Settings` and dirty-draft guidance. These keys must exist in every complete catalog.
+Settings/Explorer cleanup adds localized section/action labels for Application, Explorer menu, Installation, path labels, MenuHost note, immediate Explorer-action note and dirty-draft guidance. The legacy `ManageInSettings` key remains in complete catalogs for compatibility but is no longer shown on MainWindow after the small UX correctness cleanup.
 
 Runtime/status messages are visible state messages such as settings loaded, settings saved, Explorer integration enabled/disabled and draft entry added. They must come from the localization layer.
+
+MainWindow editor state text must also be localized user-facing status text. The saved/dirty state uses catalog keys such as `AllChangesSaved` and `UnsavedChanges`; raw boolean formatting like `Unsaved changes: True/False` must not be shown to users.
 
 Validation messages are localized at the App/UI boundary for the WPF editor. Core returns invariant issue codes and parameters; App maps those to localized text through the enabled catalogs.
 

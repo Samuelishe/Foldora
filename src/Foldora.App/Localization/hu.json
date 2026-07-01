@@ -41,6 +41,8 @@
   "ResetConfirm": "I understand that the entry list will be cleared",
   "ResetMenu": "Reset menu",
   "UnsavedChangesFormat": "Nem mentett módosítások: {0}",
+  "AllChangesSaved": "Minden módosítás mentve",
+  "UnsavedChanges": "Nem mentett módosítások",
   "Reload": "Módosítások elvetése",
   "Save": "Mentés",
   "Settings": "Beállítások",

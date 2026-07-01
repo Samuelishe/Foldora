@@ -41,6 +41,8 @@
   "ResetConfirm": "項目リストが消去されることを理解しました",
   "ResetMenu": "メニューをリセット",
   "UnsavedChangesFormat": "未保存の変更: {0}",
+  "AllChangesSaved": "すべての変更を保存済み",
+  "UnsavedChanges": "未保存の変更",
   "Reload": "変更を破棄",
   "Save": "保存",
   "Settings": "設定",

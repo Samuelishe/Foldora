@@ -41,6 +41,8 @@
   "ResetConfirm": "Je comprends que la liste des entrées sera effacée",
   "ResetMenu": "Réinitialiser le menu",
   "UnsavedChangesFormat": "Modifications non enregistrées : {0}",
+  "AllChangesSaved": "Toutes les modifications sont enregistrées",
+  "UnsavedChanges": "Modifications non enregistrées",
   "Reload": "Annuler les modifications",
   "Save": "Enregistrer",
   "Settings": "Paramètres",

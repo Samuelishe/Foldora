@@ -143,7 +143,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public string ExplorerIntegrationStatusLabel => string.Format(L.StatusLabelFormat, ExplorerIntegrationStatusText);
 
-    public string UnsavedChangesText => string.Format(L.UnsavedChangesFormat, HasUnsavedChanges);
+    public string UnsavedChangesText => HasUnsavedChanges ? L.UnsavedChanges : L.AllChangesSaved;
 
     public bool ExplorerIntegrationEnabled
     {

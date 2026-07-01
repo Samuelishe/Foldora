@@ -1,6 +1,6 @@
 # UI Design
 
-WPF editor содержит user-facing редактор menu entries с карточками, staged выбором `.ico`, прямым preview и компактным переходом в Settings для системных действий. Явные Explorer integration controls находятся в SettingsWindow.
+WPF editor содержит user-facing редактор menu entries с карточками, staged выбором `.ico`, прямым preview и компактным Explorer menu status. Явные Explorer integration controls находятся в SettingsWindow; Settings открываются через gear в title/header area.
 
 WPF shell/settings foundation переводит окно на custom title bar через `WindowChrome`. Видимый стандартный Windows title bar не используется; в шапке находятся название `Foldora`, кнопка настроек с gear glyph и window controls minimize/maximize/close. Resize должен сохраняться, а maximize должен respect Windows work area/taskbar.
 
@@ -26,12 +26,12 @@ Design system foundation добавляет централизованные WPF
 - MainWindow должен оставаться focused menu editor: title, groups, entries, icons, save/discard and editor status/errors.
 - SettingsWindow содержит system/admin actions: language/application settings, Explorer integration, installation/path information and danger reset.
 - Main UI text must be user-facing, not debug-state text. Не показывать raw booleans вроде `True/False` как пользовательский статус.
-- Buttons must account for localization and long labels: достаточный padding, min-width, min-height and wrapping/trimming policy.
+- Buttons must account for localization and long labels: shared action buttons use consistent min-height, padding and min-width; further per-locale polish remains future work.
 - Settings content should keep proper scroll gutter and section spacing; scrollbar не должен визуально прилипать к тексту.
 - App icon, exe/window icon and README hero/mockup are future branding/assets work, not ad hoc UI code additions.
 - Интерфейс MVP должен быть простым: список стилей, состояние integration, кнопки register/unregister и базовые настройки.
 - Главный экран MVP должен быть редактором пользовательского меню, а не landing page.
-- Минимальный редактор должен иметь title меню, список entries, user-facing поля `Название в меню` и `Имя создаваемой папки`, выбор `.ico`, preview около 50x50, checkbox `Показывать в меню`, `Сохранить`, `Отменить изменения` и компактный status/link для Settings.
+- Минимальный редактор должен иметь title меню, список entries, user-facing поля `Название в меню` и `Имя создаваемой папки`, выбор `.ico`, preview около 50x50, checkbox `Показывать в меню`, `Сохранить`, `Отменить изменения` и компактный Explorer menu status. Gear в title/header area остаётся основным entry point в Settings.
 - Для one-level grouping текущий основной UI управляет группами через visual group containers; пустой `GroupName` означает пункт в корне меню.
 - Entries визуально группируются по `GroupName`: пустая группа показывается как `Без группы`, непустые значения показываются отдельными group containers. Пустые группы не являются persistent model object; текущая модель остаётся entry-based.
 - `+ Добавить группу` создаёт обычный draft entry с новым `GroupName`, а UI показывает это как новую группу с первым пунктом. Отдельная persisted group entity не создаётся.
@@ -168,7 +168,7 @@ Validation errors из Core validation layer рендерятся через App
 - Visual reference для grouping использован только как грубая структура `группа -> элементы`, без копирования цветов, размеров, шрифтов или геометрии.
 - Пустой список entries показывает empty state и кнопку `+ Добавить пункт`.
 - Главный экран больше не содержит большой блок `Интеграция с Проводником` или `Опасная зона`; он сфокусирован на редактировании menu title/groups/entries/icons и глобальных `Сохранить`/`Отменить изменения`.
-- Компактный Explorer status на главном экране допустим только как non-dominant строка с переходом `Manage in Settings`.
+- Компактный Explorer status на главном экране допустим только как non-dominant строка без дублирующей content-area Settings action.
 - `SettingsWindow` содержит секции Application, Explorer menu, Installation и Danger zone. Dry-run/register/unregister, technical details и reset находятся там.
 - Reset находится в отдельной `Опасная зона` SettingsWindow с подтверждением.
 - Technical plan details показываются через `Expander` только при наличии details.

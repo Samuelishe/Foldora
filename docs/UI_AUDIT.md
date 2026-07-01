@@ -15,24 +15,28 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Observed: в title bar уже есть gear-кнопка настроек, но в content area MainWindow также есть `Manage in Settings` / `Управлять в настройках`.
 - Impact: пользователь видит два входа в одно и то же место, главный editor снова получает системный action и визуально теряет фокус.
 - Suggested direction: оставить один понятный entry point. Вероятный small cleanup: убрать content-area кнопку и оставить compact Explorer status без действия, либо заменить на очень ненавязчивый status chip, если статус нужен.
+- Status: Addressed in small UX correctness cleanup. MainWindow keeps the title-bar gear as the settings entry point and shows only compact Explorer menu status in content.
 
 ### UIA-0002 Developer-Facing Unsaved Changes Status
 
 - Observed: строка `Unsaved changes: True/False` и локализованные аналоги показывают raw boolean.
 - Impact: это выглядит как debug/dev text, а не как пользовательский статус.
 - Suggested direction: заменить на user-facing формулировки вроде `All changes saved` / `Unsaved changes` или локализованный status chip. Не показывать `True`/`False` пользователю.
+- Status: Addressed. MainWindow now renders localized saved/unsaved status strings and does not show raw `True`/`False`.
 
 ### UIA-0003 Cramped Action Buttons
 
 - Observed: в MainWindow и SettingsWindow некоторые кнопки выглядят тесно, текст находится слишком близко к краям.
 - Impact: UI ощущается менее аккуратным, а длинные локализованные labels повышают риск визуального сжатия/обрезки.
 - Suggested direction: сделать button geometry pass: consistent horizontal padding, min-width, min-height, wrapping/trimming rules and localized-label checks.
+- Status: Initial pass addressed. Shared `ActionButtonStyle` now uses larger horizontal padding and a slightly taller min-height. Further per-locale visual polish remains future work.
 
 ### UIA-0004 SettingsWindow Scrollbar / Content Gutter
 
 - Observed: scrollbar визуально слишком близко к содержимому SettingsWindow.
 - Impact: окно настроек выглядит плотным и менее polished; длинные секции и локализации сильнее подчёркивают проблему.
 - Suggested direction: добавить scroll gutter / right content padding / layout hardening для SettingsWindow.
+- Status: Addressed. SettingsWindow scroll content now has a right-side gutter while keeping the single ScrollViewer and fixed footer.
 
 ### UIA-0005 Product-Grade Visual Polish Gap
 
@@ -50,10 +54,10 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 
 Small safe improvements for a future code pass:
 
-- remove or redesign `Manage in Settings` on MainWindow;
-- replace boolean unsaved changes text with user-facing saved/unsaved status;
-- button padding/min-width/min-height pass across MainWindow and SettingsWindow;
-- SettingsWindow scrollbar gutter and content padding pass;
+- remove or redesign `Manage in Settings` on MainWindow - addressed;
+- replace boolean unsaved changes text with user-facing saved/unsaved status - addressed;
+- button padding/min-width/min-height pass across MainWindow and SettingsWindow - initial pass addressed;
+- SettingsWindow scrollbar gutter and content padding pass - addressed;
 - check SettingsWindow sections with long labels in German, Portuguese, Ukrainian and other longer locales.
 
 ## Later Visual Polish

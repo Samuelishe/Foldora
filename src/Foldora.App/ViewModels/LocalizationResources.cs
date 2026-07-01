@@ -54,6 +54,8 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string ResetConfirm => Get();
     public string ResetMenu => Get();
     public string UnsavedChangesFormat => Get();
+    public string AllChangesSaved => Get();
+    public string UnsavedChanges => Get();
     public string Reload => Get();
     public string Save => Get();
     public string Settings => Get();

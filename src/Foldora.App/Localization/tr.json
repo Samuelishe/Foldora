@@ -41,6 +41,8 @@
   "ResetConfirm": "I understand that the entry list will be cleared",
   "ResetMenu": "Reset menu",
   "UnsavedChangesFormat": "Kaydedilmemiş değişiklikler: {0}",
+  "AllChangesSaved": "Tüm değişiklikler kaydedildi",
+  "UnsavedChanges": "Kaydedilmemiş değişiklikler",
   "Reload": "Değişiklikleri at",
   "Save": "Kaydet",
   "Settings": "Ayarlar",

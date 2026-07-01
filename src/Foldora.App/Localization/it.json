@@ -41,6 +41,8 @@
   "ResetConfirm": "Capisco che l’elenco delle voci sarà cancellato",
   "ResetMenu": "Ripristina menu",
   "UnsavedChangesFormat": "Modifiche non salvate: {0}",
+  "AllChangesSaved": "Tutte le modifiche salvate",
+  "UnsavedChanges": "Modifiche non salvate",
   "Reload": "Scarta modifiche",
   "Save": "Salva",
   "Settings": "Impostazioni",

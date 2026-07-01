@@ -41,6 +41,8 @@
   "ResetConfirm": "Entiendo que se borrará la lista de entradas",
   "ResetMenu": "Restablecer menú",
   "UnsavedChangesFormat": "Cambios sin guardar: {0}",
+  "AllChangesSaved": "Todos los cambios guardados",
+  "UnsavedChanges": "Cambios sin guardar",
   "Reload": "Descartar cambios",
   "Save": "Guardar",
   "Settings": "Configuración",

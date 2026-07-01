@@ -41,6 +41,8 @@
   "ResetConfirm": "I understand that the entry list will be cleared",
   "ResetMenu": "Reset menu",
   "UnsavedChangesFormat": "Neuložené změny: {0}",
+  "AllChangesSaved": "Všechny změny uloženy",
+  "UnsavedChanges": "Neuložené změny",
   "Reload": "Zahodit změny",
   "Save": "Uložit",
   "Settings": "Nastavení",

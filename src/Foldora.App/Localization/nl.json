@@ -41,6 +41,8 @@
   "ResetConfirm": "I understand that the entry list will be cleared",
   "ResetMenu": "Reset menu",
   "UnsavedChangesFormat": "Niet-opgeslagen wijzigingen: {0}",
+  "AllChangesSaved": "Alle wijzigingen opgeslagen",
+  "UnsavedChanges": "Niet-opgeslagen wijzigingen",
   "Reload": "Wijzigingen verwerpen",
   "Save": "Opslaan",
   "Settings": "Instellingen",

@@ -33,8 +33,8 @@
     </Style>
 
     <Style x:Key="ActionButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
-        <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
-        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="Padding" Value="18,7" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="MinWidth" Value="120" />

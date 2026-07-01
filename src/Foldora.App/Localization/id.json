@@ -41,6 +41,8 @@
   "ResetConfirm": "I understand that the entry list will be cleared",
   "ResetMenu": "Reset menu",
   "UnsavedChangesFormat": "Unsaved changes: {0}",
+  "AllChangesSaved": "Semua perubahan disimpan",
+  "UnsavedChanges": "Perubahan belum disimpan",
   "Reload": "Buang perubahan",
   "Save": "Simpan",
   "Settings": "Pengaturan",

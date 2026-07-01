@@ -41,6 +41,8 @@
   "ResetConfirm": "I understand that the entry list will be cleared",
   "ResetMenu": "Reset menu",
   "UnsavedChangesFormat": "Modificări nesalvate: {0}",
+  "AllChangesSaved": "Toate modificările sunt salvate",
+  "UnsavedChanges": "Modificări nesalvate",
   "Reload": "Renunță la modificări",
   "Save": "Salvează",
   "Settings": "Setări",

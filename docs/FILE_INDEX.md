@@ -95,7 +95,7 @@
 - `src/Foldora.App/Resources/DesignTokens.xaml` - semantic colors/brushes, spacing, radius and size tokens for WPF design system.
 - `src/Foldora.App/Resources/Typography.xaml` - reusable WPF typography styles and app font family.
 - `src/Foldora.App/Resources/Controls.xaml` - reusable WPF control, card/container and status banner styles.
-- `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, empty state, save/discard и компактным Explorer menu status/link to Settings.
+- `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, empty state, save/discard и компактным Explorer menu status; Settings открываются через title-bar gear.
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI/window plumbing, custom title bar controls и установка `DataContext`.
 - `src/Foldora.App/SettingsWindow.xaml` - WPF окно настроек приложения с Application/language, Explorer menu, Installation и Danger zone секциями.
 - `src/Foldora.App/SettingsWindow.xaml.cs` - минимальный plumbing окна настроек.

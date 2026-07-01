@@ -41,6 +41,8 @@
   "ResetConfirm": "Entendo que a lista de itens será limpa",
   "ResetMenu": "Redefinir menu",
   "UnsavedChangesFormat": "Alterações não salvas: {0}",
+  "AllChangesSaved": "Todas as alterações salvas",
+  "UnsavedChanges": "Alterações não salvas",
   "Reload": "Descartar alterações",
   "Save": "Salvar",
   "Settings": "Configurações",

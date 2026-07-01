@@ -71,6 +71,17 @@ public sealed class DesignResourceTests
     }
 
     [Fact]
+    public void ActionButtonStyle_DefinesLocalizedLabelFriendlyGeometry()
+    {
+        var controls = LoadXml("src", "Foldora.App", "Resources", "Controls.xaml");
+        var actionButtonStyle = FindStyle(controls, "ActionButtonStyle");
+
+        Assert.Equal("36", GetSetterValue(actionButtonStyle, "MinHeight"));
+        Assert.Equal("18,7", GetSetterValue(actionButtonStyle, "Padding"));
+        Assert.Equal("120", GetSetterValue(actionButtonStyle, "MinWidth"));
+    }
+
+    [Fact]
     public void SettingsWindow_IsResizableAndKeepsScrollableContentWithFixedFooter()
     {
         var settingsWindow = LoadXml("src", "Foldora.App", "SettingsWindow.xaml");
@@ -85,6 +96,11 @@ public sealed class DesignResourceTests
         Assert.Equal("1", scrollViewer!.Attribute("Grid.Row")?.Value);
         Assert.Equal("Auto", scrollViewer.Attribute("VerticalScrollBarVisibility")?.Value);
         Assert.Equal("Disabled", scrollViewer.Attribute("HorizontalScrollBarVisibility")?.Value);
+
+        var scrollContent = scrollViewer.Elements()
+            .SingleOrDefault(element => element.Name.LocalName == "StackPanel");
+        Assert.NotNull(scrollContent);
+        Assert.Equal("0,0,14,0", scrollContent!.Attribute("Margin")?.Value);
 
         var footer = settingsWindow.Descendants()
             .Where(element => element.Name.LocalName == "StackPanel")
@@ -101,7 +117,8 @@ public sealed class DesignResourceTests
         Assert.DoesNotContain("DryRunCommand", mainWindowText, StringComparison.Ordinal);
         Assert.DoesNotContain("RegisterExplorerCommand", mainWindowText, StringComparison.Ordinal);
         Assert.DoesNotContain("ResetMenuCommand", mainWindowText, StringComparison.Ordinal);
-        Assert.Contains("ManageInSettings", mainWindowText, StringComparison.Ordinal);
+        Assert.DoesNotContain("ManageInSettings", mainWindowText, StringComparison.Ordinal);
+        Assert.Contains("ExplorerIntegrationStatusLabel", mainWindowText, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -130,6 +147,21 @@ public sealed class DesignResourceTests
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .Select(value => value!)
             .ToHashSet(StringComparer.Ordinal);
+    }
+
+    private static XElement FindStyle(XDocument document, string key)
+    {
+        XName keyName = XName.Get("Key", "http://schemas.microsoft.com/winfx/2006/xaml");
+        return document.Descendants()
+            .Single(element => element.Name.LocalName == "Style" && element.Attribute(keyName)?.Value == key);
+    }
+
+    private static string? GetSetterValue(XElement style, string property)
+    {
+        return style.Elements()
+            .Where(element => element.Name.LocalName == "Setter")
+            .Single(element => element.Attribute("Property")?.Value == property)
+            .Attribute("Value")?.Value;
     }
 
     private static string GetRepositoryRoot()

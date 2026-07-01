@@ -41,6 +41,8 @@
   "ResetConfirm": "Ich verstehe, dass die Eintragsliste gelöscht wird",
   "ResetMenu": "Menü zurücksetzen",
   "UnsavedChangesFormat": "Ungespeicherte Änderungen: {0}",
+  "AllChangesSaved": "Alle Änderungen gespeichert",
+  "UnsavedChanges": "Ungespeicherte Änderungen",
   "Reload": "Änderungen verwerfen",
   "Save": "Speichern",
   "Settings": "Einstellungen",

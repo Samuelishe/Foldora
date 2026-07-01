@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-07-01 - Small UX correctness cleanup
+
+- Removed the duplicate `Manage in Settings` content-area action from MainWindow; the title-bar gear remains the Settings entry point and the editor keeps only compact Explorer menu status.
+- Replaced raw `Unsaved changes: True/False` presentation with localized saved/unsaved state text.
+- Added `AllChangesSaved` and `UnsavedChanges` localization keys to all enabled WPF catalogs.
+- Tuned shared action button geometry through `ActionButtonStyle` with larger padding and min-height for localized labels.
+- Added a SettingsWindow scroll-content right gutter while preserving the single ScrollViewer and fixed footer.
+- Updated UI audit/technical debt docs: UIA/TD items 0001, 0002 and 0004 are addressed; button geometry is an initial pass with future visual polish still open.
+
 ## 2026-07-01 - UI/UX audit baseline
 
 - Added `docs/UI_AUDIT.md` as a documentation-first baseline for UI/UX/design issues found during manual inspection after Settings cleanup.
@@ -11,7 +20,7 @@
 ## 2026-07-01 - Settings and Explorer integration cleanup
 
 - MainWindow cleanup: removed the large Explorer integration block, technical details and danger reset from the main editor surface.
-- MainWindow now focuses on menu title, groups, entry cards, icons, save/discard and editor status/errors; it keeps only a compact Explorer menu status with `Manage in Settings`.
+- MainWindow now focuses on menu title, groups, entry cards, icons, save/discard and editor status/errors; later small UX cleanup removed the duplicate content-area `Manage in Settings` action and left only compact Explorer menu status.
 - SettingsWindow now contains Application/language, Explorer menu, Installation/path information and Danger zone sections.
 - Explorer menu actions in Settings execute immediately through the existing `ExplorerIntegrationController`; language Save remains separate.
 - Dirty draft policy is preserved: dry-run/register require save/discard menu changes, while unregister remains allowed with unsaved draft changes.

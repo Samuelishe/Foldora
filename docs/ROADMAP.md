@@ -81,10 +81,10 @@ UI/UX audit baseline and small correctness cleanup before visual release polish:
    - `docs/UI_AUDIT.md` tracks confirmed design debt from manual inspection.
    - Keep audit findings in docs/TECH_DEBT instead of chat-only notes.
 2. Small UX correctness cleanup:
-   - remove or redesign redundant settings entry point on MainWindow;
-   - replace raw `Unsaved changes: True/False` with user-facing saved/unsaved status;
-   - tune button padding/min-width/min-height for localized labels;
-   - add SettingsWindow scrollbar/content gutter.
+   - redundant content-area `Manage in Settings` action removed from MainWindow;
+   - raw `Unsaved changes: True/False` replaced with localized saved/unsaved status;
+   - shared action button padding/min-height tuned for localized labels;
+   - SettingsWindow scroll content gutter added.
 3. Visual polish pass:
    - refine surfaces, spacing, hierarchy, empty states, status presentation, cards and Settings sections.
 4. Branding/assets pass:

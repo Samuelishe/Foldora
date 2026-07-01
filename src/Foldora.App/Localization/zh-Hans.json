@@ -41,6 +41,8 @@
   "ResetConfirm": "我了解项目列表将被清空",
   "ResetMenu": "重置菜单",
   "UnsavedChangesFormat": "未保存的更改：{0}",
+  "AllChangesSaved": "所有更改已保存",
+  "UnsavedChanges": "有未保存的更改",
   "Reload": "放弃更改",
   "Save": "保存",
   "Settings": "设置",

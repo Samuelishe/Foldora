@@ -41,6 +41,8 @@
   "ResetConfirm": "I understand that the entry list will be cleared",
   "ResetMenu": "Reset menu",
   "UnsavedChangesFormat": "Незаписани промени: {0}",
+  "AllChangesSaved": "Всички промени са запазени",
+  "UnsavedChanges": "Има незапазени промени",
   "Reload": "Отхвърли промените",
   "Save": "Запази",
   "Settings": "Настройки",

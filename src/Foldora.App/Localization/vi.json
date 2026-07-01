@@ -41,6 +41,8 @@
   "ResetConfirm": "I understand that the entry list will be cleared",
   "ResetMenu": "Reset menu",
   "UnsavedChangesFormat": "Unsaved changes: {0}",
+  "AllChangesSaved": "Tất cả thay đổi đã lưu",
+  "UnsavedChanges": "Thay đổi chưa lưu",
   "Reload": "Bỏ thay đổi",
   "Save": "Lưu",
   "Settings": "Cài đặt",

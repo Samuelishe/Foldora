@@ -356,6 +356,56 @@ public sealed class MainViewModelPresentationTests
         }
     }
 
+    [Fact]
+    public async Task UnsavedChangesText_UsesUserFacingCleanAndDirtyStates()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "en");
+            var viewModel = await CreateViewModelAsync(paths, new RecordingSettingsDialogService(), "en-US");
+
+            Assert.Equal("All changes saved", viewModel.UnsavedChangesText);
+            Assert.DoesNotContain("True", viewModel.UnsavedChangesText, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("False", viewModel.UnsavedChangesText, StringComparison.OrdinalIgnoreCase);
+
+            viewModel.AddEntryCommand.Execute(null);
+
+            Assert.Equal("Unsaved changes", viewModel.UnsavedChangesText);
+            Assert.DoesNotContain("True", viewModel.UnsavedChangesText, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("False", viewModel.UnsavedChangesText, StringComparison.OrdinalIgnoreCase);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task UnsavedChangesText_UsesRussianUserFacingStates()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "ru");
+            var viewModel = await CreateViewModelAsync(paths);
+
+            Assert.Equal("Все изменения сохранены", viewModel.UnsavedChangesText);
+
+            viewModel.AddEntryCommand.Execute(null);
+
+            Assert.Equal("Есть несохранённые изменения", viewModel.UnsavedChangesText);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
     [Theory]
     [InlineData("ru-RU", "ru", "Создать папку")]
     [InlineData("de-DE", "de", "Ordner erstellen")]

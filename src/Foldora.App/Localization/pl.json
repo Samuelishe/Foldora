@@ -41,6 +41,8 @@
   "ResetConfirm": "I understand that the entry list will be cleared",
   "ResetMenu": "Reset menu",
   "UnsavedChangesFormat": "Niezapisane zmiany: {0}",
+  "AllChangesSaved": "Wszystkie zmiany zapisane",
+  "UnsavedChanges": "Niezapisane zmiany",
   "Reload": "Odrzuć zmiany",
   "Save": "Zapisz",
   "Settings": "Ustawienia",

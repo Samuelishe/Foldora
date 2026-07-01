@@ -41,6 +41,8 @@
   "ResetConfirm": "Я розумію, що список пунктів буде очищено",
   "ResetMenu": "Скинути меню",
   "UnsavedChangesFormat": "Незбережені зміни: {0}",
+  "AllChangesSaved": "Усі зміни збережено",
+  "UnsavedChanges": "Є незбережені зміни",
   "Reload": "Відкинути зміни",
   "Save": "Зберегти",
   "Settings": "Налаштування",
