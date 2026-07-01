@@ -106,11 +106,19 @@ public sealed class DesignResourceTests
 
         Assert.Contains("PageBackgroundBrush", keys);
         Assert.Contains("SurfaceBrush", keys);
+        Assert.Contains("SurfaceAccentBrush", keys);
+        Assert.Contains("BorderSoftBrush", keys);
         Assert.Contains("TextPrimaryBrush", keys);
         Assert.Contains("AccentBrush", keys);
         Assert.Contains("AccentSoftBrush", keys);
+        Assert.Contains("AccentGradientBrush", keys);
+        Assert.Contains("AccentSoftGradientBrush", keys);
+        Assert.Contains("AccentCyanBrush", keys);
+        Assert.Contains("AccentVioletBrush", keys);
         Assert.Contains("DangerBrush", keys);
         Assert.Contains("DangerBorderBrush", keys);
+        Assert.Contains("SuccessBorderBrush", keys);
+        Assert.Contains("WarningBorderBrush", keys);
         Assert.Contains("FocusBrush", keys);
     }
 
@@ -131,12 +139,19 @@ public sealed class DesignResourceTests
         Assert.Contains("GroupContainerStyle", keys);
         Assert.Contains("PageHeaderContainerStyle", keys);
         Assert.Contains("EmptyStateContainerStyle", keys);
+        Assert.Contains("EmptyStateIconContainerStyle", keys);
+        Assert.Contains("StatusChipStyle", keys);
+        Assert.Contains("StatusChipInfoStyle", keys);
+        Assert.Contains("StatusChipSuccessStyle", keys);
+        Assert.Contains("StatusChipWarningStyle", keys);
+        Assert.Contains("StatusChipDangerStyle", keys);
         Assert.Contains("StatusPillStyle", keys);
         Assert.Contains("FooterBarStyle", keys);
         Assert.Contains("PathRowContainerStyle", keys);
         Assert.Contains("HelpStepContainerStyle", keys);
         Assert.Contains("SettingsTabControlStyle", keys);
         Assert.Contains("SettingsTabItemStyle", keys);
+        Assert.Contains("SettingsExpanderStyle", keys);
         Assert.Contains("StatusBannerStyle", keys);
         Assert.Contains("HelpIconButtonStyle", keys);
         Assert.Contains("HelpInfoGlyphStyle", keys);
@@ -252,12 +267,14 @@ public sealed class DesignResourceTests
     }
 
     [Fact]
-    public void Typography_DefinesHelpStepTextStyle()
+    public void Typography_DefinesVisualPolishTextStyles()
     {
         var typography = LoadXml("src", "Foldora.App", "Resources", "Typography.xaml");
         var keys = GetResourceKeys(typography);
 
         Assert.Contains("HelpStepTextStyle", keys);
+        Assert.Contains("PathTextStyle", keys);
+        Assert.Contains("ChipTextStyle", keys);
     }
 
     [Fact]
@@ -303,10 +320,11 @@ public sealed class DesignResourceTests
         Assert.DoesNotContain(settingsWindow.Descendants().Where(element => element.Name.LocalName == "ScrollViewer"), element => element.Attribute("Grid.Row")?.Value == "1");
 
         var footer = settingsWindow.Descendants()
-            .Where(element => element.Name.LocalName == "StackPanel")
+            .Where(element => element.Name.LocalName == "Border")
             .SingleOrDefault(element => element.Attribute("Grid.Row")?.Value == "2");
 
         Assert.NotNull(footer);
+        Assert.Equal("{StaticResource FooterBarStyle}", footer!.Attribute("Style")?.Value);
     }
 
     [Fact]
@@ -436,6 +454,25 @@ public sealed class DesignResourceTests
     }
 
     [Fact]
+    public void MainWindow_UsesVisualDesignV2PresentationContracts()
+    {
+        var mainWindowText = File.ReadAllText(Path.Combine(GetRepositoryRoot(), "src", "Foldora.App", "MainWindow.xaml"));
+        var mainWindow = LoadXml("src", "Foldora.App", "MainWindow.xaml");
+
+        Assert.Contains("StatusChipInfoStyle", mainWindowText, StringComparison.Ordinal);
+        Assert.Contains("StatusChipSuccessStyle", mainWindowText, StringComparison.Ordinal);
+        Assert.Contains("EmptyStateIconContainerStyle", mainWindowText, StringComparison.Ordinal);
+        Assert.Contains("AccentGradientBrush", mainWindowText, StringComparison.Ordinal);
+
+        var statusBanner = mainWindow.Descendants()
+            .Single(element => element.Name.LocalName == "Border" && element.Attribute("Grid.Row")?.Value == "3");
+        Assert.Contains(statusBanner.Descendants(), element =>
+            element.Name.LocalName == "DataTrigger" && element.Attribute("Binding")?.Value == "{Binding HasStatusMessage}");
+        Assert.Contains(statusBanner.Descendants(), element =>
+            element.Name.LocalName == "DataTrigger" && element.Attribute("Binding")?.Value == "{Binding HasValidationErrors}");
+    }
+
+    [Fact]
     public void SettingsWindow_ContainsExplorerInstallationAndDangerSections()
     {
         var settingsWindowText = File.ReadAllText(Path.Combine(GetRepositoryRoot(), "src", "Foldora.App", "SettingsWindow.xaml"));
@@ -450,8 +487,11 @@ public sealed class DesignResourceTests
         Assert.Contains("HelpInfoGlyphStyle", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("HelpTooltipTextStyle", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("InlineActionButtonStyle", settingsWindowText, StringComparison.Ordinal);
-        Assert.Contains("StatusPillStyle", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("StatusChipInfoStyle", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("StatusChipSuccessStyle", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("PathRowContainerStyle", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("PathTextStyle", settingsWindowText, StringComparison.Ordinal);
+        Assert.Contains("SettingsExpanderStyle", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("SettingsTabApplication", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("SettingsTabDangerZone", settingsWindowText, StringComparison.Ordinal);
         Assert.Contains("OpenInstalledAppPathCommand", settingsWindowText, StringComparison.Ordinal);
@@ -486,6 +526,7 @@ public sealed class DesignResourceTests
         Assert.Contains("HelpUninstallUserDataWarning", helpWindowText, StringComparison.Ordinal);
         Assert.Contains("PageHeaderContainerStyle", helpWindowText, StringComparison.Ordinal);
         Assert.Contains("HelpStepContainerStyle", helpWindowText, StringComparison.Ordinal);
+        Assert.Contains("FooterBarStyle", helpWindowText, StringComparison.Ordinal);
         Assert.DoesNotContain("Foldora lets you create", helpWindowText, StringComparison.Ordinal);
 
         var scrollViewer = helpWindow.Descendants()

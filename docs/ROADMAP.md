@@ -41,6 +41,7 @@ Create folder
 - Best-effort desktop icon placement for MenuHost desktop-background create flow.
 - Dev/manual publish layout in `artifacts/publish/Foldora`.
 - Per-user install/uninstall scripts for `%LocalAppData%\Programs\Foldora`.
+- Product-grade WPF visual direction v2 for MainWindow, SettingsWindow, HelpWindow and shared design resources.
 - Small menu icons through registry `Icon`.
 - `register-menu`, `register-menu --dry-run`, `register-menu --host-path`, `unregister-menu`.
 - `menu reset --yes`.
@@ -108,7 +109,10 @@ UI/UX audit baseline, correctness cleanup and visual polish:
    - app/window/exe icon foundation addressed with a self-authored folded blue/cyan Foldora icon using a broad light-cyan folded plane;
    - root README now has a product-oriented landing flow with a hero/screenshot placeholder;
    - actual README hero image, screenshots and mockup assets remain future work after more manual visual confidence.
-9. Later layout/localization polish:
+9. Visual Design Direction v2:
+   - addressed for the current WPF windows: icon-inspired light palette, stronger shared surfaces, status chip variants, polished Settings tabs/path rows, gradient primary action, calmer danger treatment, self-authored XAML empty-state mark and cleaner status/footer behavior.
+   - no app icon, README hero, ViewModel state, settings JSON, registry/MenuHost/install/shell behavior or localization catalog changes were included.
+10. Later layout/localization polish:
    - handle feedback from long labels and non-Latin scripts across enabled locales.
 
 Per-user install smoke and release polish before full installer work:

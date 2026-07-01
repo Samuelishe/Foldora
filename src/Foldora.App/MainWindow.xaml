@@ -89,10 +89,19 @@
                     <TextBlock Text="{Binding L.PageSubtitle}"
                                Style="{StaticResource SecondaryBodyTextStyle}"
                                TextWrapping="Wrap" />
-                    <Border Style="{StaticResource StatusPillStyle}"
-                            Margin="0,12,0,0">
+                    <Border Margin="0,12,0,0">
+                        <Border.Style>
+                            <Style TargetType="Border" BasedOn="{StaticResource StatusChipInfoStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ExplorerIntegrationEnabled}" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource SuccessBackgroundBrush}" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource SuccessBorderBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
                         <TextBlock Text="{Binding ExplorerIntegrationStatusLabel}"
-                                   Style="{StaticResource CaptionTextStyle}"
+                                   Style="{StaticResource ChipTextStyle}"
                                    TextWrapping="Wrap" />
                     </Border>
                 </StackPanel>
@@ -161,20 +170,49 @@
                                     </Style.Triggers>
                                 </Style>
                             </Border.Style>
-                            <StackPanel>
-                                <TextBlock Text="{Binding L.EmptyTitle}"
-                                           Style="{StaticResource GroupTitleTextStyle}"
-                                           Margin="0,0,0,6" />
-                                <TextBlock Text="{Binding L.EmptyDescription}"
-                                           Style="{StaticResource SecondaryBodyTextStyle}"
-                                           TextWrapping="Wrap"
-                                           Margin="0,0,0,14" />
-                                <Button Content="{Binding L.AddEntry}"
-                                        Command="{Binding AddEntryCommand}"
-                                        Style="{StaticResource SecondaryButtonStyle}"
-                                        MinWidth="140"
-                                        HorizontalAlignment="Left" />
-                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0"
+                                        Style="{StaticResource EmptyStateIconContainerStyle}"
+                                        Margin="0,0,16,0">
+                                    <Viewbox Stretch="Uniform">
+                                        <Canvas Width="32" Height="32">
+                                            <Path Fill="{DynamicResource AccentSoftCyanBrush}"
+                                                  Stroke="{DynamicResource AccentCyanBrush}"
+                                                  StrokeThickness="1"
+                                                  Data="M4,11 C4,8.8 5.8,7 8,7 H13 L16,10 H24 C26.2,10 28,11.8 28,14 V23 C28,25.2 26.2,27 24,27 H8 C5.8,27 4,25.2 4,23 Z" />
+                                            <Path Fill="{DynamicResource AccentGradientBrush}"
+                                                  Data="M5,14 H27 V23 C27,24.7 25.7,26 24,26 H8 C6.3,26 5,24.7 5,23 Z" />
+                                            <Path Stroke="{DynamicResource OnAccentBrush}"
+                                                  StrokeThickness="1.8"
+                                                  StrokeStartLineCap="Round"
+                                                  StrokeEndLineCap="Round"
+                                                  Data="M11,18 H21 M11,22 H18" />
+                                            <Path Fill="{DynamicResource SurfaceBrush}"
+                                                  Opacity="0.7"
+                                                  Data="M5,14 L12,14 L8.5,22 L5,24 Z" />
+                                        </Canvas>
+                                    </Viewbox>
+                                </Border>
+                                <StackPanel Grid.Column="1"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding L.EmptyTitle}"
+                                               Style="{StaticResource GroupTitleTextStyle}"
+                                               Margin="0,0,0,6" />
+                                    <TextBlock Text="{Binding L.EmptyDescription}"
+                                               Style="{StaticResource SecondaryBodyTextStyle}"
+                                               TextWrapping="Wrap"
+                                               Margin="0,0,0,14" />
+                                    <Button Content="{Binding L.AddEntry}"
+                                            Command="{Binding AddEntryCommand}"
+                                            Style="{StaticResource PrimaryButtonStyle}"
+                                            MinWidth="140"
+                                            HorizontalAlignment="Left" />
+                                </StackPanel>
+                            </Grid>
                         </Border>
 
                         <ItemsControl ItemsSource="{Binding EntryGroups}">
@@ -492,10 +530,19 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Border Grid.Column="0"
-                            Style="{StaticResource StatusPillStyle}"
                             VerticalAlignment="Center">
+                        <Border.Style>
+                            <Style TargetType="Border" BasedOn="{StaticResource StatusChipSuccessStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasUnsavedChanges}" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource WarningBackgroundBrush}" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource WarningBorderBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
                         <TextBlock Text="{Binding UnsavedChangesText}"
-                                   Style="{StaticResource CaptionTextStyle}"
+                                   Style="{StaticResource ChipTextStyle}"
                                    TextWrapping="Wrap" />
                     </Border>
                     <StackPanel Grid.Column="1"
@@ -514,8 +561,20 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Row="3"
-                    Style="{StaticResource StatusBannerStyle}">
+            <Border Grid.Row="3">
+                <Border.Style>
+                    <Style TargetType="Border" BasedOn="{StaticResource StatusBannerStyle}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding HasStatusMessage}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding HasValidationErrors}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
                 <StackPanel>
                     <TextBlock Text="{Binding StatusMessage}"
                                Style="{StaticResource StatusTextStyle}"

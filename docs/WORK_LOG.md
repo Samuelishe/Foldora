@@ -1,5 +1,15 @@
 # Work Log
 
+## 2026-07-02 - Visual Design Direction v2
+
+- Applied a controlled product-grade WPF visual polish pass to MainWindow, SettingsWindow, HelpWindow and shared design resources without changing business behavior.
+- Updated `DesignTokens.xaml`, `Typography.xaml` and `Controls.xaml` with a soft cool page background, icon-inspired blue/cyan/violet accent system, gradient primary button, calm danger button, rounded TextBox template, status chip variants, path/chip text styles, polished Settings tabs/path rows and stronger empty/help surfaces.
+- MainWindow kept its editor-first flow and gained a self-authored XAML empty-state folder/menu mark, stronger status chip treatment and a conditional status banner that only appears for real status/errors.
+- SettingsWindow kept the tabbed layout and existing bindings while Application/Help/About sections, Explorer status, Installation path rows, technical details and footer use the v2 shared styles.
+- HelpWindow kept its localized content semantics and now shares the v2 header/section/step/footer rhythm.
+- Updated lightweight design resource/XAML tests for the new style keys and presentation contracts.
+- No localization catalogs, ViewModel state, settings JSON, Core model, registry/MenuHost/install/shell behavior, app icon, README hero or external assets were changed.
+
 ## 2026-07-01 - GitHub README product landing pass
 
 - Reworked the top of `README.md` from an engineering-first status document into a product-oriented GitHub landing flow.

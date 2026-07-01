@@ -94,14 +94,14 @@
 - `src/Foldora.App/App.xaml.cs` - WPF app startup plumbing и обработка startup exceptions.
 - `src/Foldora.App/Assets/FoldoraIcon.svg` - self-authored source vector for the folded blue/cyan Foldora app icon with a broad light-cyan folded plane.
 - `src/Foldora.App/Assets/Foldora.ico` - generated multi-size Windows app icon used by `Foldora.App.exe` and WPF windows.
-- `src/Foldora.App/Resources/DesignTokens.xaml` - semantic colors/brushes, spacing, radius and size tokens for WPF design system, включая visual polish v1 accent/danger surface tokens and Settings tab spacing tokens.
-- `src/Foldora.App/Resources/Typography.xaml` - reusable WPF typography styles and app font family, включая help step readability style.
-- `src/Foldora.App/Resources/Controls.xaml` - reusable WPF control, card/container/status styles, включая non-clipping button template/geometry, page header, status chip, empty state, path row, wrapping Settings tabs, help step and footer bar styles.
-- `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, shared app icon, visual polish v1 page header/status chip/empty state/footer, save/discard и компактным Explorer menu status; Settings открываются через title-bar gear.
+- `src/Foldora.App/Resources/DesignTokens.xaml` - semantic colors/brushes, spacing, radius and size tokens for WPF design system, включая visual direction v2 cool page background, blue/cyan/violet accent gradients, softer surfaces/borders and status/danger surface tokens.
+- `src/Foldora.App/Resources/Typography.xaml` - reusable WPF typography styles and app font family, включая help step readability, path text and status chip text styles.
+- `src/Foldora.App/Resources/Controls.xaml` - reusable WPF control, card/container/status styles, включая non-clipping button template/geometry, rounded TextBox template, page header, status chip variants, empty state icon container, path row, wrapping Settings tabs, Settings expander, help step and footer bar styles.
+- `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, shared app icon, visual direction v2 page header/status chips/self-authored XAML empty-state mark/footer, conditional status banner, save/discard и компактным Explorer menu status; Settings открываются через title-bar gear.
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI/window plumbing, custom title bar controls и установка `DataContext`.
-- `src/Foldora.App/SettingsWindow.xaml` - WPF окно настроек приложения с shared app icon and category tabs для Application/language, Explorer menu, Installation/path rows, Help/About and isolated Danger zone.
+- `src/Foldora.App/SettingsWindow.xaml` - WPF окно настроек приложения с shared app icon, polished category tabs, Application/language compact section, Explorer status/actions, Installation path rows, Help/About and isolated Danger zone.
 - `src/Foldora.App/SettingsWindow.xaml.cs` - минимальный plumbing окна настроек.
-- `src/Foldora.App/HelpWindow.xaml` - WPF окно краткой Help/About справки с shared app icon, visual polish v1 header/section/step-row rhythm, scrollable content and fixed close footer.
+- `src/Foldora.App/HelpWindow.xaml` - WPF окно краткой Help/About справки с shared app icon, visual direction v2 header/section/step-row rhythm, scrollable content and fixed close footer.
 - `src/Foldora.App/HelpWindow.xaml.cs` - минимальный plumbing окна справки.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
 - `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands и presentation state для card/list UI.
@@ -167,7 +167,7 @@
 - `tests/Foldora.Tests/Architecture/ProjectBoundaryTests.cs` - тесты архитектурных границ проектов.
 - `tests/Foldora.Tests/App/ExplorerIntegrationControllerTests.cs` - тесты WPF Explorer integration controller с fake registry.
 - `tests/Foldora.Tests/App/ExplorerCommandHostPathResolverTests.cs` - тесты WPF command-host resolver для publish sibling, missing-host failure, Debug fallback и registry command path.
-- `tests/Foldora.Tests/App/DesignResourceTests.cs` - lightweight tests for WPF design resource dictionary wiring, app icon wiring/sizes, core style keys, button layout robustness, non-clipping Settings tab headers, stretched Settings selected-content host/tab bodies, Settings path/action layout contracts and visual polish v1 style contracts.
+- `tests/Foldora.Tests/App/DesignResourceTests.cs` - lightweight tests for WPF design resource dictionary wiring, app icon wiring/sizes, core style keys, button layout robustness, non-clipping Settings tab headers, stretched Settings selected-content host/tab bodies, Settings path/action layout contracts and visual direction v2 style/presentation contracts.
 - `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
 - `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections и compact/edit entry behavior.
 - `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.

@@ -4,6 +4,8 @@
 
 Window shell foundation: главное окно использует custom title bar с названием приложения, settings gear и window controls. Settings gear открывает настройки приложения: language, Help/About, Explorer integration, installation/path information and danger zone. Изменение языка сохраняется отдельно от draft entries и не пишет registry; Explorer integration actions в Settings выполняются сразу.
 
+Visual Design Direction v2 is presentation-only: MainWindow remains the editor, SettingsWindow remains the tabbed system/settings surface, HelpWindow remains a compact Help/About window, and staged save/cancel behavior is unchanged. The v2 polish only changes shared WPF resources, surfaces, status chips, tabs, path rows, empty state and footer presentation.
+
 Startup errors не должны приводить к silent exit/no-window состоянию. При startup exception Foldora пишет `%AppData%\Foldora\Logs\startup-error.log` и показывает простой startup error dialog. Обычная загрузка settings остаётся async после создания `MainWindow`, чтобы не блокировать WPF dispatcher до появления окна.
 
 ## WPF MVP Editor

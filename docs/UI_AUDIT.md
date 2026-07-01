@@ -4,7 +4,7 @@
 
 ## Current Status
 
-WPF UI уже функционален: есть staged menu editor, compact/edit cards, grouping, локализация, SettingsWindow и перенос Explorer integration из главного окна. Visual polish pass v1 улучшил текущие окна без redesign: более спокойные header/status surfaces, ровнее section rhythm, polished empty state, path rows and Help step rows. Это не полный branding/public-presentation pass.
+WPF UI уже функционален: есть staged menu editor, compact/edit cards, grouping, локализация, SettingsWindow и перенос Explorer integration из главного окна. Visual polish pass v1 улучшил текущие окна без redesign; Visual Design Direction v2 добавил более product-grade светлую систему surfaces, icon-inspired blue/cyan/violet palette, status chip variants, stronger empty state, polished tabs/path rows and cleaner footer/status presentation. Это не полный branding/public-presentation pass.
 
 Этот документ фиксирует найденные UX/design issues, чтобы они не остались только в чате. Это не план немедленного redesign и не обещание реализации без отдельного этапа.
 
@@ -43,7 +43,7 @@ WPF UI уже функционален: есть staged menu editor, compact/edi
 - Observed: приложение уже функциональное и стало лучше, но визуально всё ещё воспринимается как прототип.
 - Impact: GitHub/public presentation и пользовательское доверие будут слабее, чем функциональная готовность MVP.
 - Suggested direction: отдельный visual polish pass: hierarchy, spacing, surfaces, section rhythm, empty states, status presentation, entry cards and Settings sections.
-- Status: Addressed for visual polish v1. MainWindow, SettingsWindow, HelpWindow and shared WPF resources now have calmer surface/card hierarchy, status chips, improved empty/path/help rows and footer/header rhythm. Further refinements should be user-feedback-driven rather than broad redesign.
+- Status: Addressed for Visual Design Direction v2. MainWindow, SettingsWindow, HelpWindow and shared WPF resources now keep the MVP information architecture while using a cooler icon-inspired palette, stronger surfaces, segmented Settings tabs, reusable status chip variants, a self-authored XAML empty-state mark, polished path/help rows and cleaner footer/status presentation. Further refinements should be user-feedback-driven rather than broad redesign.
 
 ### UIA-0006 Missing Application / Build / Window Icon
 
@@ -115,6 +115,7 @@ Small safe improvements for a future code pass:
 - Settings inline action/path buttons use compact geometry instead of the normal wide action button style, with enough horizontal padding for labels.
 - MainWindow and SettingsWindow now have higher minimum widths to prevent known broken narrow layouts.
 - Visual polish pass v1 is addressed for the current MVP windows: MainWindow, SettingsWindow, HelpWindow and shared resource styles have calmer spacing, surfaces, status and empty/path/help presentation.
+- Visual Design Direction v2 is addressed: the current WPF UI now uses an icon-inspired light palette, clearer shared surfaces, chip variants, gradient primary action, polished Settings tabs/path rows, a stronger MainWindow empty state and cleaner status/footer treatment without changing behavior.
 - SettingsWindow tabbed layout cleanup is addressed: the previous long vertical settings document was replaced by category tabs, and Installation path actions use short `Open`/`Copy` labels.
 - Settings layout robustness pass is addressed: SettingsWindow no longer allows the known too-narrow state that clipped action labels, and action/path rows have a shared sizing contract.
 - Settings tab header clipping fix is addressed: tab header clipping was separate from button clipping, and Settings tabs now wrap as content-sized headers.
@@ -127,7 +128,7 @@ Future product-grade polish can include:
 - user-feedback-driven refinements to entry cards and group containers;
 - additional localization-sensitive layout tweaks after manual reports;
 - Settings tab spacing/content tuning after manual RU/EN and long-locale checks;
-- more polished status/banner variants if real workflows need them;
+- further status/banner tuning if real workflows need more severity-specific presentation than the current shared chip/banner variants;
 - README hero/mockup only after the UI is visually ready for public presentation. The root README now has landing-page structure and placeholders, but no screenshot/hero assets are bundled yet.
 - deeper Help/About content polish: screenshots, richer instructions, and full translation review for long help text across all enabled locales.
 

@@ -39,26 +39,32 @@
                     <StackPanel HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
                                 MaxWidth="420">
-                        <TextBlock Text="{Binding L.SettingsLanguageLabel}"
-                                   Style="{StaticResource FieldLabelStyle}"
-                                   Margin="0,0,0,8" />
-                        <ComboBox ItemsSource="{Binding AvailableLanguages}"
-                                  SelectedValue="{Binding SelectedLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  SelectedValuePath="Code"
-                                  DisplayMemberPath="DisplayName"
-                                  MinWidth="180"
-                                  MaxWidth="280"
-                                  HorizontalAlignment="Left" />
-                        <TextBlock Text="{Binding L.SettingsLanguageRestartNote}"
-                                   Style="{StaticResource SecondaryBodyTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Margin="0,10,0,0" />
-                        <TextBlock Text="{Binding StatusMessage}"
-                                   Style="{StaticResource StatusTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Foreground="{DynamicResource SuccessBrush}"
-                                   Visibility="{Binding HasStatusMessage, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                   Margin="0,10,0,0" />
+                        <Border Style="{StaticResource SectionContainerStyle}"
+                                Margin="0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding L.SettingsLanguageLabel}"
+                                           Style="{StaticResource FieldLabelStyle}"
+                                           Margin="0,0,0,8" />
+                                <ComboBox ItemsSource="{Binding AvailableLanguages}"
+                                          SelectedValue="{Binding SelectedLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          SelectedValuePath="Code"
+                                          DisplayMemberPath="DisplayName"
+                                          MinWidth="180"
+                                          MaxWidth="280"
+                                          HorizontalAlignment="Left" />
+                                <TextBlock Text="{Binding L.SettingsLanguageRestartNote}"
+                                           Style="{StaticResource SecondaryBodyTextStyle}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,10,0,0" />
+                                <Border Style="{StaticResource StatusChipSuccessStyle}"
+                                        Visibility="{Binding HasStatusMessage, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Margin="0,12,0,0">
+                                    <TextBlock Text="{Binding StatusMessage}"
+                                               Style="{StaticResource ChipTextStyle}"
+                                               TextWrapping="Wrap" />
+                                </Border>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -86,10 +92,19 @@
                                 </TextBlock.ToolTip>
                             </TextBlock>
                         </StackPanel>
-                        <Border Style="{StaticResource StatusPillStyle}"
-                                Margin="0,0,0,10">
+                        <Border Margin="0,0,0,10">
+                            <Border.Style>
+                                <Style TargetType="Border" BasedOn="{StaticResource StatusChipInfoStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ExplorerIntegrationEnabled}" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource SuccessBackgroundBrush}" />
+                                            <Setter Property="BorderBrush" Value="{DynamicResource SuccessBorderBrush}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
                             <TextBlock Text="{Binding ExplorerIntegrationStatusLabel}"
-                                       Style="{StaticResource CaptionTextStyle}"
+                                       Style="{StaticResource ChipTextStyle}"
                                        TextWrapping="Wrap" />
                         </Border>
                         <TextBlock Text="{Binding L.ExplorerActionsApplyImmediately}"
@@ -144,9 +159,9 @@
                         </ItemsControl>
 
                         <Expander Header="{Binding L.TechnicalDetails}"
+                                  Style="{StaticResource SettingsExpanderStyle}"
                                   IsExpanded="{Binding ShowTechnicalDetails, Mode=TwoWay}"
-                                  Visibility="{Binding HasTechnicalDetails, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                  Margin="0,8,0,0">
+                                  Visibility="{Binding HasTechnicalDetails, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <ItemsControl ItemsSource="{Binding TechnicalDetails}"
                                           Margin="0,8,0,0">
                                 <ItemsControl.ItemTemplate>
@@ -205,7 +220,7 @@
                                            Grid.Column="0"
                                            Text="{Binding InstalledAppPath}"
                                            ToolTip="{Binding InstalledAppPath}"
-                                           Style="{StaticResource SecondaryBodyTextStyle}"
+                                           Style="{StaticResource PathTextStyle}"
                                            TextWrapping="Wrap"
                                            Margin="0,0,12,0" />
                                 <StackPanel Grid.Row="1"
@@ -250,7 +265,7 @@
                                            Grid.Column="0"
                                            Text="{Binding UserDataPath}"
                                            ToolTip="{Binding UserDataPath}"
-                                           Style="{StaticResource SecondaryBodyTextStyle}"
+                                           Style="{StaticResource PathTextStyle}"
                                            TextWrapping="Wrap"
                                            Margin="0,0,12,0" />
                                 <StackPanel Grid.Row="1"
@@ -295,7 +310,7 @@
                                            Grid.Column="0"
                                            Text="{Binding CurrentCommandHostPath}"
                                            ToolTip="{Binding CurrentCommandHostPath}"
-                                           Style="{StaticResource SecondaryBodyTextStyle}"
+                                           Style="{StaticResource PathTextStyle}"
                                            TextWrapping="Wrap"
                                            Margin="0,0,12,0" />
                                 <StackPanel Grid.Row="1"
@@ -339,16 +354,21 @@
                     <StackPanel HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
                                 MaxWidth="560">
-                        <TextBlock Text="{Binding L.HelpAboutSection}"
-                                   Style="{StaticResource SectionTitleStyle}" />
-                        <TextBlock Text="{Binding L.HelpAboutSummary}"
-                                   Style="{StaticResource SecondaryBodyTextStyle}"
-                                   TextWrapping="Wrap"
-                                   Margin="0,0,0,12" />
-                        <Button Content="{Binding L.OpenHelpAbout}"
-                                Command="{Binding OpenHelpCommand}"
-                                Style="{StaticResource InlineActionButtonStyle}"
-                                HorizontalAlignment="Left" />
+                        <Border Style="{StaticResource SectionContainerStyle}"
+                                Margin="0">
+                            <StackPanel>
+                                <TextBlock Text="{Binding L.HelpAboutSection}"
+                                           Style="{StaticResource SectionTitleStyle}" />
+                                <TextBlock Text="{Binding L.HelpAboutSummary}"
+                                           Style="{StaticResource SecondaryBodyTextStyle}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,12" />
+                                <Button Content="{Binding L.OpenHelpAbout}"
+                                        Command="{Binding OpenHelpCommand}"
+                                        Style="{StaticResource InlineActionButtonStyle}"
+                                        HorizontalAlignment="Left" />
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -387,19 +407,21 @@
             </TabItem>
         </TabControl>
 
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0,2,0,0">
-            <Button Content="{Binding L.Save}"
-                    Command="{Binding SaveCommand}"
-                    Style="{StaticResource PrimaryButtonStyle}"
-                    MinWidth="96"
-                    Margin="0,0,8,0" />
-            <Button Content="{Binding L.Close}"
-                    Click="OnCloseClick"
-                    Style="{StaticResource SecondaryButtonStyle}"
-                    MinWidth="96" />
-        </StackPanel>
+        <Border Grid.Row="2"
+                Style="{StaticResource FooterBarStyle}"
+                Margin="0,2,0,0">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Content="{Binding L.Save}"
+                        Command="{Binding SaveCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        MinWidth="96"
+                        Margin="0,0,8,0" />
+                <Button Content="{Binding L.Close}"
+                        Click="OnCloseClick"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        MinWidth="96" />
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

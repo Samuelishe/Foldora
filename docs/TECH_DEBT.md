@@ -32,8 +32,8 @@
 - Observed behavior: MainWindow shows `Unsaved changes: True/False` and localized equivalents, exposing a raw boolean state to users.
 - Expected/desired behavior: Use user-facing state text such as `All changes saved` / `Unsaved changes` or a localized status chip.
 - Known cause or hypothesis: Early presentation state was added as direct debug-friendly text.
-- Current workaround: Not needed; MainWindow now shows localized saved/unsaved status strings without raw booleans.
-- Next investigation step: Future visual polish may turn the text into a status chip, but the debug-style boolean is gone.
+- Current workaround: Not needed; MainWindow now shows localized saved/unsaved status strings inside reusable status chip presentation without raw booleans.
+- Next investigation step: Monitor whether saved/unsaved status wording needs more severity-specific styling after manual locale checks.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/LOCALIZATION.md`
@@ -51,8 +51,8 @@
 - Observed behavior: Some MainWindow and SettingsWindow buttons look tight; text sits too close to button edges.
 - Expected/desired behavior: Buttons should have consistent padding, min-width and min-height that survive long localized labels.
 - Known cause or hypothesis: Current reusable button styles are functional but not yet tuned through a localization-heavy visual polish pass.
-- Current workaround: Shared action buttons now have larger padding and min-height, the base button template applies padding/alignment, dense Settings rows use a compact inline action style with non-tiny horizontal padding, Installation path buttons use short `Open`/`Copy` labels, SettingsWindow action rows wrap or use star/auto layout, and MainWindow/SettingsWindow have minimum widths that prevent the known broken narrow layouts.
-- Next investigation step: Continue long-label visual checks during product-grade polish, especially SettingsWindow actions in long locales and non-Latin font fallback.
+- Current workaround: Shared action buttons now have larger padding and min-height, the base button template applies padding/alignment, dense Settings rows use a compact inline action style with non-tiny horizontal padding, Installation path buttons use short `Open`/`Copy` labels, SettingsWindow action rows wrap or use star/auto layout, MainWindow/SettingsWindow have minimum widths that prevent the known broken narrow layouts, and v2 button colors/states are centralized in `Controls.xaml`.
+- Next investigation step: Continue long-label visual checks after product-grade polish, especially SettingsWindow actions in long locales and non-Latin font fallback.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UI_DESIGN.md`
@@ -81,14 +81,14 @@
 
 - ID: `TD-UI-0005`
 - Title: Product-grade visual polish gap
-- Status: Fixed for visual polish v1 / Monitor
+- Status: Fixed for Visual Design Direction v2 / Monitor
 - Severity: Medium
 - Area: WPF / UX / Visual Design
 - Observed behavior: The app is functional and cleaner after Settings cleanup, but still looks like a careful prototype rather than a polished product UI.
 - Expected/desired behavior: Clearer hierarchy, spacing, surfaces, empty states, status presentation, cards and settings sections before public hero/mockup work.
 - Known cause or hypothesis: MVP work prioritized functional shell integration, safety and localization over visual polish.
-- Current workaround: Not needed for the current MVP windows; visual polish v1 refined MainWindow, SettingsWindow, HelpWindow and shared WPF resources with calmer headers, sections, status chips, empty state, path rows, help step rows and footer presentation.
-- Next investigation step: Monitor manual feedback and long-locale layout issues. README hero and broader branding assets remain a separate branding pass, not part of this debt item; app/window/exe icon foundation is tracked under `TD-UI-0006`.
+- Current workaround: Not needed for the current MVP windows; Visual Design Direction v2 refined MainWindow, SettingsWindow, HelpWindow and shared WPF resources with an icon-inspired light palette, stronger shared surfaces, segmented Settings tabs, status chip variants, a self-authored XAML empty-state mark, polished path/help rows and cleaner footer/status presentation.
+- Next investigation step: Monitor manual RU/EN and long-locale feedback. README hero and broader branding assets remain a separate branding/pass-public-presentation step, not part of this debt item; app/window/exe icon foundation is tracked under `TD-UI-0006`.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`
   - `docs/UI_DESIGN.md`
@@ -125,7 +125,7 @@
 - Observed behavior: Settings now has targeted tooltips and a small Help/About window explaining the basic workflow, Explorer menu behavior, `Foldora.MenuHost.exe`, data paths, uninstall and license notes.
 - Expected/desired behavior: Future polish should improve help copy, add screenshots only after UI visual polish, and review long help translations across all enabled locales.
 - Known cause or hypothesis: MVP prioritized functional editor and shell integration before broader onboarding/help content.
-- Current workaround: Use the Settings Help/About window, wrapped tooltips, README and docs. Visual polish v1 improved the HelpWindow header, section rhythm and step list readability.
+- Current workaround: Use the Settings Help/About window, wrapped tooltips, README and docs. Visual Design Direction v2 keeps the same Help/About content semantics while improving the shared header, section, step and fixed-footer presentation.
 - Next investigation step: Translation/content review and possible richer Help/About content or screenshots after branding/public-presentation work.
 - Links to docs/tests/code:
   - `docs/UI_AUDIT.md`

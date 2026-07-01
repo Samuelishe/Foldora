@@ -10,9 +10,9 @@ WPF UX cleanup после one-level grouping заменяет emoji/font-depende
 
 Design system foundation добавляет централизованные WPF resource dictionaries:
 
-- `DesignTokens.xaml` - semantic colors/brushes, spacing, radius and sizing tokens.
-- `Typography.xaml` - reusable text styles and app font family.
-- `Controls.xaml` - reusable button, text input, checkbox, card, group container and status banner styles.
+- `DesignTokens.xaml` - semantic colors/brushes, spacing, radius and sizing tokens, включая icon-inspired light palette and shared accent/status/danger surfaces.
+- `Typography.xaml` - reusable text styles, app font family, path text and chip text roles.
+- `Controls.xaml` - reusable button, text input, checkbox, tab, card, group container, status chip, path row, empty state and status banner styles.
 
 Будущая dark theme должна переопределять semantic colors/brushes, а не дублировать layout XAML.
 
@@ -71,12 +71,18 @@ Core roles:
 - `PageBackgroundBrush`;
 - `SurfaceBrush`;
 - `SurfaceSecondaryBrush`;
+- `SurfaceAccentBrush`;
 - `BorderBrush`;
+- `BorderSoftBrush`;
 - `BorderStrongBrush`;
 - `TextPrimaryBrush`;
 - `TextSecondaryBrush`;
 - `TextDisabledBrush`;
 - `AccentBrush`;
+- `AccentCyanBrush`;
+- `AccentVioletBrush`;
+- `AccentGradientBrush`;
+- `AccentSoftGradientBrush`;
 - `DangerBrush`;
 - `SuccessBrush`;
 - `WarningBrush`;
@@ -91,6 +97,8 @@ Typography styles:
 - `BodyTextStyle`;
 - `SecondaryBodyTextStyle`;
 - `CaptionTextStyle`;
+- `PathTextStyle`;
+- `ChipTextStyle`;
 - `FieldLabelStyle`;
 - `ValidationErrorTextStyle`;
 - `StatusTextStyle`.
@@ -107,10 +115,11 @@ Control and container styles:
 - `SettingsTabControlStyle` and `SettingsTabItemStyle` for category navigation inside SettingsWindow;
 - `CardContainerStyle`, `GroupContainerStyle`, `SectionContainerStyle`;
 - `PageHeaderContainerStyle` for calm page/window content headers;
-- `StatusPillStyle` for compact user-facing state such as Explorer menu and saved/unsaved state;
-- `EmptyStateContainerStyle` for first-run/no-entry states;
+- `StatusChipStyle`, `StatusChipInfoStyle`, `StatusChipSuccessStyle`, `StatusChipWarningStyle`, `StatusChipDangerStyle` and compatibility `StatusPillStyle` for compact user-facing state such as Explorer menu and saved/unsaved state;
+- `EmptyStateContainerStyle` and `EmptyStateIconContainerStyle` for first-run/no-entry states;
 - `PathRowContainerStyle` for installation/user-data/MenuHost path rows;
 - `HelpStepContainerStyle` and `HelpStepTextStyle` for short Help/About step rows;
+- `SettingsExpanderStyle` for less dominant technical details in Settings;
 - `FooterBarStyle` for fixed action/status footer areas;
 - `StatusBannerStyle`, `DangerBannerStyle`;
 - `PreviewBoxStyle`.
@@ -126,6 +135,18 @@ Visual polish v1 is a controlled refinement of the existing MVP windows, not a r
 - HelpWindow uses the same header/section rhythm as SettingsWindow and renders the basic workflow steps as readable boxed rows while keeping the localized content unchanged.
 - App/window/exe icon foundation is now handled through a self-authored folded blue/cyan project asset. README hero/mockup and any external visual assets remain out of scope for visual polish v1 and require a separate branding/resource-policy review.
 - RU/EN remain primary manually verified locales; other enabled locales are catalog-complete and should continue to be checked through smoke/spot checks and user feedback for long-label/font-fallback issues.
+
+## Visual Design Direction v2
+
+Visual Design Direction v2 keeps the same WPF information architecture and staged-save behavior, but raises the MVP from a careful prototype to a calmer product UI:
+
+- shared tokens now use a soft cool page background, white/light surfaces, soft borders and a Foldora-icon-inspired blue/cyan/violet accent system;
+- primary buttons use a restrained accent gradient, secondary/inline buttons stay quieter, and destructive buttons use calm danger surfaces until pressed;
+- MainWindow keeps its editor-first flow, but the page header/status chips, empty state, footer and conditional status banner now feel like one system;
+- the MainWindow empty state includes a small self-authored XAML folder/menu mark made from local `Path` geometry, not an external asset;
+- SettingsWindow keeps category tabs and left/top tab-body alignment, while tabs, path rows, technical details and footer are visually more deliberate;
+- HelpWindow keeps the same localized content, but shares the v2 header/section/step/footer rhythm;
+- no localization catalogs, ViewModel state, settings JSON, registry/MenuHost/install behavior, app icon or README hero assets were changed.
 
 ## Layout Correctness
 
