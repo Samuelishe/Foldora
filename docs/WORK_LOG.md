@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-02 - IC1 imaging foundation
+
+- Added `src/Foldora.Imaging` as a clean `net10.0` class library for future image-to-ICO conversion foundation.
+- Added standard square icon frame-size models, minimal conversion options/result/error models and `IcoWriter`.
+- `IcoWriter` writes deterministic little-endian ICO containers from already encoded PNG frame payloads, sorting frames by size and validating empty/duplicate inputs.
+- Added binary structure tests under `tests/Foldora.Tests/Imaging` for ICONDIR, ICONDIRENTRY, 256x256 byte encoding, offsets, payload concatenation, validation and caller-owned stream behavior.
+- No PNG/JPG/BMP decoding, resizing, WPF picker integration, drag-and-drop, CLI `convert-icon`, converter window, SVG, pack import/export or diagnostics/repair UI was implemented.
+
 ## 2026-07-02 - Future feature planning docs
 
 - Added `docs/ICON_CONVERSION_ROADMAP.md` as the central planning note for image-to-ICO conversion.

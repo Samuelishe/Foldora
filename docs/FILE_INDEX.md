@@ -44,6 +44,15 @@
 - `src/Foldora.Core/DesktopIni/DesktopIniAttributePolicy.cs` - тестируемые политики атрибутов папки и `desktop.ini` для manual deletion UX investigation.
 - `src/Foldora.Core/DesktopIni/DesktopIniOptions.cs` - параметры записи desktop.ini.
 - `src/Foldora.Core/DesktopIni/DesktopIniService.cs` - минимальный сервис применения/очистки desktop.ini.
+- `src/Foldora.Imaging/Foldora.Imaging.csproj` - чистая `net10.0` imaging foundation library для будущего image-to-ICO conversion.
+- `src/Foldora.Imaging/IconFrameSize.cs` - immutable square icon frame-size value object for ICO frame metadata.
+- `src/Foldora.Imaging/StandardIconFrameSizes.cs` - standard Foldora ICO frame sizes: 16, 24, 32, 48, 64, 128 and 256.
+- `src/Foldora.Imaging/IconFrame.cs` - already encoded icon frame payload model used by IC1 ICO writer.
+- `src/Foldora.Imaging/IconFrameEncoding.cs` - encoded frame payload type marker; IC1 supports PNG payloads.
+- `src/Foldora.Imaging/IconConversionOptions.cs` - minimal future conversion options model with target frame sizes.
+- `src/Foldora.Imaging/IconConversionResult.cs` - minimal future conversion result model.
+- `src/Foldora.Imaging/IconConversionError.cs` - minimal future conversion error/warning model.
+- `src/Foldora.Imaging/IcoWriter.cs` - deterministic ICO container writer for already encoded image frame payloads.
 - `src/Foldora.Shell/Foldora.Shell.csproj` - shell integration library.
 - `src/Foldora.Shell/ContextMenu/CommandLineQuoter.cs` - quoting аргументов командной строки.
 - `src/Foldora.Shell/ContextMenu/ExplorerContextMenuRegistrationOptions.cs` - параметры регистрации меню.
@@ -183,6 +192,7 @@
 - `tests/Foldora.Tests/Core/FoldoraDataPathsTests.cs` - тесты AppData paths.
 - `tests/Foldora.Tests/Core/DesktopIniServiceTests.cs` - тесты desktop.ini.
 - `tests/Foldora.Tests/Fixtures/IcoTestFile.cs` - helper ICO fixture для structural validation и WPF preview.
+- `tests/Foldora.Tests/Imaging/IcoWriterTests.cs` - binary structure tests for Foldora.Imaging ICO writer and standard frame-size model.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryTests.cs` - тесты defaults menu entry.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryActionServiceTests.cs` - тесты apply/create по entry id.
 - `tests/Foldora.Tests/Menu/FolderMenuDraftEditorTests.cs` - тесты staged-save draft editor logic, add/remove и pending icon import.

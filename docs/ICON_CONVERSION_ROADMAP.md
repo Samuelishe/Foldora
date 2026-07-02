@@ -1,6 +1,26 @@
 # Icon Conversion Roadmap
 
-Этот документ фиксирует будущий план для image-to-ICO conversion. Это не описание текущей реализации: PNG/JPG/BMP conversion, converter CLI/UI, drag-and-drop icon replacement, pack import/export and repair flows are not implemented yet.
+Этот документ фиксирует будущий план для image-to-ICO conversion. IC1 foundation уже реализует только техническую основу ICO container writing. PNG/JPG/BMP decoding, resizing, converter CLI/UI, drag-and-drop icon replacement, pack import/export and repair flows are not implemented yet.
+
+## Current Implementation Status
+
+IC1 implemented:
+
+- `src/Foldora.Imaging` project scaffold targeting `net10.0`.
+- Standard square icon frame-size model for `16`, `24`, `32`, `48`, `64`, `128` and `256`.
+- Minimal conversion options/result/error models for future pipeline stages.
+- `IcoWriter`, which writes a deterministic `.ico` container from already encoded PNG frame payload bytes.
+- Binary structure tests for ICONDIR, ICONDIRENTRY fields, 256x256 directory byte encoding, sorted frame order, offsets, payload concatenation, validation and stream ownership.
+
+Not implemented yet:
+
+- PNG/JPG/BMP decoding.
+- High-quality resize/downscale.
+- Automatic WPF picker conversion.
+- Drag image onto preview.
+- CLI `convert-icon`.
+- Converter window.
+- SVG support.
 
 ## Priority
 
@@ -43,7 +63,7 @@ SVG is not part of the first conversion milestone. Treat SVG as phase 2 / resear
 
 ## Proposed Architecture
 
-Future project:
+Project:
 
 ```text
 src/Foldora.Imaging/
@@ -51,17 +71,17 @@ src/Foldora.Imaging/
 
 Purpose:
 
-- image decode orchestration;
-- high-quality resizing;
-- ICO writing;
+- image decode orchestration, future;
+- high-quality resizing, future;
+- ICO writing, IC1 foundation implemented;
 - conversion result/reporting.
 
 Suggested future services/classes:
 
-- `ImageToIconConversionService`
-- `ImageDecoder`
-- `IconEncoder`
-- `IconResizeService`
+- `ImageToIconConversionService`, future;
+- `ImageDecoder`, future;
+- `IconEncoder` / `IcoWriter`;
+- `IconResizeService`, future;
 - `IconConversionOptions`
 - `IconConversionResult`
 - `IconFrameSize`
@@ -314,4 +334,3 @@ Possible actions:
 - Open settings file location.
 
 Priority: do after core MVP feature work.
-

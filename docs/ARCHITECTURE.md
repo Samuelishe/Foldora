@@ -1,30 +1,28 @@
 # Architecture
 
-Foldora разделена на шесть проектов:
+Foldora разделена на семь проектов:
 
 - `Foldora.Core` - доменная логика, модели, settings, AppData paths, desktop.ini, validation и тестируемые filesystem операции.
 - `Foldora.Shell` - Windows Shell integration: HKCU legacy context menu, unregister flow и command line quoting.
 - `Foldora.Cli` - тонкий console интерфейс для команд context menu и ручного запуска.
 - `Foldora.MenuHost` - no-console Windows executable для запуска Explorer context menu commands.
+- `Foldora.Imaging` - чистая библиотека foundation for future image-to-ICO conversion: frame metadata, conversion result/options models and ICO container writer.
 - `Foldora.App` - WPF-приложение настроек.
 - `Foldora.Tests` - unit-тесты Core и Shell.
-
-Будущая image conversion feature может добавить седьмой проект:
-
-- `Foldora.Imaging` - planned image-to-ICO layer for decode orchestration, high-quality resizing, ICO writing and conversion reporting. Проект не существует сейчас; proposal подробно описан в `docs/ICON_CONVERSION_ROADMAP.md`.
 
 Зависимости:
 
 - `Foldora.App` -> `Foldora.Core`, `Foldora.Shell`.
 - `Foldora.Cli` -> `Foldora.Core`, `Foldora.Shell`.
 - `Foldora.MenuHost` -> `Foldora.Core`, `Foldora.Shell`.
+- `Foldora.Imaging` currently has no Foldora project dependencies.
 - `Foldora.Shell` -> `Foldora.Core`.
-- `Foldora.Tests` -> `Foldora.Core`, `Foldora.Shell`, `Foldora.Cli`, `Foldora.App`, `Foldora.MenuHost`.
+- `Foldora.Tests` -> `Foldora.Core`, `Foldora.Imaging`, `Foldora.Shell`, `Foldora.Cli`, `Foldora.App`, `Foldora.MenuHost`.
 - `Foldora.Core` не зависит от других проектов Foldora.
 
-Planned imaging dependency direction:
+Imaging dependency direction:
 
-- `Foldora.Core` must not depend on future `Foldora.Imaging`.
+- `Foldora.Core` must not depend on `Foldora.Imaging`.
 - `Foldora.Imaging` should avoid App/UI dependencies.
 - `Foldora.App` may use `Foldora.Imaging` for picker/drop auto-conversion.
 - `Foldora.Cli` may use `Foldora.Imaging` for a future `convert-icon` command.
@@ -72,6 +70,6 @@ WPF design system foundation находится в `Foldora.App/Resources`. `Des
 
 WPF app icon foundation находится в `Foldora.App/Assets`. `FoldoraIcon.svg` является self-authored source vector for the folded blue/cyan folder mark with a broad light-cyan folded plane, а `Foldora.ico` - generated Windows icon, подключённый как `Foldora.App` `ApplicationIcon` and WPF window icon resource для MainWindow, SettingsWindow and HelpWindow. Это App-layer branding asset; Core/Shell/MenuHost behavior и пользовательские imported menu icons в `%AppData%\Foldora\icons` не меняются.
 
-Planned image-to-ICO conversion belongs outside Core and MenuHost. Future WPF/CLI workflows may accept `.png`, `.jpg`, `.jpeg` and `.bmp`, convert each source into a multi-size `.ico`, then import or stage the generated `.ico` like a normal menu icon. SVG support remains a separate research topic because WPF is not a complete SVG renderer and full SVG rendering is too large for the first conversion milestone.
+Image-to-ICO conversion belongs outside Core and MenuHost. IC1 in `Foldora.Imaging` only writes ICO containers from already encoded frame payloads; it does not decode, resize or validate real PNG/JPG/BMP image content yet. Future WPF/CLI workflows may accept `.png`, `.jpg`, `.jpeg` and `.bmp`, convert each source into a multi-size `.ico`, then import or stage the generated `.ico` like a normal menu icon. SVG support remains a separate research topic because WPF is not a complete SVG renderer and full SVG rendering is too large for the first conversion milestone.
 
 WPF startup path не должен блокировать dispatcher синхронным ожиданием async storage. `MainViewModel.CreateDefault()` только собирает сервисы; загрузка settings выполняется в `MainViewModel.LoadAsync`. Startup exceptions обрабатываются в `App.OnStartup`, `DispatcherUnhandledException` и `AppDomain.CurrentDomain.UnhandledException`; минимальный `StartupDiagnosticsService` пишет diagnostic file в `%AppData%\Foldora\Logs\startup-error.log`. Это не полноценный logging framework и не используется для доменной логики.
