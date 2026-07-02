@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-07-02 - IC2c image-to-ICO conversion foundation
+
+- Added `WindowsImageToIconConverter` in `src/Foldora.Imaging.Windows` as the Windows-specific stream-based PNG/JPG/BMP-to-ICO conversion service.
+- The service composes `WindowsImageDecoder`, pure `RgbaImageResizer`, `WindowsPngFrameEncoder` and `IcoWriter`.
+- Default conversion writes 16/24/32/48/64/128/256 px PNG-compressed ICO frames; custom target sizes are validated, unique and sorted.
+- Non-square source images use contain-fit into transparent square frames, preserving aspect ratio and avoiding cropping.
+- Added tests for standard/custom ICO output, PNG/JPG/BMP streams, stream validation/ownership, result reporting, tiny sources, alpha survival and non-square contain-fit behavior.
+- No CLI `convert-icon`, WPF picker integration, drag/drop, converter window, AppData generated icon storage integration or SVG support was implemented.
+
 ## 2026-07-02 - IC2b imaging resize/downscale foundation
 
 - Added pure `RgbaImageResizer` in `src/Foldora.Imaging` with Lanczos3-style separable resizing from `RgbaImage` to `RgbaImage`.

@@ -5,12 +5,21 @@ namespace Foldora.Imaging;
 /// </summary>
 public sealed class IconConversionOptions
 {
-    public IconConversionOptions(IReadOnlyList<IconFrameSize>? targetFrameSizes = null)
+    public IconConversionOptions(
+        IReadOnlyList<IconFrameSize>? targetFrameSizes = null,
+        ImageResizeOptions? resizeOptions = null,
+        IconImageFitMode fitMode = IconImageFitMode.Contain)
     {
         TargetFrameSizes = ValidateFrameSizes(targetFrameSizes ?? StandardIconFrameSizes.All);
+        ResizeOptions = resizeOptions ?? new ImageResizeOptions();
+        FitMode = fitMode;
     }
 
     public IReadOnlyList<IconFrameSize> TargetFrameSizes { get; }
+
+    public ImageResizeOptions ResizeOptions { get; }
+
+    public IconImageFitMode FitMode { get; }
 
     public static IconConversionOptions Default { get; } = new();
 
@@ -34,7 +43,8 @@ public sealed class IconConversionOptions
             throw new ArgumentException("Target frame sizes must be unique.", nameof(frameSizes));
         }
 
-        return frameSizes.ToArray();
+        return frameSizes
+            .OrderBy(size => size.Size)
+            .ToArray();
     }
 }
-

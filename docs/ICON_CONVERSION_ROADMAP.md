@@ -1,6 +1,6 @@
 # Icon Conversion Roadmap
 
-Этот документ фиксирует будущий план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, IC2a добавляет Windows-specific decode/PNG encode foundation, а IC2b добавляет pure alpha-aware resize/downscale foundation. Full converter service, converter CLI/UI, drag-and-drop icon replacement, pack import/export and repair flows are not implemented yet.
+Этот документ фиксирует будущий план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, IC2a добавляет Windows-specific decode/PNG encode foundation, IC2b добавляет pure alpha-aware resize/downscale foundation, а IC2c связывает эти части в Windows-specific stream-based image-to-ICO conversion service. Converter CLI/UI, drag-and-drop icon replacement, AppData storage integration, pack import/export and repair flows are not implemented yet.
 
 ## Current Implementation Status
 
@@ -27,13 +27,24 @@ IC2b implemented:
 - Premultiplied-alpha filtering to avoid transparent RGB halo artifacts.
 - Tests for dimensions, validation, constant-color normalization, alpha behavior, deterministic output, edge cases and ICO writer compatibility.
 
+IC2c implemented:
+
+- `WindowsImageToIconConverter` service/foundation in `Foldora.Imaging.Windows`.
+- Stream-based PNG/JPG/JPEG/BMP to multi-size ICO conversion pipeline.
+- Decode source image once, then resize every target frame size from the original decoded `RgbaImage`.
+- Encode each resized square frame as PNG payload and write a deterministic ICO container.
+- Default standard frame sizes: `16`, `24`, `32`, `48`, `64`, `128`, `256`.
+- Custom target frame sizes with sorted deterministic output.
+- Contain-fit transparent square policy for non-square source images.
+- Tests for standard/custom sizes, stream validation/ownership, source report, alpha, tiny sources and non-square contain-fit behavior.
+
 Not implemented yet:
 
-- Full image-to-ICO conversion service.
 - Automatic WPF picker conversion.
 - Drag image onto preview.
 - CLI `convert-icon`.
 - Converter window.
+- AppData generated icon storage integration.
 - SVG support.
 
 ## Priority
@@ -90,12 +101,12 @@ Purpose:
 - ICO writing, IC1 foundation implemented;
 - Windows/WPF image decode and PNG encode bridge, IC2a foundation implemented;
 - alpha-aware Lanczos3 resize/downscale, IC2b foundation implemented;
-- full image decode orchestration/conversion service, future;
+- stream-based image-to-ICO conversion service, IC2c foundation implemented;
 - conversion result/reporting.
 
 Suggested future services/classes:
 
-- `ImageToIconConversionService`, future;
+- `WindowsImageToIconConverter`;
 - `WindowsImageDecoder`;
 - `WindowsPngFrameEncoder`;
 - `IconEncoder` / `IcoWriter`;
@@ -106,6 +117,7 @@ Suggested future services/classes:
 - `IconConversionResult`
 - `IconFrameSize`
 - `RgbaImage`
+- `IconImageFitMode`
 
 Dependency direction:
 
@@ -144,6 +156,16 @@ Quality rules:
 - handle alpha through premultiplied-alpha filtering;
 - preserve transparency;
 - write PNG-compressed frames inside ICO if compatible with Windows Explorer.
+
+IC2c source aspect-ratio policy:
+
+- ICO frames are always square.
+- Square sources are resized directly to each target square size.
+- Non-square sources use contain-fit into a transparent square canvas.
+- The source aspect ratio is preserved.
+- The resized content is centered.
+- Padding pixels are transparent RGBA `0,0,0,0`.
+- Cropping/fill modes are not implemented yet.
 
 Implementation preference: avoid third-party conversion libraries if reasonably possible. System Windows/WPF decoders for PNG/JPG/BMP may be acceptable. Resize algorithm and ICO writer should preferably be implemented in project code.
 

@@ -8,12 +8,16 @@ public sealed class IconConversionResult
     private IconConversionResult(
         bool succeeded,
         string? outputPath,
+        int? sourceWidth,
+        int? sourceHeight,
         IReadOnlyList<IconFrameSize> generatedFrameSizes,
         IReadOnlyList<IconConversionError> errors,
         IReadOnlyList<IconConversionError> warnings)
     {
         Succeeded = succeeded;
         OutputPath = outputPath;
+        SourceWidth = sourceWidth;
+        SourceHeight = sourceHeight;
         GeneratedFrameSizes = generatedFrameSizes;
         Errors = errors;
         Warnings = warnings;
@@ -22,6 +26,10 @@ public sealed class IconConversionResult
     public bool Succeeded { get; }
 
     public string? OutputPath { get; }
+
+    public int? SourceWidth { get; }
+
+    public int? SourceHeight { get; }
 
     public IReadOnlyList<IconFrameSize> GeneratedFrameSizes { get; }
 
@@ -32,13 +40,17 @@ public sealed class IconConversionResult
     public static IconConversionResult Success(
         IReadOnlyList<IconFrameSize> generatedFrameSizes,
         string? outputPath = null,
-        IReadOnlyList<IconConversionError>? warnings = null)
+        IReadOnlyList<IconConversionError>? warnings = null,
+        int? sourceWidth = null,
+        int? sourceHeight = null)
     {
         ArgumentNullException.ThrowIfNull(generatedFrameSizes);
 
         return new IconConversionResult(
             true,
             outputPath,
+            sourceWidth,
+            sourceHeight,
             generatedFrameSizes.ToArray(),
             [],
             warnings?.ToArray() ?? []);
@@ -59,9 +71,10 @@ public sealed class IconConversionResult
         return new IconConversionResult(
             false,
             outputPath,
+            null,
+            null,
             [],
             errors.ToArray(),
             warnings?.ToArray() ?? []);
     }
 }
-
