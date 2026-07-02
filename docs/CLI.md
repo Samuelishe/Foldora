@@ -20,7 +20,7 @@ foldora register-menu --host-path "<absolute-path-to-Foldora.MenuHost.exe>"
 foldora unregister-menu
 foldora diagnostics desktop-ini-policy --target "<directory>" --icon "<absolute-icon-path>"
 foldora diagnostics desktop-icon-position --name "<desktop item name>" --x <int> --y <int> [--coordinate-space screen|view]
-foldora convert-icon --input "<image-or-directory>" --output "<ico-or-directory>"
+foldora convert-icon --input "<image-path>" --output "<ico-path>" [--force]
 foldora settings
 ```
 
@@ -43,6 +43,7 @@ foldora settings
 - выполняет `unregister-menu`, удаляя только Foldora-owned HKCU roots;
 - выполняет `diagnostics desktop-ini-policy --target ... --icon ...`, создавая тестовые папки для ручной проверки desktop.ini attribute policies;
 - выполняет `diagnostics desktop-icon-position --name ... --x ... --y ... [--coordinate-space screen|view]`, prototype-попытку переместить уже существующий desktop item;
+- выполняет `convert-icon --input "<image-path>" --output "<ico-path>" [--force]`, конвертируя один PNG/JPG/JPEG/BMP файл в multi-size `.ico`;
 - для неготовых команд пишет понятное skeleton-сообщение;
 
 Ограничения текущего CLI:
@@ -54,7 +55,7 @@ foldora settings
 - Explorer restart и icon cache reset не выполняются.
 - Explorer может не обновить иконку мгновенно из-за кэша.
 - `diagnostics desktop-icon-position` не используется Explorer menu и не получает исходные координаты right-click; это только ручная feasibility-проверка post-create positioning.
-- `convert-icon` пока не реализован. Planned initial shape: `Foldora.Cli.exe convert-icon --input ".\image.png" --output ".\folder.ico"` for PNG/JPG/BMP-to-ICO conversion, with possible later `--force`, directory input/output and `--recursive`.
+- `convert-icon` поддерживает только single-file conversion. Directory input/output, batch conversion, `--recursive`, custom frame sizes/filter/fit flags, SVG and AppData/generated-icon integration пока не реализованы.
 
 Если `--name` не указан или пустой, `menu add` использует первое свободное fallback-имя `Вид N`.
 Если `--folder-name` не указан или пустой, используется `Новая папка`.
@@ -130,31 +131,39 @@ Uninstall по default сохраняет `%AppData%\Foldora`; `-RemoveUserData`
 
 Будущее улучшение: `unregister-menu --dry-run`, который покажет удаляемые Foldora-owned roots без записи в registry и без изменения settings.
 
-## Planned Icon Conversion CLI
+## Icon Conversion CLI
 
-This section is planned, not implemented.
-
-Initial command shape:
+Implemented single-file command:
 
 ```powershell
 Foldora.Cli.exe convert-icon --input ".\image.png" --output ".\folder.ico"
+Foldora.Cli.exe convert-icon --input ".\image.png" --output ".\folder.ico" --force
 ```
 
-Supported phase 1 input formats should match the WPF picker plan:
+Supported input formats:
 
 - `.png`
 - `.jpg`
 - `.jpeg`
 - `.bmp`
 
-Possible later flags:
+Output:
 
-```powershell
-Foldora.Cli.exe convert-icon --input ".\image.png" --output ".\folder.ico" --force
-Foldora.Cli.exe convert-icon --input ".\images" --output ".\icons" --recursive
-```
+- multi-size `.ico`;
+- default frames: `16`, `24`, `32`, `48`, `64`, `128`, `256`;
+- non-square images use contain-fit with transparent padding;
+- output is not overwritten unless `--force` is passed;
+- the command writes to a temporary file in the output directory first, then moves it to the final `.ico` path.
 
-Rationale: test conversion without WPF, support power users, and provide a PowerShell-friendly path for batch conversion before a richer converter window exists. SVG is not part of this initial CLI plan; it remains a separate research topic.
+Not implemented in this CLI step:
+
+- batch/directory conversion;
+- `--recursive`;
+- custom sizes/filter/fit mode flags;
+- SVG;
+- WPF picker auto-conversion;
+- drag image onto icon preview;
+- AppData generated icon storage integration.
 
 ## Diagnostics
 

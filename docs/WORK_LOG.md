@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-02 - IC3 CLI convert-icon command
+
+- Retargeted `Foldora.Cli` to `net10.0-windows` and allowed it to reference `Foldora.Imaging.Windows` for Windows/WPF imaging conversion.
+- Added `convert-icon --input "<image>" --output "<icon.ico>" [--force]` for single-file PNG/JPG/JPEG/BMP to multi-size ICO conversion.
+- Reused `WindowsImageToIconConverter` so CLI output uses standard `16/24/32/48/64/128/256` frames and contain-fit transparent square policy.
+- Added temp-file safe write, overwrite protection without `--force`, parser/help updates and CLI runner tests for success/error paths.
+- No WPF picker integration, drag/drop, converter window, batch/recursive conversion, AppData generated icon storage integration or SVG support was implemented.
+
 ## 2026-07-02 - IC2c image-to-ICO conversion foundation
 
 - Added `WindowsImageToIconConverter` in `src/Foldora.Imaging.Windows` as the Windows-specific stream-based PNG/JPG/BMP-to-ICO conversion service.

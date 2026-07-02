@@ -184,6 +184,65 @@ public sealed class CliCommandParserTests
     }
 
     [Fact]
+    public void Parse_AcceptsConvertIconWithInputAndOutput()
+    {
+        var command = CliCommandParser.Parse(["convert-icon", "--input", @"C:\Images\source.png", "--output", @"C:\Icons\folder.ico"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.ConvertIcon, command.Kind);
+        Assert.Equal(@"C:\Images\source.png", command.InputPath);
+        Assert.Equal(@"C:\Icons\folder.ico", command.OutputPath);
+        Assert.False(command.Force);
+    }
+
+    [Fact]
+    public void Parse_AcceptsConvertIconWithForce()
+    {
+        var command = CliCommandParser.Parse(["convert-icon", "--input", "source.jpg", "--output", "folder.ico", "--force"]);
+
+        Assert.True(command.IsValid);
+        Assert.Equal(CliCommandKind.ConvertIcon, command.Kind);
+        Assert.True(command.Force);
+    }
+
+    [Fact]
+    public void Parse_RejectsConvertIconWithoutInput()
+    {
+        var command = CliCommandParser.Parse(["convert-icon", "--output", "folder.ico"]);
+
+        Assert.False(command.IsValid);
+        Assert.Equal(CliCommandKind.ConvertIcon, command.Kind);
+        Assert.Contains("--input", command.Error);
+    }
+
+    [Fact]
+    public void Parse_RejectsConvertIconWithoutOutput()
+    {
+        var command = CliCommandParser.Parse(["convert-icon", "--input", "source.png"]);
+
+        Assert.False(command.IsValid);
+        Assert.Equal(CliCommandKind.ConvertIcon, command.Kind);
+        Assert.Contains("--output", command.Error);
+    }
+
+    [Fact]
+    public void Parse_RejectsConvertIconUnknownOption()
+    {
+        var command = CliCommandParser.Parse(["convert-icon", "--input", "source.png", "--output", "folder.ico", "--recursive"]);
+
+        Assert.False(command.IsValid);
+        Assert.Equal(CliCommandKind.ConvertIcon, command.Kind);
+        Assert.Contains("Unknown option", command.Error);
+    }
+
+    [Fact]
+    public void HelpText_IncludesConvertIcon()
+    {
+        Assert.Contains("convert-icon --input", CliHelpText.Text);
+        Assert.Contains("convert-icon --input --output [--force]", CliHelpText.Text);
+    }
+
+    [Fact]
     public void Parse_RejectsMenuResetWithoutYes()
     {
         var command = CliCommandParser.Parse(["menu", "reset"]);

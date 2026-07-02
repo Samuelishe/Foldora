@@ -87,9 +87,11 @@
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryValueOperation.cs` - set value operation.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuShellTargetPlaceholder.cs` - documented placeholder policy.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuTargetKind.cs` - Directory/DirectoryBackground target kind.
-- `src/Foldora.Cli/Foldora.Cli.csproj` - console app.
+- `src/Foldora.Cli/Foldora.Cli.csproj` - Windows-targeted console app for manual commands, shell helpers and `convert-icon`.
 - `src/Foldora.Cli/CliCommand.cs` - модель разобранной CLI-команды.
-- `src/Foldora.Cli/CliCommandParser.cs` - простой parser CLI-аргументов, включая `menu reset --yes`, `register-menu --host-path` и diagnostics commands.
+- `src/Foldora.Cli/CliCommandParser.cs` - простой parser CLI-аргументов, включая `menu reset --yes`, `convert-icon`, `register-menu --host-path` и diagnostics commands.
+- `src/Foldora.Cli/CliHelpText.cs` - shared CLI help text used by Program and parser/help tests.
+- `src/Foldora.Cli/ConvertIconCommandRunner.cs` - runner for single-file PNG/JPG/BMP-to-ICO CLI conversion with safe temp-file output.
 - `src/Foldora.Cli/DesktopIniPolicyDiagnosticsRunner.cs` - runner manual diagnostic command для проверки `desktop.ini` attribute policies.
 - `src/Foldora.Cli/DesktopIconPositionDiagnosticsRunner.cs` - runner manual diagnostic command для prototype reposition existing desktop item.
 - `src/Foldora.Cli/Program.cs` - CLI help/dispatch и вызов Core/Shell-сервисов.
@@ -206,6 +208,7 @@
 - `tests/Foldora.Tests/Imaging/RgbaImageResizerTests.cs` - tests for pure resize validation, dimensions, alpha behavior, determinism, edge cases and PNG/ICO compatibility.
 - `tests/Foldora.Tests/Imaging/WindowsImageCodecTests.cs` - Windows imaging decode/PNG encode tests and ICO writer compatibility test.
 - `tests/Foldora.Tests/Imaging/WindowsImageToIconConverterTests.cs` - tests for stream-based PNG/JPG/BMP-to-ICO conversion, custom sizes, contain-fit square frames and stream contracts.
+- `tests/Foldora.Tests/Cli/ConvertIconCommandRunnerTests.cs` - CLI `convert-icon` success/error tests for PNG/JPG/BMP input, overwrite policy, safe output and ICO structure.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryTests.cs` - тесты defaults menu entry.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryActionServiceTests.cs` - тесты apply/create по entry id.
 - `tests/Foldora.Tests/Menu/FolderMenuDraftEditorTests.cs` - тесты staged-save draft editor logic, add/remove и pending icon import.

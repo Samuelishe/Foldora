@@ -4,7 +4,7 @@ Foldora разделена на восемь проектов:
 
 - `Foldora.Core` - доменная логика, модели, settings, AppData paths, desktop.ini, validation и тестируемые filesystem операции.
 - `Foldora.Shell` - Windows Shell integration: HKCU legacy context menu, unregister flow и command line quoting.
-- `Foldora.Cli` - тонкий console интерфейс для команд context menu и ручного запуска.
+- `Foldora.Cli` - Windows-targeted console интерфейс для команд context menu, ручного запуска and single-file icon conversion.
 - `Foldora.MenuHost` - no-console Windows executable для запуска Explorer context menu commands.
 - `Foldora.Imaging` - чистая `net10.0` библиотека foundation for future image-to-ICO conversion: frame metadata, conversion result/options models, RGBA pixel buffer model, alpha-aware resize foundation and ICO container writer.
 - `Foldora.Imaging.Windows` - Windows-specific `net10.0-windows` bridge for PNG/JPG/BMP decode, PNG frame encoding and image-to-ICO conversion composition through WPF imaging APIs.
@@ -14,7 +14,7 @@ Foldora разделена на восемь проектов:
 Зависимости:
 
 - `Foldora.App` -> `Foldora.Core`, `Foldora.Shell`.
-- `Foldora.Cli` -> `Foldora.Core`, `Foldora.Shell`.
+- `Foldora.Cli` -> `Foldora.Core`, `Foldora.Shell`, `Foldora.Imaging.Windows`.
 - `Foldora.MenuHost` -> `Foldora.Core`, `Foldora.Shell`.
 - `Foldora.Imaging` currently has no Foldora project dependencies.
 - `Foldora.Imaging.Windows` -> `Foldora.Imaging`.
@@ -28,7 +28,7 @@ Imaging dependency direction:
 - `Foldora.Imaging` must stay pure `net10.0` and avoid Windows/WPF/App/UI dependencies.
 - `Foldora.Imaging.Windows` isolates Windows/WPF imaging APIs and depends only on `Foldora.Imaging`.
 - `Foldora.App` may use `Foldora.Imaging.Windows` later for picker/drop auto-conversion.
-- `Foldora.Cli` may use `Foldora.Imaging.Windows` later for a future Windows-only `convert-icon` command.
+- `Foldora.Cli` may use `Foldora.Imaging.Windows` for the Windows-only `convert-icon` command.
 - `Foldora.MenuHost` should not need `Foldora.Imaging` or `Foldora.Imaging.Windows`; it should stay focused on already-saved create/apply commands.
 
 Границы: Core не знает о WPF, CLI, registry API и конкретном UI. Registry logic не находится в Core. WPF code-behind используется только для UI plumbing.
@@ -73,6 +73,6 @@ WPF design system foundation находится в `Foldora.App/Resources`. `Des
 
 WPF app icon foundation находится в `Foldora.App/Assets`. `FoldoraIcon.svg` является self-authored source vector for the folded blue/cyan folder mark with a broad light-cyan folded plane, а `Foldora.ico` - generated Windows icon, подключённый как `Foldora.App` `ApplicationIcon` and WPF window icon resource для MainWindow, SettingsWindow and HelpWindow. Это App-layer branding asset; Core/Shell/MenuHost behavior и пользовательские imported menu icons в `%AppData%\Foldora\icons` не меняются.
 
-Image-to-ICO conversion belongs outside Core and MenuHost. IC1 in `Foldora.Imaging` writes ICO containers from already encoded frame payloads. IC2a keeps `Foldora.Imaging` pure and adds `Foldora.Imaging.Windows` for PNG/JPG/JPEG/BMP decode to non-WPF `RgbaImage` and PNG frame payload encoding through WPF imaging APIs. IC2b adds pure alpha-aware `RgbaImageResizer` with Lanczos3-style separable filtering and premultiplied-alpha processing. IC2c adds `WindowsImageToIconConverter`, which composes `WindowsImageDecoder`, `RgbaImageResizer`, `WindowsPngFrameEncoder` and `IcoWriter` into a stream-based PNG/JPG/BMP-to-ICO foundation. Non-square sources use contain-fit into transparent square frames. Future WPF/CLI workflows may call this service, then import or stage the generated `.ico` like a normal menu icon. SVG support remains a separate research topic because WPF is not a complete SVG renderer and full SVG rendering is too large for the first conversion milestone.
+Image-to-ICO conversion belongs outside Core and MenuHost. IC1 in `Foldora.Imaging` writes ICO containers from already encoded frame payloads. IC2a keeps `Foldora.Imaging` pure and adds `Foldora.Imaging.Windows` for PNG/JPG/JPEG/BMP decode to non-WPF `RgbaImage` and PNG frame payload encoding through WPF imaging APIs. IC2b adds pure alpha-aware `RgbaImageResizer` with Lanczos3-style separable filtering and premultiplied-alpha processing. IC2c adds `WindowsImageToIconConverter`, which composes `WindowsImageDecoder`, `RgbaImageResizer`, `WindowsPngFrameEncoder` and `IcoWriter` into a stream-based PNG/JPG/BMP-to-ICO foundation. IC3 wires that service into `Foldora.Cli.exe convert-icon` for one input image file to one multi-size `.ico` output file with `--force` overwrite control and temp-file safe write. Non-square sources use contain-fit into transparent square frames. Future WPF workflows may call the same service, then import or stage the generated `.ico` like a normal menu icon. SVG support remains a separate research topic because WPF is not a complete SVG renderer and full SVG rendering is too large for the first conversion milestone.
 
 WPF startup path не должен блокировать dispatcher синхронным ожиданием async storage. `MainViewModel.CreateDefault()` только собирает сервисы; загрузка settings выполняется в `MainViewModel.LoadAsync`. Startup exceptions обрабатываются в `App.OnStartup`, `DispatcherUnhandledException` и `AppDomain.CurrentDomain.UnhandledException`; минимальный `StartupDiagnosticsService` пишет diagnostic file в `%AppData%\Foldora\Logs\startup-error.log`. Это не полноценный logging framework и не используется для доменной логики.

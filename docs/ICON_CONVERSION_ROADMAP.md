@@ -1,6 +1,6 @@
 # Icon Conversion Roadmap
 
-Этот документ фиксирует будущий план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, IC2a добавляет Windows-specific decode/PNG encode foundation, IC2b добавляет pure alpha-aware resize/downscale foundation, а IC2c связывает эти части в Windows-specific stream-based image-to-ICO conversion service. Converter CLI/UI, drag-and-drop icon replacement, AppData storage integration, pack import/export and repair flows are not implemented yet.
+Этот документ фиксирует план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, IC2a добавляет Windows-specific decode/PNG encode foundation, IC2b добавляет pure alpha-aware resize/downscale foundation, IC2c связывает эти части в Windows-specific stream-based image-to-ICO conversion service, а IC3 добавляет single-file CLI `convert-icon`. WPF picker conversion, drag-and-drop icon replacement, AppData storage integration, batch converter, pack import/export and repair flows are not implemented yet.
 
 ## Current Implementation Status
 
@@ -38,11 +38,20 @@ IC2c implemented:
 - Contain-fit transparent square policy for non-square source images.
 - Tests for standard/custom sizes, stream validation/ownership, source report, alpha, tiny sources and non-square contain-fit behavior.
 
+IC3 implemented:
+
+- `Foldora.Cli.exe convert-icon --input "<image>" --output "<icon.ico>" [--force]`.
+- Single-file PNG/JPG/JPEG/BMP to multi-size ICO conversion through `WindowsImageToIconConverter`.
+- Default frames: `16`, `24`, `32`, `48`, `64`, `128`, `256`.
+- `--force` controls overwrite; without it existing output is rejected.
+- Safe temp-file write before moving to the final `.ico` path.
+- Parser/help/runner tests, file validation tests and manual CLI smoke.
+
 Not implemented yet:
 
 - Automatic WPF picker conversion.
 - Drag image onto preview.
-- CLI `convert-icon`.
+- Batch/directory CLI conversion.
 - Converter window.
 - AppData generated icon storage integration.
 - SVG support.
@@ -217,18 +226,26 @@ Planned capabilities:
 
 Do not build the converter window first. The first milestone should be engine + CLI + picker integration.
 
-## CLI Plan
+## CLI Conversion
 
-Planned command, not implemented:
+Implemented single-file command:
 
 ```powershell
 Foldora.Cli.exe convert-icon --input ".\image.png" --output ".\folder.ico"
+Foldora.Cli.exe convert-icon --input ".\image.png" --output ".\folder.ico" --force
 ```
 
-Possible later flags:
+Current behavior:
+
+- supported input formats: `.png`, `.jpg`, `.jpeg`, `.bmp`;
+- output format: multi-size `.ico`;
+- default frame sizes: `16`, `24`, `32`, `48`, `64`, `128`, `256`;
+- non-square images use contain-fit transparent square frames;
+- output is not overwritten unless `--force` is provided.
+
+Possible later flags/features:
 
 ```powershell
-Foldora.Cli.exe convert-icon --input ".\image.png" --output ".\folder.ico" --force
 Foldora.Cli.exe convert-icon --input ".\images" --output ".\icons" --recursive
 ```
 

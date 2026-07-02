@@ -28,6 +28,7 @@ public static class CliCommandParser
             "apply" => ParseApply(options),
             "create" => ParseCreate(options),
             "clear" => ParseClear(options),
+            "convert-icon" => ParseConvertIcon(args.Skip(1).ToArray()),
             "register-menu" => ParseRegisterMenu(options),
             "unregister-menu" => new CliCommand(CliCommandKind.UnregisterMenu, command),
             "diagnostics" => ParseDiagnostics(args.Skip(1).ToArray()),
@@ -134,6 +135,79 @@ public static class CliCommandParser
             "reset" => ParseMenuReset(options),
             _ => new CliCommand(CliCommandKind.Unknown, $"menu {subcommand}", Error: $"Unknown menu subcommand '{subcommand}'.")
         };
+    }
+
+    private static CliCommand ParseConvertIcon(string[] args)
+    {
+        const string commandName = "convert-icon";
+        string? inputPath = null;
+        string? outputPath = null;
+        var force = false;
+
+        for (var index = 0; index < args.Length; index++)
+        {
+            var option = args[index];
+            if (!option.StartsWith("--", StringComparison.Ordinal))
+            {
+                return new CliCommand(
+                    CliCommandKind.ConvertIcon,
+                    commandName,
+                    Error: $"Unexpected argument '{option}'.");
+            }
+
+            switch (option)
+            {
+                case "--input":
+                    if (index + 1 >= args.Length || args[index + 1].StartsWith("--", StringComparison.Ordinal))
+                    {
+                        return new CliCommand(CliCommandKind.ConvertIcon, commandName, Error: "Missing required option --input.");
+                    }
+
+                    inputPath = args[++index];
+                    break;
+
+                case "--output":
+                    if (index + 1 >= args.Length || args[index + 1].StartsWith("--", StringComparison.Ordinal))
+                    {
+                        return new CliCommand(CliCommandKind.ConvertIcon, commandName, Error: "Missing required option --output.");
+                    }
+
+                    outputPath = args[++index];
+                    break;
+
+                case "--force":
+                    if (index + 1 < args.Length && !args[index + 1].StartsWith("--", StringComparison.Ordinal))
+                    {
+                        return new CliCommand(CliCommandKind.ConvertIcon, commandName, Error: "Option --force does not accept a value.");
+                    }
+
+                    force = true;
+                    break;
+
+                default:
+                    return new CliCommand(
+                        CliCommandKind.ConvertIcon,
+                        commandName,
+                        Error: $"Unknown option '{option}'.");
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(inputPath))
+        {
+            return new CliCommand(CliCommandKind.ConvertIcon, commandName, Error: "Missing required option --input.");
+        }
+
+        if (string.IsNullOrWhiteSpace(outputPath))
+        {
+            return new CliCommand(CliCommandKind.ConvertIcon, commandName, Error: "Missing required option --output.");
+        }
+
+        return new CliCommand(
+            CliCommandKind.ConvertIcon,
+            commandName,
+            InputPath: inputPath,
+            OutputPath: outputPath,
+            Force: force);
     }
 
     private static CliCommand ParseApply(IReadOnlyDictionary<string, string?> options)

@@ -59,6 +59,29 @@ public sealed class ProjectBoundaryTests
         Assert.DoesNotContain("Foldora.Shell", projectText, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    public void CliProject_TargetsWindowsAndMayReferenceWindowsImaging()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var projectFile = Path.Combine(repositoryRoot, "src", "Foldora.Cli", "Foldora.Cli.csproj");
+
+        var projectText = File.ReadAllText(projectFile);
+
+        Assert.Contains("<TargetFramework>net10.0-windows</TargetFramework>", projectText, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("..\\Foldora.Imaging.Windows\\Foldora.Imaging.Windows.csproj", projectText, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void MenuHostProject_DoesNotReferenceImagingProjects()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var projectFile = Path.Combine(repositoryRoot, "src", "Foldora.MenuHost", "Foldora.MenuHost.csproj");
+
+        var projectText = File.ReadAllText(projectFile);
+
+        Assert.DoesNotContain("Foldora.Imaging", projectText, StringComparison.OrdinalIgnoreCase);
+    }
+
     private static string FindRepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
