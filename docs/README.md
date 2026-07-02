@@ -11,7 +11,7 @@
 7. `DESKTOP_INI.md` и `SHELL_INTEGRATION.md` - ключевые Windows-механизмы.
 8. `SMOKE_TEST.md` - ручной checklist проверки MVP на Windows 11.
 9. `TECH_DEBT.md` - known technical debt, accepted limitations and investigation items.
-10. `MENU_MODEL.md`, `PACKS.md`, `SETTINGS.md`, `LOCALIZATION.md`, `CLI.md`, `UI_DESIGN.md`, `UI_AUDIT.md` - пользовательские форматы, интерфейсы и UI/UX audit baseline.
+10. `MENU_MODEL.md`, `PACKS.md`, `SETTINGS.md`, `LOCALIZATION.md`, `CLI.md`, `ICON_CONVERSION_ROADMAP.md`, `UI_DESIGN.md`, `UI_AUDIT.md` - пользовательские форматы, интерфейсы, будущая image-to-ICO roadmap и UI/UX audit baseline.
 11. `RESOURCE_POLICY.md` - правила добавления внешних и self-authored визуальных ресурсов.
 12. `CODING_RULES.md` и `FILE_INDEX.md` - правила разработки и карта файлов.
 
@@ -25,5 +25,6 @@ Per-user install foundation находится в `scripts/install-user.ps1` и 
 Localization foundation описан в `LOCALIZATION.md`: complete/enabled locales `bg`, `cs`, `de`, `en`, `es`, `fr`, `hi`, `hu`, `id`, `it`, `ja`, `ko`, `nl`, `pl`, `pt-BR`, `pt-PT`, `ro`, `ru`, `th`, `tr`, `uk`, `vi`, `zh-Hans`, `zh-Hant`; Settings показывает native names в стабильном English-sort порядке, а смена языка не переводит сохранённые пользовательские menu data.
 Settings/Explorer cleanup: главный WPF экран является focused menu editor, а Explorer integration, installation/path information and danger reset находятся в `SettingsWindow`.
 UI/UX audit baseline находится в `UI_AUDIT.md`: он фиксирует найденные после ручной проверки design debt items и будущие polish passes.
+`ICON_CONVERSION_ROADMAP.md` фиксирует следующий feature priority: image-to-ICO conversion foundation, WPF picker integration, drag image onto preview, converter window, drag-and-drop ordering, pack import/export, diagnostics/repair and later release/install polish.
 
 Research notes находятся в `docs/research/`; текущий документ `docs/research/DESKTOP_ICON_PLACEMENT.md` фиксирует desktop placement spike и не является обещанием production support.

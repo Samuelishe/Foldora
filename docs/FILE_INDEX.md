@@ -209,6 +209,7 @@
 - `docs/PRODUCT_VISION.md` - продуктовая концепция, главный MVP-объект и safety-философия.
 - `docs/UX_FLOW.md` - будущий WPF UX flow, staged-save, input behavior, preview и cleanup controls.
 - `docs/ROADMAP.md` - roadmap.
+- `docs/ICON_CONVERSION_ROADMAP.md` - future feature plan for image-to-ICO conversion, WPF picker/drop integration, converter CLI/UI, generated icon storage, pack import/export, diagnostics/repair and deferred release packaging priority.
 - `docs/WORK_LOG.md` - журнал изменений.
 - `docs/ARCHITECTURE.md` - архитектура.
 - `docs/REQUIREMENTS.md` - требования.

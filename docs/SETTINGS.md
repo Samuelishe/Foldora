@@ -146,3 +146,19 @@ WPF phase 4 меняет `ExplorerIntegrationEnabled` только через я
 `scripts/uninstall-user.ps1` по default также не удаляет `%AppData%\Foldora`. Это важно: уже созданные Foldora folders могут иметь `desktop.ini` со ссылкой на imported `.ico` в `%AppData%\Foldora\icons`. Удаление user data через `scripts/uninstall-user.ps1 -RemoveUserData` может привести к потере custom icons у таких папок.
 
 `%AppData%\Foldora\previews\` зарезервирован на будущее. WPF MVP может показывать `.ico` напрямую и не обязан генерировать preview-файлы.
+
+## Planned Generated Icon Storage
+
+Image-to-ICO conversion is planned but not implemented. Current settings still store normal `.ico` paths in `FolderMenuEntry.IconPath`.
+
+Future conversion/import flows may need clearer storage separation:
+
+```text
+%AppData%\Foldora\icons\imported\
+%AppData%\Foldora\icons\generated\
+%AppData%\Foldora\icons\packs\
+```
+
+Do not change the current storage layout until the conversion/import implementation needs it. The planned behavior is that selecting `.png`, `.jpg`, `.jpeg` or `.bmp` creates a generated multi-size `.ico`, then persists that generated `.ico` path exactly like any other imported icon.
+
+Orphan cleanup is intentionally deferred. It becomes more relevant after auto-conversion, generated icons and pack import/export exist, because replacing/deleting entries and failed conversions can leave unused generated/imported files.

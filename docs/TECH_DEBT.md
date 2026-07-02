@@ -256,6 +256,78 @@
   - `src/Foldora.Core/Menu/IconImportService.cs`
 - Date added: 2026-07-01
 
+## Deferred / Research Items
+
+### TD-IMG-0001 SVG Input Support
+
+- ID: `TD-IMG-0001`
+- Title: SVG input support for icon conversion
+- Status: Deferred / Research
+- Severity: Low
+- Area: Imaging / UX / Resource Policy
+- Observed behavior: Planned image-to-ICO conversion should initially support `.png`, `.jpg`, `.jpeg` and `.bmp`, but not SVG.
+- Expected/desired behavior: If SVG import becomes important, Foldora should support it without pretending WPF is a complete SVG renderer or accepting unknown-license conversion dependencies.
+- Known cause or hypothesis: True SVG rendering without third-party libraries is non-trivial. WPF is not a full SVG renderer, and implementing full SVG manually is too large for the first conversion milestone.
+- Current workaround: Treat SVG as phase 2/research. Users can export SVG to PNG externally before using the planned converter.
+- Next investigation step: Evaluate limited SVG subset, optional dependency after license review, or an explicitly accepted external conversion pipeline.
+- Links to docs/tests/code:
+  - `docs/ICON_CONVERSION_ROADMAP.md`
+  - `docs/RESOURCE_POLICY.md`
+- Date added: 2026-07-02
+
+### TD-IMG-0002 Orphan Imported/Generated Icon Cleanup
+
+- ID: `TD-IMG-0002`
+- Title: Orphan imported/generated icon cleanup
+- Status: Deferred
+- Severity: Low
+- Area: Settings / Storage / Imaging
+- Observed behavior: Current workflow can leave imported `.ico` files under `%AppData%\Foldora\icons` after entry deletion/replacement, but this is not a pressing problem for the current manual icon workflow.
+- Expected/desired behavior: Later, Foldora should be able to identify and clean unused imported/generated icons without deleting icons referenced by existing styled folders or packs.
+- Known cause or hypothesis: Orphan risk increases after auto-conversion, generated icons, failed conversions and pack import/export because Foldora may create more files automatically.
+- Current workaround: Preserve `%AppData%\Foldora` and avoid automatic cleanup.
+- Next investigation step: Revisit after image conversion and pack import/export exist. Consider storage separation such as `icons/imported`, `icons/generated` and `icons/packs`.
+- Links to docs/tests/code:
+  - `docs/ICON_CONVERSION_ROADMAP.md`
+  - `docs/SETTINGS.md`
+- Date added: 2026-07-02
+
+### TD-OPS-0001 Diagnostics And Repair Center
+
+- ID: `TD-OPS-0001`
+- Title: Diagnostics and repair center
+- Status: Deferred
+- Severity: Medium
+- Area: Settings / Shell / Storage / Supportability
+- Observed behavior: Foldora has startup diagnostics and MenuHost placement logs, but no user-facing repair surface for broken install paths, registry mismatch, missing icons or corrupt settings.
+- Expected/desired behavior: Future Settings -> Diagnostics / Repair can check integration state, host path validity, settings parse state, missing icons, stale registry roots, missing AppData icons referenced by `desktop.ini`, and recent MenuHost failures.
+- Known cause or hypothesis: MVP prioritized editor/shell integration and visual polish over support tooling.
+- Current workaround: Manual docs, CLI commands and log inspection.
+- Next investigation step: Design actions such as Check integration, Repair Explorer menu, Disable stale menu, Validate icons, Open logs folder and Open settings file location. Do this after core MVP feature work, not before image conversion.
+- Links to docs/tests/code:
+  - `docs/ICON_CONVERSION_ROADMAP.md`
+  - `docs/SHELL_INTEGRATION.md`
+  - `docs/SETTINGS.md`
+- Date added: 2026-07-02
+
+### TD-UX-0009 Drag-And-Drop Ordering
+
+- ID: `TD-UX-0009`
+- Title: Drag-and-drop ordering for entries and groups
+- Status: Deferred
+- Severity: Low
+- Area: WPF / UX / Menu Model
+- Observed behavior: Current editor supports groups and `SortOrder`, but drag-and-drop ordering is not implemented.
+- Expected/desired behavior: Users should be able to reorder entries within a group, move entries between groups and reorder groups while preserving staged Save/Discard behavior.
+- Known cause or hypothesis: Ordering UX was intentionally deferred until the editor, grouping and icon selection basics were stable.
+- Current workaround: Use current add/edit behavior and existing `SortOrder` persistence.
+- Next investigation step: Prioritize after image conversion and drag image onto preview. Avoid treating current group rename/delete as missing; future group polish is reorder/collapse/duplicate/context-menu work.
+- Links to docs/tests/code:
+  - `docs/ICON_CONVERSION_ROADMAP.md`
+  - `docs/UX_FLOW.md`
+  - `docs/MENU_MODEL.md`
+- Date added: 2026-07-02
+
 ## Do Not Do
 
 - Не обещать создание папки под курсором в текущем MVP.

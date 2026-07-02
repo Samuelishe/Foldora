@@ -73,3 +73,16 @@ The Foldora app icon under `src/Foldora.App/Assets/` is a self-authored folded b
 The README hero image under `docs/assets/readme/foldora-readme-hero.png` is a maintainer-created documentation/presentation mockup screenshot. It is not a runtime Foldora App asset and is not an icon pack. Third-party trademarks or logos that appear inside the mockup remain property of their respective owners and are shown only as contextual examples inside the screenshot/mockup.
 
 For small UI icons, prefer self-authored XAML/vector shapes or documented system UI fonts before adding external icon packs.
+
+## User-Provided And Generated Icons
+
+User-selected icons, future generated ICO files and future `.foldorapack` imports are user-controlled content. Foldora does not claim ownership over icons a user imports, converts or packages.
+
+Generated ICO files derived from user-provided PNG/JPG/BMP images inherit the user's rights and obligations for the source image. Foldora should not present generated output as project-owned assets unless the source image is also a Foldora-owned asset.
+
+Future exported/shared packs should preserve responsibility boundaries:
+
+- user-created packs are user-provided content;
+- bundled official packs, if ever added to the repository, require explicit license review and notices;
+- third-party icons in packs require rights compatible with the intended distribution;
+- pack import/export must not imply that Foldora owns third-party trademarks or icons.

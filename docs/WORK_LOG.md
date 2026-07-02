@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-02 - Future feature planning docs
+
+- Added `docs/ICON_CONVERSION_ROADMAP.md` as the central planning note for image-to-ICO conversion.
+- Captured the next priority order: conversion foundation, WPF picker auto-conversion, drag image onto preview, converter/batch UI, drag-and-drop ordering, pack import/export, diagnostics/repair and later release/install polish.
+- Documented the proposed future `Foldora.Imaging` layer, multi-size ICO output rules, planned `convert-icon` CLI shape, WPF picker/drop flows, generated icon storage considerations, pack import/export concept, orphan cleanup timing and diagnostics/repair scenarios.
+- Kept SVG support as a separate research topic after PNG/JPG/BMP conversion.
+- No production code, WPF/XAML, CLI implementation, csproj, tests, image generation or asset changes were made.
+
 ## 2026-07-02 - README hero image
 
 - Added the maintainer-provided README hero/mockup image to the public GitHub README.

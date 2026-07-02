@@ -157,6 +157,8 @@ Colors
 
 `Без группы` является root-секцией для entries с пустым `GroupName`; она не имеет кнопки удаления группы. Удаление группы в UI удаляет из draft все entries с этим `GroupName`, но не пишет settings и registry до `Сохранить`. Переименование группы обновляет `GroupName` у всех entries этой группы в draft.
 
+Drag-and-drop ordering is an important UX feature after converter work. Planned interactions: reorder entries within a group, move entries between groups, reorder groups, preserve the staged Save/Discard model and likely reuse existing `SortOrder`. Future group polish can add collapse/expand, optional first-class empty groups, duplicate entry/group and group context menus, but current rename/delete group support should not be described as missing.
+
 Схематичный visual reference для этого UX используется только как структура `группа -> элементы`; цвета, размеры, шрифты и грубая геометрия не копируются.
 
 ## Compact/Edit Entry Cards
@@ -212,6 +214,45 @@ Preview generation всё ещё future:
 - не генерировать preview-файлы без необходимости;
 - если WPF preview из `.ico` окажется медленным/нестабильным, добавить отдельный preview generator;
 - preview generator должен хранить ресурсы в `%AppData%\Foldora\previews\`.
+
+## Planned Image Conversion UX
+
+Image-to-ICO conversion is the next planned feature direction, not current behavior. Details live in `docs/ICON_CONVERSION_ROADMAP.md`.
+
+First UX milestone:
+
+```text
+User chooses icon/image file
+  -> .ico uses current import/preview behavior
+  -> .png/.jpg/.jpeg/.bmp auto-converts to generated multi-size .ico
+  -> generated .ico is staged/imported like a normal icon
+  -> preview updates
+  -> Save persists normal IconPath
+```
+
+Future file picker filter:
+
+```text
+Icon/image files (*.ico;*.png;*.jpg;*.jpeg;*.bmp)
+```
+
+Drag image onto icon preview is planned after the conversion foundation:
+
+```text
+Drop .ico/.png/.jpg/.jpeg/.bmp onto entry icon preview
+  -> replace staged/pending icon
+  -> auto-convert if needed
+  -> update preview
+  -> Save persists it
+```
+
+Future converter window is lower priority than engine + CLI + picker integration:
+
+```text
+Tools -> Icon converter
+```
+
+It may later support single-file conversion, batch conversion, output folder choice, generated-size preview, overwrite policy and conversion reports. Do not build this window before the conversion service and picker flow exist.
 
 ## Explorer Integration Controls
 

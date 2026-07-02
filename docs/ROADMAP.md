@@ -74,9 +74,26 @@ Foldora.MenuHost.exe
 - User data remains under `%AppData%\Foldora` and is preserved by uninstall unless `-RemoveUserData` is explicitly used.
 - `Foldora.MenuHost.exe` is a short-lived no-console command host launched by Explorer on user menu clicks; it is not a service, tray app, background helper or autostart process.
 
+## Current Feature Priority
+
+Next planned feature direction is documented in `docs/ICON_CONVERSION_ROADMAP.md`.
+
+Priority order:
+
+1. Image -> ICO conversion foundation.
+2. WPF icon picker integration for PNG/JPG/BMP auto-conversion.
+3. Drag image onto icon preview.
+4. Converter window / batch conversion.
+5. Drag-and-drop ordering.
+6. Pack import/export.
+7. Diagnostics/repair.
+8. Release/install packaging polish.
+
+Release readiness, self-contained zip, installer polish, MSI/MSIX, winget and code signing remain important, but they are intentionally below the next MVP feature work. The next feature should make Foldora easier to use with normal images while still persisting generated `.ico` files for Explorer compatibility.
+
 ## Next Stage
 
-UI/UX audit baseline, correctness cleanup and visual polish:
+Completed UI/UX audit baseline, correctness cleanup and visual polish:
 
 1. UI/UX audit baseline:
    - `docs/UI_AUDIT.md` tracks confirmed design debt from manual inspection.
@@ -115,15 +132,22 @@ UI/UX audit baseline, correctness cleanup and visual polish:
 10. Later layout/localization polish:
    - handle feedback from long labels and non-Latin scripts across enabled locales.
 
-Per-user install smoke and release polish before full installer work:
+Feature work and validation before release packaging polish:
 
-- Manually smoke the SettingsWindow tabbed flow after the cleanup: Application language save, Explorer dirty draft block, enable/disable, technical details, Installation path Open/Copy and Danger reset reload back into MainWindow.
+- Implement image-to-ICO conversion foundation for `.png`, `.jpg`, `.jpeg` and `.bmp`.
+- Integrate conversion into the WPF icon picker while keeping existing `.ico` import behavior.
+- Add drag image onto entry icon preview after the conversion service exists.
+- Add a planned CLI command such as `convert-icon --input ".\image.png" --output ".\folder.ico"` before a richer converter window.
+- Keep SVG support as separate research/future work, not part of the first PNG/JPG/BMP milestone.
+- Add drag-and-drop ordering for entries/groups after conversion UX is stable.
+- Keep pack import/export below converter and drag/drop UX.
+- Keep diagnostics/repair useful but later than the core MVP feature work.
 - Manually verify installed app enables Explorer integration with registry commands pointing to `%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe`.
 - Manually verify published MenuHost desktop-background create near the cursor/menu selection area.
 - If placement fails, inspect `%AppData%\Foldora\Logs\menuhost-placement.log` and use the latest JSONL entry for the next debugging step.
 - Manually spot-check the polished MainWindow/SettingsWindow/HelpWindow in RU/EN first, then German/Portuguese/Ukrainian long labels and Hindi/Thai/CJK font fallback as feedback-driven layout checks.
 - Define manual smoke coverage for auto-arrange icons, align-to-grid, multi-monitor, DPI scaling and Explorer restart.
-- Keep MSI/MSIX/winget/code signing as later work after the per-user layout is proven.
+- Keep MSI/MSIX/winget/code signing as later work after more MVP features are proven.
 
 ## Known MVP Limitations
 
@@ -133,11 +157,11 @@ Per-user install smoke and release polish before full installer work:
 - No MSI/MSIX installer yet.
 - No Program Files layout, winget package or code signing yet.
 - No pack import/export yet.
-- No PNG-to-ICO conversion.
+- No PNG/JPG/BMP-to-ICO conversion yet.
 - No full nested tree storage/runtime beyond one-level `GroupName`.
 - No drag-and-drop group ordering.
 - No group icons.
-- No orphan icon cleanup for imported `.ico`.
+- No orphan icon cleanup for imported/generated `.ico`; this becomes more important after auto-conversion and pack import/export.
 - No user-facing diagnostics for `Foldora.MenuHost.exe` failures launched from Explorer.
 - First-created desktop folder default-icon timing is currently not reproduced; tracked as `TD-0002` monitor item.
 - WPF catalog expansion is complete for `bg`, `cs`, `de`, `en`, `es`, `fr`, `hi`, `hu`, `id`, `it`, `ja`, `ko`, `nl`, `pl`, `pt-BR`, `pt-PT`, `ro`, `ru`, `th`, `tr`, `uk`, `vi`, `zh-Hans`, `zh-Hant`; CLI defaults/diagnostics/validation output and startup fatal dialog remain tracked debt.
@@ -146,17 +170,21 @@ Per-user install smoke and release polish before full installer work:
 
 ## Future
 
-- MSI/MSIX or winget after stable per-user install layout.
+- MSI/MSIX or winget after stable per-user install layout and more MVP feature work.
 - Modern Windows 11 context menu research.
 - Future regional candidate locale catalogs (`be`, `kk`, `uz-Latn`, `az`, `hy`, `ka`, `lt`, `lv`, `et`, `sk`, `sl`, `hr`, `sr`) after enabled catalog quality is reviewed.
 - Exact original right-click coordinate source research, if best-effort placement is not enough.
 - Modern `IExplorerCommand` research for advanced shell integration.
 - Optional Shell refresh notification investigation for desktop.ini apply/create timing, only if `TD-0002` is reproduced again and scoped.
 - Full tree menu runtime/storage beyond current one-level groups.
+- Image-to-ICO conversion for `.png`, `.jpg`, `.jpeg` and `.bmp`.
+- WPF icon picker auto-conversion for supported image formats.
+- Drag image onto entry icon preview.
+- Converter CLI/window and batch conversion.
 - Drag-and-drop ordering.
 - Group icons.
 - Pack import/export.
-- PNG-to-ICO conversion.
+- SVG support research as a separate later topic.
 - Preview generation/cache if direct `.ico` preview becomes insufficient.
 - Orphan icon cleanup.
 - Optional repair/normalize command only if old `System`-attribute folders become a real user need.

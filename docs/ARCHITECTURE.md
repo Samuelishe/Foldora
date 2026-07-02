@@ -9,6 +9,10 @@ Foldora разделена на шесть проектов:
 - `Foldora.App` - WPF-приложение настроек.
 - `Foldora.Tests` - unit-тесты Core и Shell.
 
+Будущая image conversion feature может добавить седьмой проект:
+
+- `Foldora.Imaging` - planned image-to-ICO layer for decode orchestration, high-quality resizing, ICO writing and conversion reporting. Проект не существует сейчас; proposal подробно описан в `docs/ICON_CONVERSION_ROADMAP.md`.
+
 Зависимости:
 
 - `Foldora.App` -> `Foldora.Core`, `Foldora.Shell`.
@@ -17,6 +21,14 @@ Foldora разделена на шесть проектов:
 - `Foldora.Shell` -> `Foldora.Core`.
 - `Foldora.Tests` -> `Foldora.Core`, `Foldora.Shell`, `Foldora.Cli`, `Foldora.App`, `Foldora.MenuHost`.
 - `Foldora.Core` не зависит от других проектов Foldora.
+
+Planned imaging dependency direction:
+
+- `Foldora.Core` must not depend on future `Foldora.Imaging`.
+- `Foldora.Imaging` should avoid App/UI dependencies.
+- `Foldora.App` may use `Foldora.Imaging` for picker/drop auto-conversion.
+- `Foldora.Cli` may use `Foldora.Imaging` for a future `convert-icon` command.
+- `Foldora.MenuHost` should not need `Foldora.Imaging`; it should stay focused on already-saved create/apply commands.
 
 Границы: Core не знает о WPF, CLI, registry API и конкретном UI. Registry logic не находится в Core. WPF code-behind используется только для UI plumbing.
 
@@ -59,5 +71,7 @@ WPF shell/settings foundation добавляет custom window chrome через
 WPF design system foundation находится в `Foldora.App/Resources`. `DesignTokens.xaml` задаёт semantic palette, brushes, spacing/radius/control-size tokens; `Typography.xaml` задаёт reusable text styles; `Controls.xaml` задаёт reusable control/container styles. Окна должны ссылаться на semantic resources, а будущая dark theme должна заменять semantic brushes, не копируя layout.
 
 WPF app icon foundation находится в `Foldora.App/Assets`. `FoldoraIcon.svg` является self-authored source vector for the folded blue/cyan folder mark with a broad light-cyan folded plane, а `Foldora.ico` - generated Windows icon, подключённый как `Foldora.App` `ApplicationIcon` and WPF window icon resource для MainWindow, SettingsWindow and HelpWindow. Это App-layer branding asset; Core/Shell/MenuHost behavior и пользовательские imported menu icons в `%AppData%\Foldora\icons` не меняются.
+
+Planned image-to-ICO conversion belongs outside Core and MenuHost. Future WPF/CLI workflows may accept `.png`, `.jpg`, `.jpeg` and `.bmp`, convert each source into a multi-size `.ico`, then import or stage the generated `.ico` like a normal menu icon. SVG support remains a separate research topic because WPF is not a complete SVG renderer and full SVG rendering is too large for the first conversion milestone.
 
 WPF startup path не должен блокировать dispatcher синхронным ожиданием async storage. `MainViewModel.CreateDefault()` только собирает сервисы; загрузка settings выполняется в `MainViewModel.LoadAsync`. Startup exceptions обрабатываются в `App.OnStartup`, `DispatcherUnhandledException` и `AppDomain.CurrentDomain.UnhandledException`; минимальный `StartupDiagnosticsService` пишет diagnostic file в `%AppData%\Foldora\Logs\startup-error.log`. Это не полноценный logging framework и не используется для доменной логики.
