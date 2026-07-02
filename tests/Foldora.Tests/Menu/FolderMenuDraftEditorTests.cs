@@ -628,6 +628,219 @@ public sealed class FolderMenuDraftEditorTests
         }
     }
 
+    [Fact]
+    public async Task ReorderEntry_MovesEntryUpwardInsideSameGroupAndNormalizesSortOrder()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(
+                paths,
+                false,
+                "Создать папку",
+                CreateEntry("entry-one", "Один", "Один", true, sortOrder: 0),
+                CreateEntry("entry-two", "Два", "Два", true, sortOrder: 10),
+                CreateEntry("entry-three", "Три", "Три", true, sortOrder: 20));
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var reordered = editor.ReorderEntry("entry-three", "entry-one", insertAfterTarget: false);
+
+            Assert.True(reordered);
+            Assert.Equal(["entry-three", "entry-one", "entry-two"], editor.Entries.Select(entry => entry.Id).ToArray());
+            Assert.Equal([0, 1, 2], editor.Entries.Select(entry => entry.SortOrder).ToArray());
+            Assert.True(editor.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ReorderEntry_MovesEntryDownwardInsideSameGroupAndNormalizesSortOrder()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(
+                paths,
+                false,
+                "Создать папку",
+                CreateEntry("entry-one", "Один", "Один", true, sortOrder: 0),
+                CreateEntry("entry-two", "Два", "Два", true, sortOrder: 1),
+                CreateEntry("entry-three", "Три", "Три", true, sortOrder: 2));
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var reordered = editor.ReorderEntry("entry-one", "entry-three", insertAfterTarget: true);
+
+            Assert.True(reordered);
+            Assert.Equal(["entry-two", "entry-three", "entry-one"], editor.Entries.Select(entry => entry.Id).ToArray());
+            Assert.Equal([0, 1, 2], editor.Entries.Select(entry => entry.SortOrder).ToArray());
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ReorderEntry_HandlesFirstLastEdges()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(
+                paths,
+                false,
+                "Создать папку",
+                CreateEntry("entry-one", "Один", "Один", true, sortOrder: 0),
+                CreateEntry("entry-two", "Два", "Два", true, sortOrder: 1),
+                CreateEntry("entry-three", "Три", "Три", true, sortOrder: 2));
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            Assert.True(editor.ReorderEntry("entry-one", "entry-three", insertAfterTarget: true));
+            Assert.Equal(["entry-two", "entry-three", "entry-one"], editor.Entries.Select(entry => entry.Id).ToArray());
+
+            Assert.True(editor.ReorderEntry("entry-one", "entry-two", insertAfterTarget: false));
+            Assert.Equal(["entry-one", "entry-two", "entry-three"], editor.Entries.Select(entry => entry.Id).ToArray());
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ReorderEntry_OntoItselfLeavesDraftStable()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            await SaveSettingsAsync(
+                paths,
+                false,
+                "Создать папку",
+                CreateEntry("entry-one", "Один", "Один", true, sortOrder: 0),
+                CreateEntry("entry-two", "Два", "Два", true, sortOrder: 1));
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var reordered = editor.ReorderEntry("entry-one", "entry-one", insertAfterTarget: true);
+
+            Assert.False(reordered);
+            Assert.Equal(["entry-one", "entry-two"], editor.Entries.Select(entry => entry.Id).ToArray());
+            Assert.Equal([0, 1], editor.Entries.Select(entry => entry.SortOrder).ToArray());
+            Assert.False(editor.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ReorderEntry_PreservesEntryFields()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            var source = CreateEntry("entry-one", "Один", "Папка один", false, sortOrder: 0);
+            source.GroupName = "Группа";
+            var target = CreateEntry("entry-two", "Два", "Папка два", true, sortOrder: 1);
+            target.GroupName = "Группа";
+            await SaveSettingsAsync(paths, false, "Создать папку", source, target);
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+            var originalIconPath = editor.Entries[0].IconPath;
+
+            editor.ReorderEntry("entry-one", "entry-two", insertAfterTarget: true);
+
+            var moved = editor.Entries[1];
+            Assert.Equal("entry-one", moved.Id);
+            Assert.Equal("Один", moved.DisplayName);
+            Assert.Equal("Папка один", moved.DefaultFolderName);
+            Assert.Equal("Группа", moved.GroupName);
+            Assert.Equal(originalIconPath, moved.IconPath);
+            Assert.False(moved.IsEnabled);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ReorderEntry_PreservesOtherGroupEntrySlots()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            var first = CreateEntry("entry-one", "Один", "Один", true, sortOrder: 0);
+            first.GroupName = "Первая";
+            var other = CreateEntry("entry-other", "Другой", "Другой", true, sortOrder: 1);
+            other.GroupName = "Вторая";
+            var second = CreateEntry("entry-two", "Два", "Два", true, sortOrder: 2);
+            second.GroupName = "Первая";
+            await SaveSettingsAsync(paths, false, "Создать папку", first, other, second);
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var reordered = editor.ReorderEntry("entry-two", "entry-one", insertAfterTarget: false);
+
+            Assert.True(reordered);
+            Assert.Equal(["entry-two", "entry-other", "entry-one"], editor.Entries.Select(entry => entry.Id).ToArray());
+            Assert.Equal("Вторая", editor.Entries[1].GroupName);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ReorderEntry_DoesNotMoveEntryAcrossGroups()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            var first = CreateEntry("entry-one", "Один", "Один", true, sortOrder: 0);
+            first.GroupName = "Первая";
+            var second = CreateEntry("entry-two", "Два", "Два", true, sortOrder: 1);
+            second.GroupName = "Вторая";
+            await SaveSettingsAsync(paths, false, "Создать папку", first, second);
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var reordered = editor.ReorderEntry("entry-one", "entry-two", insertAfterTarget: true);
+
+            Assert.False(reordered);
+            Assert.Equal(["entry-one", "entry-two"], editor.Entries.Select(entry => entry.Id).ToArray());
+            Assert.Equal(["Первая", "Вторая"], editor.Entries.Select(entry => entry.GroupName).ToArray());
+            Assert.False(editor.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
     private static FolderMenuDraftEditor CreateEditor(string root)
     {
         return CreateEditor(CreatePaths(root));
@@ -670,7 +883,8 @@ public sealed class FolderMenuDraftEditorTests
         string id,
         string displayName,
         string defaultFolderName,
-        bool isEnabled)
+        bool isEnabled,
+        int sortOrder = 0)
     {
         return new FolderMenuEntry
         {
@@ -678,7 +892,8 @@ public sealed class FolderMenuDraftEditorTests
             DisplayName = displayName,
             DefaultFolderName = defaultFolderName,
             IconPath = $@"C:\Foldora\icons\{id}.ico",
-            IsEnabled = isEnabled
+            IsEnabled = isEnabled,
+            SortOrder = sortOrder
         };
     }
 }

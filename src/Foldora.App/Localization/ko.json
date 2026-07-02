@@ -34,6 +34,7 @@
   "EntryGroupHelp": "비워 두면 항목이 루트 메뉴에 배치됩니다.",
   "EntryGroupName": "그룹:",
   "EntryIcon": "아이콘:",
+  "EntryDragHandleTooltip": "드래그하여 순서 변경",
   "EntryRemovedDraft": "항목이 초안에서 제거되었습니다. 파일과 설정은 저장할 때만 변경됩니다.",
   "ExplorerActionsApplyImmediately": "Explorer 메뉴 동작은 즉시 적용되며 언어 설정 저장과 별개입니다.",
   "ExplorerDisabled": "사용 안 함",

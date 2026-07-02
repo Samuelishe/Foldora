@@ -34,6 +34,7 @@
   "EntryGroupHelp": "留空可将项目放在根菜单中。",
   "EntryGroupName": "组：",
   "EntryIcon": "图标：",
+  "EntryDragHandleTooltip": "拖曳以重新排序",
   "EntryRemovedDraft": "项目已从草稿中移除。文件和设置只会在保存后更改。",
   "ExplorerActionsApplyImmediately": "檔案總管選單動作會立即套用，不會與語言設定一起暫存。",
   "ExplorerDisabled": "已禁用",

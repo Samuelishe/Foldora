@@ -1,5 +1,12 @@
 # Work Log
 
+## 2026-07-02 - IC5a WPF entry ordering
+
+- Implemented IC5a entry ordering: entries can be reordered from a drag handle in the WPF editor while preserving staged Save/Discard behavior.
+- Reorder is currently scoped to entries inside the current group; cross-group moves and group/block ordering remain deferred.
+- Added internal-only entry drag/drop behavior separate from icon preview file drop, plus Core/ViewModel tests for reorder, no-op, invalid id, Save and Discard behavior.
+- No converter window, batch conversion, SVG support, pack import/export, generated icon cleanup, settings schema changes or registry behavior changes were implemented.
+
 ## 2026-07-02 - IC4b icon preview drop support
 
 - Implemented drag/drop replacement on entry icon previews for exactly one `.ico`, `.png`, `.jpg`, `.jpeg` or `.bmp` file.

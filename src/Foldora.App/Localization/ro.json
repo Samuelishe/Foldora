@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Leave empty to place the entry in the root menu.",
   "EntryGroupName": "Group:",
   "EntryIcon": "Pictogramă:",
+  "EntryDragHandleTooltip": "Trageți pentru a reordona",
   "EntryRemovedDraft": "Entry removed from the draft. Files and settings change only after save.",
   "ExplorerActionsApplyImmediately": "Acțiunile meniului Explorer se aplică imediat și nu sunt salvate împreună cu limba.",
   "ExplorerDisabled": "Disabled",

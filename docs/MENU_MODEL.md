@@ -12,7 +12,7 @@ Foldora не запрещает пользователю делать стран
 - `GroupName` - optional visible name одноуровневой группы/submenu.
 - `IconPath` - копия `.ico` внутри `%AppData%\Foldora\icons`.
 - `PreviewPath` - optional/future preview.
-- `SortOrder` - порядок пункта.
+- `SortOrder` - порядок пункта. WPF drag-handle reorder внутри текущей группы нормализует его в draft в детерминированные значения `0..N-1`.
 - `IsEnabled` - скрыть пункт без удаления.
 
 `DisplayName`, `DefaultFolderName` и `GroupName` не смешиваются. `DisplayName` и `GroupName` нельзя использовать как id, имя файла или registry key. Дубликаты `DisplayName` и одинаковые `GroupName` разрешены.
@@ -132,6 +132,8 @@ WPF может показывать entries как visual group containers `Бе
 `Без группы` - root-section для entries с empty/whitespace `GroupName`, не удаляемая group entity. Удаление non-empty group в UI означает staged удаление всех entries с этим `GroupName`. Переименование group container означает staged обновление `GroupName` у всех entries этой группы.
 
 Entry count в header group container является presentation state. Он вычисляется из entries и не сохраняется в Core model или `settings.json`.
+
+Порядок entries контролируется `SortOrder`. WPF editor в IC5a позволяет перетаскивать entry за drag handle внутри текущей группы; операция меняет только staged draft, переставляет entries в draft list и нормализует `SortOrder` без добавления новых persisted fields. `Save` сохраняет новый порядок, `Discard`/reload возвращает последний saved order. Группы остаются одноуровневыми и по-прежнему выводятся из `GroupName`; cross-group drag/drop moves and full group/block ordering deferred до более ясной semantics group ordering.
 
 Full tree storage остаётся future:
 

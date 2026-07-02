@@ -38,6 +38,7 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string EntryGroupHelp => Get();
     public string EntryEnabled => Get();
     public string EntryIcon => Get();
+    public string EntryDragHandleTooltip => Get();
     public string ChooseIcon => Get();
     public string Delete => Get();
     public string Edit => Get();

@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Deixe vazio para colocar o item no menu raiz.",
   "EntryGroupName": "Grupo:",
   "EntryIcon": "Ícone:",
+  "EntryDragHandleTooltip": "Arraste para reordenar",
   "EntryRemovedDraft": "Item removido do rascunho. Arquivos e configurações só mudam ao salvar.",
   "ExplorerActionsApplyImmediately": "Ações do menu do Explorer são aplicadas imediatamente e não ficam pendentes com o idioma.",
   "ExplorerDisabled": "Desativado",

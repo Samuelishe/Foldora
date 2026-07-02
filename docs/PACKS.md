@@ -25,7 +25,7 @@
 }
 ```
 
-Pack import/export пока не реализован. Icon packs являются будущей возможностью обмена и распространения наборов entries, а не основой текущего MVP. Текущий priority ниже image-to-ICO conversion, WPF picker/drop integration and drag-and-drop ordering; подробный порядок зафиксирован в `ICON_CONVERSION_ROADMAP.md`.
+Pack import/export пока не реализован. Icon packs являются будущей возможностью обмена и распространения наборов entries, а не основой текущего MVP. Текущий priority ниже image-to-ICO conversion, WPF picker/drop integration, same-group entry reorder and deeper ordering work; подробный порядок зафиксирован в `ICON_CONVERSION_ROADMAP.md`.
 
 Иконки должны быть настоящими `.ico`, а не переименованными PNG. Для MVP используются абсолютные пути в AppData.
 

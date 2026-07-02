@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Lascia vuoto per mettere la voce nel menu principale.",
   "EntryGroupName": "Gruppo:",
   "EntryIcon": "Icona:",
+  "EntryDragHandleTooltip": "Trascina per riordinare",
   "EntryRemovedDraft": "Entry removed from the draft. Files and settings change only after save.",
   "ExplorerActionsApplyImmediately": "Le azioni del menu di Explorer vengono applicate subito e non sono salvate insieme alla lingua.",
   "ExplorerDisabled": "Disabilitato",

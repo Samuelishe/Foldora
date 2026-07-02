@@ -319,7 +319,9 @@
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <Border Style="{StaticResource CardContainerStyle}"
-                                                            ToolTip="{Binding Id}">
+                                                            ToolTip="{Binding Id}"
+                                                            behaviors:EntryReorderDragDropBehavior.DropEntryId="{Binding Id}"
+                                                            behaviors:EntryReorderDragDropBehavior.ReorderCommand="{Binding DataContext.ReorderEntryCommand, RelativeSource={RelativeSource AncestorType=Window}}">
                                                         <StackPanel>
                                                             <Grid>
                                                                 <Grid.Style>
@@ -333,12 +335,28 @@
                                                                     </Style>
                                                                 </Grid.Style>
                                                                 <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="28" />
                                                                     <ColumnDefinition Width="64" />
                                                                     <ColumnDefinition Width="*" />
                                                                     <ColumnDefinition Width="Auto" />
                                                                 </Grid.ColumnDefinitions>
 
                                                                 <Border Grid.Column="0"
+                                                                        Width="22"
+                                                                        Height="44"
+                                                                        Margin="0,0,6,0"
+                                                                        Background="Transparent"
+                                                                        Cursor="SizeAll"
+                                                                        ToolTip="{Binding DataContext.L.EntryDragHandleTooltip, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                        behaviors:EntryReorderDragDropBehavior.DragEntryId="{Binding Id}">
+                                                                    <TextBlock Text="⋮⋮"
+                                                                               Style="{StaticResource CaptionTextStyle}"
+                                                                               FontSize="18"
+                                                                               HorizontalAlignment="Center"
+                                                                               VerticalAlignment="Center" />
+                                                                </Border>
+
+                                                                <Border Grid.Column="1"
                                                                         Style="{StaticResource PreviewBoxStyle}"
                                                                         ToolTip="{Binding DataContext.L.IconDropTooltip, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                         behaviors:FileDropBehavior.Command="{Binding DropIconFilesCommand}">
@@ -348,7 +366,7 @@
                                                                            Stretch="Uniform" />
                                                                 </Border>
 
-                                                                <StackPanel Grid.Column="1"
+                                                                <StackPanel Grid.Column="2"
                                                                             VerticalAlignment="Center">
                                                                     <TextBlock Text="{Binding CompactTitle}"
                                                                                Style="{StaticResource GroupTitleTextStyle}"
@@ -369,7 +387,7 @@
                                                                                Margin="0,4,0,0" />
                                                                 </StackPanel>
 
-                                                                <StackPanel Grid.Column="2"
+                                                                <StackPanel Grid.Column="3"
                                                                             Orientation="Horizontal"
                                                                             VerticalAlignment="Center"
                                                                             Margin="14,0,0,0">
@@ -400,11 +418,27 @@
                                                                     </Style>
                                                                 </Grid.Style>
                                                                 <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="28" />
                                                                     <ColumnDefinition Width="64" />
                                                                     <ColumnDefinition Width="*" />
                                                                 </Grid.ColumnDefinitions>
 
                                                                 <Border Grid.Column="0"
+                                                                        Width="22"
+                                                                        Height="44"
+                                                                        Margin="0,0,6,0"
+                                                                        Background="Transparent"
+                                                                        Cursor="SizeAll"
+                                                                        ToolTip="{Binding DataContext.L.EntryDragHandleTooltip, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                        behaviors:EntryReorderDragDropBehavior.DragEntryId="{Binding Id}">
+                                                                    <TextBlock Text="⋮⋮"
+                                                                               Style="{StaticResource CaptionTextStyle}"
+                                                                               FontSize="18"
+                                                                               HorizontalAlignment="Center"
+                                                                               VerticalAlignment="Center" />
+                                                                </Border>
+
+                                                                <Border Grid.Column="1"
                                                                         Style="{StaticResource PreviewBoxStyle}"
                                                                         ToolTip="{Binding DataContext.L.IconDropTooltip, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                         behaviors:FileDropBehavior.Command="{Binding DropIconFilesCommand}">
@@ -414,7 +448,7 @@
                                                                            Stretch="Uniform" />
                                                                 </Border>
 
-                                                                <StackPanel Grid.Column="1">
+                                                                <StackPanel Grid.Column="2">
                                                                     <Grid>
                                                                         <Grid.RowDefinitions>
                                                                             <RowDefinition Height="Auto" />

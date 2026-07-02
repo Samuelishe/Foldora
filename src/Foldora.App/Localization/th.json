@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Leave empty to place the entry in the root menu.",
   "EntryGroupName": "กลุ่ม:",
   "EntryIcon": "ไอคอน:",
+  "EntryDragHandleTooltip": "ลากเพื่อจัดลำดับใหม่",
   "EntryRemovedDraft": "Entry removed from the draft. Files and settings change only after save.",
   "ExplorerActionsApplyImmediately": "การกระทำเมนู Explorer มีผลทันที และไม่ถูกพักไว้กับการตั้งค่าภาษา",
   "ExplorerDisabled": "ปิดใช้",

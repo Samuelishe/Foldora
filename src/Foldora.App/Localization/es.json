@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Déjalo vacío para colocar la entrada en el menú principal.",
   "EntryGroupName": "Grupo:",
   "EntryIcon": "Icono:",
+  "EntryDragHandleTooltip": "Arrastra para cambiar el orden",
   "EntryRemovedDraft": "Entrada eliminada del borrador. Los archivos y la configuración solo cambiarán al guardar.",
   "ExplorerActionsApplyImmediately": "Las acciones del menú del Explorador se aplican de inmediato y no forman parte del guardado del idioma.",
   "ExplorerDisabled": "Desactivado",

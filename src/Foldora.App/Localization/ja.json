@@ -34,6 +34,7 @@
   "EntryGroupHelp": "空のままにすると項目はルートメニューに置かれます。",
   "EntryGroupName": "グループ:",
   "EntryIcon": "アイコン:",
+  "EntryDragHandleTooltip": "ドラッグして並べ替え",
   "EntryRemovedDraft": "項目を下書きから削除しました。ファイルと設定は保存時にのみ変更されます。",
   "ExplorerActionsApplyImmediately": "Explorer メニュー操作はすぐに適用され、言語設定の保存とは別です。",
   "ExplorerDisabled": "無効",

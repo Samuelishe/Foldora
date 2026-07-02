@@ -107,6 +107,61 @@ public sealed class FolderMenuDraftEditor
         return true;
     }
 
+    public bool ReorderEntry(string sourceEntryId, string targetEntryId, bool insertAfterTarget)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(sourceEntryId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(targetEntryId);
+
+        if (string.Equals(sourceEntryId, targetEntryId, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var sourceEntry = Entries.FirstOrDefault(entry => string.Equals(entry.Id, sourceEntryId, StringComparison.OrdinalIgnoreCase));
+        var targetEntry = Entries.FirstOrDefault(entry => string.Equals(entry.Id, targetEntryId, StringComparison.OrdinalIgnoreCase));
+        if (sourceEntry is null || targetEntry is null)
+        {
+            return false;
+        }
+
+        var sourceGroupName = NormalizeGroupName(sourceEntry.GroupName);
+        if (!string.Equals(sourceGroupName, NormalizeGroupName(targetEntry.GroupName), StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var orderedEntries = Entries
+            .OrderBy(entry => entry.SortOrder)
+            .ThenBy(entry => entry.Id, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var groupEntries = orderedEntries
+            .Where(entry => string.Equals(NormalizeGroupName(entry.GroupName), sourceGroupName, StringComparison.Ordinal))
+            .ToList();
+        groupEntries.Remove(sourceEntry);
+
+        var targetIndex = groupEntries.IndexOf(targetEntry);
+        if (targetIndex < 0)
+        {
+            return false;
+        }
+
+        var insertionIndex = insertAfterTarget ? targetIndex + 1 : targetIndex;
+        groupEntries.Insert(insertionIndex, sourceEntry);
+
+        var reorderedGroupEntryIndex = 0;
+        Entries.Clear();
+        foreach (var entry in orderedEntries)
+        {
+            Entries.Add(string.Equals(NormalizeGroupName(entry.GroupName), sourceGroupName, StringComparison.Ordinal)
+                ? groupEntries[reorderedGroupEntryIndex++]
+                : entry);
+        }
+
+        NormalizeSortOrder();
+        return true;
+    }
+
     public FolderMenuValidationResult SetPendingIconSource(string entryId, string sourceIconPath, bool importOnSave = true)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(entryId);
@@ -287,6 +342,19 @@ public sealed class FolderMenuDraftEditor
             .OrderBy(entry => entry.SortOrder)
             .ThenBy(entry => entry.Id, StringComparer.OrdinalIgnoreCase)
             .ToArray();
+    }
+
+    private void NormalizeSortOrder()
+    {
+        for (var index = 0; index < Entries.Count; index++)
+        {
+            Entries[index].SortOrder = index;
+        }
+    }
+
+    private static string NormalizeGroupName(string? groupName)
+    {
+        return string.IsNullOrWhiteSpace(groupName) ? string.Empty : groupName.Trim();
     }
 
     private static string CreateEntryId()

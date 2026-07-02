@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Leer lassen, um den Eintrag im Hauptmenü zu platzieren.",
   "EntryGroupName": "Gruppe:",
   "EntryIcon": "Symbol:",
+  "EntryDragHandleTooltip": "Ziehen, um die Reihenfolge zu ändern",
   "EntryRemovedDraft": "Eintrag aus dem Entwurf entfernt. Dateien und Einstellungen ändern sich erst beim Speichern.",
   "ExplorerActionsApplyImmediately": "Explorer-Menüaktionen werden sofort angewendet und nicht mit den Spracheinstellungen zwischengespeichert.",
   "ExplorerDisabled": "Deaktiviert",

@@ -69,6 +69,7 @@ Selecting an entry creates a folder and applies its icon through `desktop.ini`.
 - Compact/edit cards for entries and groups.
 - Add/remove menu entries.
 - One-level grouping through `GroupName`.
+- Drag-handle reordering within the current group.
 - User-editable menu title, entry label, created folder name and enabled state.
 - Staged save: changes are not written until `Save`.
 - `.ico` import into `%AppData%\Foldora\icons\`.
@@ -239,7 +240,7 @@ Foldora is an early MVP / work-in-progress project. It is usable for local testi
 - No Program Files layout, code signing, winget package or stable release packaging yet.
 - No icon pack import/export yet.
 - No full nested tree storage beyond the current one-level `GroupName`.
-- No drag-and-drop ordering or group icons yet.
+- No cross-group drag-and-drop moves, group/block ordering or group icons yet.
 - No orphan icon cleanup yet.
 - No user-facing diagnostics if `Foldora.MenuHost.exe` fails when invoked by Explorer.
 - Localization debt remains for CLI diagnostics/validation output, startup fatal errors and external translation review; WPF catalogs are complete for the enabled locales.

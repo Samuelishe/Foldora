@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Leave empty to place the entry in the root menu.",
   "EntryGroupName": "Group:",
   "EntryIcon": "Икона:",
+  "EntryDragHandleTooltip": "Плъзнете, за да промените реда",
   "EntryRemovedDraft": "Entry removed from the draft. Files and settings change only after save.",
   "ExplorerActionsApplyImmediately": "Действията за менюто на Explorer се прилагат веднага и не са част от записването на езика.",
   "ExplorerDisabled": "Disabled",

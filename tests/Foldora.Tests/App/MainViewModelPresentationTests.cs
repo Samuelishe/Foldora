@@ -1,4 +1,5 @@
 using Foldora.App.Services;
+using Foldora.App.Behaviors;
 using Foldora.App.ViewModels;
 using Foldora.Core.Menu;
 using Foldora.Core.Settings;
@@ -964,6 +965,162 @@ public sealed class MainViewModelPresentationTests
             Assert.StartsWith(Path.GetFullPath(paths.IconsDirectory), Path.GetFullPath(savedIconPath), StringComparison.OrdinalIgnoreCase);
             Assert.True(File.Exists(savedIconPath));
             Assert.Empty(viewModel.Errors);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ReorderEntryCommand_UpdatesObservableOrderWithinGroup()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var first = CreateEntry("entry-one", "Один");
+            first.SortOrder = 0;
+            var second = CreateEntry("entry-two", "Два");
+            second.SortOrder = 1;
+            var third = CreateEntry("entry-three", "Три");
+            third.SortOrder = 2;
+            await SaveSettingsAsync(paths, first, second, third);
+            var viewModel = await CreateViewModelAsync(paths);
+
+            await viewModel.ReorderEntryCommand.ExecuteAsync(new EntryReorderRequest(
+                "entry-three",
+                "entry-one",
+                EntryReorderDropPosition.Before));
+
+            Assert.Equal(["entry-three", "entry-one", "entry-two"], viewModel.Entries.Select(entry => entry.Id).ToArray());
+            Assert.Equal(["entry-three", "entry-one", "entry-two"], viewModel.EntryGroups[0].Entries.Select(entry => entry.Id).ToArray());
+            Assert.True(viewModel.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ReorderEntryCommand_WithInvalidEntryIdLeavesOrderUnchanged()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var first = CreateEntry("entry-one", "Один");
+            first.SortOrder = 0;
+            var second = CreateEntry("entry-two", "Два");
+            second.SortOrder = 1;
+            await SaveSettingsAsync(paths, first, second);
+            var viewModel = await CreateViewModelAsync(paths);
+
+            await viewModel.ReorderEntryCommand.ExecuteAsync(new EntryReorderRequest(
+                "entry-missing",
+                "entry-two",
+                EntryReorderDropPosition.After));
+
+            Assert.Equal(["entry-one", "entry-two"], viewModel.Entries.Select(entry => entry.Id).ToArray());
+            Assert.False(viewModel.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ReorderEntryCommand_OntoItselfLeavesOrderStable()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var first = CreateEntry("entry-one", "Один");
+            first.SortOrder = 0;
+            var second = CreateEntry("entry-two", "Два");
+            second.SortOrder = 1;
+            await SaveSettingsAsync(paths, first, second);
+            var viewModel = await CreateViewModelAsync(paths);
+
+            await viewModel.ReorderEntryCommand.ExecuteAsync(new EntryReorderRequest(
+                "entry-one",
+                "entry-one",
+                EntryReorderDropPosition.After));
+
+            Assert.Equal(["entry-one", "entry-two"], viewModel.Entries.Select(entry => entry.Id).ToArray());
+            Assert.False(viewModel.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ReloadAfterReorder_RestoresSavedOrder()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var first = CreateEntry("entry-one", "Один");
+            first.SortOrder = 0;
+            var second = CreateEntry("entry-two", "Два");
+            second.SortOrder = 1;
+            await SaveSettingsAsync(paths, first, second);
+            var viewModel = await CreateViewModelAsync(paths);
+
+            await viewModel.ReorderEntryCommand.ExecuteAsync(new EntryReorderRequest(
+                "entry-two",
+                "entry-one",
+                EntryReorderDropPosition.Before));
+            viewModel.ReloadCommand.Execute(null);
+
+            Assert.Equal(["entry-one", "entry-two"], viewModel.Entries.Select(entry => entry.Id).ToArray());
+            Assert.False(viewModel.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task SaveAfterReorder_PersistsSortOrder()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var firstIcon = Path.Combine(root.FullName, "one.ico");
+            var secondIcon = Path.Combine(root.FullName, "two.ico");
+            await IcoTestFile.WriteValidAsync(firstIcon);
+            await IcoTestFile.WriteValidAsync(secondIcon);
+            var first = CreateEntry("entry-one", "Один", "Один", firstIcon);
+            first.SortOrder = 0;
+            var second = CreateEntry("entry-two", "Два", "Два", secondIcon);
+            second.SortOrder = 1;
+            await SaveSettingsAsync(paths, first, second);
+            var viewModel = await CreateViewModelAsync(paths);
+
+            await viewModel.ReorderEntryCommand.ExecuteAsync(new EntryReorderRequest(
+                "entry-two",
+                "entry-one",
+                EntryReorderDropPosition.Before));
+            await viewModel.SaveDraftAsync();
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.Equal(["entry-two", "entry-one"], saved.CreateFolderMenu.Entries.OrderBy(entry => entry.SortOrder).Select(entry => entry.Id).ToArray());
+            Assert.Equal([0, 1], saved.CreateFolderMenu.Entries.OrderBy(entry => entry.SortOrder).Select(entry => entry.SortOrder).ToArray());
+            Assert.False(viewModel.HasUnsavedChanges);
         }
         finally
         {

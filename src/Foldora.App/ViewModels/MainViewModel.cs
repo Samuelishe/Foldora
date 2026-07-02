@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using Foldora.App.Behaviors;
 using Foldora.Core.Menu;
 using Foldora.Core.Settings;
 using Foldora.Core.Storage;
@@ -36,6 +37,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private readonly RelayCommand reloadCommand;
     private readonly RelayCommand addEntryCommand;
     private readonly RelayCommand addGroupCommand;
+    private readonly AsyncRelayCommand<EntryReorderRequest> reorderEntryCommand;
     private string title = string.Empty;
     private string statusMessage = string.Empty;
     private bool explorerIntegrationEnabled;
@@ -75,6 +77,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         reloadCommand = new RelayCommand(ReloadDraft, () => HasUnsavedChanges);
         addEntryCommand = new RelayCommand(AddEntry);
         addGroupCommand = new RelayCommand(AddGroup);
+        reorderEntryCommand = new AsyncRelayCommand<EntryReorderRequest>(ReorderEntryAsync);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -108,6 +111,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public RelayCommand AddEntryCommand => addEntryCommand;
 
     public RelayCommand AddGroupCommand => addGroupCommand;
+
+    public AsyncRelayCommand<EntryReorderRequest> ReorderEntryCommand => reorderEntryCommand;
 
     public string Title
     {
@@ -558,6 +563,30 @@ public sealed class MainViewModel : INotifyPropertyChanged
         NotifyErrorAndDetailsStateChanged();
         StatusMessage = L.EntryRemovedDraft;
         RefreshDirtyState();
+    }
+
+    private async Task ReorderEntryAsync(EntryReorderRequest? request)
+    {
+        if (request is null)
+        {
+            return;
+        }
+
+        var reordered = draftEditor.ReorderEntry(
+            request.SourceEntryId,
+            request.TargetEntryId,
+            request.DropPosition == EntryReorderDropPosition.After);
+        if (!reordered)
+        {
+            return;
+        }
+
+        LoadDraftIntoViewModels();
+        Errors.Clear();
+        OperationDetails.Clear();
+        NotifyErrorAndDetailsStateChanged();
+        RefreshDirtyState();
+        await Task.CompletedTask;
     }
 
     private void LoadDraftIntoViewModels()

@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Laissez vide pour placer l’entrée dans le menu racine.",
   "EntryGroupName": "Groupe :",
   "EntryIcon": "Icône :",
+  "EntryDragHandleTooltip": "Faites glisser pour réorganiser",
   "EntryRemovedDraft": "Entrée supprimée du brouillon. Les fichiers et paramètres ne changent qu’à l’enregistrement.",
   "ExplorerActionsApplyImmediately": "Les actions du menu de l’Explorateur s’appliquent immédiatement et ne sont pas liées à l’enregistrement de la langue.",
   "ExplorerDisabled": "Désactivé",

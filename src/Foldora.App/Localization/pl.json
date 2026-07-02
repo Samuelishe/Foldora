@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Leave empty to place the entry in the root menu.",
   "EntryGroupName": "Group:",
   "EntryIcon": "Ikona:",
+  "EntryDragHandleTooltip": "Przeciągnij, aby zmienić kolejność",
   "EntryRemovedDraft": "Entry removed from the draft. Files and settings change only after save.",
   "ExplorerActionsApplyImmediately": "Akcje menu Eksploratora są stosowane od razu i nie są etapowane razem z zapisem języka.",
   "ExplorerDisabled": "Disabled",

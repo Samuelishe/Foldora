@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Leave empty to place the entry in the root menu.",
   "EntryGroupName": "Group:",
   "EntryIcon": "Ikon:",
+  "EntryDragHandleTooltip": "Húzza az átrendezéshez",
   "EntryRemovedDraft": "Entry removed from the draft. Files and settings change only after save.",
   "ExplorerActionsApplyImmediately": "Az Intéző menü műveletei azonnal érvényesülnek, és nem a nyelvi mentéssel együtt történnek.",
   "ExplorerDisabled": "Disabled",

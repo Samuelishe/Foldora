@@ -24,6 +24,7 @@ Foldora currently has a working MVP loop:
 - Direct `.ico` preview in WPF.
 - PNG/JPG/BMP image auto-conversion in the WPF icon picker, stored as generated multi-size `.ico` files under `%AppData%\Foldora\icons\generated`.
 - Drag/drop replacement of an entry icon preview with one `.ico`, `.png`, `.jpg`, `.jpeg` or `.bmp` file.
+- Drag-handle reordering for entries within the current WPF editor group.
 - CLI `convert-icon` for single-file PNG/JPG/BMP to multi-size ICO conversion.
 - Safe HKCU legacy Explorer menu registration under Foldora-owned roots.
 - Visible menu shape:
@@ -79,12 +80,12 @@ Foldora.MenuHost.exe
 
 ## Current Feature Priority
 
-Next planned feature direction is documented in `docs/ICON_CONVERSION_ROADMAP.md`. After IC4b, icon picker and preview drop both accept normal icon/image files; the next practical feature step is converter-window/batch polish or drag-and-drop ordering.
+Next planned feature direction is documented in `docs/ICON_CONVERSION_ROADMAP.md`. After IC5a, icon picker and preview drop both accept normal icon/image files, and entry ordering works inside the current group; the next practical feature step is converter-window/batch polish or deeper ordering work.
 
 Priority order:
 
 1. Converter window / batch conversion.
-2. Drag-and-drop ordering.
+2. Cross-group entry moves and group/block ordering.
 3. Pack import/export.
 4. Diagnostics/repair.
 5. Release/install packaging polish.
@@ -136,7 +137,7 @@ Feature work and validation before release packaging polish:
 
 - Add a richer converter window/batch flow after CLI and picker conversion are stable.
 - Keep SVG support as separate research/future work, not part of the first PNG/JPG/BMP milestone.
-- Add drag-and-drop ordering for entries/groups after conversion UX is stable.
+- Add cross-group drag-and-drop moves and group/block ordering after the same-group entry reorder is stable.
 - Keep pack import/export below converter and drag/drop UX.
 - Keep diagnostics/repair useful but later than the core MVP feature work.
 - Manually verify installed app enables Explorer integration with registry commands pointing to `%LocalAppData%\Programs\Foldora\Foldora.MenuHost.exe`.
@@ -154,7 +155,8 @@ Feature work and validation before release packaging polish:
 - No MSI/MSIX installer yet.
 - No Program Files layout, winget package or code signing yet.
 - No pack import/export yet.
-- Drag/drop image-to-icon replacement is limited to dropping exactly one supported file on the entry icon preview; drag/drop ordering is still not implemented.
+- Drag/drop image-to-icon replacement is limited to dropping exactly one supported file on the entry icon preview.
+- Entry drag/drop ordering is limited to reordering inside the current group.
 - No full nested tree storage/runtime beyond one-level `GroupName`.
 - No drag-and-drop group ordering.
 - No group icons.
@@ -175,7 +177,7 @@ Feature work and validation before release packaging polish:
 - Optional Shell refresh notification investigation for desktop.ini apply/create timing, only if `TD-0002` is reproduced again and scoped.
 - Full tree menu runtime/storage beyond current one-level groups.
 - Converter window and batch conversion beyond the existing single-file CLI.
-- Drag-and-drop ordering.
+- Cross-group drag-and-drop moves and group/block ordering.
 - Group icons.
 - Pack import/export.
 - SVG support research as a separate later topic.

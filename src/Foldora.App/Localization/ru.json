@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Оставьте пустым, чтобы пункт был в корне меню.",
   "EntryGroupName": "Группа:",
   "EntryIcon": "Иконка:",
+  "EntryDragHandleTooltip": "Перетащите, чтобы изменить порядок",
   "EntryRemovedDraft": "Пункт удалён из draft. Файлы и настройки изменятся только после сохранения.",
   "ExplorerActionsApplyImmediately": "Действия меню Проводника применяются сразу и не являются частью сохранения языка.",
   "ExplorerDisabled": "Отключена",

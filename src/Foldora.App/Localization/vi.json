@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Leave empty to place the entry in the root menu.",
   "EntryGroupName": "Nhóm:",
   "EntryIcon": "Biểu tượng:",
+  "EntryDragHandleTooltip": "Kéo để sắp xếp lại",
   "EntryRemovedDraft": "Entry removed from the draft. Files and settings change only after save.",
   "ExplorerActionsApplyImmediately": "Các thao tác menu Explorer áp dụng ngay và không được lưu chung với thiết lập ngôn ngữ.",
   "ExplorerDisabled": "Đã tắt",

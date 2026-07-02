@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Leave empty to place the entry in the root menu.",
   "EntryGroupName": "Group:",
   "EntryIcon": "Simge:",
+  "EntryDragHandleTooltip": "Sıralamayı değiştirmek için sürükleyin",
   "EntryRemovedDraft": "Entry removed from the draft. Files and settings change only after save.",
   "ExplorerActionsApplyImmediately": "Explorer menü eylemleri hemen uygulanır ve dil ayarlarıyla birlikte bekletilmez.",
   "ExplorerDisabled": "Disabled",

@@ -23,7 +23,7 @@ public sealed class FolderMenuDraftEntry
 
     public string? PreviewPath { get; init; }
 
-    public int SortOrder { get; init; }
+    public int SortOrder { get; set; }
 
     public bool IsEnabled { get; set; } = true;
 

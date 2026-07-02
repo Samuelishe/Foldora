@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Leave empty to place the entry in the root menu.",
   "EntryGroupName": "Grup:",
   "EntryIcon": "Ikon:",
+  "EntryDragHandleTooltip": "Seret untuk mengubah urutan",
   "EntryRemovedDraft": "Entry removed from the draft. Files and settings change only after save.",
   "ExplorerActionsApplyImmediately": "Aksi menu Explorer diterapkan segera dan tidak disimpan bersama pengaturan bahasa.",
   "ExplorerDisabled": "Nonaktif",

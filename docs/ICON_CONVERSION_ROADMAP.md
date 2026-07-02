@@ -1,6 +1,6 @@
 # Icon Conversion Roadmap
 
-Этот документ фиксирует план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, IC2a добавляет Windows-specific decode/PNG encode foundation, IC2b добавляет pure alpha-aware resize/downscale foundation, IC2c связывает эти части в Windows-specific stream-based image-to-ICO conversion service, IC3 добавляет single-file CLI `convert-icon`, IC4a подключает auto-conversion к WPF icon picker, а IC4b добавляет drag/drop replacement на preview иконки. Converter window, batch conversion, pack import/export, generated icon cleanup and repair flows are not implemented yet.
+Этот документ фиксирует план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, IC2a добавляет Windows-specific decode/PNG encode foundation, IC2b добавляет pure alpha-aware resize/downscale foundation, IC2c связывает эти части в Windows-specific stream-based image-to-ICO conversion service, IC3 добавляет single-file CLI `convert-icon`, IC4a подключает auto-conversion к WPF icon picker, IC4b добавляет drag/drop replacement на preview иконки, а IC5a закрывает adjacent same-group entry reorder в WPF editor. Converter window, batch conversion, pack import/export, generated icon cleanup and repair flows are not implemented yet.
 
 ## Current Implementation Status
 
@@ -65,7 +65,7 @@ IC4b implemented:
 
 Not implemented yet:
 
-- Drag-and-drop ordering.
+- Cross-group entry moves and group/block ordering.
 - Batch/directory CLI conversion.
 - Converter window.
 - Generated icon cleanup.
@@ -74,10 +74,10 @@ Not implemented yet:
 
 ## Priority
 
-Текущий feature priority для Foldora после IC4b:
+Текущий feature priority для Foldora после IC5a:
 
 1. Converter window / batch conversion.
-2. Drag-and-drop ordering.
+2. Cross-group entry moves and group/block ordering.
 3. Pack import/export.
 4. Diagnostics/repair.
 5. Release/install packaging polish.
@@ -240,7 +240,7 @@ Planned capabilities:
 - overwrite policy;
 - conversion report/errors.
 
-Do not mix converter-window work with drag/drop ordering or SVG. The next converter-window milestone should stay on single/batch PNG/JPG/BMP-to-ICO workflows over the existing conversion service.
+Do not mix converter-window work with deeper drag/drop ordering or SVG. The next converter-window milestone should stay on single/batch PNG/JPG/BMP-to-ICO workflows over the existing conversion service.
 
 ## CLI Conversion
 
@@ -371,9 +371,15 @@ Security/resource policy:
 
 ## Drag-And-Drop Ordering
 
-Important UX feature after converter work:
+IC5a implemented the first slice:
 
-- reorder entries within a group;
+- reorder entries within the current group from a drag handle;
+- reuse existing `SortOrder`;
+- preserve staged edit model;
+- keep Save/Discard behavior clear.
+
+Future deeper ordering work:
+
 - move entry between groups;
 - reorder groups;
 - reuse existing `SortOrder` if the current flat model remains sufficient;

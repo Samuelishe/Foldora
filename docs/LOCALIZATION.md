@@ -111,6 +111,8 @@ Runtime/status messages are visible state messages such as settings loaded, sett
 
 Icon picker/drop file filters, tooltips and conversion/drop errors are App-localized strings. The picker and icon-preview drop target expose icon/image support for `.ico`, `.png`, `.jpg`, `.jpeg` and `.bmp`; if image-to-ICO conversion fails, the user-facing error must come from the catalog and technical details may be shown separately through the existing status/details surface.
 
+Entry reorder affordances are App-localized strings. The drag handle tooltip uses catalog key `EntryDragHandleTooltip`; reorder itself is staged state and should not introduce hardcoded XAML/ViewModel text.
+
 MainWindow editor state text must also be localized user-facing status text. The saved/dirty state uses catalog keys such as `AllChangesSaved` and `UnsavedChanges`; raw boolean formatting like `Unsaved changes: True/False` must not be shown to users.
 
 Validation messages are localized at the App/UI boundary for the WPF editor. Core returns invariant issue codes and parameters; App maps those to localized text through the enabled catalogs.
@@ -316,7 +318,7 @@ To add a complete language:
 - Startup fatal error dialog is hardcoded Russian.
 - Technical plan/details text in Explorer integration is not fully localized.
 - Help/About foundation is catalog-backed, but long-form help copy for non-primary locales still needs translation/content review before treating it as product-grade help text.
-- Settings tab labels, short Explorer action labels and path action tooltips are catalog-complete; non-primary locale wording may still need human review during future translation polish.
+- Settings tab labels, short Explorer action labels, path action tooltips and entry reorder tooltip are catalog-complete; non-primary locale wording may still need human review during future translation polish.
 - `InMemoryLocalizationService` is now catalog-backed but still has its early MVP name.
 
 ## Future work

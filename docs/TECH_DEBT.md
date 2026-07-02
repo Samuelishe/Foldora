@@ -331,15 +331,15 @@
 ### TD-UX-0009 Drag-And-Drop Ordering
 
 - ID: `TD-UX-0009`
-- Title: Drag-and-drop ordering for entries and groups
-- Status: Deferred
+- Title: Cross-group and group/block drag-and-drop ordering
+- Status: Partially addressed
 - Severity: Low
 - Area: WPF / UX / Menu Model
-- Observed behavior: Current editor supports groups and `SortOrder`, but drag-and-drop ordering is not implemented.
-- Expected/desired behavior: Users should be able to reorder entries within a group, move entries between groups and reorder groups while preserving staged Save/Discard behavior.
+- Observed behavior: IC5a supports drag-handle reorder for entries within the current group and normalizes `SortOrder` in the staged draft. Cross-group entry moves and group/block ordering are not implemented.
+- Expected/desired behavior: Users should be able to move entries between groups and reorder groups while preserving staged Save/Discard behavior.
 - Known cause or hypothesis: Ordering UX was intentionally deferred until the editor, grouping and icon selection basics were stable.
-- Current workaround: Use current add/edit behavior and existing `SortOrder` persistence.
-- Next investigation step: Prioritize after converter/batch work or if menu editing UX becomes the next focus. Avoid treating current group rename/delete as missing; future group polish is reorder/collapse/duplicate/context-menu work.
+- Current workaround: Reorder inside a group with the drag handle; use the editable `GroupName` field or group rename/delete flow for group-level changes.
+- Next investigation step: Decide whether cross-group moves should remain flat `GroupName` updates or require first-class group ordering semantics. Avoid treating current group rename/delete as missing; future group polish is reorder/collapse/duplicate/context-menu work.
 - Links to docs/tests/code:
   - `docs/ICON_CONVERSION_ROADMAP.md`
   - `docs/UX_FLOW.md`

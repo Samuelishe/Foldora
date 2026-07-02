@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Leave empty to place the entry in the root menu.",
   "EntryGroupName": "Group:",
   "EntryIcon": "Ikona:",
+  "EntryDragHandleTooltip": "Přetažením změníte pořadí",
   "EntryRemovedDraft": "Entry removed from the draft. Files and settings change only after save.",
   "ExplorerActionsApplyImmediately": "Akce nabídky Průzkumníka se použijí okamžitě a nejsou součástí uložení jazyka.",
   "ExplorerDisabled": "Disabled",

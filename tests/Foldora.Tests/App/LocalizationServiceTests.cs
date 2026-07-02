@@ -81,6 +81,7 @@ public sealed class LocalizationServiceTests
         Assert.Equal("The dropped file is not a supported icon or image format.", english.Resources.IconDropUnsupportedFile);
         Assert.Equal("Drop a file, not a folder.", english.Resources.IconDropDirectoryRejected);
         Assert.Equal("Could not use the dropped file as an icon.", english.Resources.IconDropCouldNotUseFile);
+        Assert.Equal("Drag to reorder", english.Resources.EntryDragHandleTooltip);
     }
 
     [Fact]
@@ -105,6 +106,7 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Перетащенный файл не является поддерживаемой иконкой или изображением.", service.Resources.IconDropUnsupportedFile);
         Assert.Equal("Перетащите файл, а не папку.", service.Resources.IconDropDirectoryRejected);
         Assert.Equal("Не удалось использовать перетащенный файл как иконку.", service.Resources.IconDropCouldNotUseFile);
+        Assert.Equal("Перетащите, чтобы изменить порядок", service.Resources.EntryDragHandleTooltip);
     }
 
     [Fact]

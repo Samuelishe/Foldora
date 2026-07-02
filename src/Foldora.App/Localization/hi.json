@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Leave empty to place the entry in the root menu.",
   "EntryGroupName": "समूह:",
   "EntryIcon": "आइकन:",
+  "EntryDragHandleTooltip": "क्रम बदलने के लिए खींचें",
   "EntryRemovedDraft": "Entry removed from the draft. Files and settings change only after save.",
   "ExplorerActionsApplyImmediately": "Explorer मेनू कार्रवाइयाँ तुरंत लागू होती हैं और भाषा सेटिंग के साथ staged नहीं होतीं।",
   "ExplorerDisabled": "अक्षम",

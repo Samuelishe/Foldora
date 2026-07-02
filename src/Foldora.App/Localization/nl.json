@@ -34,6 +34,7 @@
   "EntryGroupHelp": "Leave empty to place the entry in the root menu.",
   "EntryGroupName": "Groep:",
   "EntryIcon": "Pictogram:",
+  "EntryDragHandleTooltip": "Sleep om de volgorde te wijzigen",
   "EntryRemovedDraft": "Entry removed from the draft. Files and settings change only after save.",
   "ExplorerActionsApplyImmediately": "Explorer-menuacties worden direct toegepast en zijn niet gekoppeld aan taalinstellingen opslaan.",
   "ExplorerDisabled": "Uitgeschakeld",
