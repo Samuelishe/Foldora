@@ -19,6 +19,7 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
     private readonly Action groupChanged;
     private readonly Action<FolderMenuEntryViewModel> editRequested;
     private readonly Func<FolderMenuEntryViewModel, Task> chooseIconAsync;
+    private readonly Func<FolderMenuEntryViewModel, IReadOnlyList<string>, Task> dropIconFilesAsync;
     private readonly Action<FolderMenuEntryViewModel> remove;
     private readonly Func<LocalizationResources> localizationResourcesProvider;
     private bool isEditing;
@@ -30,6 +31,7 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
         Action groupChanged,
         Action<FolderMenuEntryViewModel> editRequested,
         Func<FolderMenuEntryViewModel, Task> chooseIconAsync,
+        Func<FolderMenuEntryViewModel, IReadOnlyList<string>, Task> dropIconFilesAsync,
         Action<FolderMenuEntryViewModel> remove,
         Func<LocalizationResources> localizationResourcesProvider)
     {
@@ -39,11 +41,13 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
         this.groupChanged = groupChanged ?? throw new ArgumentNullException(nameof(groupChanged));
         this.editRequested = editRequested ?? throw new ArgumentNullException(nameof(editRequested));
         this.chooseIconAsync = chooseIconAsync ?? throw new ArgumentNullException(nameof(chooseIconAsync));
+        this.dropIconFilesAsync = dropIconFilesAsync ?? throw new ArgumentNullException(nameof(dropIconFilesAsync));
         this.remove = remove ?? throw new ArgumentNullException(nameof(remove));
         this.localizationResourcesProvider = localizationResourcesProvider ?? throw new ArgumentNullException(nameof(localizationResourcesProvider));
         EditCommand = new RelayCommand(() => this.editRequested(this));
         FinishEditingCommand = new RelayCommand(FinishEditing);
         ChooseIconCommand = new AsyncRelayCommand(() => this.chooseIconAsync(this));
+        DropIconFilesCommand = new AsyncRelayCommand<string[]>(paths => this.dropIconFilesAsync(this, paths ?? []));
         RemoveCommand = new RelayCommand(() => this.remove(this));
         RefreshIconPreview();
     }
@@ -115,6 +119,8 @@ public sealed class FolderMenuEntryViewModel : INotifyPropertyChanged
     public RelayCommand FinishEditingCommand { get; }
 
     public AsyncRelayCommand ChooseIconCommand { get; }
+
+    public AsyncRelayCommand<string[]> DropIconFilesCommand { get; }
 
     public RelayCommand RemoveCommand { get; }
 

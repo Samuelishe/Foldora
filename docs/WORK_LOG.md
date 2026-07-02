@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-07-02 - IC4b icon preview drop support
+
+- Implemented drag/drop replacement on entry icon previews for exactly one `.ico`, `.png`, `.jpg`, `.jpeg` or `.bmp` file.
+- Reused the existing `IconAssetPreparationService`: `.ico` keeps staged import-on-save, while raster drops convert to generated multi-size `.ico` files.
+- Added ViewModel/drop error handling so multiple files, directories, unsupported files and failed/corrupt conversion leave the current icon unchanged.
+- Added a minimal App-layer file-drop behavior and localized tooltip/error strings across enabled WPF catalogs.
+- Added ViewModel/localization tests for `.ico` drop, raster drop, save, discard/reload, unsupported/multiple/directory rejection and preparation failure.
+- No drag-and-drop ordering, converter window, batch conversion, SVG support, pack import/export or generated icon cleanup was implemented.
+
 ## 2026-07-02 - IC4a WPF icon picker auto-conversion
 
 - Added App-level icon asset preparation for the existing WPF icon picker: `.ico` keeps the existing staged import-on-save workflow, while `.png`/`.jpg`/`.jpeg`/`.bmp` are converted to generated multi-size `.ico` files.

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:behaviors="clr-namespace:Foldora.App.Behaviors"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         mc:Ignorable="d"
         Title="Foldora"
@@ -338,7 +339,9 @@
                                                                 </Grid.ColumnDefinitions>
 
                                                                 <Border Grid.Column="0"
-                                                                        Style="{StaticResource PreviewBoxStyle}">
+                                                                        Style="{StaticResource PreviewBoxStyle}"
+                                                                        ToolTip="{Binding DataContext.L.IconDropTooltip, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                        behaviors:FileDropBehavior.Command="{Binding DropIconFilesCommand}">
                                                                     <Image Source="{Binding IconPreview}"
                                                                            Width="{DynamicResource PreviewImageSize}"
                                                                            Height="{DynamicResource PreviewImageSize}"
@@ -402,7 +405,9 @@
                                                                 </Grid.ColumnDefinitions>
 
                                                                 <Border Grid.Column="0"
-                                                                        Style="{StaticResource PreviewBoxStyle}">
+                                                                        Style="{StaticResource PreviewBoxStyle}"
+                                                                        ToolTip="{Binding DataContext.L.IconDropTooltip, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                        behaviors:FileDropBehavior.Command="{Binding DropIconFilesCommand}">
                                                                     <Image Source="{Binding IconPreview}"
                                                                            Width="{DynamicResource PreviewImageSize}"
                                                                            Height="{DynamicResource PreviewImageSize}"

@@ -17,6 +17,7 @@ namespace Foldora.App.ViewModels;
 /// </summary>
 public sealed class MainViewModel : INotifyPropertyChanged
 {
+    private static readonly string[] SupportedIconFileExtensions = [".ico", ".png", ".jpg", ".jpeg", ".bmp"];
     private readonly FolderMenuDraftEditor draftEditor;
     private readonly IIconFilePicker iconFilePicker;
     private readonly IIconAssetPreparationService iconAssetPreparationService;
@@ -454,11 +455,40 @@ public sealed class MainViewModel : INotifyPropertyChanged
             return;
         }
 
+        await ApplyIconFileAsync(entry, result.FilePath!, isDrop: false);
+    }
+
+    private async Task DropIconFilesAsync(FolderMenuEntryViewModel entry, IReadOnlyList<string> filePaths)
+    {
+        if (filePaths.Count != 1)
+        {
+            RejectDroppedIcon(L.IconDropMultipleFilesRejected);
+            return;
+        }
+
+        var filePath = filePaths[0];
+        if (Directory.Exists(filePath))
+        {
+            RejectDroppedIcon(L.IconDropDirectoryRejected);
+            return;
+        }
+
+        if (!IsSupportedIconFile(filePath))
+        {
+            RejectDroppedIcon(L.IconDropUnsupportedFile);
+            return;
+        }
+
+        await ApplyIconFileAsync(entry, filePath, isDrop: true);
+    }
+
+    private async Task ApplyIconFileAsync(FolderMenuEntryViewModel entry, string filePath, bool isDrop)
+    {
         Errors.Clear();
         IconAssetPreparationResult preparedIcon;
         try
         {
-            preparedIcon = await iconAssetPreparationService.PrepareAsync(result.FilePath!);
+            preparedIcon = await iconAssetPreparationService.PrepareAsync(filePath);
         }
         catch (Exception exception) when (exception is ArgumentException
                                           or FileNotFoundException
@@ -469,7 +499,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
                                           or System.Security.SecurityException)
         {
             OperationDetails.Clear();
-            Errors.Add(L.IconImageConversionFailed);
+            Errors.Add(isDrop ? L.IconDropCouldNotUseFile : L.IconImageConversionFailed);
             OperationDetails.Add(exception.Message);
             NotifyErrorAndDetailsStateChanged();
             StatusMessage = L.IconNotSelectedFixFile;
@@ -496,6 +526,21 @@ public sealed class MainViewModel : INotifyPropertyChanged
         StatusMessage = L.IconSelectedImportedOnSave;
         RefreshDirtyState();
         await Task.CompletedTask;
+    }
+
+    private void RejectDroppedIcon(string message)
+    {
+        Errors.Clear();
+        OperationDetails.Clear();
+        Errors.Add(message);
+        NotifyErrorAndDetailsStateChanged();
+        StatusMessage = L.IconNotSelectedFixFile;
+    }
+
+    private static bool IsSupportedIconFile(string filePath)
+    {
+        var extension = Path.GetExtension(filePath);
+        return SupportedIconFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase);
     }
 
     private void RemoveEntry(FolderMenuEntryViewModel entry)
@@ -544,6 +589,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
             OnEntryGroupChanged,
             RequestEntryEdit,
             ChooseIconAsync,
+            DropIconFilesAsync,
             RemoveEntry,
             () => L);
     }

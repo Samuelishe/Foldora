@@ -157,7 +157,7 @@ Current generated icon storage:
 %AppData%\Foldora\icons\generated\
 ```
 
-Selecting `.png`, `.jpg`, `.jpeg` or `.bmp` in the WPF icon picker creates a generated multi-size `.ico` under `icons\generated`, stages that `.ico` path on the entry and saves it as a normal `IconPath` when the user saves the draft. Selecting `.ico` keeps the existing staged import-on-save path through `%AppData%\Foldora\icons`.
+Selecting `.png`, `.jpg`, `.jpeg` or `.bmp` in the WPF icon picker or dropping one such file onto an entry icon preview creates a generated multi-size `.ico` under `icons\generated`, stages that `.ico` path on the entry and saves it as a normal `IconPath` when the user saves the draft. Selecting or dropping `.ico` keeps the existing staged import-on-save path through `%AppData%\Foldora\icons`.
 
 Future conversion/import flows may still need clearer storage separation such as `icons\imported`, `icons\generated` and `icons\packs`.
 

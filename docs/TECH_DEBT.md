@@ -282,11 +282,11 @@
 - Status: Deferred
 - Severity: Low
 - Area: Settings / Storage / Imaging
-- Observed behavior: Current workflow can leave imported `.ico` files under `%AppData%\Foldora\icons` after entry deletion/replacement. IC4a can also leave generated `.ico` files under `%AppData%\Foldora\icons\generated` when the user replaces an icon, deletes an entry or discards a staged edit after image conversion.
+- Observed behavior: Current workflow can leave imported `.ico` files under `%AppData%\Foldora\icons` after entry deletion/replacement. IC4a/IC4b can also leave generated `.ico` files under `%AppData%\Foldora\icons\generated` when the user replaces an icon through picker/drop, deletes an entry or discards a staged edit after image conversion.
 - Expected/desired behavior: Later, Foldora should be able to identify and clean unused imported/generated icons without deleting icons referenced by existing styled folders or packs.
-- Known cause or hypothesis: Orphan risk increased with picker auto-conversion because Foldora now creates generated icon files automatically. Pack import/export will add more cases later.
+- Known cause or hypothesis: Orphan risk increased with picker and preview-drop auto-conversion because Foldora now creates generated icon files automatically. Pack import/export will add more cases later.
 - Current workaround: Preserve `%AppData%\Foldora` and avoid automatic cleanup.
-- Next investigation step: Revisit after drag/drop conversion or pack import/export. Cleanup must respect settings, existing styled folders and future packs, and should keep generated storage separate from user-imported icons.
+- Next investigation step: Revisit after converter/batch work or pack import/export. Cleanup must respect settings, existing styled folders and future packs, and should keep generated storage separate from user-imported icons.
 - Links to docs/tests/code:
   - `docs/ICON_CONVERSION_ROADMAP.md`
   - `docs/SETTINGS.md`
@@ -339,7 +339,7 @@
 - Expected/desired behavior: Users should be able to reorder entries within a group, move entries between groups and reorder groups while preserving staged Save/Discard behavior.
 - Known cause or hypothesis: Ordering UX was intentionally deferred until the editor, grouping and icon selection basics were stable.
 - Current workaround: Use current add/edit behavior and existing `SortOrder` persistence.
-- Next investigation step: Prioritize after image conversion and drag image onto preview. Avoid treating current group rename/delete as missing; future group polish is reorder/collapse/duplicate/context-menu work.
+- Next investigation step: Prioritize after converter/batch work or if menu editing UX becomes the next focus. Avoid treating current group rename/delete as missing; future group polish is reorder/collapse/duplicate/context-menu work.
 - Links to docs/tests/code:
   - `docs/ICON_CONVERSION_ROADMAP.md`
   - `docs/UX_FLOW.md`

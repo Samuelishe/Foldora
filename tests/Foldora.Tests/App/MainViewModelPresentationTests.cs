@@ -938,15 +938,244 @@ public sealed class MainViewModelPresentationTests
         }
     }
 
+    [Fact]
+    public async Task DropIconFilesCommand_WithSingleIco_UsesImportOnSaveWorkflow()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "en");
+            var sourceIcon = Path.Combine(root.FullName, "source.ico");
+            await IcoTestFile.WriteValidAsync(sourceIcon);
+            var storage = new FoldoraSettingsStorage(paths);
+            var viewModel = await CreateViewModelAsync(
+                paths,
+                iconAssetPreparationService: new RecordingIconAssetPreparationService(IconAssetPreparationResult.ExistingIcon(sourceIcon)));
+
+            viewModel.AddEntryCommand.Execute(null);
+            await viewModel.Entries[0].DropIconFilesCommand.ExecuteAsync([sourceIcon]);
+            await viewModel.SaveDraftAsync();
+            var saved = await storage.LoadAsync();
+            var savedIconPath = Assert.Single(saved.CreateFolderMenu.Entries).IconPath;
+
+            Assert.NotEqual(Path.GetFullPath(sourceIcon), Path.GetFullPath(savedIconPath));
+            Assert.StartsWith(Path.GetFullPath(paths.IconsDirectory), Path.GetFullPath(savedIconPath), StringComparison.OrdinalIgnoreCase);
+            Assert.True(File.Exists(savedIconPath));
+            Assert.Empty(viewModel.Errors);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task DropIconFilesCommand_WithSingleRaster_UsesPreparedGeneratedIconAndSavePersistsIt()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "en");
+            var generatedIcon = Path.Combine(paths.IconsDirectory, "generated", "drop-12345678.ico");
+            await IcoTestFile.WriteValidAsync(generatedIcon);
+            var sourceImage = Path.Combine(root.FullName, "drop.png");
+            await File.WriteAllBytesAsync(sourceImage, [0x01, 0x02]);
+            var storage = new FoldoraSettingsStorage(paths);
+            var viewModel = await CreateViewModelAsync(
+                paths,
+                iconAssetPreparationService: new RecordingIconAssetPreparationService(IconAssetPreparationResult.GeneratedIcon(generatedIcon)));
+
+            viewModel.AddEntryCommand.Execute(null);
+            await viewModel.Entries[0].DropIconFilesCommand.ExecuteAsync([sourceImage]);
+            await viewModel.SaveDraftAsync();
+            var saved = await storage.LoadAsync();
+
+            Assert.Equal(generatedIcon, Assert.Single(saved.CreateFolderMenu.Entries).IconPath);
+            Assert.False(viewModel.HasUnsavedChanges);
+            Assert.Empty(viewModel.Errors);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task DropIconFilesCommand_WithUnsupportedFile_LeavesIconUnchangedAndReportsError()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var existingIcon = Path.Combine(root.FullName, "existing.ico");
+            await IcoTestFile.WriteValidAsync(existingIcon);
+            await SaveSettingsAsync(paths, "en", CreateEntry("entry-music", "Music", "Music", existingIcon));
+            var unsupportedFile = Path.Combine(root.FullName, "notes.txt");
+            await File.WriteAllTextAsync(unsupportedFile, "not an icon");
+            var preparationService = new RecordingIconAssetPreparationService(IconAssetPreparationResult.ExistingIcon(unsupportedFile));
+            var viewModel = await CreateViewModelAsync(paths, iconAssetPreparationService: preparationService);
+
+            await viewModel.Entries[0].DropIconFilesCommand.ExecuteAsync([unsupportedFile]);
+
+            Assert.Equal(existingIcon, viewModel.Entries[0].IconPath);
+            Assert.False(viewModel.HasUnsavedChanges);
+            Assert.False(preparationService.WasCalled);
+            Assert.Contains("not a supported icon or image format", Assert.Single(viewModel.Errors), StringComparison.Ordinal);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task DropIconFilesCommand_WithMultipleFiles_LeavesIconUnchangedAndReportsError()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var existingIcon = Path.Combine(root.FullName, "existing.ico");
+            await IcoTestFile.WriteValidAsync(existingIcon);
+            await SaveSettingsAsync(paths, "en", CreateEntry("entry-music", "Music", "Music", existingIcon));
+            var first = Path.Combine(root.FullName, "first.ico");
+            var second = Path.Combine(root.FullName, "second.ico");
+            await IcoTestFile.WriteValidAsync(first);
+            await IcoTestFile.WriteValidAsync(second);
+            var preparationService = new RecordingIconAssetPreparationService(IconAssetPreparationResult.ExistingIcon(first));
+            var viewModel = await CreateViewModelAsync(paths, iconAssetPreparationService: preparationService);
+
+            await viewModel.Entries[0].DropIconFilesCommand.ExecuteAsync([first, second]);
+
+            Assert.Equal(existingIcon, viewModel.Entries[0].IconPath);
+            Assert.False(viewModel.HasUnsavedChanges);
+            Assert.False(preparationService.WasCalled);
+            Assert.Contains("Only one icon file", Assert.Single(viewModel.Errors), StringComparison.Ordinal);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task DropIconFilesCommand_WithDirectory_LeavesIconUnchangedAndReportsError()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var existingIcon = Path.Combine(root.FullName, "existing.ico");
+            await IcoTestFile.WriteValidAsync(existingIcon);
+            await SaveSettingsAsync(paths, "en", CreateEntry("entry-music", "Music", "Music", existingIcon));
+            var droppedDirectory = Path.Combine(root.FullName, "Icons");
+            Directory.CreateDirectory(droppedDirectory);
+            var preparationService = new RecordingIconAssetPreparationService(IconAssetPreparationResult.ExistingIcon(existingIcon));
+            var viewModel = await CreateViewModelAsync(paths, iconAssetPreparationService: preparationService);
+
+            await viewModel.Entries[0].DropIconFilesCommand.ExecuteAsync([droppedDirectory]);
+
+            Assert.Equal(existingIcon, viewModel.Entries[0].IconPath);
+            Assert.False(viewModel.HasUnsavedChanges);
+            Assert.False(preparationService.WasCalled);
+            Assert.Contains("not a folder", Assert.Single(viewModel.Errors), StringComparison.Ordinal);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task DropIconFilesCommand_WhenPreparationFails_LeavesIconUnchangedAndReportsError()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var existingIcon = Path.Combine(root.FullName, "existing.ico");
+            await IcoTestFile.WriteValidAsync(existingIcon);
+            await SaveSettingsAsync(paths, "en", CreateEntry("entry-music", "Music", "Music", existingIcon));
+            var sourceImage = Path.Combine(root.FullName, "broken.png");
+            await File.WriteAllBytesAsync(sourceImage, [0x01, 0x02]);
+            var viewModel = await CreateViewModelAsync(
+                paths,
+                iconAssetPreparationService: new ThrowingIconAssetPreparationService(new IOException("Image decode failed.")));
+
+            await viewModel.Entries[0].DropIconFilesCommand.ExecuteAsync([sourceImage]);
+
+            Assert.Equal(existingIcon, viewModel.Entries[0].IconPath);
+            Assert.False(viewModel.HasUnsavedChanges);
+            Assert.Equal("Could not use the dropped file as an icon.", Assert.Single(viewModel.Errors));
+            Assert.Contains("Image decode failed.", viewModel.OperationDetails);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ReloadAfterRasterDrop_RevertsStagedGeneratedIcon()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var existingIcon = Path.Combine(root.FullName, "existing.ico");
+            await IcoTestFile.WriteValidAsync(existingIcon);
+            await SaveSettingsAsync(paths, "en", CreateEntry("entry-music", "Music", "Music", existingIcon));
+            var generatedIcon = Path.Combine(paths.IconsDirectory, "generated", "drop-12345678.ico");
+            await IcoTestFile.WriteValidAsync(generatedIcon);
+            var sourceImage = Path.Combine(root.FullName, "drop.bmp");
+            await File.WriteAllBytesAsync(sourceImage, [0x01, 0x02]);
+            var viewModel = await CreateViewModelAsync(
+                paths,
+                iconAssetPreparationService: new RecordingIconAssetPreparationService(IconAssetPreparationResult.GeneratedIcon(generatedIcon)));
+
+            await viewModel.Entries[0].DropIconFilesCommand.ExecuteAsync([sourceImage]);
+            Assert.True(viewModel.HasUnsavedChanges);
+
+            viewModel.ReloadCommand.Execute(null);
+
+            Assert.Equal(existingIcon, viewModel.Entries[0].IconPath);
+            Assert.False(viewModel.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
     private static Task<MainViewModel> CreateViewModelAsync(FoldoraDataPaths paths)
     {
         return CreateViewModelAsync(paths, new RecordingSettingsDialogService());
     }
 
+    private static Task<MainViewModel> CreateViewModelAsync(
+        FoldoraDataPaths paths,
+        IIconAssetPreparationService iconAssetPreparationService)
+    {
+        return CreateViewModelAsync(
+            paths,
+            new RecordingSettingsDialogService(),
+            iconAssetPreparationService: iconAssetPreparationService);
+    }
+
     private static async Task<MainViewModel> CreateViewModelAsync(
         FoldoraDataPaths paths,
         ISettingsDialogService settingsDialogService,
-        string systemLanguage = "ru-RU")
+        string systemLanguage = "ru-RU",
+        IIconAssetPreparationService? iconAssetPreparationService = null)
     {
         var storage = new FoldoraSettingsStorage(paths);
         var draftEditor = new FolderMenuDraftEditor(storage, paths);
@@ -968,7 +1197,8 @@ public sealed class MainViewModelPresentationTests
             localizationService,
             settingsLanguageInitializer: new SettingsLanguageInitializer(
                 storage,
-                new FixedSystemLanguageProvider(systemLanguage)));
+                new FixedSystemLanguageProvider(systemLanguage)),
+            iconAssetPreparationService: iconAssetPreparationService);
 
         await viewModel.LoadAsync();
         return viewModel;
@@ -1015,12 +1245,17 @@ public sealed class MainViewModelPresentationTests
 
     private static FolderMenuEntry CreateEntry(string id, string displayName, string defaultFolderName)
     {
+        return CreateEntry(id, displayName, defaultFolderName, string.Empty);
+    }
+
+    private static FolderMenuEntry CreateEntry(string id, string displayName, string defaultFolderName, string iconPath)
+    {
         return new FolderMenuEntry
         {
             Id = id,
             DisplayName = displayName,
             DefaultFolderName = defaultFolderName,
-            IconPath = string.Empty,
+            IconPath = iconPath,
             IsEnabled = true
         };
     }
@@ -1075,6 +1310,42 @@ public sealed class MainViewModelPresentationTests
         public Task<IconAssetPreparationResult> PrepareAsync(string selectedFilePath, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(IconAssetPreparationResult.GeneratedIcon(generatedIconPath));
+        }
+    }
+
+    private sealed class RecordingIconAssetPreparationService : IIconAssetPreparationService
+    {
+        private readonly IconAssetPreparationResult result;
+
+        public RecordingIconAssetPreparationService(IconAssetPreparationResult result)
+        {
+            this.result = result;
+        }
+
+        public bool WasCalled { get; private set; }
+
+        public string? SelectedFilePath { get; private set; }
+
+        public Task<IconAssetPreparationResult> PrepareAsync(string selectedFilePath, CancellationToken cancellationToken = default)
+        {
+            WasCalled = true;
+            SelectedFilePath = selectedFilePath;
+            return Task.FromResult(result);
+        }
+    }
+
+    private sealed class ThrowingIconAssetPreparationService : IIconAssetPreparationService
+    {
+        private readonly Exception exception;
+
+        public ThrowingIconAssetPreparationService(Exception exception)
+        {
+            this.exception = exception;
+        }
+
+        public Task<IconAssetPreparationResult> PrepareAsync(string selectedFilePath, CancellationToken cancellationToken = default)
+        {
+            throw exception;
         }
     }
 

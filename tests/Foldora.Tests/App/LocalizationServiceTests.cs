@@ -76,6 +76,11 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Images (*.png;*.jpg;*.jpeg;*.bmp)", english.Resources.IconPickerFilterImages);
         Assert.Equal("All files (*.*)", english.Resources.IconPickerFilterAllFiles);
         Assert.Equal("Could not convert the selected image to an ICO file.", english.Resources.IconImageConversionFailed);
+        Assert.Equal("Drop an ICO, PNG, JPG, or BMP file here to use it as the folder icon.", english.Resources.IconDropTooltip);
+        Assert.Equal("Only one icon file can be dropped at a time.", english.Resources.IconDropMultipleFilesRejected);
+        Assert.Equal("The dropped file is not a supported icon or image format.", english.Resources.IconDropUnsupportedFile);
+        Assert.Equal("Drop a file, not a folder.", english.Resources.IconDropDirectoryRejected);
+        Assert.Equal("Could not use the dropped file as an icon.", english.Resources.IconDropCouldNotUseFile);
     }
 
     [Fact]
@@ -95,6 +100,11 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Открывает папку, где находится файл.", service.Resources.OpenLocationTooltip);
         Assert.Equal("Выбрать иконку/изображение", service.Resources.ChooseIcon);
         Assert.Equal("Не удалось преобразовать выбранное изображение в файл ICO.", service.Resources.IconImageConversionFailed);
+        Assert.Equal("Перетащите сюда файл ICO, PNG, JPG или BMP, чтобы использовать его как иконку папки.", service.Resources.IconDropTooltip);
+        Assert.Equal("За один раз можно перетащить только один файл иконки.", service.Resources.IconDropMultipleFilesRejected);
+        Assert.Equal("Перетащенный файл не является поддерживаемой иконкой или изображением.", service.Resources.IconDropUnsupportedFile);
+        Assert.Equal("Перетащите файл, а не папку.", service.Resources.IconDropDirectoryRejected);
+        Assert.Equal("Не удалось использовать перетащенный файл как иконку.", service.Resources.IconDropCouldNotUseFile);
     }
 
     [Fact]

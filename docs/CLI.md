@@ -161,9 +161,8 @@ Not implemented in this CLI step:
 - `--recursive`;
 - custom sizes/filter/fit mode flags;
 - SVG;
-- WPF picker auto-conversion;
-- drag image onto icon preview;
-- AppData generated icon storage integration.
+- WPF picker/drop UX, which is implemented in `Foldora.App` rather than this CLI command;
+- AppData generated icon storage integration outside the app workflow.
 
 ## Diagnostics
 

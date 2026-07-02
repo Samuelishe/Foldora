@@ -154,6 +154,11 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string IconPickerFilterImages => Get();
     public string IconPickerFilterAllFiles => Get();
     public string IconImageConversionFailed => Get();
+    public string IconDropTooltip => Get();
+    public string IconDropMultipleFilesRejected => Get();
+    public string IconDropUnsupportedFile => Get();
+    public string IconDropDirectoryRejected => Get();
+    public string IconDropCouldNotUseFile => Get();
     public string PreviewNoIcon => Get();
     public string PreviewIconMissing => Get();
     public string PreviewIconLoaded => Get();

@@ -23,6 +23,7 @@ Foldora currently has a working MVP loop:
 - Staged icon import into `%AppData%\Foldora\icons`.
 - Direct `.ico` preview in WPF.
 - PNG/JPG/BMP image auto-conversion in the WPF icon picker, stored as generated multi-size `.ico` files under `%AppData%\Foldora\icons\generated`.
+- Drag/drop replacement of an entry icon preview with one `.ico`, `.png`, `.jpg`, `.jpeg` or `.bmp` file.
 - CLI `convert-icon` for single-file PNG/JPG/BMP to multi-size ICO conversion.
 - Safe HKCU legacy Explorer menu registration under Foldora-owned roots.
 - Visible menu shape:
@@ -78,16 +79,15 @@ Foldora.MenuHost.exe
 
 ## Current Feature Priority
 
-Next planned feature direction is documented in `docs/ICON_CONVERSION_ROADMAP.md`. After IC4a, the next UX step is drag image onto icon preview, followed by converter-window/batch polish.
+Next planned feature direction is documented in `docs/ICON_CONVERSION_ROADMAP.md`. After IC4b, icon picker and preview drop both accept normal icon/image files; the next practical feature step is converter-window/batch polish or drag-and-drop ordering.
 
 Priority order:
 
-1. Drag image onto icon preview.
-2. Converter window / batch conversion.
-3. Drag-and-drop ordering.
-4. Pack import/export.
-5. Diagnostics/repair.
-6. Release/install packaging polish.
+1. Converter window / batch conversion.
+2. Drag-and-drop ordering.
+3. Pack import/export.
+4. Diagnostics/repair.
+5. Release/install packaging polish.
 
 Release readiness, self-contained zip, installer polish, MSI/MSIX, winget and code signing remain important, but they are intentionally below the next MVP feature work. The next feature should make Foldora easier to use with normal images while still persisting generated `.ico` files for Explorer compatibility.
 
@@ -134,7 +134,6 @@ Completed UI/UX audit baseline, correctness cleanup and visual polish:
 
 Feature work and validation before release packaging polish:
 
-- Add drag image onto entry icon preview after the picker conversion flow.
 - Add a richer converter window/batch flow after CLI and picker conversion are stable.
 - Keep SVG support as separate research/future work, not part of the first PNG/JPG/BMP milestone.
 - Add drag-and-drop ordering for entries/groups after conversion UX is stable.
@@ -155,11 +154,11 @@ Feature work and validation before release packaging polish:
 - No MSI/MSIX installer yet.
 - No Program Files layout, winget package or code signing yet.
 - No pack import/export yet.
-- No drag-and-drop image-to-icon replacement yet; PNG/JPG/BMP conversion currently works through CLI and the WPF file picker only.
+- Drag/drop image-to-icon replacement is limited to dropping exactly one supported file on the entry icon preview; drag/drop ordering is still not implemented.
 - No full nested tree storage/runtime beyond one-level `GroupName`.
 - No drag-and-drop group ordering.
 - No group icons.
-- No orphan icon cleanup for imported/generated `.ico`; this is now more important after picker auto-conversion and will matter further after drag/drop and pack import/export.
+- No orphan icon cleanup for imported/generated `.ico`; this is now more important after picker/drop auto-conversion and will matter further after converter/batch work and pack import/export.
 - No user-facing diagnostics for `Foldora.MenuHost.exe` failures launched from Explorer.
 - First-created desktop folder default-icon timing is currently not reproduced; tracked as `TD-0002` monitor item.
 - WPF catalog expansion is complete for `bg`, `cs`, `de`, `en`, `es`, `fr`, `hi`, `hu`, `id`, `it`, `ja`, `ko`, `nl`, `pl`, `pt-BR`, `pt-PT`, `ro`, `ru`, `th`, `tr`, `uk`, `vi`, `zh-Hans`, `zh-Hant`; CLI defaults/diagnostics/validation output and startup fatal dialog remain tracked debt.
@@ -175,7 +174,6 @@ Feature work and validation before release packaging polish:
 - Modern `IExplorerCommand` research for advanced shell integration.
 - Optional Shell refresh notification investigation for desktop.ini apply/create timing, only if `TD-0002` is reproduced again and scoped.
 - Full tree menu runtime/storage beyond current one-level groups.
-- Drag image onto entry icon preview.
 - Converter window and batch conversion beyond the existing single-file CLI.
 - Drag-and-drop ordering.
 - Group icons.

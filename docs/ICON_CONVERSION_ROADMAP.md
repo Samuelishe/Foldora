@@ -1,6 +1,6 @@
 # Icon Conversion Roadmap
 
-Этот документ фиксирует план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, IC2a добавляет Windows-specific decode/PNG encode foundation, IC2b добавляет pure alpha-aware resize/downscale foundation, IC2c связывает эти части в Windows-specific stream-based image-to-ICO conversion service, IC3 добавляет single-file CLI `convert-icon`, а IC4a подключает auto-conversion к WPF icon picker. Drag-and-drop icon replacement, converter window, batch conversion, pack import/export, generated icon cleanup and repair flows are not implemented yet.
+Этот документ фиксирует план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, IC2a добавляет Windows-specific decode/PNG encode foundation, IC2b добавляет pure alpha-aware resize/downscale foundation, IC2c связывает эти части в Windows-specific stream-based image-to-ICO conversion service, IC3 добавляет single-file CLI `convert-icon`, IC4a подключает auto-conversion к WPF icon picker, а IC4b добавляет drag/drop replacement на preview иконки. Converter window, batch conversion, pack import/export, generated icon cleanup and repair flows are not implemented yet.
 
 ## Current Implementation Status
 
@@ -56,24 +56,31 @@ IC4a implemented:
 - Conversion failures keep the previous icon unchanged and remove temp/partial output where possible.
 - App/service/ViewModel tests cover generated icon storage, picker flow, error handling and project boundaries.
 
+IC4b implemented:
+
+- Dragging one `.ico`, `.png`, `.jpg`, `.jpeg` or `.bmp` file onto an entry icon preview updates the staged icon.
+- Existing `.ico` drops reuse the staged import-on-save workflow.
+- Raster drops reuse the existing App icon preparation/conversion service and produce generated multi-size `.ico` files.
+- Unsupported, multiple-file, directory and failed/corrupt drops leave the current entry icon unchanged and report a user-facing error.
+
 Not implemented yet:
 
-- Drag image onto preview.
+- Drag-and-drop ordering.
 - Batch/directory CLI conversion.
 - Converter window.
 - Generated icon cleanup.
+- Pack import/export.
 - SVG support.
 
 ## Priority
 
-Текущий feature priority для Foldora:
+Текущий feature priority для Foldora после IC4b:
 
-1. Drag image onto icon preview.
-2. Converter window / batch conversion.
-3. Drag-and-drop ordering.
-4. Pack import/export.
-5. Diagnostics/repair.
-6. Release/install packaging polish.
+1. Converter window / batch conversion.
+2. Drag-and-drop ordering.
+3. Pack import/export.
+4. Diagnostics/repair.
+5. Release/install packaging polish.
 
 Release readiness, self-contained zip, installer polish, MSI/MSIX, winget and code signing remain important, but they are intentionally below MVP feature work until icon conversion and adjacent menu-editing UX are stronger.
 
@@ -139,7 +146,7 @@ Dependency direction:
 - `Foldora.Core` must not depend on `Foldora.Imaging`.
 - `Foldora.Imaging` must stay pure `net10.0` without WPF/Windows imaging dependencies.
 - `Foldora.Imaging.Windows` may depend on `Foldora.Imaging` and Windows/WPF imaging APIs.
-- `Foldora.App` may use `Foldora.Imaging.Windows` for picker auto-conversion and later drag/drop conversion.
+- `Foldora.App` may use `Foldora.Imaging.Windows` for picker/drop auto-conversion.
 - `Foldora.Cli` may use `Foldora.Imaging.Windows` for the Windows-only `convert-icon` command.
 - `Foldora.MenuHost` should not need `Foldora.Imaging` or `Foldora.Imaging.Windows`.
 
@@ -206,7 +213,7 @@ Behavior:
 - conversion failure keeps the previous icon unchanged;
 - user should not need to understand ICO internals.
 
-Drag image onto icon preview:
+Drag image onto icon preview implemented in IC4b:
 
 ```text
 Drop .ico/.png/.jpg/.jpeg/.bmp onto entry icon preview
@@ -216,7 +223,7 @@ Drop .ico/.png/.jpg/.jpeg/.bmp onto entry icon preview
   -> Save persists it
 ```
 
-This should come after the conversion foundation so the drag/drop path can reuse the same validation and conversion code.
+Only one dropped file is accepted. Unsupported files, directories, multiple files and failed conversion/decode leave the previous staged icon unchanged. This is a UX layer over the IC4a `IconAssetPreparationService`, not a second conversion pipeline.
 
 Converter window:
 
@@ -233,7 +240,7 @@ Planned capabilities:
 - overwrite policy;
 - conversion report/errors.
 
-Do not build the converter window first. The first milestone should be engine + CLI + picker integration.
+Do not mix converter-window work with drag/drop ordering or SVG. The next converter-window milestone should stay on single/batch PNG/JPG/BMP-to-ICO workflows over the existing conversion service.
 
 ## CLI Conversion
 
@@ -269,13 +276,13 @@ Rationale:
 
 Current manual workflow can still have users manually place icons in `%AppData%\Foldora\icons` once. That does not automatically create junk by itself.
 
-IC4a generated icon workflow:
+IC4a/IC4b generated icon workflow:
 
 ```text
 %AppData%\Foldora\icons\generated\
 ```
 
-The WPF picker writes generated multi-size `.ico` files there when the user selects `.png`, `.jpg`, `.jpeg` or `.bmp`. The settings file stores the generated `.ico` path as a normal `IconPath`; it does not store the original source image path or conversion options.
+The WPF picker and preview drop flow write generated multi-size `.ico` files there when the user selects or drops `.png`, `.jpg`, `.jpeg` or `.bmp`. The settings file stores the generated `.ico` path as a normal `IconPath`; it does not store the original source image path or conversion options.
 
 Potential orphan/generated icon cases become more important later:
 
@@ -286,7 +293,7 @@ Potential orphan/generated icon cases become more important later:
 - pack import copies icons;
 - failed/aborted conversions leave temp/generated files.
 
-Conclusion: orphan icon cleanup is deferred. It is now relevant for generated picker icons and becomes more important after drag/drop replacement and pack import/export.
+Conclusion: orphan icon cleanup is deferred. It is now relevant for generated picker/drop icons and becomes more important after converter/batch work and pack import/export.
 
 Future storage separation idea:
 

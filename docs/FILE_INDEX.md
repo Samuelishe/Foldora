@@ -2,7 +2,7 @@
 
 - `Foldora.sln` - solution.
 - `.gitignore` - исключения для .NET/WPF и локальных файлов.
-- `README.md` - публичный GitHub README: product landing top with README hero image, highlights, quick start, текущие возможности, ограничения, build/run и базовые CLI-примеры.
+- `README.md` - публичный GitHub README: product landing top with README hero image, highlights, quick start, текущие возможности including picker/drop icon-image conversion, ограничения, build/run и базовые CLI-примеры.
 - `LICENSE` - Zero-Clause BSD License (0BSD) для оригинального кода, документации и self-authored ресурсов Foldora, если не указано иное.
 - `THIRD_PARTY_NOTICES.md` - notices для bundled third-party materials; сейчас фиксирует отсутствие сторонних runtime visual assets, README mockup/trademark note и test-only NuGet dependency license metadata.
 - `AGENTS.md` - правила для будущих агентных сессий.
@@ -118,21 +118,23 @@
 - `src/Foldora.App/Resources/DesignTokens.xaml` - semantic colors/brushes, spacing, radius and size tokens for WPF design system, включая visual direction v2 cool page background, blue/cyan/violet accent gradients, softer surfaces/borders and status/danger surface tokens.
 - `src/Foldora.App/Resources/Typography.xaml` - reusable WPF typography styles and app font family, включая help step readability, path text and status chip text styles.
 - `src/Foldora.App/Resources/Controls.xaml` - reusable WPF control, card/container/status styles, включая non-clipping button template/geometry with foreground forwarding, rounded TextBox template, page header, status chip variants, empty state icon container, path row, wrapping Settings tabs, Settings expander, help step and footer bar styles.
-- `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, shared app icon, visual direction v2 page header/status chips/self-authored XAML empty-state mark/footer, conditional status banner, save/discard и компактным Explorer menu status; Settings открываются через title-bar gear.
+- `src/Foldora.App/MainWindow.xaml` - WPF editor с user-facing карточками entries, icon preview drop target, shared app icon, visual direction v2 page header/status chips/self-authored XAML empty-state mark/footer, conditional status banner, save/discard и компактным Explorer menu status; Settings открываются через title-bar gear.
 - `src/Foldora.App/MainWindow.xaml.cs` - минимальный UI/window plumbing, custom title bar controls и установка `DataContext`.
 - `src/Foldora.App/SettingsWindow.xaml` - WPF окно настроек приложения с shared app icon, polished category tabs, practical 940/920 sizing, Application/language compact section, short Explorer status/actions, Installation path rows, Help/About and isolated Danger zone.
 - `src/Foldora.App/SettingsWindow.xaml.cs` - минимальный plumbing окна настроек.
 - `src/Foldora.App/HelpWindow.xaml` - WPF окно краткой Help/About справки с shared app icon, visual direction v2 header/section/step-row rhythm, scrollable content and fixed close footer.
 - `src/Foldora.App/HelpWindow.xaml.cs` - минимальный plumbing окна справки.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
-- `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands, presentation state для card/list UI and icon picker preparation/conversion flow.
-- `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню с icon status, preview, compact/edit presentation state и inline errors.
+- `src/Foldora.App/Behaviors/FileDropBehavior.cs` - минимальный WPF attached behavior, который передаёт dropped file paths из `DataFormats.FileDrop` в ViewModel command.
+- `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands, presentation state для card/list UI and shared icon picker/drop preparation/conversion flow.
+- `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню с icon status, preview, compact/edit presentation state, icon drop command и inline errors.
 - `src/Foldora.App/ViewModels/FolderMenuEntryGroupViewModel.cs` - presentation-only group container WPF для entries по `GroupName`, включая entry count и add/rename/delete group commands.
 - `src/Foldora.App/ViewModels/SettingsViewModel.cs` - ViewModel окна настроек: language save, Explorer integration actions, installation/path info and danger reset presentation.
 - `src/Foldora.App/ViewModels/HelpWindowViewModel.cs` - ViewModel краткой Help/About справки поверх App localization service.
-- `src/Foldora.App/ViewModels/LocalizationResources.cs` - bindable набор локализованных строк для WPF, включая Settings tab labels, path action tooltips and icon picker/conversion labels.
+- `src/Foldora.App/ViewModels/LocalizationResources.cs` - bindable набор локализованных строк для WPF, включая Settings tab labels, path action tooltips and icon picker/drop/conversion labels.
 - `src/Foldora.App/ViewModels/RelayCommand.cs` - простая синхронная WPF-команда.
 - `src/Foldora.App/ViewModels/AsyncRelayCommand.cs` - простая асинхронная WPF-команда with awaitable execution for tests.
+- `src/Foldora.App/ViewModels/AsyncRelayCommandOfT.cs` - простая асинхронная WPF-команда с параметром для lightweight UI command bridges.
 - `src/Foldora.App/Services/IIconFilePicker.cs` - abstraction выбора icon/image file для WPF.
 - `src/Foldora.App/Services/IconFilePickerResult.cs` - результат выбора icon/image file.
 - `src/Foldora.App/Services/WindowsIconFilePicker.cs` - WPF file picker для `.ico`, `.png`, `.jpg`, `.jpeg` and `.bmp`.
@@ -162,8 +164,8 @@
 - `src/Foldora.App/Services/ValidationMessageLocalizer.cs` - catalog-backed рендер validation issues по `Validation.<code>` keys.
 - `src/Foldora.App/Services/IPathActionService.cs` - abstraction Open/Copy actions для installation/user-data/MenuHost paths в SettingsWindow.
 - `src/Foldora.App/Services/WindowsPathActionService.cs` - Windows implementation path actions через Explorer/Clipboard для WPF settings UI.
-- `src/Foldora.App/Localization/ru.json` - Russian complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
-- `src/Foldora.App/Localization/en.json` - English complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
+- `src/Foldora.App/Localization/ru.json` - Russian complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels, short Help tab label and icon preview drop strings.
+- `src/Foldora.App/Localization/en.json` - English complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels, short Help tab label and icon preview drop strings.
 - `src/Foldora.App/Localization/zh-Hans.json` - Simplified Chinese complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
 - `src/Foldora.App/Localization/de.json` - German complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
 - `src/Foldora.App/Localization/es.json` - Spanish complete localization catalog для WPF UI/status/defaults, включая short Settings Explorer action labels and short Help tab label.
@@ -193,9 +195,9 @@
 - `tests/Foldora.Tests/App/ExplorerCommandHostPathResolverTests.cs` - тесты WPF command-host resolver для publish sibling, missing-host failure, Debug fallback и registry command path.
 - `tests/Foldora.Tests/App/DesignResourceTests.cs` - lightweight tests for WPF design resource dictionary wiring, app icon wiring/sizes, core style keys, button layout robustness/foreground forwarding, non-clipping Settings tab headers, stretched Settings selected-content host/tab bodies, Settings path/action/sizing contracts and visual direction v2 style/presentation contracts.
 - `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
-- `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections, compact/edit entry behavior and picker-prepared generated icon paths.
+- `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections, compact/edit entry behavior, picker-prepared generated icon paths and icon preview drop command behavior.
 - `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.
-- `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты enabled catalog completeness, fallback, Settings tab labels, compact Explorer/path action labels, icon picker/conversion labels and known localization keys.
+- `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты enabled catalog completeness, fallback, Settings tab labels, compact Explorer/path action labels, icon picker/drop/conversion labels and known localization keys.
 - `tests/Foldora.Tests/App/IconAssetPreparationServiceTests.cs` - tests for App icon picker preparation: `.ico` pass-through, PNG/JPG/BMP generated ICO conversion, generated filename safety, corrupt input cleanup and ICO structure.
 - `tests/Foldora.Tests/App/SettingsLanguageInitializerTests.cs` - тесты first-run language detection, unsupported culture fallback и persistence policy.
 - `tests/Foldora.Tests/App/ValidationMessageLocalizerTests.cs` - тесты App-level локализации Core validation issues.

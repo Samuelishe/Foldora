@@ -2,7 +2,7 @@
 
 Custom folder creation menu for Windows Explorer.
 
-Foldora lets you build your own "Create folder" menu in File Explorer: choose an `.ico` or select a PNG/JPG/BMP image for auto-conversion, name the menu item, set the created folder name, and create styled folders directly from the context menu.
+Foldora lets you build your own "Create folder" menu in File Explorer: choose or drop an `.ico` or PNG/JPG/BMP image for auto-conversion, name the menu item, set the created folder name, and create styled folders directly from the context menu.
 
 <p align="center">
   <img src="docs/assets/readme/foldora-readme-hero.png" alt="Foldora app showing a custom folder menu, File Explorer context menu integration, and created custom folders">
@@ -12,7 +12,7 @@ Foldora lets you build your own "Create folder" menu in File Explorer: choose an
 
 - Create custom-icon folders from File Explorer.
 - Build your own grouped "Create folder" menu.
-- Use any valid `.ico` file or auto-convert PNG/JPG/BMP images selected in the app.
+- Use any valid `.ico` file or auto-convert selected/dropped PNG/JPG/BMP images in the app.
 - Preview icons before saving.
 - Organize entries with one-level groups.
 - Install for the current user, no admin required.
@@ -35,7 +35,7 @@ pwsh scripts/install-user.ps1
 & "$env:LOCALAPPDATA\Programs\Foldora\Foldora.App.exe"
 ```
 
-3. Add menu entries, choose `.ico` files or PNG/JPG/BMP images, set created folder names and save changes.
+3. Add menu entries, choose or drop `.ico` files or PNG/JPG/BMP images, set created folder names and save changes.
 
 4. Open Settings and enable the Explorer menu.
 
@@ -72,7 +72,7 @@ Selecting an entry creates a folder and applies its icon through `desktop.ini`.
 - User-editable menu title, entry label, created folder name and enabled state.
 - Staged save: changes are not written until `Save`.
 - `.ico` import into `%AppData%\Foldora\icons\`.
-- PNG/JPG/BMP auto-conversion in the WPF icon picker, producing generated multi-size `.ico` files.
+- PNG/JPG/BMP auto-conversion in the WPF icon picker and icon-preview drop target, producing generated multi-size `.ico` files.
 - Direct `.ico` preview in the WPF editor.
 - Self-authored Foldora app/window/exe icon.
 - Safe HKCU legacy context menu registration under Foldora-owned roots.
@@ -205,7 +205,7 @@ Foldora stores user data under:
 %AppData%\Foldora\packs\
 ```
 
-Imported icons are copied into the `icons` directory. PNG/JPG/BMP images selected in the app are converted into generated `.ico` files under `icons\generated`. The original source image file is not used as the permanent menu icon path.
+Imported icons are copied into the `icons` directory. PNG/JPG/BMP images selected or dropped in the app are converted into generated `.ico` files under `icons\generated`. The original source image file is not used as the permanent menu icon path.
 
 Per-user installed binaries live separately under:
 
@@ -238,7 +238,6 @@ Foldora is an early MVP / work-in-progress project. It is usable for local testi
 - No MSI/MSIX installer yet.
 - No Program Files layout, code signing, winget package or stable release packaging yet.
 - No icon pack import/export yet.
-- No drag-and-drop image-to-icon replacement yet.
 - No full nested tree storage beyond the current one-level `GroupName`.
 - No drag-and-drop ordering or group icons yet.
 - No orphan icon cleanup yet.

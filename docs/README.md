@@ -25,6 +25,6 @@ Per-user install foundation находится в `scripts/install-user.ps1` и 
 Localization foundation описан в `LOCALIZATION.md`: complete/enabled locales `bg`, `cs`, `de`, `en`, `es`, `fr`, `hi`, `hu`, `id`, `it`, `ja`, `ko`, `nl`, `pl`, `pt-BR`, `pt-PT`, `ro`, `ru`, `th`, `tr`, `uk`, `vi`, `zh-Hans`, `zh-Hant`; Settings показывает native names в стабильном English-sort порядке, а смена языка не переводит сохранённые пользовательские menu data.
 Settings/Explorer cleanup: главный WPF экран является focused menu editor, а Explorer integration, installation/path information and danger reset находятся в `SettingsWindow`.
 UI/UX audit baseline находится в `UI_AUDIT.md`: он фиксирует найденные после ручной проверки design debt items и будущие polish passes.
-`ICON_CONVERSION_ROADMAP.md` фиксирует следующий feature priority: image-to-ICO conversion foundation, WPF picker integration, drag image onto preview, converter window, drag-and-drop ordering, pack import/export, diagnostics/repair and later release/install polish.
+`ICON_CONVERSION_ROADMAP.md` фиксирует feature priority: implemented image-to-ICO foundation, WPF picker integration and icon-preview drop support, then converter window/batch conversion, drag-and-drop ordering, pack import/export, diagnostics/repair and later release/install polish.
 
 Research notes находятся в `docs/research/`; текущий документ `docs/research/DESKTOP_ICON_PLACEMENT.md` фиксирует desktop placement spike и не является обещанием production support.

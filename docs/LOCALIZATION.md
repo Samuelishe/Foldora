@@ -109,7 +109,7 @@ SettingsWindow tab labels use dedicated keys (`SettingsTabApplication`, `Setting
 
 Runtime/status messages are visible state messages such as settings loaded, settings saved, Explorer integration enabled/disabled and draft entry added. They must come from the localization layer.
 
-Icon picker file filters and conversion errors are App-localized strings. The picker exposes icon/image filters for `.ico`, `.png`, `.jpg`, `.jpeg` and `.bmp`; if image-to-ICO conversion fails, the user-facing error must come from the catalog and technical details may be shown separately through the existing status/details surface.
+Icon picker/drop file filters, tooltips and conversion/drop errors are App-localized strings. The picker and icon-preview drop target expose icon/image support for `.ico`, `.png`, `.jpg`, `.jpeg` and `.bmp`; if image-to-ICO conversion fails, the user-facing error must come from the catalog and technical details may be shown separately through the existing status/details surface.
 
 MainWindow editor state text must also be localized user-facing status text. The saved/dirty state uses catalog keys such as `AllChangesSaved` and `UnsavedChanges`; raw boolean formatting like `Unsaved changes: True/False` must not be shown to users.
 
