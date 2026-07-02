@@ -1,6 +1,6 @@
 # Icon Conversion Roadmap
 
-Этот документ фиксирует будущий план для image-to-ICO conversion. IC1 foundation уже реализует только техническую основу ICO container writing. PNG/JPG/BMP decoding, resizing, converter CLI/UI, drag-and-drop icon replacement, pack import/export and repair flows are not implemented yet.
+Этот документ фиксирует будущий план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, а IC2a добавляет Windows-specific decode/PNG encode foundation. High-quality resizing, full converter service, converter CLI/UI, drag-and-drop icon replacement, pack import/export and repair flows are not implemented yet.
 
 ## Current Implementation Status
 
@@ -12,10 +12,18 @@ IC1 implemented:
 - `IcoWriter`, which writes a deterministic `.ico` container from already encoded PNG frame payload bytes.
 - Binary structure tests for ICONDIR, ICONDIRENTRY fields, 256x256 directory byte encoding, sorted frame order, offsets, payload concatenation, validation and stream ownership.
 
+IC2a implemented:
+
+- `src/Foldora.Imaging.Windows` project scaffold targeting `net10.0-windows`.
+- `RgbaImage` tightly packed RGBA buffer model in pure `Foldora.Imaging`.
+- Windows/WPF decoding of PNG/JPG/JPEG/BMP streams to `RgbaImage`.
+- PNG frame payload encoding from `RgbaImage`.
+- Tests for decode/encode behavior, alpha/opaque handling, stream ownership and ICO writer compatibility.
+
 Not implemented yet:
 
-- PNG/JPG/BMP decoding.
 - High-quality resize/downscale.
+- Full image-to-ICO conversion service.
 - Automatic WPF picker conversion.
 - Drag image onto preview.
 - CLI `convert-icon`.
@@ -63,36 +71,42 @@ SVG is not part of the first conversion milestone. Treat SVG as phase 2 / resear
 
 ## Proposed Architecture
 
-Project:
+Projects:
 
 ```text
-src/Foldora.Imaging/
+src/Foldora.Imaging/          pure net10.0
+src/Foldora.Imaging.Windows/  Windows-specific net10.0-windows
 ```
 
 Purpose:
 
-- image decode orchestration, future;
-- high-quality resizing, future;
+- pure icon frame metadata, conversion options/result models and tightly packed RGBA buffer model;
 - ICO writing, IC1 foundation implemented;
+- Windows/WPF image decode and PNG encode bridge, IC2a foundation implemented;
+- high-quality resizing, future;
+- full image decode orchestration/conversion service, future;
 - conversion result/reporting.
 
 Suggested future services/classes:
 
 - `ImageToIconConversionService`, future;
-- `ImageDecoder`, future;
+- `WindowsImageDecoder`;
+- `WindowsPngFrameEncoder`;
 - `IconEncoder` / `IcoWriter`;
 - `IconResizeService`, future;
 - `IconConversionOptions`
 - `IconConversionResult`
 - `IconFrameSize`
+- `RgbaImage`
 
 Dependency direction:
 
 - `Foldora.Core` must not depend on `Foldora.Imaging`.
-- `Foldora.Imaging` should avoid App/UI dependencies.
-- `Foldora.App` may use `Foldora.Imaging`.
-- `Foldora.Cli` may use `Foldora.Imaging`.
-- `Foldora.MenuHost` should not need `Foldora.Imaging`.
+- `Foldora.Imaging` must stay pure `net10.0` without WPF/Windows imaging dependencies.
+- `Foldora.Imaging.Windows` may depend on `Foldora.Imaging` and Windows/WPF imaging APIs.
+- `Foldora.App` may use `Foldora.Imaging.Windows` later for picker/drop auto-conversion.
+- `Foldora.Cli` may use `Foldora.Imaging.Windows` later for a Windows-only `convert-icon` command.
+- `Foldora.MenuHost` should not need `Foldora.Imaging` or `Foldora.Imaging.Windows`.
 
 Rationale: conversion belongs to app/CLI workflows. `Foldora.MenuHost` should stay small and focused on already-saved menu actions, and `Foldora.Core` should remain model/storage/validation oriented without pulling Windows imaging dependencies.
 

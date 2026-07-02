@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-02 - IC2a imaging decode/encode foundation
+
+- Kept `src/Foldora.Imaging` as a pure `net10.0` library and added `RgbaImage` as a tightly packed RGBA buffer model for future converter stages.
+- Added `src/Foldora.Imaging.Windows` as a `net10.0-windows` project using WPF imaging APIs and referencing only `Foldora.Imaging`.
+- Implemented PNG/JPG/JPEG/BMP stream decoding to `RgbaImage` and PNG frame payload encoding from `RgbaImage`.
+- Added tests for RGBA model validation, PNG/JPG/BMP decoding, PNG encode round-trip, alpha/opaque behavior, stream ownership and feeding encoded PNG payloads into the IC1 `IcoWriter`.
+- No resize/downscale, full converter service, CLI `convert-icon`, WPF picker integration, drag/drop, converter window or SVG support was implemented.
+
 ## 2026-07-02 - IC1 imaging foundation
 
 - Added `src/Foldora.Imaging` as a clean `net10.0` class library for future image-to-ICO conversion foundation.

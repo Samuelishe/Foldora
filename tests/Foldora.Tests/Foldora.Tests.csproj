@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Foldora.Core\Foldora.Core.csproj" />
     <ProjectReference Include="..\..\src\Foldora.Imaging\Foldora.Imaging.csproj" />
+    <ProjectReference Include="..\..\src\Foldora.Imaging.Windows\Foldora.Imaging.Windows.csproj" />
     <ProjectReference Include="..\..\src\Foldora.Shell\Foldora.Shell.csproj" />
     <ProjectReference Include="..\..\src\Foldora.Cli\Foldora.Cli.csproj" />
     <ProjectReference Include="..\..\src\Foldora.App\Foldora.App.csproj" />

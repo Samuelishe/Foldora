@@ -53,6 +53,10 @@
 - `src/Foldora.Imaging/IconConversionResult.cs` - minimal future conversion result model.
 - `src/Foldora.Imaging/IconConversionError.cs` - minimal future conversion error/warning model.
 - `src/Foldora.Imaging/IcoWriter.cs` - deterministic ICO container writer for already encoded image frame payloads.
+- `src/Foldora.Imaging/RgbaImage.cs` - pure tightly packed RGBA pixel buffer model for future decode/resize/conversion stages.
+- `src/Foldora.Imaging.Windows/Foldora.Imaging.Windows.csproj` - Windows-specific `net10.0-windows` imaging bridge project for decode/PNG encode foundation.
+- `src/Foldora.Imaging.Windows/WindowsImageDecoder.cs` - WPF imaging based PNG/JPG/JPEG/BMP stream decoder that returns `RgbaImage`.
+- `src/Foldora.Imaging.Windows/WindowsPngFrameEncoder.cs` - WPF imaging based PNG payload encoder from `RgbaImage`.
 - `src/Foldora.Shell/Foldora.Shell.csproj` - shell integration library.
 - `src/Foldora.Shell/ContextMenu/CommandLineQuoter.cs` - quoting аргументов командной строки.
 - `src/Foldora.Shell/ContextMenu/ExplorerContextMenuRegistrationOptions.cs` - параметры регистрации меню.
@@ -193,6 +197,8 @@
 - `tests/Foldora.Tests/Core/DesktopIniServiceTests.cs` - тесты desktop.ini.
 - `tests/Foldora.Tests/Fixtures/IcoTestFile.cs` - helper ICO fixture для structural validation и WPF preview.
 - `tests/Foldora.Tests/Imaging/IcoWriterTests.cs` - binary structure tests for Foldora.Imaging ICO writer and standard frame-size model.
+- `tests/Foldora.Tests/Imaging/RgbaImageTests.cs` - tests for RGBA pixel buffer validation, ownership and byte order.
+- `tests/Foldora.Tests/Imaging/WindowsImageCodecTests.cs` - Windows imaging decode/PNG encode tests and ICO writer compatibility test.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryTests.cs` - тесты defaults menu entry.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryActionServiceTests.cs` - тесты apply/create по entry id.
 - `tests/Foldora.Tests/Menu/FolderMenuDraftEditorTests.cs` - тесты staged-save draft editor logic, add/remove и pending icon import.

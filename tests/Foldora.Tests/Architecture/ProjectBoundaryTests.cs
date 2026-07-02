@@ -27,6 +27,38 @@ public sealed class ProjectBoundaryTests
         Assert.DoesNotContain("Foldora.Shell", projectText, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    public void ImagingProject_RemainsPureNetProject()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var projectFile = Path.Combine(repositoryRoot, "src", "Foldora.Imaging", "Foldora.Imaging.csproj");
+
+        var projectText = File.ReadAllText(projectFile);
+
+        Assert.Contains("<TargetFramework>net10.0</TargetFramework>", projectText, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("net10.0-windows", projectText, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("UseWPF", projectText, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("ProjectReference", projectText, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void WindowsImagingProject_OnlyReferencesPureImagingProject()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var projectFile = Path.Combine(repositoryRoot, "src", "Foldora.Imaging.Windows", "Foldora.Imaging.Windows.csproj");
+
+        var projectText = File.ReadAllText(projectFile);
+
+        Assert.Contains("<TargetFramework>net10.0-windows</TargetFramework>", projectText, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("<UseWPF>true</UseWPF>", projectText, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("..\\Foldora.Imaging\\Foldora.Imaging.csproj", projectText, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Foldora.App", projectText, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Foldora.Core", projectText, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Foldora.Cli", projectText, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Foldora.MenuHost", projectText, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Foldora.Shell", projectText, StringComparison.OrdinalIgnoreCase);
+    }
+
     private static string FindRepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
