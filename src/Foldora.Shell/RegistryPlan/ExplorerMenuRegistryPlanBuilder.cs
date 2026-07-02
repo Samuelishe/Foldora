@@ -59,9 +59,9 @@ public sealed class ExplorerMenuRegistryPlanBuilder
             .ToArray();
         var groups = enabledEntries
             .Where(entry => GroupNameValidator.Normalize(entry.GroupName).Length > 0)
-            .GroupBy(entry => GroupNameValidator.Normalize(entry.GroupName), StringComparer.OrdinalIgnoreCase)
+            .GroupBy(entry => GroupNameValidator.Normalize(entry.GroupName), GroupNameValidator.Comparer)
             .OrderBy(group => group.Min(entry => entry.SortOrder))
-            .ThenBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(group => group.Key, GroupNameValidator.Comparer)
             .ToArray();
 
         for (var index = 0; index < rootEntries.Length; index++)

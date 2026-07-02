@@ -7,9 +7,16 @@ public static class GroupNameValidator
 {
     public const int MaxLength = 80;
 
+    public static StringComparer Comparer { get; } = StringComparer.Ordinal;
+
     public static string Normalize(string? value)
     {
         return string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim();
+    }
+
+    public static bool EqualsNormalized(string? left, string? right)
+    {
+        return Comparer.Equals(Normalize(left), Normalize(right));
     }
 
     public static FolderMenuValidationResult Validate(string? groupName, string? entryId = null)

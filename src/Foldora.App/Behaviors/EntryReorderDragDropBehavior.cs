@@ -9,6 +9,7 @@ namespace Foldora.App.Behaviors;
 public static class EntryReorderDragDropBehavior
 {
     private const string DataFormat = "Foldora.EntryReorder.EntryId";
+    private static Point? dragStartPosition;
 
     public static readonly DependencyProperty DragEntryIdProperty = DependencyProperty.RegisterAttached(
         "DragEntryId",
@@ -66,9 +67,13 @@ public static class EntryReorderDragDropBehavior
         }
 
         element.PreviewMouseMove -= OnPreviewMouseMove;
+        element.PreviewMouseLeftButtonDown -= OnPreviewMouseLeftButtonDown;
+        element.PreviewMouseLeftButtonUp -= OnPreviewMouseLeftButtonUp;
         if (args.NewValue is not null)
         {
+            element.PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
             element.PreviewMouseMove += OnPreviewMouseMove;
+            element.PreviewMouseLeftButtonUp += OnPreviewMouseLeftButtonUp;
         }
     }
 
@@ -94,9 +99,27 @@ public static class EntryReorderDragDropBehavior
         element.Drop += OnDrop;
     }
 
+    private static void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs args)
+    {
+        if (sender is IInputElement inputElement)
+        {
+            dragStartPosition = args.GetPosition(inputElement);
+        }
+    }
+
+    private static void OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs args)
+    {
+        dragStartPosition = null;
+    }
+
     private static void OnPreviewMouseMove(object sender, MouseEventArgs args)
     {
         if (sender is not DependencyObject dependencyObject || args.LeftButton != MouseButtonState.Pressed)
+        {
+            return;
+        }
+
+        if (sender is not IInputElement inputElement || !HasExceededDragThreshold(args.GetPosition(inputElement)))
         {
             return;
         }
@@ -107,8 +130,21 @@ public static class EntryReorderDragDropBehavior
             return;
         }
 
+        dragStartPosition = null;
         DragDrop.DoDragDrop((DependencyObject)sender, new DataObject(DataFormat, entryId), DragDropEffects.Move);
         args.Handled = true;
+    }
+
+    private static bool HasExceededDragThreshold(Point currentPosition)
+    {
+        if (!dragStartPosition.HasValue)
+        {
+            return false;
+        }
+
+        var delta = currentPosition - dragStartPosition.Value;
+        return Math.Abs(delta.X) > SystemParameters.MinimumHorizontalDragDistance
+               || Math.Abs(delta.Y) > SystemParameters.MinimumVerticalDragDistance;
     }
 
     private static void OnPreviewDragOver(object sender, DragEventArgs args)

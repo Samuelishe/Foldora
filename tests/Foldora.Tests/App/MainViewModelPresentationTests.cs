@@ -940,6 +940,33 @@ public sealed class MainViewModelPresentationTests
     }
 
     [Fact]
+    public async Task EntryGroups_TreatCaseDifferentGroupNamesAsSeparateSections()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var upper = CreateEntry("entry-work", "Work");
+            upper.GroupName = "Work";
+            var lower = CreateEntry("entry-lower-work", "work");
+            lower.GroupName = "work";
+            await SaveSettingsAsync(paths, upper, lower);
+
+            var viewModel = await CreateViewModelAsync(paths);
+
+            Assert.Equal(["Work", "work"], viewModel.EntryGroups.Select(group => group.Title).Order(StringComparer.Ordinal).ToArray());
+            Assert.Single(viewModel.EntryGroups[0].Entries);
+            Assert.Single(viewModel.EntryGroups[1].Entries);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+
+    [Fact]
     public async Task DropIconFilesCommand_WithSingleIco_UsesImportOnSaveWorkflow()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
@@ -1121,6 +1148,40 @@ public sealed class MainViewModelPresentationTests
             Assert.Equal(["entry-two", "entry-one"], saved.CreateFolderMenu.Entries.OrderBy(entry => entry.SortOrder).Select(entry => entry.Id).ToArray());
             Assert.Equal([0, 1], saved.CreateFolderMenu.Entries.OrderBy(entry => entry.SortOrder).Select(entry => entry.SortOrder).ToArray());
             Assert.False(viewModel.HasUnsavedChanges);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task ReorderEntryCommand_PreservesEditModeAndInlineErrors()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var first = CreateEntry("entry-one", "Один");
+            first.SortOrder = 0;
+            var second = CreateEntry("entry-two", "Два");
+            second.SortOrder = 1;
+            await SaveSettingsAsync(paths, first, second);
+            var viewModel = await CreateViewModelAsync(paths);
+            var entry = viewModel.Entries[1];
+            entry.BeginEditing();
+            entry.AddInlineError("Ошибка пункта");
+
+            await viewModel.ReorderEntryCommand.ExecuteAsync(new EntryReorderRequest(
+                "entry-two",
+                "entry-one",
+                EntryReorderDropPosition.Before));
+
+            var movedEntry = viewModel.Entries[0];
+            Assert.Equal("entry-two", movedEntry.Id);
+            Assert.True(movedEntry.IsEditing);
+            Assert.Equal(["Ошибка пункта"], movedEntry.InlineErrors.ToArray());
         }
         finally
         {

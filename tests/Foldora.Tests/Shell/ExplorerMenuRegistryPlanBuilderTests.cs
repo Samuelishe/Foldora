@@ -259,6 +259,85 @@ public sealed class ExplorerMenuRegistryPlanBuilderTests
     }
 
     [Fact]
+    public void Build_CaseDifferentGroupNamesProduceSeparateGroupSubmenus()
+    {
+        var first = CreateEntry("entry-work", "Work");
+        first.GroupName = "Work";
+        first.SortOrder = 0;
+        var second = CreateEntry("entry-lower-work", "work");
+        second.GroupName = "work";
+        second.SortOrder = 1;
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettingsPreservingSortOrder(first, second));
+
+        var groupVerbs = plan.ValueOperations
+            .Where(operation => operation.ValueName == "MUIVerb"
+                                && operation.KeyPath.StartsWith(
+                                    $@"{ExplorerMenuRegistryPaths.DirectoryBackgroundRoot}\shell\group-",
+                                    StringComparison.Ordinal)
+                                && operation.KeyPath.IndexOf('\\', ExplorerMenuRegistryPaths.DirectoryBackgroundRoot.Length + @"\shell\group-".Length) < 0)
+            .Select(operation => operation.ValueData)
+            .ToArray();
+        Assert.Equal(["Work", "work"], groupVerbs);
+    }
+
+    [Fact]
+    public void Build_MaterializesRootEntriesInSortOrder()
+    {
+        var third = CreateEntry("entry-third", "Третий");
+        third.SortOrder = 30;
+        var first = CreateEntry("entry-first", "Первый");
+        first.SortOrder = 10;
+        var second = CreateEntry("entry-second", "Второй");
+        second.SortOrder = 20;
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettingsPreservingSortOrder(third, first, second));
+
+        Assert.Equal(["entry-first", "entry-second", "entry-third"], GetCommandEntryIds(plan));
+    }
+
+    [Fact]
+    public void Build_MaterializesGroupedEntriesInSortOrder()
+    {
+        var third = CreateEntry("entry-third", "Третий");
+        third.GroupName = "Работа";
+        third.SortOrder = 30;
+        var first = CreateEntry("entry-first", "Первый");
+        first.GroupName = "Работа";
+        first.SortOrder = 10;
+        var second = CreateEntry("entry-second", "Второй");
+        second.GroupName = "Работа";
+        second.SortOrder = 20;
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettingsPreservingSortOrder(third, first, second));
+
+        Assert.Equal(["entry-first", "entry-second", "entry-third"], GetCommandEntryIds(plan));
+    }
+
+    [Fact]
+    public void Build_MaterializesRootEntriesBeforeGroupsAndOrdersGroupsByMinimumSortOrder()
+    {
+        var laterRoot = CreateEntry("entry-later-root", "Поздний root");
+        laterRoot.SortOrder = 50;
+        var work = CreateEntry("entry-work", "Работа");
+        work.GroupName = "Work";
+        work.SortOrder = 20;
+        var media = CreateEntry("entry-media", "Медиа");
+        media.GroupName = "Media";
+        media.SortOrder = 10;
+        var earlyRoot = CreateEntry("entry-early-root", "Ранний root");
+        earlyRoot.SortOrder = 0;
+
+        var plan = BuildPlan(ExplorerMenuTargetKind.DirectoryBackground, CreateSettingsPreservingSortOrder(laterRoot, work, media, earlyRoot));
+
+        Assert.Equal(
+            ["entry-001-entry-early-root", "entry-002-entry-later-root", "group-001", "group-002"],
+            GetDirectShellChildNames(plan, ExplorerMenuRegistryPaths.DirectoryBackgroundRoot));
+        Assert.Contains(plan.ValueOperations, operation => operation.KeyPath.EndsWith(@"\group-001", StringComparison.Ordinal) && operation.ValueData == "Media");
+        Assert.Contains(plan.ValueOperations, operation => operation.KeyPath.EndsWith(@"\group-002", StringComparison.Ordinal) && operation.ValueData == "Work");
+    }
+
+    [Fact]
     public void Build_DisabledGroupedEntryDoesNotCreateGroup()
     {
         var entry = CreateEntry("entry-blue", "Синяя");
@@ -372,6 +451,45 @@ public sealed class ExplorerMenuRegistryPlanBuilderTests
         }
 
         return settings;
+    }
+
+    private static FolderMenuSettings CreateSettingsPreservingSortOrder(params FolderMenuEntry[] entries)
+    {
+        var settings = new FolderMenuSettings();
+        settings.Entries.AddRange(entries);
+        return settings;
+    }
+
+    private static string[] GetCommandEntryIds(ExplorerMenuRegistryPlan plan)
+    {
+        return plan.ValueOperations
+            .Where(operation => operation.KeyPath.EndsWith(@"\command", StringComparison.Ordinal)
+                                && operation.ValueName == string.Empty)
+            .Select(operation => ExtractEntryId(operation.ValueData))
+            .ToArray();
+    }
+
+    private static string[] GetDirectShellChildNames(ExplorerMenuRegistryPlan plan, string root)
+    {
+        var rootShell = $@"{root}\shell\";
+        return plan.KeyOperations
+            .Select(operation => operation.KeyPath)
+            .Where(path => path.StartsWith(rootShell, StringComparison.Ordinal))
+            .Select(path => path[rootShell.Length..])
+            .Where(child => !child.Contains('\\', StringComparison.Ordinal))
+            .ToArray();
+    }
+
+    private static string ExtractEntryId(string command)
+    {
+        const string marker = "--entry-id";
+        var markerIndex = command.IndexOf(marker, StringComparison.Ordinal);
+        Assert.True(markerIndex >= 0);
+        var value = command[(markerIndex + marker.Length)..].Trim();
+        Assert.StartsWith("\"", value, StringComparison.Ordinal);
+        var endIndex = value.IndexOf('"', 1);
+        Assert.True(endIndex > 1);
+        return value[1..endIndex];
     }
 
     private static FolderMenuEntry CreateEntry(string id, string displayName)

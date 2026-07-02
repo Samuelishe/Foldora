@@ -572,6 +572,17 @@ public sealed class MainViewModel : INotifyPropertyChanged
             return;
         }
 
+        var editingEntryIds = Entries
+            .Where(entry => entry.IsEditing)
+            .Select(entry => entry.Id)
+            .ToHashSet(StringComparer.Ordinal);
+        var inlineErrorsByEntryId = Entries
+            .Where(entry => entry.HasInlineErrors)
+            .ToDictionary(
+                entry => entry.Id,
+                entry => entry.InlineErrors.ToArray(),
+                StringComparer.Ordinal);
+
         var reordered = draftEditor.ReorderEntry(
             request.SourceEntryId,
             request.TargetEntryId,
@@ -582,11 +593,32 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
 
         LoadDraftIntoViewModels();
-        Errors.Clear();
-        OperationDetails.Clear();
-        NotifyErrorAndDetailsStateChanged();
+        RestoreEntryPresentationState(editingEntryIds, inlineErrorsByEntryId);
         RefreshDirtyState();
         await Task.CompletedTask;
+    }
+
+    private void RestoreEntryPresentationState(
+        IReadOnlySet<string> editingEntryIds,
+        IReadOnlyDictionary<string, string[]> inlineErrorsByEntryId)
+    {
+        foreach (var entry in Entries)
+        {
+            if (editingEntryIds.Contains(entry.Id))
+            {
+                entry.BeginEditing();
+            }
+
+            if (!inlineErrorsByEntryId.TryGetValue(entry.Id, out var inlineErrors))
+            {
+                continue;
+            }
+
+            foreach (var inlineError in inlineErrors)
+            {
+                entry.AddInlineError(inlineError);
+            }
+        }
     }
 
     private void LoadDraftIntoViewModels()
@@ -665,9 +697,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
         foreach (var group in Entries
                      .Where(entry => !string.IsNullOrWhiteSpace(entry.GroupName))
-                     .GroupBy(entry => entry.GroupName.Trim(), StringComparer.Ordinal)
+                     .GroupBy(entry => GroupNameValidator.Normalize(entry.GroupName), GroupNameValidator.Comparer)
                      .OrderBy(group => Entries.IndexOf(group.First()))
-                     .ThenBy(group => group.Key, StringComparer.Ordinal))
+                     .ThenBy(group => group.Key, GroupNameValidator.Comparer))
         {
             EntryGroups.Add(new FolderMenuEntryGroupViewModel(
                 group.Key,
@@ -691,9 +723,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private string GetNextGroupName()
     {
         var existingNames = Entries
-            .Select(entry => entry.GroupName.Trim())
+            .Select(entry => GroupNameValidator.Normalize(entry.GroupName))
             .Where(groupName => !string.IsNullOrWhiteSpace(groupName))
-            .ToHashSet(StringComparer.Ordinal);
+            .ToHashSet(GroupNameValidator.Comparer);
 
         for (var index = 1; index < 1000; index++)
         {
@@ -755,7 +787,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
 
         var entriesToRemove = Entries
-            .Where(entry => string.Equals(entry.GroupName.Trim(), groupName.Trim(), StringComparison.Ordinal))
+            .Where(entry => GroupNameValidator.EqualsNormalized(entry.GroupName, groupName))
             .ToList();
 
         foreach (var entry in entriesToRemove)
@@ -775,12 +807,12 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     private void RenameGroup(string oldGroupName, string newGroupName)
     {
-        if (string.IsNullOrWhiteSpace(oldGroupName) || string.Equals(oldGroupName, newGroupName, StringComparison.Ordinal))
+        if (string.IsNullOrWhiteSpace(oldGroupName) || GroupNameValidator.EqualsNormalized(oldGroupName, newGroupName))
         {
             return;
         }
 
-        foreach (var entry in Entries.Where(entry => string.Equals(entry.GroupName.Trim(), oldGroupName.Trim(), StringComparison.Ordinal)))
+        foreach (var entry in Entries.Where(entry => GroupNameValidator.EqualsNormalized(entry.GroupName, oldGroupName)))
         {
             entry.GroupName = newGroupName;
         }

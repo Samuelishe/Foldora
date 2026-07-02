@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-02 - IC5a follow-up fixes
+
+- Fixed icon preview file-drop filtering so `FileDropBehavior` handles only real `DataFormats.FileDrop` payloads and does not swallow internal entry reorder drops.
+- Centralized normalized ordinal/case-sensitive `GroupName` comparison across draft editing, WPF grouping, validation and registry planning; `Work` and `work` remain separate user-visible groups.
+- Added normal WPF drag-start threshold behavior for the entry reorder handle and preserved entry edit/inline-error presentation state across reorder reloads.
+- Expanded tests for case-sensitive group policy, registry `SortOrder` materialization, Explorer-save rebuild order and reorder presentation-state preservation.
+- No cross-group moves, group/block ordering, converter window, batch conversion, SVG, pack import/export, generated icon cleanup, settings schema changes or registry behavior changes were implemented.
+
 ## 2026-07-02 - IC5a WPF entry ordering
 
 - Implemented IC5a entry ordering: entries can be reordered from a drag handle in the WPF editor while preserving staged Save/Discard behavior.

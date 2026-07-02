@@ -153,6 +153,30 @@ dotnet run --project src/Foldora.App/Foldora.App.csproj
 
 ## 4. Explorer Integration
 
+## 3a. Entry Reorder And Icon Preview Drop
+
+1. Создать несколько entries в одной группе.
+2. Перетащить entry вверх за drag handle.
+3. Перетащить entry вниз за drag handle.
+4. Перетащить entry и отпустить его над icon preview area другого entry.
+5. Нажать/зажать drag handle с минимальным jitter и без намеренного движения.
+6. Намеренно сдвинуть pointer дальше обычного drag threshold и выполнить reorder.
+7. Перетащить один поддержанный `.ico`, `.png`, `.jpg`, `.jpeg` или `.bmp` file на icon preview.
+8. Перетащить неподдержанный file на icon preview.
+9. Нажать `Сохранить`, закрыть и снова открыть приложение.
+10. Выполнить reorder и нажать `Отменить изменения`.
+
+Ожидаемо:
+
+- reorder работает только от drag handle, а поля/кнопки в entry остаются обычными controls;
+- drop entry над icon preview другого entry всё равно переупорядочивает entry и не запускает icon-drop error;
+- click/press на drag handle с маленьким jitter не начинает drag, пока движение не превысит WPF drag threshold;
+- supported file drop на icon preview по-прежнему заменяет/готовит иконку через picker/drop workflow;
+- unsupported file drop на icon preview не меняет текущую иконку;
+- `Сохранить` persists новый `SortOrder`, а `Отменить изменения` возвращает последний saved order.
+
+## 4. Explorer Integration
+
 1. Открыть Settings через gear.
 2. В секции Explorer menu нажать `Предпросмотр изменений`.
 3. Проверить short status и раскрываемые technical details.

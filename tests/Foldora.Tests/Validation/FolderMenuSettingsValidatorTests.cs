@@ -50,6 +50,46 @@ public sealed class FolderMenuSettingsValidatorTests
     }
 
     [Fact]
+    public void Validate_CountsCaseDifferentGroupNamesAsDifferentGroups()
+    {
+        var settings = new FolderMenuSettings();
+        for (var index = 0; index < 15; index++)
+        {
+            settings.Entries.Add(CreateEntry(index, enabled: true, $"Work {index}", "Work"));
+            settings.Entries.Add(CreateEntry(index + 100, enabled: true, $"work {index}", "work"));
+        }
+
+        var result = new FolderMenuSettingsValidator().Validate(settings);
+
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public void Validate_CountsCaseDifferentGroupChildrenSeparately()
+    {
+        var settings = new FolderMenuSettings();
+        for (var index = 0; index < 31; index++)
+        {
+            settings.Entries.Add(CreateEntry(index, enabled: true, $"Work {index}", "Work"));
+            settings.Entries.Add(CreateEntry(index + 100, enabled: true, $"work {index}", "work"));
+        }
+
+        var result = new FolderMenuSettingsValidator().Validate(settings);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == FolderMenuValidationIssueCodes.MenuGroupChildrenLimit
+                     && issue.Parameters["groupName"] == "Work"
+                     && issue.Parameters["count"] == "31");
+        Assert.Contains(
+            result.Issues,
+            issue => issue.Code == FolderMenuValidationIssueCodes.MenuGroupChildrenLimit
+                     && issue.Parameters["groupName"] == "work"
+                     && issue.Parameters["count"] == "31");
+    }
+
+    [Fact]
     public void Validate_RejectsMoreThanThirtyGroups()
     {
         var settings = new FolderMenuSettings();

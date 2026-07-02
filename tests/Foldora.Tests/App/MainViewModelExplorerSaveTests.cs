@@ -1,4 +1,5 @@
 using Foldora.App.Services;
+using Foldora.App.Behaviors;
 using Foldora.App.ViewModels;
 using Foldora.Core.Menu;
 using Foldora.Core.Settings;
@@ -106,6 +107,44 @@ public sealed class MainViewModelExplorerSaveTests
         }
     }
 
+    [Fact]
+    public async Task SaveDraft_AfterReorderWithExplorerIntegrationEnabledPersistsOrderAndRebuildsRegistryInOrder()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraMainVmSave-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            var hostPath = await CreateFakeHostAsync(root.FullName);
+            var firstIcon = await CreateIconAsync(paths, "entry-first");
+            var secondIcon = await CreateIconAsync(paths, "entry-second");
+            var first = CreateEntry("entry-first", "Первый", firstIcon);
+            first.SortOrder = 0;
+            var second = CreateEntry("entry-second", "Второй", secondIcon);
+            second.SortOrder = 1;
+            await SaveSettingsAsync(paths, explorerIntegrationEnabled: true, first, second);
+            var registry = new FakeRegistryAccess();
+            var viewModel = await CreateViewModelAsync(paths, registry, hostPath);
+
+            await viewModel.ReorderEntryCommand.ExecuteAsync(new EntryReorderRequest(
+                "entry-second",
+                "entry-first",
+                EntryReorderDropPosition.Before));
+            await viewModel.SaveDraftAsync();
+
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+            Assert.Equal(["entry-second", "entry-first"], saved.CreateFolderMenu.Entries.OrderBy(entry => entry.SortOrder).Select(entry => entry.Id).ToArray());
+            Assert.Equal([0, 1], saved.CreateFolderMenu.Entries.OrderBy(entry => entry.SortOrder).Select(entry => entry.SortOrder).ToArray());
+            Assert.Equal(
+                ["entry-001-entry-second", "entry-002-entry-first"],
+                GetDirectCreatedShellChildren(registry, ExplorerMenuRegistryPaths.DirectoryBackgroundRoot));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
     private static async Task<MainViewModel> CreateViewModelAsync(
         FoldoraDataPaths paths,
         FakeRegistryAccess registry,
@@ -155,6 +194,16 @@ public sealed class MainViewModelExplorerSaveTests
             IconPath = iconPath,
             IsEnabled = true
         };
+    }
+
+    private static string[] GetDirectCreatedShellChildren(FakeRegistryAccess registry, string root)
+    {
+        var prefix = $"create:{ExplorerMenuRegistryHive.CurrentUser}\\{root}\\shell\\";
+        return registry.Calls
+            .Where(call => call.StartsWith(prefix, StringComparison.Ordinal))
+            .Select(call => call[prefix.Length..])
+            .Where(child => !child.Contains('\\', StringComparison.Ordinal))
+            .ToArray();
     }
 
     private static async Task<string> CreateIconAsync(FoldoraDataPaths paths, string entryId)

@@ -8,16 +8,16 @@ namespace Foldora.Shell.RegistryPlan;
 public sealed class ExplorerMenuCommandBuilder
 {
     public string BuildCreateFolderCommand(
-        string cliExecutablePath,
+        string commandHostPath,
         ExplorerMenuTargetKind targetKind,
         string entryId)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(cliExecutablePath);
+        ArgumentException.ThrowIfNullOrWhiteSpace(commandHostPath);
         ArgumentException.ThrowIfNullOrWhiteSpace(entryId);
 
         return string.Join(
             " ",
-            CommandLineQuoter.Quote(cliExecutablePath),
+            CommandLineQuoter.Quote(commandHostPath),
             CommandLineQuoter.Quote("create"),
             CommandLineQuoter.Quote("--target"),
             CommandLineQuoter.QuoteAlways(ExplorerMenuShellTargetPlaceholder.GetPlaceholder(targetKind)),

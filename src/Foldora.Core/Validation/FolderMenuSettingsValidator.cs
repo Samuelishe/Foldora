@@ -50,7 +50,7 @@ public sealed class FolderMenuSettingsValidator
             .Where(entry => entry.IsEnabled)
             .Select(entry => GroupNameValidator.Normalize(entry.GroupName))
             .Where(groupName => groupName.Length > 0)
-            .GroupBy(groupName => groupName, StringComparer.OrdinalIgnoreCase)
+            .GroupBy(groupName => groupName, GroupNameValidator.Comparer)
             .ToArray();
 
         if (enabledGroups.Length > MaxGroups)

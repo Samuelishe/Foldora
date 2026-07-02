@@ -32,7 +32,7 @@
 - `src/Foldora.Core/Menu/FolderMenuDraftSaveResult.cs` - результат сохранения draft-состояния меню.
 - `src/Foldora.Core/Validation/DisplayNameValidator.cs` - валидация подписи пункта меню.
 - `src/Foldora.Core/Validation/FolderNameValidator.cs` - валидация имени создаваемой папки.
-- `src/Foldora.Core/Validation/GroupNameValidator.cs` - валидация имени одноуровневой группы меню.
+- `src/Foldora.Core/Validation/GroupNameValidator.cs` - валидация имени одноуровневой группы меню и shared normalized ordinal/case-sensitive comparison policy.
 - `src/Foldora.Core/Validation/FolderNameSanitizer.cs` - sanitizer имени папки для будущего UI.
 - `src/Foldora.Core/Validation/FolderMenuEntryValidator.cs` - валидация одного menu entry.
 - `src/Foldora.Core/Validation/FolderMenuSettingsValidator.cs` - валидация меню, group limits и entry limits.
@@ -75,13 +75,13 @@
 - `src/Foldora.Shell/Registry/ExplorerMenuRegistryWriter.cs` - применение validated registry plan.
 - `src/Foldora.Shell/Registry/ExplorerMenuRegistrationResult.cs` - результат register/dry-run/unregister.
 - `src/Foldora.Shell/Registry/ExplorerMenuRegistrationService.cs` - orchestration register-menu/unregister-menu/menu reset.
-- `src/Foldora.Shell/RegistryPlan/ExplorerMenuCommandBuilder.cs` - command strings для будущих registry values.
+- `src/Foldora.Shell/RegistryPlan/ExplorerMenuCommandBuilder.cs` - command strings для registry values, targeting command host/MenuHost executable paths.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryDeleteOperation.cs` - delete key operation.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryHive.cs` - registry hive model.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryKeyOperation.cs` - create key operation.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPaths.cs` - Foldora-owned registry roots.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlan.cs` - immutable registry plan.
-- `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanBuilder.cs` - testable registry plan builder для visible shape `<CreateFolderMenu.Title> -> groups/entries`.
+- `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanBuilder.cs` - testable registry plan builder для visible shape `<CreateFolderMenu.Title> -> groups/entries`, `SortOrder` materialization and shared `GroupName` comparison policy.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanValidationResult.cs` - validation result.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryPlanValidator.cs` - safety validator для plan.
 - `src/Foldora.Shell/RegistryPlan/ExplorerMenuRegistryValueOperation.cs` - set value operation.
@@ -125,11 +125,11 @@
 - `src/Foldora.App/HelpWindow.xaml` - WPF окно краткой Help/About справки с shared app icon, visual direction v2 header/section/step-row rhythm, scrollable content and fixed close footer.
 - `src/Foldora.App/HelpWindow.xaml.cs` - минимальный plumbing окна справки.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
-- `src/Foldora.App/Behaviors/FileDropBehavior.cs` - минимальный WPF attached behavior, который передаёт dropped file paths из `DataFormats.FileDrop` в ViewModel command.
-- `src/Foldora.App/Behaviors/EntryReorderDragDropBehavior.cs` - минимальный WPF attached behavior для internal-only drag/drop переупорядочивания entries.
+- `src/Foldora.App/Behaviors/FileDropBehavior.cs` - минимальный WPF attached behavior, который передаёт dropped file paths из `DataFormats.FileDrop` в ViewModel command and ignores non-file drag payloads.
+- `src/Foldora.App/Behaviors/EntryReorderDragDropBehavior.cs` - минимальный WPF attached behavior для internal-only drag/drop переупорядочивания entries with normal WPF drag threshold.
 - `src/Foldora.App/Behaviors/EntryReorderRequest.cs` - request model для передачи source/target/position из reorder behavior в ViewModel command.
 - `src/Foldora.App/Behaviors/EntryReorderDropPosition.cs` - enum позиции вставки before/after target entry для reorder behavior.
-- `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands, same-group entry reorder command, presentation state для card/list UI and shared icon picker/drop preparation/conversion flow.
+- `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands, same-group entry reorder command, presentation state preservation для card/list UI and shared icon picker/drop preparation/conversion flow.
 - `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню с icon status, preview, compact/edit presentation state, icon drop command и inline errors.
 - `src/Foldora.App/ViewModels/FolderMenuEntryGroupViewModel.cs` - presentation-only group container WPF для entries по `GroupName`, включая entry count и add/rename/delete group commands.
 - `src/Foldora.App/ViewModels/SettingsViewModel.cs` - ViewModel окна настроек: language save, Explorer integration actions, installation/path info and danger reset presentation.
@@ -197,8 +197,8 @@
 - `tests/Foldora.Tests/App/ExplorerIntegrationControllerTests.cs` - тесты WPF Explorer integration controller с fake registry.
 - `tests/Foldora.Tests/App/ExplorerCommandHostPathResolverTests.cs` - тесты WPF command-host resolver для publish sibling, missing-host failure, Debug fallback и registry command path.
 - `tests/Foldora.Tests/App/DesignResourceTests.cs` - lightweight tests for WPF design resource dictionary wiring, app icon wiring/sizes, core style keys, button layout robustness/foreground forwarding, non-clipping Settings tab headers, stretched Settings selected-content host/tab bodies, Settings path/action/sizing contracts and visual direction v2 style/presentation contracts.
-- `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
-- `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections, compact/edit entry behavior, same-group reorder command behavior, picker-prepared generated icon paths and icon preview drop command behavior.
+- `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy, включая reordered `SortOrder` persistence and fake-registry command order.
+- `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections, case-sensitive group presentation, compact/edit entry behavior, same-group reorder command behavior, picker-prepared generated icon paths and icon preview drop command behavior.
 - `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.
 - `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты enabled catalog completeness, fallback, Settings tab labels, compact Explorer/path action labels, entry reorder tooltip, icon picker/drop/conversion labels and known localization keys.
 - `tests/Foldora.Tests/App/IconAssetPreparationServiceTests.cs` - tests for App icon picker preparation: `.ico` pass-through, PNG/JPG/BMP generated ICO conversion, generated filename safety, corrupt input cleanup and ICO structure.
@@ -228,13 +228,13 @@
 - `tests/Foldora.Tests/MenuHost/MenuHostCommandRunnerTests.cs` - тесты no-console MenuHost command runner и csproj settings.
 - `tests/Foldora.Tests/Settings/FoldoraSettingsStorageTests.cs` - тесты JSON storage и default settings.
 - `tests/Foldora.Tests/Shell/CommandLineQuoterTests.cs` - тесты command line quoting.
-- `tests/Foldora.Tests/Shell/ExplorerMenuRegistryPlanBuilderTests.cs` - тесты registry plan builder и visible menu shape.
+- `tests/Foldora.Tests/Shell/ExplorerMenuRegistryPlanBuilderTests.cs` - тесты registry plan builder, visible menu shape, `SortOrder` materialization and case-sensitive group submenu policy.
 - `tests/Foldora.Tests/Shell/ExplorerMenuRegistryPlanValidatorTests.cs` - тесты registry plan safety validator.
 - `tests/Foldora.Tests/Shell/Fakes/FakeRegistryAccess.cs` - fake registry access для тестов.
 - `tests/Foldora.Tests/Shell/ExplorerMenuRegistryWriterTests.cs` - тесты writer safety.
 - `tests/Foldora.Tests/Shell/ExplorerMenuRegistrationServiceTests.cs` - тесты register/dry-run/unregister/reset service.
 - `tests/Foldora.Tests/Validation/DisplayNameValidatorTests.cs` - тесты display name validation.
-- `tests/Foldora.Tests/Validation/FolderMenuSettingsValidatorTests.cs` - тесты лимитов menu settings.
+- `tests/Foldora.Tests/Validation/FolderMenuSettingsValidatorTests.cs` - тесты лимитов menu settings and case-sensitive group counting policy.
 - `tests/Foldora.Tests/Validation/FolderNameSanitizerTests.cs` - тесты sanitizer имени папки.
 - `tests/Foldora.Tests/Validation/FolderNameValidatorTests.cs` - тесты Windows folder name validation.
 - `tests/Foldora.Tests/Validation/GroupNameValidatorTests.cs` - тесты validation one-level group names.

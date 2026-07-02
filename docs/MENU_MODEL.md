@@ -61,7 +61,7 @@ HKCU\Software\Classes\Directory\Background\shell\Foldora
 
 `DefaultFolderName`: пустое значение получает fallback `Новая папка`, максимум 80 символов, control chars запрещены, запрещены Windows filename characters `< > : " / \ | ? *`, reserved names `CON`, `PRN`, `AUX`, `NUL`, `COM1`...`COM9`, `LPT1`...`LPT9`, а также trailing dot/space.
 
-`GroupName`: trim по краям, empty/whitespace разрешены и означают root-level entry, максимум 80 символов, control chars запрещены, кириллица/emoji/пробелы разрешены. `/` и `\` запрещены, потому что nested groups вида `A/B` пока не поддерживаются.
+`GroupName`: trim по краям, empty/whitespace разрешены и означают root-level entry, максимум 80 символов, control chars запрещены, кириллица/emoji/пробелы разрешены. `/` и `\` запрещены, потому что nested groups вида `A/B` пока не поддерживаются. Сравнение group names в WPF draft, validation и registry builder использует normalized-by-trim ordinal/case-sensitive policy: `Work` и `work` являются разными visible groups. Foldora не приводит пользовательский `GroupName` к lower-case, потому что это видимые пользовательские данные, а не registry key, id или имя файла.
 
 Menu limits на текущем этапе: max total entries 100, max enabled entries 50, max groups 30, max enabled children per group 30.
 
@@ -125,7 +125,7 @@ Create folder
     Pictures
 ```
 
-Пустое значение оставляет пункт прямо в root menu. Непустое значение объединяет entries с одинаковым `GroupName` в один submenu.
+Пустое значение оставляет пункт прямо в root menu. Непустое значение объединяет entries с одинаковым normalized-by-trim `GroupName` в один submenu. Сравнение case-sensitive ordinal, поэтому `Work` и `work` остаются разными submenu и в WPF, и в generated registry menu.
 
 WPF может показывать entries как visual group containers `Без группы` и `<GroupName>`, но это не меняет persisted model. Пустые группы не сохраняются отдельно; `+ Добавить группу` в UI создаёт обычный draft entry с новым `GroupName`.
 

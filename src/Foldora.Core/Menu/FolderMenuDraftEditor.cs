@@ -124,8 +124,8 @@ public sealed class FolderMenuDraftEditor
             return false;
         }
 
-        var sourceGroupName = NormalizeGroupName(sourceEntry.GroupName);
-        if (!string.Equals(sourceGroupName, NormalizeGroupName(targetEntry.GroupName), StringComparison.Ordinal))
+        var sourceGroupName = GroupNameValidator.Normalize(sourceEntry.GroupName);
+        if (!GroupNameValidator.EqualsNormalized(sourceGroupName, targetEntry.GroupName))
         {
             return false;
         }
@@ -136,7 +136,7 @@ public sealed class FolderMenuDraftEditor
             .ToList();
 
         var groupEntries = orderedEntries
-            .Where(entry => string.Equals(NormalizeGroupName(entry.GroupName), sourceGroupName, StringComparison.Ordinal))
+            .Where(entry => GroupNameValidator.EqualsNormalized(entry.GroupName, sourceGroupName))
             .ToList();
         groupEntries.Remove(sourceEntry);
 
@@ -153,7 +153,7 @@ public sealed class FolderMenuDraftEditor
         Entries.Clear();
         foreach (var entry in orderedEntries)
         {
-            Entries.Add(string.Equals(NormalizeGroupName(entry.GroupName), sourceGroupName, StringComparison.Ordinal)
+            Entries.Add(GroupNameValidator.EqualsNormalized(entry.GroupName, sourceGroupName)
                 ? groupEntries[reorderedGroupEntryIndex++]
                 : entry);
         }
@@ -350,11 +350,6 @@ public sealed class FolderMenuDraftEditor
         {
             Entries[index].SortOrder = index;
         }
-    }
-
-    private static string NormalizeGroupName(string? groupName)
-    {
-        return string.IsNullOrWhiteSpace(groupName) ? string.Empty : groupName.Trim();
     }
 
     private static string CreateEntryId()

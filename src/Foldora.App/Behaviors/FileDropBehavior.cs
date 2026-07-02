@@ -46,14 +46,22 @@ public static class FileDropBehavior
 
     private static void OnPreviewDragOver(object sender, DragEventArgs args)
     {
-        args.Effects = args.Data.GetDataPresent(DataFormats.FileDrop)
-            ? DragDropEffects.Copy
-            : DragDropEffects.None;
+        if (!args.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            return;
+        }
+
+        args.Effects = DragDropEffects.Copy;
         args.Handled = true;
     }
 
     private static void OnDrop(object sender, DragEventArgs args)
     {
+        if (!args.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            return;
+        }
+
         if (sender is not DependencyObject dependencyObject)
         {
             return;
