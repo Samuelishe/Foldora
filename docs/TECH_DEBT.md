@@ -282,11 +282,11 @@
 - Status: Deferred
 - Severity: Low
 - Area: Settings / Storage / Imaging
-- Observed behavior: Current workflow can leave imported `.ico` files under `%AppData%\Foldora\icons` after entry deletion/replacement, but this is not a pressing problem for the current manual icon workflow.
+- Observed behavior: Current workflow can leave imported `.ico` files under `%AppData%\Foldora\icons` after entry deletion/replacement. IC4a can also leave generated `.ico` files under `%AppData%\Foldora\icons\generated` when the user replaces an icon, deletes an entry or discards a staged edit after image conversion.
 - Expected/desired behavior: Later, Foldora should be able to identify and clean unused imported/generated icons without deleting icons referenced by existing styled folders or packs.
-- Known cause or hypothesis: Orphan risk increases after auto-conversion, generated icons, failed conversions and pack import/export because Foldora may create more files automatically.
+- Known cause or hypothesis: Orphan risk increased with picker auto-conversion because Foldora now creates generated icon files automatically. Pack import/export will add more cases later.
 - Current workaround: Preserve `%AppData%\Foldora` and avoid automatic cleanup.
-- Next investigation step: Revisit after image conversion and pack import/export exist. Consider storage separation such as `icons/imported`, `icons/generated` and `icons/packs`.
+- Next investigation step: Revisit after drag/drop conversion or pack import/export. Cleanup must respect settings, existing styled folders and future packs, and should keep generated storage separate from user-imported icons.
 - Links to docs/tests/code:
   - `docs/ICON_CONVERSION_ROADMAP.md`
   - `docs/SETTINGS.md`

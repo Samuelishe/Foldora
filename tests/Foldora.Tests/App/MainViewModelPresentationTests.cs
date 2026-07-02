@@ -5,6 +5,7 @@ using Foldora.Core.Settings;
 using Foldora.Core.Storage;
 using Foldora.Shell.Registry;
 using Foldora.Shell.RegistryPlan;
+using Foldora.Tests.Fixtures;
 using Foldora.Tests.Shell.Fakes;
 
 namespace Foldora.Tests.App;
@@ -890,6 +891,53 @@ public sealed class MainViewModelPresentationTests
         }
     }
 
+    [Fact]
+    public async Task ChooseIconCommand_UsesPreparedGeneratedIconAndSavePersistsIt()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraVmPresentation-");
+
+        try
+        {
+            var paths = new FoldoraDataPaths(Path.Combine(root.FullName, "Foldora"));
+            await SaveSettingsAsync(paths, "en");
+            var generatedIcon = Path.Combine(paths.IconsDirectory, "generated", "source-12345678.ico");
+            await IcoTestFile.WriteValidAsync(generatedIcon);
+            var storage = new FoldoraSettingsStorage(paths);
+            var draftEditor = new FolderMenuDraftEditor(storage, paths);
+            var localizationService = new InMemoryLocalizationService();
+            var registrationService = new ExplorerMenuRegistrationService(
+                storage,
+                new ExplorerMenuRegistryPlanBuilder(),
+                new ExplorerMenuRegistryWriter(new FakeRegistryAccess()));
+            var viewModel = new MainViewModel(
+                draftEditor,
+                new FixedIconFilePicker(Path.Combine(root.FullName, "source.png")),
+                new NoopIconPreviewService(),
+                new ExplorerIntegrationController(
+                    draftEditor,
+                    registrationService,
+                    new FixedHostPathResolver(Path.Combine(paths.RootDirectory, "Foldora.MenuHost.exe")),
+                    localizationService),
+                localizationService: localizationService,
+                settingsLanguageInitializer: new NoopSettingsLanguageInitializer(),
+                iconAssetPreparationService: new FixedIconAssetPreparationService(generatedIcon));
+            await viewModel.LoadAsync();
+
+            viewModel.AddEntryCommand.Execute(null);
+            await viewModel.Entries[0].ChooseIconCommand.ExecuteAsync(null);
+            await viewModel.SaveDraftAsync();
+            var saved = await storage.LoadAsync();
+
+            Assert.Equal(generatedIcon, Assert.Single(saved.CreateFolderMenu.Entries).IconPath);
+            Assert.False(viewModel.HasUnsavedChanges);
+            Assert.Empty(viewModel.Errors);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
     private static Task<MainViewModel> CreateViewModelAsync(FoldoraDataPaths paths)
     {
         return CreateViewModelAsync(paths, new RecordingSettingsDialogService());
@@ -1000,6 +1048,36 @@ public sealed class MainViewModelPresentationTests
         }
     }
 
+    private sealed class FixedIconFilePicker : IIconFilePicker
+    {
+        private readonly string filePath;
+
+        public FixedIconFilePicker(string filePath)
+        {
+            this.filePath = filePath;
+        }
+
+        public IconFilePickerResult PickIcon()
+        {
+            return IconFilePickerResult.FromPath(filePath);
+        }
+    }
+
+    private sealed class FixedIconAssetPreparationService : IIconAssetPreparationService
+    {
+        private readonly string generatedIconPath;
+
+        public FixedIconAssetPreparationService(string generatedIconPath)
+        {
+            this.generatedIconPath = generatedIconPath;
+        }
+
+        public Task<IconAssetPreparationResult> PrepareAsync(string selectedFilePath, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(IconAssetPreparationResult.GeneratedIcon(generatedIconPath));
+        }
+    }
+
     private sealed class NoopIconPreviewService : IIconPreviewService
     {
         public IconPreviewResult LoadPreview(string? iconPath)
@@ -1034,6 +1112,14 @@ public sealed class MainViewModelPresentationTests
         }
 
         public string CurrentUiCultureName { get; }
+    }
+
+    private sealed class NoopSettingsLanguageInitializer : ISettingsLanguageInitializer
+    {
+        public Task InitializeAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
     }
 
     public static TheoryData<string> EnabledLocales()

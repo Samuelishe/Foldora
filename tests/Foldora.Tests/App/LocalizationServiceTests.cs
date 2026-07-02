@@ -40,7 +40,7 @@ public sealed class LocalizationServiceTests
         Assert.Equal("All changes saved", english.Resources.AllChangesSaved);
         Assert.Equal("Unsaved changes", english.Resources.UnsavedChanges);
         Assert.Equal("Settings loaded.", english.Resources.SettingsLoaded);
-        Assert.Equal("Draft entry added. Choose an .ico before saving.", english.Resources.DraftEntryAddedChooseIcon);
+        Assert.Equal("Draft entry added. Choose an icon or image before saving.", english.Resources.DraftEntryAddedChooseIcon);
         Assert.Equal("Application", english.Resources.ApplicationSection);
         Assert.Equal("Explorer menu", english.Resources.ExplorerMenuSection);
         Assert.Equal("Installation", english.Resources.InstallationSection);
@@ -70,6 +70,12 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Save or discard menu changes before changing Explorer integration.", english.Resources.SaveOrDiscardBeforeExplorer);
         Assert.Equal("Created folder name contains invalid character \"{character}\".", english.Resources["Validation.folder_name_invalid_chars"]);
         Assert.Equal("Choose an .ico for the menu entry before saving.", english.Resources["Validation.entry_icon_path_empty"]);
+        Assert.Equal("Choose icon/image", english.Resources.ChooseIcon);
+        Assert.Equal("Icon/image files (*.ico;*.png;*.jpg;*.jpeg;*.bmp)", english.Resources.IconPickerFilterIconImages);
+        Assert.Equal("ICO icons (*.ico)", english.Resources.IconPickerFilterIco);
+        Assert.Equal("Images (*.png;*.jpg;*.jpeg;*.bmp)", english.Resources.IconPickerFilterImages);
+        Assert.Equal("All files (*.*)", english.Resources.IconPickerFilterAllFiles);
+        Assert.Equal("Could not convert the selected image to an ICO file.", english.Resources.IconImageConversionFailed);
     }
 
     [Fact]
@@ -87,6 +93,8 @@ public sealed class LocalizationServiceTests
         Assert.Equal("Выключить", service.Resources.UnregisterExplorer);
         Assert.Equal("Открыть", service.Resources.OpenLocation);
         Assert.Equal("Открывает папку, где находится файл.", service.Resources.OpenLocationTooltip);
+        Assert.Equal("Выбрать иконку/изображение", service.Resources.ChooseIcon);
+        Assert.Equal("Не удалось преобразовать выбранное изображение в файл ICO.", service.Resources.IconImageConversionFailed);
     }
 
     [Fact]

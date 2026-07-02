@@ -1,6 +1,6 @@
 # Icon Conversion Roadmap
 
-Этот документ фиксирует план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, IC2a добавляет Windows-specific decode/PNG encode foundation, IC2b добавляет pure alpha-aware resize/downscale foundation, IC2c связывает эти части в Windows-specific stream-based image-to-ICO conversion service, а IC3 добавляет single-file CLI `convert-icon`. WPF picker conversion, drag-and-drop icon replacement, AppData storage integration, batch converter, pack import/export and repair flows are not implemented yet.
+Этот документ фиксирует план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, IC2a добавляет Windows-specific decode/PNG encode foundation, IC2b добавляет pure alpha-aware resize/downscale foundation, IC2c связывает эти части в Windows-specific stream-based image-to-ICO conversion service, IC3 добавляет single-file CLI `convert-icon`, а IC4a подключает auto-conversion к WPF icon picker. Drag-and-drop icon replacement, converter window, batch conversion, pack import/export, generated icon cleanup and repair flows are not implemented yet.
 
 ## Current Implementation Status
 
@@ -47,27 +47,33 @@ IC3 implemented:
 - Safe temp-file write before moving to the final `.ico` path.
 - Parser/help/runner tests, file validation tests and manual CLI smoke.
 
+IC4a implemented:
+
+- WPF icon picker accepts `.ico`, `.png`, `.jpg`, `.jpeg` and `.bmp`.
+- Existing `.ico` selection keeps the staged import-on-save workflow.
+- PNG/JPG/JPEG/BMP selections are converted immediately to generated multi-size `.ico` files under `%AppData%\Foldora\icons\generated`.
+- Generated `.ico` paths are staged, previewed and saved as normal `IconPath` values.
+- Conversion failures keep the previous icon unchanged and remove temp/partial output where possible.
+- App/service/ViewModel tests cover generated icon storage, picker flow, error handling and project boundaries.
+
 Not implemented yet:
 
-- Automatic WPF picker conversion.
 - Drag image onto preview.
 - Batch/directory CLI conversion.
 - Converter window.
-- AppData generated icon storage integration.
+- Generated icon cleanup.
 - SVG support.
 
 ## Priority
 
-Следующий feature priority для Foldora:
+Текущий feature priority для Foldora:
 
-1. Image -> ICO conversion foundation.
-2. WPF icon picker integration for PNG/JPG/BMP auto-conversion.
-3. Drag image onto icon preview.
-4. Converter window / batch conversion.
-5. Drag-and-drop ordering.
-6. Pack import/export.
-7. Diagnostics/repair.
-8. Release/install packaging polish.
+1. Drag image onto icon preview.
+2. Converter window / batch conversion.
+3. Drag-and-drop ordering.
+4. Pack import/export.
+5. Diagnostics/repair.
+6. Release/install packaging polish.
 
 Release readiness, self-contained zip, installer polish, MSI/MSIX, winget and code signing remain important, but they are intentionally below MVP feature work until icon conversion and adjacent menu-editing UX are stronger.
 
@@ -133,8 +139,8 @@ Dependency direction:
 - `Foldora.Core` must not depend on `Foldora.Imaging`.
 - `Foldora.Imaging` must stay pure `net10.0` without WPF/Windows imaging dependencies.
 - `Foldora.Imaging.Windows` may depend on `Foldora.Imaging` and Windows/WPF imaging APIs.
-- `Foldora.App` may use `Foldora.Imaging.Windows` later for picker/drop auto-conversion.
-- `Foldora.Cli` may use `Foldora.Imaging.Windows` later for a Windows-only `convert-icon` command.
+- `Foldora.App` may use `Foldora.Imaging.Windows` for picker auto-conversion and later drag/drop conversion.
+- `Foldora.Cli` may use `Foldora.Imaging.Windows` for the Windows-only `convert-icon` command.
 - `Foldora.MenuHost` should not need `Foldora.Imaging` or `Foldora.Imaging.Windows`.
 
 Rationale: conversion belongs to app/CLI workflows. `Foldora.MenuHost` should stay small and focused on already-saved menu actions, and `Foldora.Core` should remain model/storage/validation oriented without pulling Windows imaging dependencies.
@@ -180,9 +186,9 @@ Implementation preference: avoid third-party conversion libraries if reasonably 
 
 Gamma-correct resizing remains deferred/research. IC2b performs alpha-aware Lanczos-style resizing in byte/sRGB value space; this is materially better than nearest/bilinear for the MVP converter foundation, but it does not claim physically perfect color-space handling.
 
-## WPF UX Plan
+## WPF Picker UX
 
-File picker idea:
+Implemented file picker filter:
 
 ```text
 Icon/image files (*.ico;*.png;*.jpg;*.jpeg;*.bmp)
@@ -192,9 +198,12 @@ Behavior:
 
 - if user selects `.ico`, existing import behavior stays;
 - if user selects `.png`, `.jpg`, `.jpeg` or `.bmp`, Foldora auto-converts to a generated multi-size `.ico`;
-- generated `.ico` is copied into `%AppData%\Foldora\icons` or a future generated/imported subfolder;
+- generated `.ico` is written under `%AppData%\Foldora\icons\generated`;
+- generated filenames use a sanitized source base name plus a short content hash;
 - entry preview updates after conversion;
 - save persists a normal icon path;
+- discard reverts the staged entry, but may leave an unused generated `.ico`;
+- conversion failure keeps the previous icon unchanged;
 - user should not need to understand ICO internals.
 
 Drag image onto icon preview:
@@ -258,7 +267,15 @@ Rationale:
 
 ## Generated Icon Storage And Cleanup
 
-Current manual workflow often has users manually place icons in `%AppData%\Foldora\icons` once. That does not automatically create junk by itself.
+Current manual workflow can still have users manually place icons in `%AppData%\Foldora\icons` once. That does not automatically create junk by itself.
+
+IC4a generated icon workflow:
+
+```text
+%AppData%\Foldora\icons\generated\
+```
+
+The WPF picker writes generated multi-size `.ico` files there when the user selects `.png`, `.jpg`, `.jpeg` or `.bmp`. The settings file stores the generated `.ico` path as a normal `IconPath`; it does not store the original source image path or conversion options.
 
 Potential orphan/generated icon cases become more important later:
 
@@ -269,9 +286,9 @@ Potential orphan/generated icon cases become more important later:
 - pack import copies icons;
 - failed/aborted conversions leave temp/generated files.
 
-Conclusion: orphan icon cleanup is deferred. It becomes more relevant after auto-conversion and pack import/export exist.
+Conclusion: orphan icon cleanup is deferred. It is now relevant for generated picker icons and becomes more important after drag/drop replacement and pack import/export.
 
-Future storage idea, not current behavior:
+Future storage separation idea:
 
 ```text
 %AppData%\Foldora\icons\imported\
@@ -279,7 +296,7 @@ Future storage idea, not current behavior:
 %AppData%\Foldora\icons\packs\
 ```
 
-Do not change actual storage until the converter/import flow needs it.
+Do not move existing imported icons until a cleanup/import migration is explicitly designed.
 
 ## Pack Import / Export
 

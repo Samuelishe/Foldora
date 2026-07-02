@@ -19,6 +19,8 @@ public sealed class FolderMenuDraftEntry
 
     public string? PendingIconSourcePath { get; set; }
 
+    public bool PendingIconSourceShouldBeImported { get; set; } = true;
+
     public string? PreviewPath { get; init; }
 
     public int SortOrder { get; init; }

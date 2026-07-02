@@ -464,6 +464,36 @@ public sealed class FolderMenuDraftEditorTests
     }
 
     [Fact]
+    public async Task SaveAsync_PersistsGeneratedPendingIconWithoutImportingAgain()
+    {
+        var root = Directory.CreateTempSubdirectory("FoldoraDraft-");
+
+        try
+        {
+            var paths = CreatePaths(root.FullName);
+            var generatedIcon = Path.Combine(paths.IconsDirectory, "generated", "source-12345678.ico");
+            await IcoTestFile.WriteValidAsync(generatedIcon);
+            var editor = CreateEditor(paths);
+            await editor.LoadAsync();
+
+            var entry = editor.AddEntry();
+            editor.SetPendingIconSource(entry.Id, generatedIcon, importOnSave: false);
+            var result = await editor.SaveAsync();
+            var saved = await new FoldoraSettingsStorage(paths).LoadAsync();
+
+            Assert.True(result.Saved);
+            var savedEntry = Assert.Single(saved.CreateFolderMenu.Entries);
+            Assert.Equal(generatedIcon, savedEntry.IconPath);
+            Assert.True(File.Exists(generatedIcon));
+            Assert.False(File.Exists(Path.Combine(paths.IconsDirectory, $"{entry.Id}.ico")));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task SaveAsync_PersistsRemovalButDoesNotDeleteImportedIcon()
     {
         var root = Directory.CreateTempSubdirectory("FoldoraDraft-");

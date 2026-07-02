@@ -3,7 +3,7 @@ using Microsoft.Win32;
 namespace Foldora.App.Services;
 
 /// <summary>
-/// WPF file picker для выбора ICO-файла.
+/// WPF file picker для выбора ICO-файла или raster image для auto-conversion.
 /// </summary>
 public sealed class WindowsIconFilePicker : IIconFilePicker
 {
@@ -24,7 +24,16 @@ public sealed class WindowsIconFilePicker : IIconFilePicker
         var dialog = new OpenFileDialog
         {
             Title = localizationService.Resources.IconPickerTitle,
-            Filter = "ICO files (*.ico)|*.ico",
+            Filter = string.Join(
+                "|",
+                localizationService.Resources.IconPickerFilterIconImages,
+                "*.ico;*.png;*.jpg;*.jpeg;*.bmp",
+                localizationService.Resources.IconPickerFilterIco,
+                "*.ico",
+                localizationService.Resources.IconPickerFilterImages,
+                "*.png;*.jpg;*.jpeg;*.bmp",
+                localizationService.Resources.IconPickerFilterAllFiles,
+                "*.*"),
             CheckFileExists = true,
             CheckPathExists = true,
             Multiselect = false

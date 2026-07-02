@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Foldora.Core\Foldora.Core.csproj" />
+    <ProjectReference Include="..\Foldora.Imaging.Windows\Foldora.Imaging.Windows.csproj" />
     <ProjectReference Include="..\Foldora.Shell\Foldora.Shell.csproj" />
   </ItemGroup>
 

@@ -107,7 +107,7 @@ public sealed class FolderMenuDraftEditor
         return true;
     }
 
-    public FolderMenuValidationResult SetPendingIconSource(string entryId, string sourceIconPath)
+    public FolderMenuValidationResult SetPendingIconSource(string entryId, string sourceIconPath, bool importOnSave = true)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(entryId);
         ArgumentException.ThrowIfNullOrWhiteSpace(sourceIconPath);
@@ -126,6 +126,7 @@ public sealed class FolderMenuDraftEditor
         }
 
         entry.PendingIconSourcePath = sourceIconPath;
+        entry.PendingIconSourceShouldBeImported = importOnSave;
         return FolderMenuValidationResult.Success;
     }
 
@@ -143,7 +144,7 @@ public sealed class FolderMenuDraftEditor
             return FolderMenuDraftSaveResult.Blocked(validation);
         }
 
-        foreach (var entry in Entries.Where(entry => !string.IsNullOrWhiteSpace(entry.PendingIconSourcePath)))
+        foreach (var entry in Entries.Where(entry => !string.IsNullOrWhiteSpace(entry.PendingIconSourcePath) && entry.PendingIconSourceShouldBeImported))
         {
             var importedIconPath = await iconImportService.ImportForEntryAsync(
                 entry.PendingIconSourcePath!,
@@ -224,9 +225,14 @@ public sealed class FolderMenuDraftEditor
 
     private string GetEffectiveIconPathForSave(FolderMenuDraftEntry entry)
     {
-        return string.IsNullOrWhiteSpace(entry.PendingIconSourcePath)
-            ? entry.IconPath
-            : GetImportedIconPath(entry.Id);
+        if (string.IsNullOrWhiteSpace(entry.PendingIconSourcePath))
+        {
+            return entry.IconPath;
+        }
+
+        return entry.PendingIconSourceShouldBeImported
+            ? GetImportedIconPath(entry.Id)
+            : entry.PendingIconSourcePath;
     }
 
     private string GetImportedIconPath(string entryId)

@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using Foldora.Core.Menu;
 using Foldora.Core.Settings;
@@ -18,6 +19,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 {
     private readonly FolderMenuDraftEditor draftEditor;
     private readonly IIconFilePicker iconFilePicker;
+    private readonly IIconAssetPreparationService iconAssetPreparationService;
     private readonly IIconPreviewService iconPreviewService;
     private readonly ExplorerIntegrationController explorerIntegrationController;
     private readonly ISettingsDialogService settingsDialogService;
@@ -48,10 +50,12 @@ public sealed class MainViewModel : INotifyPropertyChanged
         ISettingsDialogService? settingsDialogService = null,
         ILocalizationService? localizationService = null,
         IValidationMessageLocalizer? validationMessageLocalizer = null,
-        ISettingsLanguageInitializer? settingsLanguageInitializer = null)
+        ISettingsLanguageInitializer? settingsLanguageInitializer = null,
+        IIconAssetPreparationService? iconAssetPreparationService = null)
     {
         this.draftEditor = draftEditor ?? throw new ArgumentNullException(nameof(draftEditor));
         this.iconFilePicker = iconFilePicker ?? throw new ArgumentNullException(nameof(iconFilePicker));
+        this.iconAssetPreparationService = iconAssetPreparationService ?? new NoopIconAssetPreparationService();
         this.iconPreviewService = iconPreviewService ?? throw new ArgumentNullException(nameof(iconPreviewService));
         this.explorerIntegrationController = explorerIntegrationController ?? throw new ArgumentNullException(nameof(explorerIntegrationController));
         this.settingsDialogService = settingsDialogService ?? new NoopSettingsDialogService();
@@ -251,7 +255,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
             integrationController,
             new WindowSettingsDialogService(storage, localizationService, integrationController, commandHostPathResolver),
             localizationService,
-            settingsLanguageInitializer: settingsLanguageInitializer);
+            settingsLanguageInitializer: settingsLanguageInitializer,
+            iconAssetPreparationService: new IconAssetPreparationService(paths));
     }
 
     public async Task LoadAsync(CancellationToken cancellationToken = default)
@@ -450,7 +455,28 @@ public sealed class MainViewModel : INotifyPropertyChanged
         }
 
         Errors.Clear();
-        var validation = draftEditor.SetPendingIconSource(entry.Id, result.FilePath!);
+        IconAssetPreparationResult preparedIcon;
+        try
+        {
+            preparedIcon = await iconAssetPreparationService.PrepareAsync(result.FilePath!);
+        }
+        catch (Exception exception) when (exception is ArgumentException
+                                          or FileNotFoundException
+                                          or DirectoryNotFoundException
+                                          or UnauthorizedAccessException
+                                          or IOException
+                                          or NotSupportedException
+                                          or System.Security.SecurityException)
+        {
+            OperationDetails.Clear();
+            Errors.Add(L.IconImageConversionFailed);
+            OperationDetails.Add(exception.Message);
+            NotifyErrorAndDetailsStateChanged();
+            StatusMessage = L.IconNotSelectedFixFile;
+            return;
+        }
+
+        var validation = draftEditor.SetPendingIconSource(entry.Id, preparedIcon.IconPath, preparedIcon.ImportOnSave);
         if (!validation.IsValid)
         {
             OperationDetails.Clear();
@@ -743,6 +769,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
         public Task<SettingsDialogResult> ShowSettingsAsync()
         {
             return Task.FromResult(new SettingsDialogResult(false, FoldoraLanguage.Russian));
+        }
+    }
+
+    private sealed class NoopIconAssetPreparationService : IIconAssetPreparationService
+    {
+        public Task<IconAssetPreparationResult> PrepareAsync(string selectedFilePath, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(IconAssetPreparationResult.ExistingIcon(selectedFilePath));
         }
     }
 

@@ -109,7 +109,7 @@
 - `src/Foldora.MenuHost/MenuHostCommand.cs` - модель команды MenuHost.
 - `src/Foldora.MenuHost/MenuHostCommandParser.cs` - минимальный parser MenuHost для `create`/`apply` по entry id.
 - `src/Foldora.MenuHost/MenuHostCommandRunner.cs` - запуск существующего Core action service из MenuHost.
-- `src/Foldora.App/Foldora.App.csproj` - WPF settings app, including the app `ApplicationIcon` wiring.
+- `src/Foldora.App/Foldora.App.csproj` - WPF settings app, including the app `ApplicationIcon` wiring and App reference to `Foldora.Imaging.Windows` for icon picker conversion.
 - `src/Foldora.App/App.xaml` - WPF application entry.
 - `src/Foldora.App/App.xaml.cs` - WPF app startup plumbing и обработка startup exceptions.
 - `src/Foldora.App/Assets/FoldoraIcon.svg` - self-authored source vector for the folded blue/cyan Foldora app icon with a broad light-cyan folded plane.
@@ -125,17 +125,20 @@
 - `src/Foldora.App/HelpWindow.xaml` - WPF окно краткой Help/About справки с shared app icon, visual direction v2 header/section/step-row rhythm, scrollable content and fixed close footer.
 - `src/Foldora.App/HelpWindow.xaml.cs` - минимальный plumbing окна справки.
 - `src/Foldora.App/AssemblyInfo.cs` - WPF assembly attributes.
-- `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands и presentation state для card/list UI.
+- `src/Foldora.App/ViewModels/MainViewModel.cs` - ViewModel главного окна WPF editor, включая staged commands, presentation state для card/list UI and icon picker preparation/conversion flow.
 - `src/Foldora.App/ViewModels/FolderMenuEntryViewModel.cs` - ViewModel draft-пункта меню с icon status, preview, compact/edit presentation state и inline errors.
 - `src/Foldora.App/ViewModels/FolderMenuEntryGroupViewModel.cs` - presentation-only group container WPF для entries по `GroupName`, включая entry count и add/rename/delete group commands.
 - `src/Foldora.App/ViewModels/SettingsViewModel.cs` - ViewModel окна настроек: language save, Explorer integration actions, installation/path info and danger reset presentation.
 - `src/Foldora.App/ViewModels/HelpWindowViewModel.cs` - ViewModel краткой Help/About справки поверх App localization service.
-- `src/Foldora.App/ViewModels/LocalizationResources.cs` - bindable набор локализованных строк для WPF, включая Settings tab labels and path action tooltips.
+- `src/Foldora.App/ViewModels/LocalizationResources.cs` - bindable набор локализованных строк для WPF, включая Settings tab labels, path action tooltips and icon picker/conversion labels.
 - `src/Foldora.App/ViewModels/RelayCommand.cs` - простая синхронная WPF-команда.
-- `src/Foldora.App/ViewModels/AsyncRelayCommand.cs` - простая асинхронная WPF-команда.
-- `src/Foldora.App/Services/IIconFilePicker.cs` - abstraction выбора `.ico` для WPF.
-- `src/Foldora.App/Services/IconFilePickerResult.cs` - результат выбора `.ico`.
-- `src/Foldora.App/Services/WindowsIconFilePicker.cs` - WPF file picker для `.ico`.
+- `src/Foldora.App/ViewModels/AsyncRelayCommand.cs` - простая асинхронная WPF-команда with awaitable execution for tests.
+- `src/Foldora.App/Services/IIconFilePicker.cs` - abstraction выбора icon/image file для WPF.
+- `src/Foldora.App/Services/IconFilePickerResult.cs` - результат выбора icon/image file.
+- `src/Foldora.App/Services/WindowsIconFilePicker.cs` - WPF file picker для `.ico`, `.png`, `.jpg`, `.jpeg` and `.bmp`.
+- `src/Foldora.App/Services/IIconAssetPreparationService.cs` - App-level abstraction that prepares selected icon/image files for staged menu entries.
+- `src/Foldora.App/Services/IconAssetPreparationResult.cs` - result model for selected `.ico` import-on-save paths and generated `.ico` paths.
+- `src/Foldora.App/Services/IconAssetPreparationService.cs` - App-level icon preparation service that keeps `.ico` workflow and converts PNG/JPG/BMP images into generated multi-size `.ico` files under AppData.
 - `src/Foldora.App/Services/IIconPreviewService.cs` - abstraction загрузки `.ico` preview для WPF.
 - `src/Foldora.App/Services/IconPreviewResult.cs` - structured result загрузки preview.
 - `src/Foldora.App/Services/WpfIconPreviewService.cs` - WPF decoder preview из `.ico` без генерации файлов.
@@ -190,9 +193,10 @@
 - `tests/Foldora.Tests/App/ExplorerCommandHostPathResolverTests.cs` - тесты WPF command-host resolver для publish sibling, missing-host failure, Debug fallback и registry command path.
 - `tests/Foldora.Tests/App/DesignResourceTests.cs` - lightweight tests for WPF design resource dictionary wiring, app icon wiring/sizes, core style keys, button layout robustness/foreground forwarding, non-clipping Settings tab headers, stretched Settings selected-content host/tab bodies, Settings path/action/sizing contracts and visual direction v2 style/presentation contracts.
 - `tests/Foldora.Tests/App/MainViewModelExplorerSaveTests.cs` - тесты WPF save-triggered registry rebuild policy.
-- `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections и compact/edit entry behavior.
+- `tests/Foldora.Tests/App/MainViewModelPresentationTests.cs` - тесты presentation state WPF editor, grouped sections, compact/edit entry behavior and picker-prepared generated icon paths.
 - `tests/Foldora.Tests/App/SettingsViewModelTests.cs` - тесты ViewModel настроек языка.
-- `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты enabled catalog completeness, fallback, Settings tab labels, compact Explorer/path action labels and known localization keys.
+- `tests/Foldora.Tests/App/LocalizationServiceTests.cs` - тесты enabled catalog completeness, fallback, Settings tab labels, compact Explorer/path action labels, icon picker/conversion labels and known localization keys.
+- `tests/Foldora.Tests/App/IconAssetPreparationServiceTests.cs` - tests for App icon picker preparation: `.ico` pass-through, PNG/JPG/BMP generated ICO conversion, generated filename safety, corrupt input cleanup and ICO structure.
 - `tests/Foldora.Tests/App/SettingsLanguageInitializerTests.cs` - тесты first-run language detection, unsupported culture fallback и persistence policy.
 - `tests/Foldora.Tests/App/ValidationMessageLocalizerTests.cs` - тесты App-level локализации Core validation issues.
 - `tests/Foldora.Tests/App/StartupDiagnosticsServiceTests.cs` - тесты controlled startup diagnostic log.
@@ -211,7 +215,7 @@
 - `tests/Foldora.Tests/Cli/ConvertIconCommandRunnerTests.cs` - CLI `convert-icon` success/error tests for PNG/JPG/BMP input, overwrite policy, safe output and ICO structure.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryTests.cs` - тесты defaults menu entry.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryActionServiceTests.cs` - тесты apply/create по entry id.
-- `tests/Foldora.Tests/Menu/FolderMenuDraftEditorTests.cs` - тесты staged-save draft editor logic, add/remove и pending icon import.
+- `tests/Foldora.Tests/Menu/FolderMenuDraftEditorTests.cs` - тесты staged-save draft editor logic, add/remove, pending `.ico` import and generated icon path persistence.
 - `tests/Foldora.Tests/Menu/FolderMenuNameGeneratorTests.cs` - тесты fallback-имён.
 - `tests/Foldora.Tests/Menu/IconImportServiceTests.cs` - тесты импорта `.ico`.
 - `tests/Foldora.Tests/Menu/FolderMenuServiceTests.cs` - тесты управления menu entries.

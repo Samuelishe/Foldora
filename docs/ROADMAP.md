@@ -22,6 +22,8 @@ Foldora currently has a working MVP loop:
 - Staged save/cancel.
 - Staged icon import into `%AppData%\Foldora\icons`.
 - Direct `.ico` preview in WPF.
+- PNG/JPG/BMP image auto-conversion in the WPF icon picker, stored as generated multi-size `.ico` files under `%AppData%\Foldora\icons\generated`.
+- CLI `convert-icon` for single-file PNG/JPG/BMP to multi-size ICO conversion.
 - Safe HKCU legacy Explorer menu registration under Foldora-owned roots.
 - Visible menu shape:
 
@@ -76,18 +78,16 @@ Foldora.MenuHost.exe
 
 ## Current Feature Priority
 
-Next planned feature direction is documented in `docs/ICON_CONVERSION_ROADMAP.md`.
+Next planned feature direction is documented in `docs/ICON_CONVERSION_ROADMAP.md`. After IC4a, the next UX step is drag image onto icon preview, followed by converter-window/batch polish.
 
 Priority order:
 
-1. Image -> ICO conversion foundation.
-2. WPF icon picker integration for PNG/JPG/BMP auto-conversion.
-3. Drag image onto icon preview.
-4. Converter window / batch conversion.
-5. Drag-and-drop ordering.
-6. Pack import/export.
-7. Diagnostics/repair.
-8. Release/install packaging polish.
+1. Drag image onto icon preview.
+2. Converter window / batch conversion.
+3. Drag-and-drop ordering.
+4. Pack import/export.
+5. Diagnostics/repair.
+6. Release/install packaging polish.
 
 Release readiness, self-contained zip, installer polish, MSI/MSIX, winget and code signing remain important, but they are intentionally below the next MVP feature work. The next feature should make Foldora easier to use with normal images while still persisting generated `.ico` files for Explorer compatibility.
 
@@ -134,10 +134,8 @@ Completed UI/UX audit baseline, correctness cleanup and visual polish:
 
 Feature work and validation before release packaging polish:
 
-- Implement image-to-ICO conversion foundation for `.png`, `.jpg`, `.jpeg` and `.bmp`.
-- Integrate conversion into the WPF icon picker while keeping existing `.ico` import behavior.
-- Add drag image onto entry icon preview after the conversion service exists.
-- Add a planned CLI command such as `convert-icon --input ".\image.png" --output ".\folder.ico"` before a richer converter window.
+- Add drag image onto entry icon preview after the picker conversion flow.
+- Add a richer converter window/batch flow after CLI and picker conversion are stable.
 - Keep SVG support as separate research/future work, not part of the first PNG/JPG/BMP milestone.
 - Add drag-and-drop ordering for entries/groups after conversion UX is stable.
 - Keep pack import/export below converter and drag/drop UX.
@@ -157,11 +155,11 @@ Feature work and validation before release packaging polish:
 - No MSI/MSIX installer yet.
 - No Program Files layout, winget package or code signing yet.
 - No pack import/export yet.
-- No PNG/JPG/BMP-to-ICO conversion yet.
+- No drag-and-drop image-to-icon replacement yet; PNG/JPG/BMP conversion currently works through CLI and the WPF file picker only.
 - No full nested tree storage/runtime beyond one-level `GroupName`.
 - No drag-and-drop group ordering.
 - No group icons.
-- No orphan icon cleanup for imported/generated `.ico`; this becomes more important after auto-conversion and pack import/export.
+- No orphan icon cleanup for imported/generated `.ico`; this is now more important after picker auto-conversion and will matter further after drag/drop and pack import/export.
 - No user-facing diagnostics for `Foldora.MenuHost.exe` failures launched from Explorer.
 - First-created desktop folder default-icon timing is currently not reproduced; tracked as `TD-0002` monitor item.
 - WPF catalog expansion is complete for `bg`, `cs`, `de`, `en`, `es`, `fr`, `hi`, `hu`, `id`, `it`, `ja`, `ko`, `nl`, `pl`, `pt-BR`, `pt-PT`, `ro`, `ru`, `th`, `tr`, `uk`, `vi`, `zh-Hans`, `zh-Hant`; CLI defaults/diagnostics/validation output and startup fatal dialog remain tracked debt.
@@ -177,10 +175,8 @@ Feature work and validation before release packaging polish:
 - Modern `IExplorerCommand` research for advanced shell integration.
 - Optional Shell refresh notification investigation for desktop.ini apply/create timing, only if `TD-0002` is reproduced again and scoped.
 - Full tree menu runtime/storage beyond current one-level groups.
-- Image-to-ICO conversion for `.png`, `.jpg`, `.jpeg` and `.bmp`.
-- WPF icon picker auto-conversion for supported image formats.
 - Drag image onto entry icon preview.
-- Converter CLI/window and batch conversion.
+- Converter window and batch conversion beyond the existing single-file CLI.
 - Drag-and-drop ordering.
 - Group icons.
 - Pack import/export.

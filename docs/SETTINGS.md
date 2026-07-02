@@ -147,18 +147,18 @@ WPF phase 4 меняет `ExplorerIntegrationEnabled` только через я
 
 `%AppData%\Foldora\previews\` зарезервирован на будущее. WPF MVP может показывать `.ico` напрямую и не обязан генерировать preview-файлы.
 
-## Planned Generated Icon Storage
+## Generated Icon Storage
 
-Image-to-ICO conversion is planned but not implemented. Current settings still store normal `.ico` paths in `FolderMenuEntry.IconPath`.
+Image-to-ICO picker conversion stores generated `.ico` files as normal icon paths in `FolderMenuEntry.IconPath`. The settings schema does not store the original PNG/JPG/BMP path or conversion options.
 
-Future conversion/import flows may need clearer storage separation:
+Current generated icon storage:
 
 ```text
-%AppData%\Foldora\icons\imported\
 %AppData%\Foldora\icons\generated\
-%AppData%\Foldora\icons\packs\
 ```
 
-Do not change the current storage layout until the conversion/import implementation needs it. The planned behavior is that selecting `.png`, `.jpg`, `.jpeg` or `.bmp` creates a generated multi-size `.ico`, then persists that generated `.ico` path exactly like any other imported icon.
+Selecting `.png`, `.jpg`, `.jpeg` or `.bmp` in the WPF icon picker creates a generated multi-size `.ico` under `icons\generated`, stages that `.ico` path on the entry and saves it as a normal `IconPath` when the user saves the draft. Selecting `.ico` keeps the existing staged import-on-save path through `%AppData%\Foldora\icons`.
 
-Orphan cleanup is intentionally deferred. It becomes more relevant after auto-conversion, generated icons and pack import/export exist, because replacing/deleting entries and failed conversions can leave unused generated/imported files.
+Future conversion/import flows may still need clearer storage separation such as `icons\imported`, `icons\generated` and `icons\packs`.
+
+Orphan cleanup is intentionally deferred. Replacing an icon, deleting an entry or discarding a staged edit after image conversion can leave unused generated `.ico` files. Cleanup must not delete files referenced by existing styled folders, settings or future packs.

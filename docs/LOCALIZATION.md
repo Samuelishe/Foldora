@@ -99,7 +99,7 @@ Foldora uses canonical BCP-47-style tags where practical:
 
 ## String categories
 
-UI labels are visible interface text such as `Save`, `Discard changes`, `Choose .ico`, group buttons and settings labels. They must come from the localization layer.
+UI labels are visible interface text such as `Save`, `Discard changes`, `Choose icon/image`, group buttons and settings labels. They must come from the localization layer.
 
 Settings/Explorer cleanup adds localized section/action labels for Application, Explorer menu, Installation, path labels, MenuHost note, immediate Explorer-action note and dirty-draft guidance. The legacy `ManageInSettings` key remains in complete catalogs for compatibility but is no longer shown on MainWindow after the small UX correctness cleanup.
 
@@ -108,6 +108,8 @@ Settings clarity strings are also catalog-backed: explicit Foldora Explorer menu
 SettingsWindow tab labels use dedicated keys (`SettingsTabApplication`, `SettingsTabExplorerMenu`, `SettingsTabInstallation`, `SettingsTabHelpAbout`, `SettingsTabDangerZone`) so the tabbed layout can reuse category wording without hardcoding XAML strings. The Help/About tab label is intentionally short (`Help`, `Справка`, etc.) while the section/window content can keep fuller Help/About wording. Path actions use short visible labels (`Open`/`Copy`, `Открыть`/`Копировать`) and tooltip keys for extra detail such as opening the containing folder for the command host path. Explorer enable/disable action labels are also short (`Enable`/`Disable`, `Включить`/`Выключить`) because the tab and section already provide the Explorer menu context.
 
 Runtime/status messages are visible state messages such as settings loaded, settings saved, Explorer integration enabled/disabled and draft entry added. They must come from the localization layer.
+
+Icon picker file filters and conversion errors are App-localized strings. The picker exposes icon/image filters for `.ico`, `.png`, `.jpg`, `.jpeg` and `.bmp`; if image-to-ICO conversion fails, the user-facing error must come from the catalog and technical details may be shown separately through the existing status/details surface.
 
 MainWindow editor state text must also be localized user-facing status text. The saved/dirty state uses catalog keys such as `AllChangesSaved` and `UnsavedChanges`; raw boolean formatting like `Unsaved changes: True/False` must not be shown to users.
 

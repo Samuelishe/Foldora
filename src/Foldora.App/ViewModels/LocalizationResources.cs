@@ -149,6 +149,11 @@ public sealed class LocalizationResources : INotifyPropertyChanged
     public string IconExistsFormat => Get();
     public string IconPreviewNotLoaded => Get();
     public string IconPickerTitle => Get();
+    public string IconPickerFilterIconImages => Get();
+    public string IconPickerFilterIco => Get();
+    public string IconPickerFilterImages => Get();
+    public string IconPickerFilterAllFiles => Get();
+    public string IconImageConversionFailed => Get();
     public string PreviewNoIcon => Get();
     public string PreviewIconMissing => Get();
     public string PreviewIconLoaded => Get();

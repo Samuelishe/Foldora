@@ -215,28 +215,30 @@ Preview generation всё ещё future:
 - если WPF preview из `.ico` окажется медленным/нестабильным, добавить отдельный preview generator;
 - preview generator должен хранить ресурсы в `%AppData%\Foldora\previews\`.
 
-## Planned Image Conversion UX
+## Icon Picker Image Conversion
 
-Image-to-ICO conversion is the next planned feature direction, not current behavior. Details live in `docs/ICON_CONVERSION_ROADMAP.md`.
+Image-to-ICO conversion foundation is now connected to the normal WPF icon picker. Details live in `docs/ICON_CONVERSION_ROADMAP.md`.
 
-First UX milestone:
+Current picker flow:
 
 ```text
 User chooses icon/image file
   -> .ico uses current import/preview behavior
   -> .png/.jpg/.jpeg/.bmp auto-converts to generated multi-size .ico
-  -> generated .ico is staged/imported like a normal icon
+  -> generated .ico is staged like a normal icon
   -> preview updates
   -> Save persists normal IconPath
 ```
 
-Future file picker filter:
+Current file picker filter:
 
 ```text
 Icon/image files (*.ico;*.png;*.jpg;*.jpeg;*.bmp)
 ```
 
-Drag image onto icon preview is planned after the conversion foundation:
+Generated icons are stored under `%AppData%\Foldora\icons\generated`. If conversion fails, the current entry icon is left unchanged and temp/partial generated output is removed where possible. Discarding a staged edit can leave an unused generated icon file; cleanup remains deferred.
+
+Drag image onto icon preview is planned after the picker conversion flow:
 
 ```text
 Drop .ico/.png/.jpg/.jpeg/.bmp onto entry icon preview

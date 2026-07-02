@@ -72,6 +72,18 @@ public sealed class ProjectBoundaryTests
     }
 
     [Fact]
+    public void AppProject_MayReferenceWindowsImagingForIconPickerConversion()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var projectFile = Path.Combine(repositoryRoot, "src", "Foldora.App", "Foldora.App.csproj");
+
+        var projectText = File.ReadAllText(projectFile);
+
+        Assert.Contains("<TargetFramework>net10.0-windows</TargetFramework>", projectText, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("..\\Foldora.Imaging.Windows\\Foldora.Imaging.Windows.csproj", projectText, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public void MenuHostProject_DoesNotReferenceImagingProjects()
     {
         var repositoryRoot = FindRepositoryRoot();

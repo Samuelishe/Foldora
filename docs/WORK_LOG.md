@@ -1,5 +1,14 @@
 # Work Log
 
+## 2026-07-02 - IC4a WPF icon picker auto-conversion
+
+- Added App-level icon asset preparation for the existing WPF icon picker: `.ico` keeps the existing staged import-on-save workflow, while `.png`/`.jpg`/`.jpeg`/`.bmp` are converted to generated multi-size `.ico` files.
+- Stored generated icons under `%AppData%\Foldora\icons\generated` with sanitized source-base filenames plus short content hashes.
+- Wired `Foldora.App` to `Foldora.Imaging.Windows` and reused `WindowsImageToIconConverter`; Core and MenuHost remain independent from Windows imaging.
+- Updated picker filters, localization catalogs, ViewModel error handling and staged Save behavior so generated `.ico` paths preview and persist like normal icons.
+- Added service/ViewModel/draft-editor/localization/boundary tests for conversion, failure behavior, generated storage and existing `.ico` workflow.
+- No drag/drop icon replacement, converter window, batch conversion, SVG support or generated icon cleanup was implemented.
+
 ## 2026-07-02 - IC3 CLI convert-icon command
 
 - Retargeted `Foldora.Cli` to `net10.0-windows` and allowed it to reference `Foldora.Imaging.Windows` for Windows/WPF imaging conversion.
