@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-07-02 - IC2b imaging resize/downscale foundation
+
+- Added pure `RgbaImageResizer` in `src/Foldora.Imaging` with Lanczos3-style separable resizing from `RgbaImage` to `RgbaImage`.
+- Added `ImageResizeOptions` and `ImageResizeFilter` as the small public resize contract for future converter stages.
+- Implemented premultiplied-alpha filtering and unpremultiply output so transparent RGB pixels do not create color halos.
+- Added resize tests for validation, requested dimensions, opaque alpha, constant-color normalization, transparent RGB behavior, semi-transparent alpha, determinism, 1px/non-square edge cases, source immutability and PNG/ICO compatibility.
+- No CLI `convert-icon`, WPF picker integration, drag/drop, converter window, full conversion pipeline, SVG support or decode/encode bridge changes were implemented.
+
 ## 2026-07-02 - IC2a imaging decode/encode foundation
 
 - Kept `src/Foldora.Imaging` as a pure `net10.0` library and added `RgbaImage` as a tightly packed RGBA buffer model for future converter stages.

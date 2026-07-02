@@ -54,6 +54,9 @@
 - `src/Foldora.Imaging/IconConversionError.cs` - minimal future conversion error/warning model.
 - `src/Foldora.Imaging/IcoWriter.cs` - deterministic ICO container writer for already encoded image frame payloads.
 - `src/Foldora.Imaging/RgbaImage.cs` - pure tightly packed RGBA pixel buffer model for future decode/resize/conversion stages.
+- `src/Foldora.Imaging/ImageResizeFilter.cs` - resize filter enum; IC2b exposes Lanczos3 as the current production default.
+- `src/Foldora.Imaging/ImageResizeOptions.cs` - minimal resize options model for future converter stages.
+- `src/Foldora.Imaging/RgbaImageResizer.cs` - pure alpha-aware Lanczos3-style resize/downscale engine for `RgbaImage`.
 - `src/Foldora.Imaging.Windows/Foldora.Imaging.Windows.csproj` - Windows-specific `net10.0-windows` imaging bridge project for decode/PNG encode foundation.
 - `src/Foldora.Imaging.Windows/WindowsImageDecoder.cs` - WPF imaging based PNG/JPG/JPEG/BMP stream decoder that returns `RgbaImage`.
 - `src/Foldora.Imaging.Windows/WindowsPngFrameEncoder.cs` - WPF imaging based PNG payload encoder from `RgbaImage`.
@@ -198,6 +201,7 @@
 - `tests/Foldora.Tests/Fixtures/IcoTestFile.cs` - helper ICO fixture для structural validation и WPF preview.
 - `tests/Foldora.Tests/Imaging/IcoWriterTests.cs` - binary structure tests for Foldora.Imaging ICO writer and standard frame-size model.
 - `tests/Foldora.Tests/Imaging/RgbaImageTests.cs` - tests for RGBA pixel buffer validation, ownership and byte order.
+- `tests/Foldora.Tests/Imaging/RgbaImageResizerTests.cs` - tests for pure resize validation, dimensions, alpha behavior, determinism, edge cases and PNG/ICO compatibility.
 - `tests/Foldora.Tests/Imaging/WindowsImageCodecTests.cs` - Windows imaging decode/PNG encode tests and ICO writer compatibility test.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryTests.cs` - тесты defaults menu entry.
 - `tests/Foldora.Tests/Menu/FolderMenuEntryActionServiceTests.cs` - тесты apply/create по entry id.

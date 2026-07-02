@@ -1,6 +1,6 @@
 # Icon Conversion Roadmap
 
-Этот документ фиксирует будущий план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, а IC2a добавляет Windows-specific decode/PNG encode foundation. High-quality resizing, full converter service, converter CLI/UI, drag-and-drop icon replacement, pack import/export and repair flows are not implemented yet.
+Этот документ фиксирует будущий план для image-to-ICO conversion. IC1 foundation реализует техническую основу ICO container writing, IC2a добавляет Windows-specific decode/PNG encode foundation, а IC2b добавляет pure alpha-aware resize/downscale foundation. Full converter service, converter CLI/UI, drag-and-drop icon replacement, pack import/export and repair flows are not implemented yet.
 
 ## Current Implementation Status
 
@@ -20,9 +20,15 @@ IC2a implemented:
 - PNG frame payload encoding from `RgbaImage`.
 - Tests for decode/encode behavior, alpha/opaque handling, stream ownership and ICO writer compatibility.
 
+IC2b implemented:
+
+- Pure `RgbaImage` resize/downscale foundation in `Foldora.Imaging`.
+- Lanczos3 separable resize from `RgbaImage` to `RgbaImage`.
+- Premultiplied-alpha filtering to avoid transparent RGB halo artifacts.
+- Tests for dimensions, validation, constant-color normalization, alpha behavior, deterministic output, edge cases and ICO writer compatibility.
+
 Not implemented yet:
 
-- High-quality resize/downscale.
 - Full image-to-ICO conversion service.
 - Automatic WPF picker conversion.
 - Drag image onto preview.
@@ -83,7 +89,7 @@ Purpose:
 - pure icon frame metadata, conversion options/result models and tightly packed RGBA buffer model;
 - ICO writing, IC1 foundation implemented;
 - Windows/WPF image decode and PNG encode bridge, IC2a foundation implemented;
-- high-quality resizing, future;
+- alpha-aware Lanczos3 resize/downscale, IC2b foundation implemented;
 - full image decode orchestration/conversion service, future;
 - conversion result/reporting.
 
@@ -93,7 +99,9 @@ Suggested future services/classes:
 - `WindowsImageDecoder`;
 - `WindowsPngFrameEncoder`;
 - `IconEncoder` / `IcoWriter`;
-- `IconResizeService`, future;
+- `RgbaImageResizer`;
+- `ImageResizeOptions`;
+- `ImageResizeFilter`;
 - `IconConversionOptions`
 - `IconConversionResult`
 - `IconFrameSize`
@@ -132,14 +140,14 @@ Minimum acceptable future set:
 Quality rules:
 
 - resize each target frame from the original/source image, not by chaining `256 -> 128 -> 64 -> ...`;
-- use high-quality downscale, similar in intent to Photoshop-style resize for reduction;
-- consider Lanczos3 or Mitchell-Netravali;
-- handle alpha correctly;
-- prefer premultiplied-alpha-aware processing;
+- use the IC2b `RgbaImageResizer` Lanczos3 foundation for high-quality downscale;
+- handle alpha through premultiplied-alpha filtering;
 - preserve transparency;
 - write PNG-compressed frames inside ICO if compatible with Windows Explorer.
 
 Implementation preference: avoid third-party conversion libraries if reasonably possible. System Windows/WPF decoders for PNG/JPG/BMP may be acceptable. Resize algorithm and ICO writer should preferably be implemented in project code.
+
+Gamma-correct resizing remains deferred/research. IC2b performs alpha-aware Lanczos-style resizing in byte/sRGB value space; this is materially better than nearest/bilinear for the MVP converter foundation, but it does not claim physically perfect color-space handling.
 
 ## WPF UX Plan
 

@@ -292,6 +292,24 @@
   - `docs/SETTINGS.md`
 - Date added: 2026-07-02
 
+### TD-IMG-0003 Gamma-Correct Resize Research
+
+- ID: `TD-IMG-0003`
+- Title: Gamma-correct resize research
+- Status: Deferred / Research
+- Severity: Low
+- Area: Imaging / Conversion Quality
+- Observed behavior: IC2b implements alpha-aware Lanczos-style resizing in byte/sRGB value space.
+- Expected/desired behavior: A future converter quality pass could evaluate gamma-correct or linear-light resizing if visual evidence shows color shifts in generated icons.
+- Known cause or hypothesis: Correct color-space handling adds complexity and requires a clear policy for source profiles, alpha and deterministic output. The MVP converter foundation currently needs robust alpha behavior and good downscale quality more than full color management.
+- Current workaround: Use premultiplied-alpha Lanczos3 resizing, resize every ICO target frame from the original source image and avoid chained resizing.
+- Next investigation step: Revisit after the full converter pipeline exists and can be visually compared on real icon samples.
+- Links to docs/tests/code:
+  - `docs/ICON_CONVERSION_ROADMAP.md`
+  - `src/Foldora.Imaging/RgbaImageResizer.cs`
+  - `tests/Foldora.Tests/Imaging/RgbaImageResizerTests.cs`
+- Date added: 2026-07-02
+
 ### TD-OPS-0001 Diagnostics And Repair Center
 
 - ID: `TD-OPS-0001`
